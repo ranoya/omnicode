@@ -1,3 +1,5 @@
+document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.2/ace.min.js" type="text/javascript"></script>');
+document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.2/ext-language_tools.min.js" type="text/javascript"></script>');
 
 // Ace Editor Change Viewer
 function changeContent(data, who, predata, extras) {
