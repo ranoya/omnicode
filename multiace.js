@@ -1,5 +1,3 @@
-document.write('<script src="https://www.ranoya.com/aceeditor/src-min-noconflict/ace.js" type="text/javascript"></script>');
-document.write('<script src="https://www.ranoya.com/aceeditor/src-min-noconflict/ext-language_tools.js" type="text/javascript"></script>');
 
 // Ace Editor Change Viewer
 function changeContent(data, who, predata, extras) {
