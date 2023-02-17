@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var editor;
     var ednum = 0;
     ace_config = {
-        maxLines: Infinity,
         enableBasicAutocompletion: true,
         enableSnippets: true,
         enableLiveAutocompletion: false,
