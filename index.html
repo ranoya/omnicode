@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="multiace.js"></script>
+    <style>
+      #right_panel {
+        position: fixed;
+        width: 60%;
+        padding-left: 4px;
+        height: 100%;
+        right: 15px;
+        top: 15px;
+        height: calc(100vh - 30px);
+        border: 1px solid #cccccc;
+        border-left: 0;
+        overflow-y: scroll;
+      }
+
+      #View_editor_1 {
+        border: 0;
+        position: absolute;
+        top: 0;
+        left: 40px;
+        width: calc(100% - 40px);
+        height: calc(100vh - 30px);
+        padding: 0;
+        margin: 0;
+      }
+
+      #editor_1 {
+        position: fixed;
+        width: 40%;
+        height: calc(100vh - 30px);
+        left: 15px;
+        top: 15px;
+        border: 1px solid #cccccc;
+        border-right: 0;
+        overflow-y: scroll;
+        margin: 0;
+        padding: 0;
+      }
+
+      #resize {
+        background-color: #ff000000;
+        position: absolute;
+        left: 0px;
+        top: 0;
+        width: 40px;
+        height: 100%;
+        cursor: w-resize;
+        z-index: 5000;
+        border-right: 1px solid #cccccc;
+      }
+    </style>
+  </head>
+
+  <body>
+    <pre
+      class="editor codefull"
+      data-name="editor_1"
+      id="editor_1"
+      data-linguagem="java"
+      data-acetheme="tomorrow"
+    >
+void setup() {
+size(150,150);
+background(#78008A);
+frameRate(20);
+}
+  </pre
+    >
+
+    <div id="right_panel">
+      <div id="resize"></div>
+      <iframe id="View_editor_1" frameborder="0"></iframe>
+    </div>
+
+    <script>
+      acegeneralconfig = {
+        maxLines: Infinity,
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: false,
+        showPrintMargin: false,
+        highlightSelectedWord: true,
+        selectionStyle: "text",
+        highlightActiveLine: false,
+        cursorStyle: "wide",
+        wrapBehavioursEnabled: true,
+        wrap: true,
+      };
+
+      Predata_editor_1 = "";
+      Postdata_editor_1 = "";
+
+      Predata_editor_2 = "<b>";
+      Postdata_editor_2 = "</b>";
+
+      let m_pos;
+      const resize = function (e) {
+        let parent = resize_el.parentNode;
+        let dx = m_pos - e.x;
+        m_pos = e.x;
+        document.getElementById("editor_1").style.width = m_pos - 15 + "px";
+        parent.style.width =
+          parseInt(getComputedStyle(parent, "").width) + dx + "px";
+      };
+
+      let resize_el = document.getElementById("resize");
+
+      resize_el.addEventListener(
+        "mousedown",
+        function (e) {
+          m_pos = e.x;
+          document.addEventListener("mousemove", resize, false);
+        },
+        false
+      );
+      document.addEventListener(
+        "mouseup",
+        function () {
+          document.removeEventListener("mousemove", resize, false);
+        },
+        false
+      );
+    </script>
+  </body>
+</html>
