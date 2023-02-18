@@ -163,7 +163,6 @@
   </head>
 
   <body>
-    <div id="myscreenconsole"></div>
     <pre
       class="editor codefull"
       data-name="editor_1"
@@ -261,46 +260,6 @@
     </script>
 
     <script src="multiace.js"></script>
-
-    <script>
-      document.getElementById("myscreenconsole").innerHTML =
-        `
-      <div id="ScreenConsoleWrap" style="position: fixed; bottom: 0px; width: calc(100% - 15px); height: 200px; z-index: 10000;"><div id="ScreenConsoleClose" style="width: border: 1px solid #` +
-        bdc +
-        `; margin: 8px 8px 0px; padding: 8px; display: inline-block; color: #` +
-        bgc +
-        `; background-color: ` +
-        bdc +
-        `; font-family: monospace;">X</div><div id="ScreenConsoleTitle" style="border: 1px solid #` +
-        bdc +
-        `; margin: 8px 8px 0px; padding: 8px; display: inline-block; color: #` +
-        bgc +
-        `; background-color: #` +
-        bdc +
-        `; font-family: monospace;">Console</div><div id="ScreenConsole" style="border: 1px solid #` +
-        bdc +
-        `; margin: 0px 8px 8px; padding: 8px; width: calc(100% - 32px); height: 130px; overflow-y: scroll; font-family: monospace; color: #` +
-        bdc +
-        `; background-color: #` +
-        gcolr +
-        `;"></div></div>
-      `;
-
-      console.clear();
-      console.defaultLog = console.log.bind(console);
-      console.logs = [];
-
-      console.log = function () {
-        console.defaultLog.apply(console, arguments);
-        console.logs.push(Array.from(arguments));
-        document.getElementById("ScreenConsole").innerHTML +=
-          arguments[0] + "<br>";
-      };
-      window.onerror = function (msg, url, line) {
-        document.getElementById("ScreenConsole").innerHTML +=
-          "Line: " + line + "<br>" + msg + "<br>";
-      };
-    </script>
   </body>
 
   <script>
@@ -367,5 +326,92 @@
       document.getElementById("resize").style.borderLeft =
         "1px dotted #" + corborda;
     }
+
+    const enviacomando = function (instr) {
+      let aceed = ace.edit("editor_1");
+      aceed.setOptions(instr);
+    };
+
+    const redimensiona = function (qnt) {
+      document.getElementById("right_panel").style.width =
+        "calc(" + qnt + "% - 36px)";
+      document.getElementById("editor_1").style.width =
+        "calc(100% - " + qnt + "%)";
+    };
+
+    const sobrescreve = function (arquivo) {
+      fetch(arquivo)
+        .then((response) => response.text())
+        .then((dados) => {
+          let aceed = ace.edit("editor_1");
+          aceed.setValue(dados);
+        });
+    };
+
+    const lingua = function (qual) {
+      if (qual == "html") {
+        let aceed = ace.edit("editor_1");
+        aceed.setOptions({ mode: "ace/mode/html" });
+
+        Predata_editor_1 = "";
+        Postdata_editor_1 = "";
+      }
+
+      if (qual == "javascript") {
+        let aceed = ace.edit("editor_1");
+        aceed.setOptions({ mode: "ace/mode/javascript" });
+        Predata_editor_1 = `<scri` + `pt>`;
+        Postdata_editor_1 = `</scr` + `ipt>`;
+      }
+
+      if (qual == "p5") {
+        let aceed = ace.edit("editor_1");
+        aceed.setOptions({ mode: "ace/mode/javascript" });
+        Predata_editor_1 =
+          `
+            <st` +
+          `yle>body,html { margin: 0; padding: 0; }</sty` +
+          `le>
+            <scr` +
+          `ipt src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></scr` +
+          `ipt>
+            <scr` +
+          `ipt>`;
+        Postdata_editor_1 = `</scr` + `ipt>`;
+      }
+
+      if (qual == "processing") {
+        let aceed = ace.edit("editor_1");
+        aceed.setOptions({ mode: "ace/mode/java" });
+
+        Predata_editor_1 =
+          `
+            <sty` +
+          `le>body,html { margin: 0; padding: 0; }</sty` +
+          `le>
+            <ca` +
+          `nvas id='pjs' style='outline: none;'></canv` +
+          `as>
+            <scr` +
+          `ipt src="https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.6.6/processing.min.js"></scr` +
+          `ipt>
+            <scr` +
+          `ipt type="application/processing" data-processing-target='pjs'>`;
+        Postdata_editor_1 =
+          `
+            </sc` +
+          `ript>
+        <can` +
+          `vas> </canv` +
+          `as>`;
+      }
+
+      changeContent(
+        editor_1.getSession().getValue(),
+        "View_editor_1",
+        Predata_editor_1,
+        Postdata_editor_1
+      );
+    };
   </script>
 </html>
