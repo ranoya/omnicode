@@ -25,6 +25,21 @@
         }
       })();
 
+      let bgc = "e8e8e8";
+      if ($_GET["bgcolor"]) {
+        bgc = $_GET["bgcolor"];
+      }
+
+      let gcolr = "e1e1e1";
+      if ($_GET["gutcolor"]) {
+        gcolr = $_GET["gutcolor"];
+      }
+
+      let bdc = "cccccc";
+      if ($_GET["bordercolor"]) {
+        bdc = $_GET["bordercolor"];
+      }
+
       let tema = "solarized_light";
       let linguagem = "html";
 
@@ -266,6 +281,7 @@
           "ace_gutter-layer"
         )[0].style.backgroundColor = "#" + $_GET["gutcolor"];
       }, 1300);
+      gcolr = $_GET["gutcolor"];
     }
 
     if (

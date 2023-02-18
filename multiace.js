@@ -112,25 +112,24 @@ const lingua = function (qual) {
         document.getElementById('ScreenConsoleWrap').style.width = '100%';
         document.getElementById('ScreenConsoleWrap').style.height = '200px';
         document.getElementById('ScreenConsoleWrap').style.zIndex = '1000';
-        document.getElementById('ScreenConsoleWrap').style.backgroundColor = '#FFFFFF';
         
         let console_output_title = document.createElement('div');
         console_output_title.setAttribute('id', 'ScreenConsoleTitle');
         screen_console_wrap.appendChild(console_output_title);
         document.getElementById('ScreenConsoleTitle').innerHTML = 'Console';
-        document.getElementById('ScreenConsoleTitle').style.border = '1px solid grey';
+        document.getElementById('ScreenConsoleTitle').style.border = '1px solid '#`+ bdc + `';
         document.getElementById('ScreenConsoleTitle').style.margin = '8px';
         document.getElementById('ScreenConsoleTitle').style.marginBottom = 0;
         document.getElementById('ScreenConsoleTitle').style.padding = '8px';
         document.getElementById('ScreenConsoleTitle').style.display = 'inline-block';
-        document.getElementById('ScreenConsoleTitle').style.color = 'white';
-        document.getElementById('ScreenConsoleTitle').style.backgroundColor = 'grey';
+        document.getElementById('ScreenConsoleTitle').style.color = '#` + bgc + `';
+        document.getElementById('ScreenConsoleTitle').style.backgroundColor = '#`+ bdc + `';
         document.getElementById('ScreenConsoleTitle').style.fontFamily = 'monospace';
         
         let console_output = document.createElement('div');
         console_output.setAttribute('id', 'ScreenConsole');
         screen_console_wrap.appendChild(console_output);
-        document.getElementById('ScreenConsole').style.border = '1px solid grey';
+        document.getElementById('ScreenConsole').style.border = '1px solid '#`+ bdc + `';
         document.getElementById('ScreenConsole').style.margin = '8px';
         document.getElementById('ScreenConsole').style.marginTop = 0;
         document.getElementById('ScreenConsole').style.padding = '8px';
@@ -138,6 +137,8 @@ const lingua = function (qual) {
         document.getElementById('ScreenConsole').style.height = '130px';
         document.getElementById('ScreenConsole').style.overflowY = 'scroll';
         document.getElementById('ScreenConsole').style.fontFamily = 'monospace';
+        document.getElementById('ScreenConsole').style.color = '#` + bdc +  `';
+        document.getElementById('ScreenConsole').style.backgroundColor = '#` + gcolr + `';
         
         console.log = function () {
             console.defaultLog.apply(console, arguments);
