@@ -18,17 +18,16 @@ You can customize Omnicode with URL variables, like these:
 
 These are the variables you can use:
 
-|-----|-----|-----|-----|
-| variable | type | example | description |
-|-----|-----|-----|-----|
-| bgcolor | RGBA value (without the #) | https://omnicode.vercel.app/?bgcolor=fef6e4 | sets the background color |
-| gutcolor | RGB value (without the #) | https://omnicode.vercel.app/?gutcolor=f8f0e0 | sets the editor's lines column background |
-| bordercolor | RGBA value (without the #) | https://omnicode.vercel.app/?bordercolor=c0cf54 | sets the line borders color |
-| preview | percentage (without the %) | https://omnicode.vercel.app/?preview=50 | sets the size for the preview |
-| theme | keyword | https://omnicode.vercel.app/?theme=cobalt | sets the ACE Theme for code highlighting |
-| lang | keyword | https://omnicode.vercel.app/?lang=markdown | sets the ACE Mode (programing language) |
-| minimal | boolean | https://omnicode.vercel.app/?minimal=true&bordercolor=c0cf54 | remove the borders keeping only the border between the editor and the preview |
-| file | url | https://omnicode.vercel.app/?file=https://omnicode.vercel.app/example/myfile.html | opens a external file in the editor |
-| nopoe | boolean | https://omnicode.vercel.app/?nopoe=true | disable POE (command palette) from the editor |
-| basepoe | url | https://omnicode.vercel.app/?basepoe=https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/ExemplosHTML | JSON with the POE commands (see [POE Documentation](https://github.com/ranoya/poepalette)) |
-| poecss | url | https://omnicode.vercel.app/?poecss=https://poepalette.vercel.app/dev/lesssolarized.css | CSS customization for POE command palette |
+| variable    | type                       | description                                                                                | example                                                                                                                 |
+| ----------- | -------------------------- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| bgcolor     | RGBA value (without the #) | sets the background color                                                                  | https://omnicode.vercel.app/?bgcolor=fef6e4                                                                             |
+| gutcolor    | RGB value (without the #)  | sets the editor's lines column background                                                  | https://omnicode.vercel.app/?gutcolor=f8f0e0                                                                            |
+| bordercolor | RGBA value (without the #) | sets the line borders color                                                                | https://omnicode.vercel.app/?bordercolor=c0cf54                                                                         |
+| preview     | percentage (without the %) | sets the size for the preview                                                              | https://omnicode.vercel.app/?preview=50                                                                                 |
+| theme       | keyword                    | sets the ACE Theme for code highlighting                                                   | https://omnicode.vercel.app/?theme=cobalt                                                                               |
+| lang        | keyword                    | sets the ACE Mode (programing language)                                                    | https://omnicode.vercel.app/?lang=markdown                                                                              |
+| minimal     | boolean                    | remove the borders keeping only the border between the editor and the preview              | https://omnicode.vercel.app/?minimal=true&bordercolor=c0cf54                                                            |
+| file        | url                        | opens a external file in the editor                                                        | https://omnicode.vercel.app/?file=https://omnicode.vercel.app/example/myfile.html                                       |
+| nopoe       | boolean                    | disable POE (command palette) from the editor                                              | https://omnicode.vercel.app/?nopoe=true                                                                                 |
+| basepoe     | url                        | JSON with the POE commands (see [POE Documentation](https://github.com/ranoya/poepalette)) | https://omnicode.vercel.app/?basepoe=https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/ExemplosHTML |
+| poecss      | url                        | CSS customization for POE command palette                                                  | https://omnicode.vercel.app/?poecss=https://poepalette.vercel.app/dev/lesssolarized.css                                 |
