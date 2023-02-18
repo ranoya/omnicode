@@ -200,7 +200,7 @@
           .then((dada) => {
             let dados = dada.toHtmlEntities();
             let aceed = ace.edit("editor_1");
-            aceed.setValue(dados);
+            aceed.setValue(dada);
 
             if ($_GET["file"].match(/\.js/i) && $_GET["lang"] != "p5") {
               lingua("javascript");
