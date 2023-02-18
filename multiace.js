@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         ednum++;
         let este = document.getElementById("editor_" + ednum);
+        editor_1.session.setUseWrapMode(true);
         _name = "editor_" + ednum;
         code = `let name = este.getAttribute('data-name');
  
