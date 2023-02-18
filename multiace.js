@@ -99,46 +99,14 @@ const lingua = function (qual) {
         let aceed = ace.edit('editor_1');
         aceed.setOptions({ mode: "ace/mode/javascript" });
         Predata_editor_1 = `
-        
+        <script>`;
+        Postdata_editor_1 = `</script>
+                
+        <div id="ScreenConsoleWrap" style="position: fixed; bottom: -5px; width: 100%; height: 200px; z-index: 1000;"><div id="ScreenConsoleTitle" style="border: 1px solid #` + bdc + `; margin: 8px 8px 0px; padding: 8px; display: inline-block; color: #` + bgc + `; background-color: ` + bdc + `; font-family: monospace;">Console</div><div id="ScreenConsole" style="border: 1px solid #` + bdc + `; margin: 0px 8px 8px; padding: 8px; width: calc(100% - 32px); height: 130px; overflow-y: scroll; font-family: monospace; color: ` + bdc + `; background-color: ` + gcolr + `;"></div></div>
+
         <script>
         console.defaultLog = console.log.bind(console);
         console.logs = [];
-        
-        let screen_console_wrap = document.createElement('div');
-        screen_console_wrap.setAttribute('id', 'ScreenConsoleWrap');
-        document.lastChild.appendChild(screen_console_wrap);
-        document.getElementById('ScreenConsoleWrap').style.position = 'fixed';
-        document.getElementById('ScreenConsoleWrap').style.bottom = '-5px';
-        document.getElementById('ScreenConsoleWrap').style.width = '100%';
-        document.getElementById('ScreenConsoleWrap').style.height = '200px';
-        document.getElementById('ScreenConsoleWrap').style.zIndex = '1000';
-        
-        let console_output_title = document.createElement('div');
-        console_output_title.setAttribute('id', 'ScreenConsoleTitle');
-        screen_console_wrap.appendChild(console_output_title);
-        document.getElementById('ScreenConsoleTitle').innerHTML = 'Console';
-        document.getElementById('ScreenConsoleTitle').style.border = '1px solid #`+ bdc + `';
-        document.getElementById('ScreenConsoleTitle').style.margin = '8px';
-        document.getElementById('ScreenConsoleTitle').style.marginBottom = 0;
-        document.getElementById('ScreenConsoleTitle').style.padding = '8px';
-        document.getElementById('ScreenConsoleTitle').style.display = 'inline-block';
-        document.getElementById('ScreenConsoleTitle').style.color = '#` + bgc + `';
-        document.getElementById('ScreenConsoleTitle').style.backgroundColor = '#`+ bdc + `';
-        document.getElementById('ScreenConsoleTitle').style.fontFamily = 'monospace';
-        
-        let console_output = document.createElement('div');
-        console_output.setAttribute('id', 'ScreenConsole');
-        screen_console_wrap.appendChild(console_output);
-        document.getElementById('ScreenConsole').style.border = '1px solid #`+ bdc + `';
-        document.getElementById('ScreenConsole').style.margin = '8px';
-        document.getElementById('ScreenConsole').style.marginTop = 0;
-        document.getElementById('ScreenConsole').style.padding = '8px';
-        document.getElementById('ScreenConsole').style.width = 'calc(100% - 32px)';
-        document.getElementById('ScreenConsole').style.height = '130px';
-        document.getElementById('ScreenConsole').style.overflowY = 'scroll';
-        document.getElementById('ScreenConsole').style.fontFamily = 'monospace';
-        document.getElementById('ScreenConsole').style.color = '#` + bdc +  `';
-        document.getElementById('ScreenConsole').style.backgroundColor = '#` + gcolr + `';
         
         console.log = function () {
             console.defaultLog.apply(console, arguments);
@@ -149,9 +117,7 @@ const lingua = function (qual) {
             document.getElementById('ScreenConsole').innerHTML += 'Line: ' + line + '<br>' + msg + '<br>';
         }
         </script>
-        
-        <script>`;
-        Postdata_editor_1 = `</script>`;
+        `;
 
     }
 
@@ -161,45 +127,15 @@ const lingua = function (qual) {
         Predata_editor_1 = `
          <style>body,html { margin: 0; padding: 0; }</style>
          <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></script>
-         <script>
+         
+         <script>`;
+        Postdata_editor_1 = `</script>
+        
+        <div id="ScreenConsoleWrap" style="position: fixed; bottom: -5px; width: 100%; height: 200px; z-index: 1000;"><div id="ScreenConsoleTitle" style="border: 1px solid #` + bdc + `; margin: 8px 8px 0px; padding: 8px; display: inline-block; color: #` + bgc + `; background-color: ` + bdc + `; font-family: monospace;">Console</div><div id="ScreenConsole" style="border: 1px solid #` + bdc + `; margin: 0px 8px 8px; padding: 8px; width: calc(100% - 32px); height: 130px; overflow-y: scroll; font-family: monospace; color: ` + bdc + `; background-color: ` + gcolr + `;"></div></div>
+
+        <script>
         console.defaultLog = console.log.bind(console);
         console.logs = [];
-        
-        let screen_console_wrap = document.createElement('div');
-        screen_console_wrap.setAttribute('id', 'ScreenConsoleWrap');
-        document.lastChild.appendChild(screen_console_wrap);
-        document.getElementById('ScreenConsoleWrap').style.position = 'fixed';
-        document.getElementById('ScreenConsoleWrap').style.bottom = '-5px';
-        document.getElementById('ScreenConsoleWrap').style.width = '100%';
-        document.getElementById('ScreenConsoleWrap').style.height = '200px';
-        document.getElementById('ScreenConsoleWrap').style.zIndex = '1000';
-        
-        let console_output_title = document.createElement('div');
-        console_output_title.setAttribute('id', 'ScreenConsoleTitle');
-        screen_console_wrap.appendChild(console_output_title);
-        document.getElementById('ScreenConsoleTitle').innerHTML = 'Console';
-        document.getElementById('ScreenConsoleTitle').style.border = '1px solid #`+ bdc + `';
-        document.getElementById('ScreenConsoleTitle').style.margin = '8px';
-        document.getElementById('ScreenConsoleTitle').style.marginBottom = 0;
-        document.getElementById('ScreenConsoleTitle').style.padding = '8px';
-        document.getElementById('ScreenConsoleTitle').style.display = 'inline-block';
-        document.getElementById('ScreenConsoleTitle').style.color = '#` + bgc + `';
-        document.getElementById('ScreenConsoleTitle').style.backgroundColor = '#`+ bdc + `';
-        document.getElementById('ScreenConsoleTitle').style.fontFamily = 'monospace';
-        
-        let console_output = document.createElement('div');
-        console_output.setAttribute('id', 'ScreenConsole');
-        screen_console_wrap.appendChild(console_output);
-        document.getElementById('ScreenConsole').style.border = '1px solid #`+ bdc + `';
-        document.getElementById('ScreenConsole').style.margin = '8px';
-        document.getElementById('ScreenConsole').style.marginTop = 0;
-        document.getElementById('ScreenConsole').style.padding = '8px';
-        document.getElementById('ScreenConsole').style.width = 'calc(100% - 32px)';
-        document.getElementById('ScreenConsole').style.height = '130px';
-        document.getElementById('ScreenConsole').style.overflowY = 'scroll';
-        document.getElementById('ScreenConsole').style.fontFamily = 'monospace';
-        document.getElementById('ScreenConsole').style.color = '#` + bdc +  `';
-        document.getElementById('ScreenConsole').style.backgroundColor = '#` + gcolr + `';
         
         console.log = function () {
             console.defaultLog.apply(console, arguments);
@@ -210,8 +146,7 @@ const lingua = function (qual) {
             document.getElementById('ScreenConsole').innerHTML += 'Line: ' + line + '<br>' + msg + '<br>';
         }
         </script>
-         <script>`;
-        Postdata_editor_1 = `</script>`;
+        `;
     }
 
     if (qual == "processing") {
