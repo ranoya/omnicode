@@ -1,4 +1,4 @@
-document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.2/ace.min.js" type="text/javascript"></script>');
+document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.2/ace.js" type="text/javascript"></script>');
 document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.2/ext-language_tools.min.js" type="text/javascript"></script>');
 
 // Ace Editor Change Viewer
@@ -39,28 +39,18 @@ document.addEventListener('DOMContentLoaded', function () {
         ednum++;
         let este = document.getElementById("editor_" + ednum);
         _name = "editor_" + ednum;
-        code = `var name = este.getAttribute('data-name');
-                var linguagem_` + _name + ` = '';
-                var acetheme_` + _name + ` = '';
-                var customconfig_` + _name + ` = '';
-                var precode_` + _name + ` = '';
-                var postcode_` + _name + ` = '';
+        code = `let name = este.getAttribute('data-name');
+ 
+                let customconfig_` + _name + ` = '';
+                let precode_` + _name + ` = '';
+                let postcode_` + _name + ` = '';
                 if (typeof Predata_` + _name + ` != 'undefined') {
                      precode_` + _name + ` = Predata_` + _name + `;
                 }
                 if (typeof Postdata_` + _name + ` != 'undefined') { 
                     postcode_` + _name + ` = Postdata_` + _name + `;
                 }
-                if (este.getAttribute('data-linguagem')) { 
-                    linguagem_` + _name + ` = este.getAttribute('data-linguagem');
-                } else { 
-                    linguagem_` + _name + ` = 'html';
-                }
-                if (este.getAttribute('data-acetheme')) { 
-                    acetheme_` + _name + ` = este.getAttribute('data-acetheme');
-                } else { 
-                    acetheme_` + _name + ` = 'dreamweaver';
-                }
+
                 if (este.getAttribute('data-config')) { 
                     customconfig_` + _name + ` = este.getAttribute('data-config');
                 } else {
@@ -71,8 +61,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     } 
                 }
            ` + _name + ` = ace.edit('` + _name + `');
-           ` + _name + `.setTheme('ace/theme/' + acetheme_` + _name + `);
-           ` + _name + `.getSession().setMode('ace/mode/' + linguagem_` + _name + `);
            ` + _name + `.setOptions(customconfig_` + _name + `);
                if (document.getElementById('View_` + _name + `')) {
                    changeContent(` + _name + `.getSession().getValue(),'View_` + _name + `', precode_` + _name + `, postcode_` + _name + `);

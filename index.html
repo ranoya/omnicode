@@ -3,11 +3,66 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <script src="multiace.js"></script>
+
+    <script>
+      $_GET = [];
+      (function () {
+        let corte = window.location.href.toString().indexOf("?");
+        if (corte > 0) {
+          let argumento = window.location.href.toString().substring(corte + 1);
+          argumentos = argumento.split("&");
+          for (arg in argumentos) {
+            let argCorte = argumentos[arg].indexOf("=");
+            $_GET[argumentos[arg].substring(0, argCorte)] = argumentos[
+              arg
+            ].substring(argCorte + 1);
+          }
+        }
+      })();
+
+      let tema = "dawn";
+      let linguagem = "html";
+
+      if ($_GET["theme"]) {
+        tema = $_GET["theme"];
+      }
+
+      if ($_GET["lang"]) {
+        linguagem = $_GET["lang"];
+      }
+
+      let acegeneralconfig = {
+        theme: "ace/theme/" + tema,
+        mode: "ace/mode/" + linguagem,
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: false,
+        showPrintMargin: false,
+        highlightSelectedWord: true,
+        selectionStyle: "text",
+        highlightActiveLine: false,
+        cursorStyle: "wide",
+        wrapBehavioursEnabled: true,
+        wrap: true,
+        fontSize: "14px",
+        fontFamily: "Fira Code",
+      };
+    </script>
+
     <style>
+      @import url("https://fonts.googleapis.com/css2?family=Fira+Code&display=swap");
+
+      body {
+        background-color: #999999;
+      }
+
+      .ace_gutter-layer {
+        background-color: #aaaaaa;
+      }
+
       #right_panel {
         position: fixed;
-        width: 60%;
+        width: calc(60% - 36px);
         padding-left: 4px;
         height: 100%;
         right: 15px;
@@ -22,8 +77,8 @@
         border: 0;
         position: absolute;
         top: 0;
-        left: 40px;
-        width: calc(100% - 40px);
+        left: 10px;
+        width: calc(100% - 10px);
         height: calc(100vh - 30px);
         padding: 0;
         margin: 0;
@@ -40,6 +95,8 @@
         overflow-y: scroll;
         margin: 0;
         padding: 0;
+        background-color: transparent;
+        z-index: 4900;
       }
 
       #resize {
@@ -47,7 +104,7 @@
         position: absolute;
         left: 0px;
         top: 0;
-        width: 40px;
+        width: 10px;
         height: 100%;
         cursor: w-resize;
         z-index: 5000;
@@ -61,14 +118,9 @@
       class="editor codefull"
       data-name="editor_1"
       id="editor_1"
-      data-linguagem="java"
-      data-acetheme="tomorrow"
+      data-linguagem="html"
     >
-void setup() {
-size(150,150);
-background(#78008A);
-frameRate(20);
-}
+&lt;h1&gt;Hello World&lt;/h1&gt;
   </pre
     >
 
@@ -78,18 +130,14 @@ frameRate(20);
     </div>
 
     <script>
-      acegeneralconfig = {
-        enableBasicAutocompletion: true,
-        enableSnippets: true,
-        enableLiveAutocompletion: false,
-        showPrintMargin: false,
-        highlightSelectedWord: true,
-        selectionStyle: "text",
-        highlightActiveLine: false,
-        cursorStyle: "wide",
-        wrapBehavioursEnabled: true,
-        wrap: true,
-      };
+      // FUNÇÃO DE FETCH DE ARQUIVO
+      if ($_GET["file"] != "" && typeof $_GET["file"] != "undefined") {
+        fetch($_GET["file"])
+          .then((response) => response.text())
+          .then((dados) => {
+            document.getElementById("editor_1").innerHTML = dados;
+          });
+      }
 
       Predata_editor_1 = "";
       Postdata_editor_1 = "";
@@ -102,9 +150,15 @@ frameRate(20);
         let parent = resize_el.parentNode;
         let dx = m_pos - e.x;
         m_pos = e.x;
-        document.getElementById("editor_1").style.width = m_pos - 15 + "px";
+        if (m_pos > 5 && m_pos < window.innerWidth - 35) {
+          document.getElementById("editor_1").style.width = m_pos - 5 + "px";
+          document.getElementById("right_panel").style.width =
+            "calc(100vw - 30px - " + m_pos + "px)";
+        }
+        /*
         parent.style.width =
           parseInt(getComputedStyle(parent, "").width) + dx + "px";
+          */
       };
 
       let resize_el = document.getElementById("resize");
@@ -125,5 +179,14 @@ frameRate(20);
         false
       );
     </script>
+
+    <script src="multiace.js"></script>
   </body>
+
+  <script>
+    if ($_GET["bgcolor"]) {
+      document.getElementsByTagName("body")[0].style.backgroundColor =
+        "#" + $_GET["bgcolor"];
+    }
+  </script>
 </html>
