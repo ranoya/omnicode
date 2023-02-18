@@ -190,10 +190,16 @@
   </body>
 
   <script>
+    let poecss = `https://poepalette.vercel.app/dev/lessgrey.css`;
+
+    if ($_GET["poecss"] != "" && typeof $_GET["poecss"] != "undefined") {
+      poecss = $_GET["poecss"];
+    }
+
     if ($_GET["nopoe"] == "" || typeof $_GET["nopoe"] == "undefined") {
       startpoe(
         "https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/OmniCode",
-        "https://poepalette.vercel.app/dev/lessgrey.css",
+        poecss,
         ""
       );
     }
