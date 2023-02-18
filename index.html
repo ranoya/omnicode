@@ -4,6 +4,8 @@
   <head>
     <meta charset="UTF-8" />
 
+    <script src="https://poepalette.vercel.app/poeinstance.js"></script>
+
     <script>
       $_GET = [];
       (function () {
@@ -139,11 +141,15 @@
           });
       }
 
-      Predata_editor_1 = "";
-      Postdata_editor_1 = "";
+      if ($_GET["preview"]) {
+        document.getElementById("right_panel").style.width =
+          "calc(" + $_GET["preview"] + "% - 36px)";
+        document.getElementById("editor_1").style.width =
+          "calc(100% - " + $_GET["preview"] + "%)";
+      }
 
-      Predata_editor_2 = "<b>";
-      Postdata_editor_2 = "</b>";
+      let Predata_editor_1 = "";
+      let Postdata_editor_1 = "";
 
       let m_pos;
       const resize = function (e) {
@@ -184,6 +190,12 @@
   </body>
 
   <script>
+    startpoe(
+      "https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/OmniCode",
+      "https://poepalette.vercel.app/dev/lessblue.css",
+      ""
+    );
+
     if ($_GET["bgcolor"]) {
       document.getElementsByTagName("body")[0].style.backgroundColor =
         "#" + $_GET["bgcolor"];
