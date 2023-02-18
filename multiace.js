@@ -100,6 +100,7 @@ const lingua = function (qual) {
         aceed.setOptions({ mode: "ace/mode/javascript" });
         Predata_editor_1 = `
         
+        <script>
         console.defaultLog = console.log.bind(console);
         console.logs = [];
         
@@ -146,6 +147,7 @@ const lingua = function (qual) {
         window.onerror = function (msg, url, line) {
             document.getElementById('ScreenConsole').innerHTML += 'Line: ' + line + '<br>' + msg + '<br>';
         }
+        </script>
         
         <script>`;
         Postdata_editor_1 = `</script>`;
