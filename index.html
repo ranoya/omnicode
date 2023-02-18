@@ -7,6 +7,10 @@
     <script src="https://poepalette.vercel.app/poeinstance.js"></script>
 
     <script>
+
+      let Predata_editor_1 = "";
+      let Postdata_editor_1 = "";
+
       $_GET = [];
       (function () {
         let corte = window.location.href.toString().indexOf("?");
@@ -30,7 +34,44 @@
       }
 
       if ($_GET["lang"]) {
+
         linguagem = $_GET["lang"];
+
+        if ($_GET["lang"] == "html") {
+          linguagem = "html"
+          Predata_editor_1 = "";
+          Postdata_editor_1 = "";
+        }
+
+        if ($_GET["lang"] == "javascript") {
+          linguagem = "javascript";
+          Predata_editor_1 = `<script>`;
+          Postdata_editor_1 = `</script>`;
+        }
+
+        if ($_GET["lang"] == "p5") {
+            linguagem = "javascript";
+            Predata_editor_1 = `
+            <style>body,html { margin: 0; padding: 0; }</style>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></script>
+            <script>`;
+            Postdata_editor_1 = `</script>`;
+        }
+
+        if (qual == "processing") {
+
+            linguagem = "java";
+            Predata_editor_1 = `
+            <style>body,html { margin: 0; padding: 0; }</style>
+            <canvas id='pjs' style='outline: none;'></canvas>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.6.6/processing.min.js"></script>
+            <script type="application/processing" data-processing-target='pjs'>
+            `;
+            Postdata_editor_1 = `
+            </script>
+            <canvas> </canvas>
+            `;
+        }
       }
 
       let acegeneralconfig = {
@@ -155,7 +196,7 @@
 
             document.getElementById("editor_1").innerHTML = dados;
 
-            if ($_GET["file"].match(/\.js/i)) {
+            if ($_GET["file"].match(/\.js/i) && $_GET['lang'] != "p5") {
               let myTimeout2 = setTimeout(function () {
                 lingua("javascript");
               }, 1300);
@@ -182,8 +223,7 @@
           "calc(100% - " + $_GET["preview"] + "%)";
       }
 
-      let Predata_editor_1 = "";
-      let Postdata_editor_1 = "";
+      
 
       let m_pos;
       const resize = function (e) {
