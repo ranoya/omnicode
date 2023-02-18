@@ -191,17 +191,18 @@
 
   <script>
     let poecss = `https://poepalette.vercel.app/dev/lessgrey.css`;
+    let basepoe = `https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/OmniCode`;
+
+    if ($_GET["basepoe"] != "" && typeof $_GET["basepoe"] != "undefined") {
+      basepoe = $_GET["basepoe"];
+    }
 
     if ($_GET["poecss"] != "" && typeof $_GET["poecss"] != "undefined") {
       poecss = $_GET["poecss"];
     }
 
     if ($_GET["nopoe"] == "" || typeof $_GET["nopoe"] == "undefined") {
-      startpoe(
-        "https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/OmniCode",
-        poecss,
-        ""
-      );
+      startpoe(basepoe, poecss, "");
     }
 
     if ($_GET["bgcolor"]) {
