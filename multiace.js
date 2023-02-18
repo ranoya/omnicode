@@ -101,23 +101,6 @@ const lingua = function (qual) {
         Predata_editor_1 = `
         <script>`;
         Postdata_editor_1 = `</script>
-                
-        <div id="ScreenConsoleWrap" style="position: fixed; bottom: -5px; width: 100%; height: 200px; z-index: 1000;"><div id="ScreenConsoleTitle" style="border: 1px solid #` + bdc + `; margin: 8px 8px 0px; padding: 8px; display: inline-block; color: #` + bgc + `; background-color: ` + bdc + `; font-family: monospace;">Console</div><div id="ScreenConsole" style="border: 1px solid #` + bdc + `; margin: 0px 8px 8px; padding: 8px; width: calc(100% - 32px); height: 130px; overflow-y: scroll; font-family: monospace; color: ` + bdc + `; background-color: ` + gcolr + `;"></div></div>
-
-        <script>
-        console.clear();
-        console.defaultLog = console.log.bind(console);
-        console.logs = [];
-        
-        console.log = function () {
-            console.defaultLog.apply(console, arguments);
-            console.logs.push(Array.from(arguments));
-            document.getElementById('ScreenConsole').innerHTML += arguments[0] + '<br>';
-        }
-        window.onerror = function (msg, url, line) {
-            document.getElementById('ScreenConsole').innerHTML += 'Line: ' + line + '<br>' + msg + '<br>';
-        }
-        </script>
         `;
 
     }
@@ -131,23 +114,6 @@ const lingua = function (qual) {
          
          <script>`;
         Postdata_editor_1 = `</script>
-        
-        <div id="ScreenConsoleWrap" style="position: fixed; bottom: -5px; width: 100%; height: 200px; z-index: 1000;"><div id="ScreenConsoleTitle" style="border: 1px solid #` + bdc + `; margin: 8px 8px 0px; padding: 8px; display: inline-block; color: #` + bgc + `; background-color: ` + bdc + `; font-family: monospace;">Console</div><div id="ScreenConsole" style="border: 1px solid #` + bdc + `; margin: 0px 8px 8px; padding: 8px; width: calc(100% - 32px); height: 130px; overflow-y: scroll; font-family: monospace; color: ` + bdc + `; background-color: ` + gcolr + `;"></div></div>
-
-        <script>
-        console.clear();
-        console.defaultLog = console.log.bind(console);
-        console.logs = [];
-        
-        console.log = function () {
-            console.defaultLog.apply(console, arguments);
-            console.logs.push(Array.from(arguments));
-            document.getElementById('ScreenConsole').innerHTML += arguments[0] + '<br>';
-        }
-        window.onerror = function (msg, url, line) {
-            document.getElementById('ScreenConsole').innerHTML += 'Line: ' + line + '<br>' + msg + '<br>';
-        }
-        </script>
         `;
     }
 
