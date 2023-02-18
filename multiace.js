@@ -117,7 +117,7 @@ const lingua = function (qual) {
         console_output_title.setAttribute('id', 'ScreenConsoleTitle');
         screen_console_wrap.appendChild(console_output_title);
         document.getElementById('ScreenConsoleTitle').innerHTML = 'Console';
-        document.getElementById('ScreenConsoleTitle').style.border = '1px solid '#`+ bdc + `';
+        document.getElementById('ScreenConsoleTitle').style.border = '1px solid #`+ bdc + `';
         document.getElementById('ScreenConsoleTitle').style.margin = '8px';
         document.getElementById('ScreenConsoleTitle').style.marginBottom = 0;
         document.getElementById('ScreenConsoleTitle').style.padding = '8px';
@@ -129,7 +129,7 @@ const lingua = function (qual) {
         let console_output = document.createElement('div');
         console_output.setAttribute('id', 'ScreenConsole');
         screen_console_wrap.appendChild(console_output);
-        document.getElementById('ScreenConsole').style.border = '1px solid '#`+ bdc + `';
+        document.getElementById('ScreenConsole').style.border = '1px solid #`+ bdc + `';
         document.getElementById('ScreenConsole').style.margin = '8px';
         document.getElementById('ScreenConsole').style.marginTop = 0;
         document.getElementById('ScreenConsole').style.padding = '8px';
