@@ -38,7 +38,7 @@
         linguagem = $_GET["lang"];
 
         if ($_GET["lang"] == "html") {
-          linguagem = "html"
+          linguagem = "html";
           Predata_editor_1 = "";
           Postdata_editor_1 = "";
         }
@@ -49,29 +49,7 @@
           Postdata_editor_1 = `</script>`;
         }
 
-        if ($_GET["lang"] == "p5") {
-            linguagem = "javascript";
-            Predata_editor_1 = `
-            <style>body,html { margin: 0; padding: 0; }</style>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></script>
-            <script>`;
-            Postdata_editor_1 = `</script>`;
-        }
-
-        if (qual == "processing") {
-
-            linguagem = "java";
-            Predata_editor_1 = `
-            <style>body,html { margin: 0; padding: 0; }</style>
-            <canvas id='pjs' style='outline: none;'></canvas>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.6.6/processing.min.js"></script>
-            <script type="application/processing" data-processing-target='pjs'>
-            `;
-            Postdata_editor_1 = `
-            </script>
-            <canvas> </canvas>
-            `;
-        }
+        
       }
 
       let acegeneralconfig = {
