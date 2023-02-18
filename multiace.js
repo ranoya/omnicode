@@ -133,3 +133,10 @@ const lingua = function (qual) {
         
         
 }
+
+const sobrescreve = function(arquivo) {
+    fetch(arquivo).then((response) => response.text()).then((dados) => {
+              let aceed = ace.edit('editor_1');
+              aceed.setValue(dados);
+          });
+}
