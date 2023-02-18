@@ -232,7 +232,10 @@
       }, 1300);
     }
 
-    if ($_GET["bordercolor"]) {
+    if (
+      $_GET["bordercolor"] &&
+      ($_GET["minimal"] == "" || typeof $_GET["minimal"] == "undefined")
+    ) {
       document.getElementById("editor_1").style.border =
         "1px solid #" + $_GET["bordercolor"];
       document.getElementById("resize").style.borderRight =
@@ -244,6 +247,24 @@
       document.getElementById("resize").style.borderLeft = "0 none transparent";
       document.getElementById("editor_1").style.borderRight =
         "0 none transparent";
+    }
+
+    if ($_GET["minimal"] != "") {
+      let corborda = "cccccc";
+      if (
+        typeof $_GET["bordercolor"] != "undefined" &&
+        $_GET["bordercolor"] != ""
+      ) {
+        corborda = $_GET["bordercolor"];
+      }
+
+      document.getElementById("editor_1").style.border = "0 transparent none";
+      document.getElementById("resize").style.border = "0 transparent none";
+      document.getElementById("right_panel").style.border =
+        "0 transparent none";
+
+      document.getElementById("resize").style.borderLeft =
+        "1px dotted #" + corborda;
     }
   </script>
 </html>
