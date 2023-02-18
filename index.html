@@ -132,11 +132,26 @@
     </div>
 
     <script>
+      String.prototype.toHtmlEntities = function () {
+        return this.replace(/./gm, function (s) {
+          // return "&#" + s.charCodeAt(0) + ";";
+          return s.match(/[a-z0-9\s]+/i) ? s : "&#" + s.charCodeAt(0) + ";";
+        });
+      };
+
+      String.fromHtmlEntities = function (string) {
+        return (string + "").replace(/&#\d+;/gm, function (s) {
+          return String.fromCharCode(s.match(/\d+/gm)[0]);
+        });
+      };
+
       // FUNÇÃO DE FETCH DE ARQUIVO
       if ($_GET["file"] != "" && typeof $_GET["file"] != "undefined") {
         fetch($_GET["file"])
           .then((response) => response.text())
-          .then((dados) => {
+          .then((dada) => {
+            let dados = dada.toHtmlEntities();
+
             document.getElementById("editor_1").innerHTML = dados;
 
             if ($_GET["file"].match(/\.js/i)) {
