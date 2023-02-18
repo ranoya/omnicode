@@ -76,7 +76,7 @@
 
         let myTimeout4 = setTimeout(function () {
           lingua($_GET["lang"]);
-        }, 1300);
+        }, 2300);
       }
 
       let acegeneralconfig = {
@@ -204,19 +204,19 @@
             if ($_GET["file"].match(/\.js/i) && $_GET["lang"] != "p5") {
               let myTimeout2 = setTimeout(function () {
                 lingua("javascript");
-              }, 1300);
+              }, 2300);
             }
 
             if ($_GET["file"].match(/\.html/i)) {
               let myTimeout2 = setTimeout(function () {
                 lingua("html");
-              }, 1300);
+              }, 2300);
             }
 
             if ($_GET["file"].match(/\.pde/i)) {
               let myTimeout2 = setTimeout(function () {
                 lingua("processing");
-              }, 1300);
+              }, 2300);
             }
           });
       }
@@ -288,7 +288,7 @@
         document.getElementsByClassName(
           "ace_gutter-layer"
         )[0].style.backgroundColor = "#" + $_GET["gutcolor"];
-      }, 1300);
+      }, 2300);
       gcolr = $_GET["gutcolor"];
     }
 
