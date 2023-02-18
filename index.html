@@ -395,22 +395,6 @@
           `;"></d` +
           `iv></d` +
           `iv>
-        <sc` +
-          `ript>
-        console.defaultLog = console.log.bind(console);
-        console.logs = [];
-        
-        console.log = function () {
-            console.defaultLog.apply(console, arguments);
-            console.logs.push(Array.from(arguments));
-            document.getElementById('ScreenConsole').innerHTML += arguments[0] + '<br>';
-        }
-        window.onerror = function (msg, url, line) {
-            document.getElementById('ScreenConsole').innerHTML += 'Line: ' + line + '<br>' + msg + '<br>';
-        }
-        </scr` +
-          `ipt>
-        
         `;
       }
 
@@ -446,6 +430,23 @@
         Predata_editor_1,
         Postdata_editor_1
       );
+    };
+
+    console.defaultLog = console.log.bind(console);
+    console.logs = [];
+    let conteudo = document.getElementById("View_editor_1");
+
+    console.log = function () {
+      console.defaultLog.apply(console, arguments);
+      console.logs.push(Array.from(arguments));
+      conteudo.contentWindow.document.getElementById(
+        "ScreenConsole"
+      ).innerHTML += arguments[0] + "<br>";
+    };
+    window.onerror = function (msg, url, line) {
+      conteudo.contentWindow.document.getElementById(
+        "ScreenConsole"
+      ).innerHTML += "Line: " + line + "<br>" + msg + "<br>";
     };
   </script>
 </html>
