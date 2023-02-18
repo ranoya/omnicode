@@ -138,6 +138,24 @@
           .then((response) => response.text())
           .then((dados) => {
             document.getElementById("editor_1").innerHTML = dados;
+
+            if ($_GET["file"].match(/\.js/i)) {
+              let myTimeout2 = setTimeout(function () {
+                lingua("javascript");
+              }, 1300);
+            }
+
+            if ($_GET["file"].match(/\.html/i)) {
+              let myTimeout2 = setTimeout(function () {
+                lingua("html");
+              }, 1300);
+            }
+
+            if ($_GET["file"].match(/\.pde/i)) {
+              let myTimeout2 = setTimeout(function () {
+                lingua("processing");
+              }, 1300);
+            }
           });
       }
 
@@ -161,10 +179,6 @@
           document.getElementById("right_panel").style.width =
             "calc(100vw - 30px - " + m_pos + "px)";
         }
-        /*
-        parent.style.width =
-          parseInt(getComputedStyle(parent, "").width) + dx + "px";
-          */
       };
 
       let resize_el = document.getElementById("resize");
@@ -208,6 +222,28 @@
     if ($_GET["bgcolor"]) {
       document.getElementsByTagName("body")[0].style.backgroundColor =
         "#" + $_GET["bgcolor"];
+    }
+
+    if ($_GET["gutcolor"]) {
+      let myTimeout1 = setTimeout(function () {
+        document.getElementsByClassName(
+          "ace_gutter-layer"
+        )[0].style.backgroundColor = "#" + $_GET["gutcolor"];
+      }, 1300);
+    }
+
+    if ($_GET["bordercolor"]) {
+      document.getElementById("editor_1").style.border =
+        "1px solid #" + $_GET["bordercolor"];
+      document.getElementById("resize").style.borderRight =
+        "1px solid #" + $_GET["bordercolor"];
+      document.getElementById("right_panel").style.border =
+        "1px solid #" + $_GET["bordercolor"];
+      document.getElementById("right_panel").style.borderLeft =
+        "0 none transparent";
+      document.getElementById("resize").style.borderLeft = "0 none transparent";
+      document.getElementById("editor_1").style.borderRight =
+        "0 none transparent";
     }
   </script>
 </html>
