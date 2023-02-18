@@ -37,57 +37,23 @@
 
         if ($_GET["lang"] == "html") {
           linguagem = "html";
-          Predata_editor_1 = "";
-          Postdata_editor_1 = "";
         }
 
         if ($_GET["lang"] == "javascript") {
           linguagem = "javascript";
-          Predata_editor_1 = `<scri` + `pt>`;
-          Postdata_editor_1 = `</scr` + `ipt>`;
         }
 
         if ($_GET["lang"] == "p5") {
           linguagem = "javascript";
-          Predata_editor_1 =
-            `
-            <sty` +
-            `le>body,ht` +
-            `ml { margin: 0; padding: 0; }</sty` +
-            `le>
-            <sc` +
-            `ript src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></sc` +
-            `ript>
-            <scr` +
-            `ipt>`;
-          Postdata_editor_1 = `</sc` + `ript>`;
         }
 
-        if (qual == "processing") {
+        if ($_GET["lang"] == "processing") {
           linguagem = "java";
-          Predata_editor_1 =
-            `
-            <sty` +
-            `le>body,html { margin: 0; padding: 0; }</s` +
-            `tyle>
-            <can` +
-            `vas id='pjs' style='outline: none;'></ca` +
-            `nvas>
-            <scr` +
-            `ipt src="https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.6.6/processing.min.js"></sc` +
-            `ript>
-            <scri` +
-            `pt type="application/processing" data-processing-target='pjs'>
-            `;
-          Postdata_editor_1 =
-            `
-            </scr` +
-            `ipt>
-            <canv` +
-            `as> </canv` +
-            `as>
-            `;
         }
+
+        let myTimeout4 = setTimeout(function () {
+          lingua($_GET["lang"]);
+        }, 1300);
       }
 
       let acegeneralconfig = {
