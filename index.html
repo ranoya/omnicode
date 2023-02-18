@@ -13,6 +13,7 @@
       type="text/javascript"
     ></script>
     <script src="https://poepalette.vercel.app/poeinstance.js"></script>
+    <script src="multiace.js"></script>
 
     <script>
       let Predata_editor_1 = "";
@@ -198,25 +199,19 @@
           .then((response) => response.text())
           .then((dada) => {
             let dados = dada.toHtmlEntities();
-
-            document.getElementById("editor_1").innerHTML = dados;
+            let aceed = ace.edit("editor_1");
+            aceed.setValue(dados);
 
             if ($_GET["file"].match(/\.js/i) && $_GET["lang"] != "p5") {
-              let myTimeout2 = setTimeout(function () {
-                lingua("javascript");
-              }, 2300);
+              lingua("javascript");
             }
 
             if ($_GET["file"].match(/\.html/i)) {
-              let myTimeout2 = setTimeout(function () {
-                lingua("html");
-              }, 2300);
+              lingua("html");
             }
 
             if ($_GET["file"].match(/\.pde/i)) {
-              let myTimeout2 = setTimeout(function () {
-                lingua("processing");
-              }, 2300);
+              lingua("processing");
             }
           });
       }
@@ -258,8 +253,6 @@
         false
       );
     </script>
-
-    <script src="multiace.js"></script>
   </body>
 
   <script>
