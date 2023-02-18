@@ -318,5 +318,9 @@
       document.getElementById("resize").style.borderLeft =
         "1px dotted #" + corborda;
     }
+
+    if ($_GET["noconsole"] != "" && typeof $_GET["noconsole"] != "undefined") {
+      let myTimeOut5 = setTimeout(hideconsole, 1400);
+    }
   </script>
 </html>

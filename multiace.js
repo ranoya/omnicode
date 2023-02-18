@@ -241,3 +241,17 @@ const sobrescreve = function(arquivo) {
               aceed.setValue(dados);
           });
 }
+
+const hideconsole = function () {
+    let ifr = document.getElementById("View_editor_1");
+    if (typeof ifr.contentWindow.document.getElementById("ScreenConsoleWrap") != "undefined" && ifr.contentWindow.document.getElementById("ScreenConsoleWrap") != null) {
+        ifr.contentWindow.document.getElementById("ScreenConsoleWrap").style.display = "none";
+    }
+}
+
+const showconsole = function () {
+    let ifr = document.getElementById("View_editor_1");
+    if (typeof ifr.contentWindow.document.getElementById("ScreenConsoleWrap") != "undefined" && ifr.contentWindow.document.getElementById("ScreenConsoleWrap") != null) {
+        ifr.contentWindow.document.getElementById("ScreenConsoleWrap").style.display = "block";
+    }
+}
