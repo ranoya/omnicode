@@ -249,7 +249,7 @@
         "0 none transparent";
     }
 
-    if ($_GET["minimal"] != "") {
+    if ($_GET["minimal"] != "" && typeof $_GET["minimal"] != "undefined") {
       let corborda = "cccccc";
       if (
         typeof $_GET["bordercolor"] != "undefined" &&
