@@ -342,8 +342,8 @@
     };
 
     const lingua = function (qual) {
+      let aceed = ace.edit("editor_1");
       if (qual == "html") {
-        let aceed = ace.edit("editor_1");
         aceed.setOptions({ mode: "ace/mode/html" });
 
         Predata_editor_1 = "";
@@ -351,14 +351,12 @@
       }
 
       if (qual == "javascript") {
-        let aceed = ace.edit("editor_1");
         aceed.setOptions({ mode: "ace/mode/javascript" });
         Predata_editor_1 = `<scri` + `pt>`;
         Postdata_editor_1 = `</scr` + `ipt>`;
       }
 
       if (qual == "p5") {
-        let aceed = ace.edit("editor_1");
         aceed.setOptions({ mode: "ace/mode/javascript" });
         Predata_editor_1 =
           `
@@ -374,7 +372,6 @@
       }
 
       if (qual == "processing") {
-        let aceed = ace.edit("editor_1");
         aceed.setOptions({ mode: "ace/mode/java" });
 
         Predata_editor_1 =
