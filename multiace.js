@@ -1,15 +1,22 @@
 // Ace Editor Change Viewer
+
+let mudatudo = "";
+
 function changeContent(data, who, predata, extras) {
 
+    clearTimeout(mudatudo);
 
-    var iframeA = document.getElementById(who);
-    iframeA = iframeA.contentWindow || (iframeA.contentDocument.document || iframeA.contentDocument);
+    mudatudo = setTimeout(function (data, who, predata, extras) {
+        let iframeA = document.getElementById(who);
+        iframeA = iframeA.contentWindow || (iframeA.contentDocument.document || iframeA.contentDocument);
 
-    iframeA.document.open();
-    iframeA.document.write(predata);
-    iframeA.document.write(data);
-    iframeA.document.write(extras);
-    iframeA.document.close();
+        iframeA.document.open();
+        iframeA.document.write(predata);
+        iframeA.document.write(data);
+        iframeA.document.write(extras);
+        iframeA.document.close();
+        
+    }, 1000);
 
 }
 
@@ -18,8 +25,8 @@ document.addEventListener('DOMContentLoaded', function () {
     
     // Multiple Auto Ace
     ace.require("ace/ext/language_tools");
-    var editor;
-    var ednum = 0;
+    let editor;
+    let ednum = 0;
     ace_config = {
         enableBasicAutocompletion: true,
         enableSnippets: true,
