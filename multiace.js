@@ -1,14 +1,16 @@
 // Ace Editor Change Viewer
 
 let mudatudo = "";
+let iframeA = "";
 
 function changeContent(data, who, predata, extras) {
 
     clearTimeout(mudatudo);
 
+    iframeA = document.getElementById(who);
+    iframeA = iframeA.contentWindow || (iframeA.contentDocument.document || iframeA.contentDocument);
     mudatudo = setTimeout(function (data, who, predata, extras) {
-        let iframeA = document.getElementById(who);
-        iframeA = iframeA.contentWindow || (iframeA.contentDocument.document || iframeA.contentDocument);
+        
 
         iframeA.document.open();
         iframeA.document.write(predata);
