@@ -16,7 +16,7 @@ function changeContent(data, who, predata, extras) {
         iframeA.document.write(extras);
         iframeA.document.close();
         
-    }, 1000);
+    }, 3000);
 
 }
 
