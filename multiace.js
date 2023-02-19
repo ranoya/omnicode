@@ -1,24 +1,23 @@
+let iframeA = document.getElementById("View_editor_1");
+iframeA = iframeA.contentWindow || (iframeA.contentDocument.document || iframeA.contentDocument);
+
+iframeA.document.open();
+iframeA.document.write(`<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></script>`);
+iframeA.document.close();
+
+
 // Ace Editor Change Viewer
-
-let mudatudo = "";
-let iframeA = "";
-
 function changeContent(data, who, predata, extras) {
 
-    clearTimeout(mudatudo);
 
-    iframeA = document.getElementById(who);
+    let iframeA = document.getElementById(who);
     iframeA = iframeA.contentWindow || (iframeA.contentDocument.document || iframeA.contentDocument);
-    mudatudo = setTimeout(function (data, who, predata, extras) {
-        
 
-        iframeA.document.open();
-        iframeA.document.write(predata);
-        iframeA.document.write(data);
-        iframeA.document.write(extras);
-        iframeA.document.close();
-        
-    }, 3000);
+    iframeA.document.open();
+    iframeA.document.write(predata);
+    iframeA.document.write(data);
+    iframeA.document.write(extras);
+    iframeA.document.close();
 
 }
 
