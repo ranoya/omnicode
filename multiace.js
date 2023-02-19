@@ -1,9 +1,9 @@
-let iframeA = document.getElementById("View_editor_1");
-iframeA = iframeA.contentWindow || (iframeA.contentDocument.document || iframeA.contentDocument);
+let iframeC = document.getElementById("View_editor_1");
+iframeC = iframeC.contentWindow || (iframeC.contentDocument.document || iframeC.contentDocument);
 
-iframeA.document.open();
-iframeA.document.write(`<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></script>`);
-iframeA.document.close();
+iframeC.document.open();
+iframeC.document.write(`<scr`+`ipt src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></sc`+`ript>`);
+iframeC.document.close();
 
 
 // Ace Editor Change Viewer
