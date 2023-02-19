@@ -1,16 +1,29 @@
+let delei = setTimeout(function () {
+    // nada
+}, 9999999999);
+let iframeA = "";
 
 // Ace Editor Change Viewer
 function changeContent(data, who, predata, extras) {
 
+    clearTimeout(delei);
 
-    let iframeA = document.getElementById(who);
+    iframeA = document.getElementById(who);
     iframeA = iframeA.contentWindow || (iframeA.contentDocument.document || iframeA.contentDocument);
 
     iframeA.document.open();
-    iframeA.document.write(predata);
-    iframeA.document.write(data);
-    iframeA.document.write(extras);
+    iframeA.document.write("");
     iframeA.document.close();
+
+
+    delei = setTimeout(function () {
+        iframeA.document.open();
+        iframeA.document.write(predata);
+        iframeA.document.write(data);
+        iframeA.document.write(extras);
+        iframeA.document.close();
+    }, 2000);
+
 
 }
 
