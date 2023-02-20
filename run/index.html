@@ -138,6 +138,26 @@
         overflow-y: scroll;
       }
 
+      #roda {
+        position: fixed;
+        z-index: 10200000;
+        display: inline-block;
+        top: 15px;
+        right: 15px;
+        padding: 4px;
+        border: 1px solid #cccccc;
+        color: #8e6e7b;
+        font-size: 12px;
+        padding-left: 7px;
+        padding-right: 5px;
+      }
+
+      #roda:hover {
+        cursor: pointer;
+        background-color: #eec3c3;
+        color: #8e6e7b;
+      }
+
       #View_editor_1 {
         border: 0;
         position: absolute;
@@ -193,6 +213,14 @@
 
     <div id="right_panel">
       <div id="resize"></div>
+
+      <div
+        id="roda"
+        onclick="javascript:runContent(String.fromHtmlEntities(localStorage.getItem('omnicodecode')),'View_editor_1',Predata_editor_1, Postdata_editor_1);"
+      >
+        &#9658;
+      </div>
+
       <iframe id="View_editor_1" frameborder="0"></iframe>
     </div>
 
