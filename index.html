@@ -363,6 +363,7 @@
         .then((dados) => {
           let aceed = ace.edit("editor_1");
           aceed.setValue(dados);
+          localStorage.setItem("omnicodecode", dados);
         });
     };
 

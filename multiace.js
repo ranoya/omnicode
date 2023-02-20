@@ -4,21 +4,7 @@ let delei = setTimeout(function () {
 let iframeA = "";
 
 let screenconsole = "";
-if ($_GET["noconsole"] == "" || typeof $_GET["noconsole"] == "undefined") {
 
-    screenconsole = `<div id="ScreenConsoleWrap" style="position: fixed; left: 0; bottom: -5px; width: 100%; height: 200px; z-index: 1000;"><div id="ScreenConsoleTitle" style="border: 1px solid #` + bdc + `; margin: 8px 8px 0px; padding: 8px; display: inline-block; color: #` + bgc + `; background-color: ` + bdc + `; font-family: monospace;">Console</div><div id="ScreenConsole" style="border: 1px solid #` + bdc + `; margin: 0px 8px 8px; padding: 8px; width: calc(100% - 32px); height: 130px; overflow-y: scroll; font-family: monospace; color: ` + gtc + `; background-color: ` + gcolr + `;"></div></div>
-<script>
-window.onerror = function myErrorHandler(err, url, line) {  
-document.getElementById('ScreenConsole').innerHTML += 'Line: ' + line + '<br>' + err + '<br>';
-console.log(err);
-return false;
-}
-console.log = function (msg) {
-    document.getElementById('ScreenConsole').innerHTML += msg + '<br>';
-}
-</script>
-`;
-}
 
 // Ace Editor Change Viewer
 function changeContent(data, who, predata, extras) {
@@ -33,6 +19,21 @@ function changeContent(data, who, predata, extras) {
     iframeA.document.write("");
     iframeA.document.close();
 
+    if ($_GET["noconsole"] == "" || typeof $_GET["noconsole"] == "undefined") {
+
+    screenconsole = `<div id="ScreenConsoleWrap" style="position: fixed; left: 0; bottom: -5px; width: 100%; height: 200px; z-index: 1000;"><div id="ScreenConsoleTitle" style="border: 1px solid #` + bdc + `; margin: 8px 8px 0px; padding: 8px; display: inline-block; color: #` + bgc + `; background-color: ` + bdc + `; font-family: monospace;">Console</div><div id="ScreenConsole" style="border: 1px solid #` + bdc + `; margin: 0px 8px 8px; padding: 8px; width: calc(100% - 32px); height: 130px; overflow-y: scroll; font-family: monospace; color: ` + gtc + `; background-color: ` + gcolr + `;"></div></div>
+    <script>
+    window.onerror = function myErrorHandler(err, url, line) {  
+    document.getElementById('ScreenConsole').innerHTML += 'Line: ' + line + '<br>' + err + '<br>';
+    console.log(err);
+    return false;
+    }
+    console.log = function (msg) {
+        document.getElementById('ScreenConsole').innerHTML += msg + '<br>';
+    }
+    </script>
+    `;
+    }
 
     delei = setTimeout(function () {
         iframeA.document.open();
