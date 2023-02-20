@@ -107,4 +107,13 @@ if ($_GET['readonly'] != "" && typeof $_GET['readonly'] != "undefined") {
     }, 2400);
 }
 
+const snippetManager = ace.require('ace/snippets').snippetManager;
+const snippetContent = `
+# scope: html
+snippet hello
+    <p>Hello, \${1:name}!</p>
+`;
+const snippets = snippetManager.parseSnippetFile(snippetContent);
+snippetManager.register(snippets, 'html');
+
 
