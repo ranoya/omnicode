@@ -142,6 +142,21 @@
         overflow-y: scroll;
       }
 
+      .linkstatusbar {
+        float: left;
+        display: inline-block;
+        border: 1px solid #cccccc;
+        font-size: 10px;
+        line-height: 23px;
+        padding-left: 7px;
+        padding-right: 5px;
+      }
+
+      .linkstatusbar:hover {
+        cursor: pointer;
+        background-color: var(--bgcolor, #eec3c3);
+      }
+
       #View_editor_1 {
         border: 0;
         position: absolute;
@@ -219,7 +234,10 @@
     </div>
 
     <div id="statusbar">
-      <span id="mensagem">menu: CTRL/CMD+SHIFT+P | </span>HTML
+      <div class="linkstatusbar" onclick="tolivecode();">LIVECODE</div>
+      <div class="linkstatusbar" onclick="toruncode();">RUN CODE</div>
+      <span id="mensagem">menu: CTRL/CMD+SHIFT+P | </span
+      ><span id="tipoliguagem">HTML</span>
     </div>
 
     <script>
@@ -429,7 +447,7 @@
     const lingua = function (qual) {
       let aceed = ace.edit("editor_1");
 
-      document.getElementById("statusbar").innerHTML = mensagem + qual;
+      document.getElementById("tipoliguagem").innerHTML = qual;
 
       if (qual == "html") {
         aceed.setOptions({ mode: "ace/mode/html" });
