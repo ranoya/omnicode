@@ -137,4 +137,34 @@ if ($_GET['readonly'] != "" && typeof $_GET['readonly'] != "undefined") {
     }, 2400);
 }
 
+const tolivecode = function () {   
+    let url = window.location.href;
+    let goto = "";
+
+    if (!url.match(/https:\/\/omnicode.vercel.app\/run/i)) {
+     // do nothing
+    } else {
+        if (!url.match(/https:\/\/omnicode.vercel.app\/run\//i)) {
+            window.location = "https://omnicode.vercel.app";
+        } else {
+            goto = url.replace("//omnicode.vercel.app/run/", "//omnicode.vercel.app/");
+            window.location = goto;
+        }
+    }
+}
+
+const toruncode = function () {
+    let url = window.location.href;
+    let goto = "";
+    if (url.match(/https:\/\/omnicode.vercel.app\/run/i)) {
+     // do nothing
+    } else {
+        if (!url.match(/https:\/\/omnicode.vercel.app\/run\//i)) {
+            window.location = "https://omnicode.vercel.app";
+        } else {
+            goto = url.replace("//omnicode.vercel.app/run/", "//omnicode.vercel.app/");
+            window.location = goto;
+        }
+    }
+}
 
