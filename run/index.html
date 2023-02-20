@@ -54,6 +54,11 @@
         gcolr = $_GET["gutcolor"];
       }
 
+      let gtc = "444444";
+      if ($_GET["guttext"]) {
+        gtc = $_GET["guttext"];
+      }
+
       let bdc = "cccccc";
       if ($_GET["bordercolor"]) {
         bdc = $_GET["bordercolor"];
@@ -296,6 +301,14 @@
         )[0].style.backgroundColor = "#" + $_GET["gutcolor"];
       }, 2300);
       gcolr = $_GET["gutcolor"];
+    }
+
+    if ($_GET["guttext"]) {
+      let myTimeout1 = setTimeout(function () {
+        document.getElementsByClassName("ace_gutter-layer")[0].style.color =
+          "#" + $_GET["guttext"];
+      }, 2400);
+      gtc = $_GET["guttext"];
     }
 
     if (
