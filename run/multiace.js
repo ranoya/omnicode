@@ -1,17 +1,9 @@
-let delei = setTimeout(function () {
-    // nada
-}, 9999999999);
+
 let iframeA = "";
 
 // Ace Editor Change Viewer
 function changeContent(data, who, predata, extras) {
-
-    clearTimeout(delei);
-
-    delei = setTimeout(function () {
         localStorage.setItem('omnicodecode', data.toHtmlEntities());
-    }, 2000);
-
 }
 
 var keymapping = {}; // You could also use an array
@@ -66,9 +58,9 @@ function runContent(data, who, predata, extras) {
         </script>`;
 
     iframeA.document.open();
-    iframeA.document.write(predata);
+    iframeA.document.write(screenconsole + predata);
     iframeA.document.write(data);
-    iframeA.document.write(extras + screenconsole);
+    iframeA.document.write(extras);
     iframeA.document.close();
 
 }
