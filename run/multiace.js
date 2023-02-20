@@ -14,23 +14,31 @@ function changeContent(data, who, predata, extras) {
 
 }
 
-let acoesdoteclado = {}; // You could also use an array
+var keymapping = {}; // You could also use an array
 onkeydown = onkeyup = function(e){
     e = e || event;
-    acoesdoteclado[e.keyCode] = e.type == 'keydown';
+    keymapping[e.keyCode] = e.type == 'keydown';
 
-    //console.table(acoesdoteclado);
-
+    // ctrl+shift+p
+  if ((keymapping[93] || keymapping[91]) && keymapping[80] && keymapping[16] || (keymapping[93] || keymapping[91]) && keymapping[75]) {
+    keymapping[93] = false;
+    keymapping[91] = false;
+    keymapping[75] = false;
+    keymapping[80] = false;
+    keymapping[16] = false;
+      toggle("poeinst");
+  }
+    
     // ctrl+e
-  if ((acoesdoteclado[17] || acoesdoteclado[91]) && acoesdoteclado[69]) {
-    acoesdoteclado[17] = false;
-    acoesdoteclado[91] = false;
-    acoesdoteclado[69] = false;
+  if ((keymapping[17] || keymapping[91]) && keymapping[69]) {
+    keymapping[17] = false;
+    keymapping[91] = false;
+    keymapping[69] = false;
       runContent(String.fromHtmlEntities(localStorage.getItem('omnicodecode')),'View_editor_1',Predata_editor_1, Postdata_editor_1);
     }
-
   
 }
+
 
 function runContent(data, who, predata, extras) {
 
