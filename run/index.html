@@ -125,6 +125,10 @@
         background-color: #e1e1e1;
       }
 
+      .ace_indent-guide {
+        border-right: 1px dotted #000000;
+      }
+
       #right_panel {
         position: fixed;
         width: calc(60% - 36px);
@@ -335,6 +339,10 @@
       let myTimeout1 = setTimeout(function () {
         document.getElementsByClassName("ace_gutter-layer")[0].style.color =
           "#" + $_GET["guttext"];
+
+        document.getElementsByClassName(
+          "ace_indent-guide"
+        )[0].style.borderRight = "1px dotted #" + $_GET["guttext"];
       }, 2400);
       gtc = $_GET["guttext"];
     }
