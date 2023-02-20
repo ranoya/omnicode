@@ -2,19 +2,33 @@
 
 ## What is Omnicode
 
-Omnicode is a livecode editor for HTML + CSS + Javascript, Javascript only, Processing (Java mode), P5 (Processing + Javascript), Markdown, and other client side programing languages, eventually.
+Omnicode is an embedable editor and livecode editor for HTML + CSS + Javascript, Javascript only, Processing (Java mode), P5 (Processing + Javascript), Markdown, and other client side programing languages, eventually, with a built in preview. It was designed to assist HTML, Javascript, Processing and P5 lectures and documentation.
 
 Omnicode is an evolution from HTML/Processing/P5/Markdown [Playground](https://github.com/ranoya/Playground) and relies on [ACE Editor](https://ace.c9.io/) as it's core (wich is a favorite, since it was called _Bespin - Code in the Cloud_).
 
 It's simplier than it's previous instance, and far more customizable. Also have a customizable [POE Instace](https://github.com/ranoya/poepalette) implementation as a command palette interface.
 
-You can use (and embed) Omnicode in this address: [https://omnicode.vercel.app](https://omnicode.vercel.app).
+You can use (and embed) Omnicode Livecode at this address: [https://omnicode.vercel.app](https://omnicode.vercel.app) and Omnicode with a edit/run control at this address: [https://omnicode.vercel.app/run](https://omnicode.vercel.app/run).
 
 ## Customization
 
 You can customize Omnicode with URL variables, like these:
 
 [https://omnicode.vercel.app/?bgcolor=fef6e4&preview=80&theme=solarized_light&gutcolor=f8f0e0&bordercolor=c0cf54&minimal=true&poecss=https://poepalette.vercel.app/dev/lesssolarized.css](https://omnicode.vercel.app/?bgcolor=fef6e4&preview=80&theme=solarized_light&gutcolor=f8f0e0&bordercolor=c0cf54&minimal=true&poecss=https://poepalette.vercel.app/dev/lesssolarized.css)
+
+## Some examples:
+
+Livecode with Borland Turbo-C color scheme (yes... i'm that old) in blue background and Cobalt code highlight, with no status bar or console:
+
+[https://omnicode.vercel.app/?nostatus=true&noconsole=true&preview=65&bgcolor=000cd0&bordercolor=9fc5e866&gutcolor=000cd0&basepoe=https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/ExemplosHTML&theme=cobalt&poecss=https://poepalette.vercel.app/dev/lessblue.css](https://omnicode.vercel.app/?nostatus=true&noconsole=true&preview=65&bgcolor=000cd0&bordercolor=9fc5e866&gutcolor=000cd0&basepoe=https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/ExemplosHTML&theme=cobalt&poecss=https://poepalette.vercel.app/dev/lessblue.css)
+
+Run mode with Solarized color scheme and background, loading a introductory P5 example:
+
+[https://omnicode.vercel.app/run/?lang=p5&bgcolor=fef6e4&preview=60&theme=solarized_light&gutcolor=f8f0e0&bordercolor=ded6c4&poecss=https://poepalette.vercel.app/dev/lesssolarized.css&file=https://omnicode.vercel.app/examples/p5start.js](https://omnicode.vercel.app/run/?lang=p5&bgcolor=fef6e4&preview=70&theme=solarized_light&gutcolor=f8f0e0&bordercolor=ded6c4&poecss=https://poepalette.vercel.app/dev/lesssolarized.css&file=https://omnicode.vercel.app/examples/p5start.js)
+
+Run mode with default background, Tomorrow code highlight, and minimal interface, loading the same introductory P5 example as before:
+
+[https://omnicode.vercel.app/run/?lang=p5&preview=80&minimal=true&theme=tomorrow&file=https://omnicode.vercel.app/examples/p5start.js](https://omnicode.vercel.app/run/?lang=p5&preview=80&minimal=true&theme=tomorrow&file=https://omnicode.vercel.app/examples/p5start.js)
 
 These are the variables you can use:
 

@@ -365,16 +365,6 @@
         "#" + $_GET["bordercolor"];
     }
 
-    if ($_GET["nostatus"] != "" && typeof $_GET["nostatus"] != "undefined") {
-      document.getElementById("statusbar").style.display = "none";
-
-      document.getElementById("editor_1").style.height = "calc(100vh - 30px)";
-      document.getElementById("right_panel").style.height =
-        "calc(100vh - 30px)";
-      document.getElementById("View_editor_1").style.height =
-        "calc(100vh - 30px)";
-    }
-
     if ($_GET["minimal"] != "" && typeof $_GET["minimal"] != "undefined") {
       let corborda = "cccccc";
       if (
@@ -400,6 +390,18 @@
 
       document.getElementById("resize").style.borderLeft =
         "1px dotted #" + corborda;
+
+      $_GET["nostatus"] = "true";
+    }
+
+    if ($_GET["nostatus"] != "" && typeof $_GET["nostatus"] != "undefined") {
+      document.getElementById("statusbar").style.display = "none";
+
+      document.getElementById("editor_1").style.height = "calc(100vh - 30px)";
+      document.getElementById("right_panel").style.height =
+        "calc(100vh - 30px)";
+      document.getElementById("View_editor_1").style.height =
+        "calc(100vh - 30px)";
     }
 
     const enviacomando = function (instr) {
