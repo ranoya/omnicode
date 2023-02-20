@@ -136,7 +136,7 @@
         height: 100%;
         right: 15px;
         top: 15px;
-        height: calc(100vh - 30px);
+        height: calc(100vh - 50px);
         border: 1px solid #cccccc;
         border-left: 0;
         overflow-y: scroll;
@@ -148,7 +148,7 @@
         top: 0;
         left: 10px;
         width: calc(100% - 10px);
-        height: calc(100vh - 30px);
+        height: calc(100vh - 50px);
         padding: 0;
         margin: 0;
       }
@@ -156,7 +156,7 @@
       #editor_1 {
         position: fixed;
         width: 40%;
-        height: calc(100vh - 30px);
+        height: calc(100vh - 50px);
         left: 15px;
         top: 15px;
         border: 1px solid #cccccc;
@@ -179,6 +179,17 @@
         z-index: 5000;
         border-right: 1px solid #cccccc;
       }
+
+      #statusbar {
+        background-color: #cccccc;
+        color: #444444;
+        text-transform: uppercase;
+        font-size: 12px;
+        width: calc(100% - 60px);
+        padding-left: 15px;
+        padding-right: 15px;
+        line-height: 20px;
+      }
     </style>
   </head>
 
@@ -199,6 +210,8 @@
       <div id="resize"></div>
       <iframe id="View_editor_1" frameborder="0"></iframe>
     </div>
+
+    <div id="statusbar"></div>
 
     <script>
       String.prototype.toHtmlEntities = function () {
@@ -373,6 +386,9 @@
 
     const lingua = function (qual) {
       let aceed = ace.edit("editor_1");
+
+      document.getElementById("statusbar").innerHTML = qual;
+
       if (qual == "html") {
         aceed.setOptions({ mode: "ace/mode/html" });
 
