@@ -1,0 +1,50 @@
+<svg viewBox="0 0 500 500" style="width: 500; height: 500">
+  <style>
+    .pontos {
+      stroke: black;
+      stroke-width: 3;
+      fill: black;
+    }
+
+    .letras {
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 30;
+
+      fill: black;
+      stroke: none;
+      text-anchor: middle;
+    }
+  </style>
+
+  <path
+    id="AB"
+    d="M 100 350 l 150 -300"
+    stroke="red"
+    stroke-width="3"
+    fill="none"
+  />
+  <path
+    id="BC"
+    d="M 250 50 l 150 300"
+    stroke="red"
+    stroke-width="3"
+    fill="none"
+  />
+  <path d="M 175 200 l 150 0" stroke="green" stroke-width="3" fill="none" />
+  <path
+    d="M 100 350 q 150 -300 300 0"
+    stroke="blue"
+    stroke-width="5"
+    fill="none"
+  />
+
+  <!-- Pontos -->
+  <circle class="pontos" id="pontoA" cx="100" cy="350" r="3" />
+  <circle class="pontos" id="pontoB" cx="250" cy="50" r="3" />
+  <circle class="pontos" id="pontoC" cx="400" cy="350" r="3" />
+
+  <!-- Letras -->
+  <text class="letras" x="100" y="350" dx="-30">A</text>
+  <text class="letras" x="250" y="50" dy="-10">B</text>
+  <text class="letras" x="400" y="350" dx="30">C</text>
+</svg>

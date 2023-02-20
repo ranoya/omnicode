@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="pinterest" content="nopin" />
+    <meta name="pinterest" content="nohover" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="keywords" content="" />
+    <title>Responsive Style Guide</title>
+    <meta name="generator" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="SHORTCUT ICON" href="" />
+    <link rel="image_src" type="image/jpg" href="" />
+    <meta property="og:image" content="" />
+    <meta property="og:image:width" content="1145" />
+    <meta property="og:image:height" content="601" />
+    <meta name="theme-color" content="#" />
+    <meta name="msapplication-navbutton-color" content="#" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="#" />
+
+    <style>
+      /* Mobile First (até 480px) */
+
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        background-color: white;
+        color: grey;
+      }
+
+      body {
+        margin: 10px;
+      }
+
+      #cabecalho {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        background-image: url("https://www.ranoya.com/Assets/bg-turbina.jpg");
+        background-position: center center;
+        background-size: 1200px 600px;
+        width: 100%;
+        height: 400px;
+      }
+
+      nav {
+        float: right;
+        background-color: red;
+        width: 35px;
+        height: 35px;
+        overflow: hidden;
+      }
+
+      #menusmall {
+        display: none;
+      }
+
+      #menunormal {
+        display: none;
+      }
+
+      h1 {
+        font-size: 48px;
+      }
+
+      h2 {
+        display: none;
+      }
+
+      h3 {
+        font-size: 28px;
+      }
+
+      #resumo {
+        font-size: 22px;
+      }
+
+      h4,
+      #texto {
+        display: none;
+      }
+
+      ul,
+      li {
+        float: right;
+        list-style-type: none;
+      }
+
+      /* Tablets & Mobile (481px - 767px) */
+      @media (min-width: 481px) and (max-width: 767px) {
+        body {
+          margin: 10px;
+        }
+
+        #cabecalho {
+          margin-top: 20px;
+          margin-bottom: 20px;
+          background-image: url("https://www.ranoya.com/Assets/bg-turbina.jpg");
+          background-position: center center;
+          background-size: 1200px 600px;
+          width: 100%;
+          height: 300px;
+        }
+
+        nav {
+          float: right;
+          background-color: transparent;
+          width: 280px;
+          height: 35px;
+          overflow: hidden;
+        }
+
+        #menusmall {
+          display: block;
+        }
+
+        #menunormal {
+          display: none;
+        }
+
+        h1 {
+          font-size: 36px;
+        }
+
+        h2 {
+          display: block;
+          font-size: 26px;
+        }
+
+        h3 {
+          display: none;
+        }
+
+        #resumo {
+          display: none;
+        }
+
+        h4 {
+          display: block;
+          font-size: 26px;
+        }
+
+        #texto {
+          display: block;
+          font-size: 20px;
+        }
+
+        ul {
+          margin-top: 4px;
+        }
+
+        li {
+          margin-left: 7px;
+          background-color: red;
+          color: white;
+          padding-top: 5px;
+          padding-bottom: 7px;
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+      }
+
+      /* Tablets, Ipads (landscape 768px - 1024px) */
+      @media (min-width: 768px) {
+        body {
+          margin: 25px;
+        }
+
+        #cabecalho {
+          float: left;
+          margin-right: 20px;
+          margin-top: 20px;
+          margin-bottom: 20px;
+          background-image: url("https://www.ranoya.com/Assets/bg-turbina.jpg");
+          background-position: center center;
+          background-size: cover;
+          width: 40%;
+          height: 250px;
+        }
+
+        nav {
+          float: right;
+          background-color: transparent;
+          width: 580px;
+          height: 40px;
+          overflow: hidden;
+        }
+
+        #menusmall {
+          display: none;
+        }
+
+        #menunormal {
+          display: block;
+        }
+
+        h1 {
+          font-size: 36px;
+        }
+
+        h2 {
+          display: block;
+          font-size: 16px;
+        }
+
+        h3 {
+          display: none;
+        }
+
+        #resumo {
+          display: none;
+        }
+
+        h4 {
+          display: block;
+          margin-top: 20px;
+          font-size: 22px;
+        }
+
+        #texto {
+          margin-top: 20px;
+          float: left;
+          width: calc(60% - 20px);
+          display: block;
+          font-size: 16px;
+          text-align: justify;
+        }
+
+        ul {
+          margin-top: 4px;
+        }
+
+        li {
+          margin-left: 18px;
+          background-color: transparent;
+          color: red;
+          border: 1px solid red;
+          padding-top: 5px;
+          padding-bottom: 7px;
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav>
+      <div id="menumobile"></div>
+      <ul id="menusmall">
+        <li>opção 1</li>
+        <li>opção 2</li>
+        <li>opção 3</li>
+        <li>opção 4</li>
+      </ul>
+      <ul id="menunormal">
+        <li>conteúdo tipo 1</li>
+        <li>link para conteúdo 2</li>
+        <li>página tipo 3</li>
+        <li>conteúdo bloco 4</li>
+      </ul>
+    </nav>
+    <h1>Título / H1</h1>
+    <h2>Segundo nível / H2</h2>
+
+    <div id="cabecalho"></div>
+
+    <h3>Terceiro nível / H3</h3>
+
+    <p id="resumo">
+      Este texto tenta ser mais sintético do que o texto completo, resumindo um
+      pouco do que está presente no conteúdo, pois se trata de uma versão
+      mobile. O conteudo se altera em função do tamanho do dispositivo. Se há
+      mais espaço, apresenta-se mais conteúdo.
+    </p>
+
+    <h4>Terceiro nível (subtítulo) / H4</h4>
+
+    <p id="texto">
+      Este é um texto completo, que contém toda a informação que deveria constar
+      na página, explicando detalhadamente o que é a informação sendo exibida.
+      Quando o contexto é mais amplo, este texto aparece e ocupa o espaço
+      destinado para o conteúdo; quanto o contexto é reduzido, um outro conteúdo
+      aparece em seu lugar, mais enxuto e sintético, desenvolvido para quem está
+      usando este documento em uma plataforma mobile. Não faz sentido apresentar
+      laudas de texto em um dispositivo que não foi criado para a leitura.
+    </p>
+  </body>
+</html>
