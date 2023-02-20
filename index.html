@@ -16,6 +16,16 @@
     <script src="multiace.js"></script>
 
     <script>
+      if (
+        localStorage.getItem("omnicodecode") == "" ||
+        typeof localStorage.getItem("omnicodecode") == "undefined"
+      ) {
+        localStorage.setItem(
+          "omnicodecode",
+          "&lt;h1&gt;Hello World&lt;/h1&gt;"
+        );
+      }
+
       let Predata_editor_1 = "";
       let Postdata_editor_1 = "";
 
@@ -42,6 +52,11 @@
       let gcolr = "e1e1e1";
       if ($_GET["gutcolor"]) {
         gcolr = $_GET["gutcolor"];
+      }
+
+      let gtc = "444444";
+      if ($_GET["guttext"]) {
+        gtc = $_GET["guttext"];
       }
 
       let bdc = "cccccc";
@@ -169,10 +184,12 @@
       data-name="editor_1"
       id="editor_1"
       data-linguagem="html"
-    >
-&lt;h1&gt;Hello World&lt;/h1&gt;
-  </pre
-    >
+    ></pre>
+
+    <script>
+      document.getElementsByTagName("pre")[0].innerHTML =
+        localStorage.getItem("omnicodecode");
+    </script>
 
     <div id="right_panel">
       <div id="resize"></div>
@@ -283,6 +300,14 @@
         )[0].style.backgroundColor = "#" + $_GET["gutcolor"];
       }, 2300);
       gcolr = $_GET["gutcolor"];
+    }
+
+    if ($_GET["guttext"]) {
+      let myTimeout1 = setTimeout(function () {
+        document.getElementsByClassName("ace_gutter-layer")[0].style.color =
+          "#" + $_GET["guttext"];
+      }, 2400);
+      gtc = $_GET["guttext"];
     }
 
     if (
