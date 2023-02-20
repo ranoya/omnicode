@@ -240,7 +240,10 @@
       <iframe id="View_editor_1" frameborder="0"></iframe>
     </div>
 
-    <div id="statusbar">HTML</div>
+    <div id="statusbar">
+      <span id="mensagem">executar: CTRL/CMD+S | menu: CTRL/CMD+SHIFT+P | </span
+      >HTML
+    </div>
     <div
       id="roda"
       onclick="javascript:runContent(String.fromHtmlEntities(localStorage.getItem('omnicodecode')),'View_editor_1',Predata_editor_1, Postdata_editor_1);"
@@ -249,6 +252,11 @@
     </div>
 
     <script>
+      let mensagem =
+        `<sp` +
+        `an id='mensagem'>executar: CTRL/CMD+S | menu: CTRL/CMD+SHIFT+P | </sp` +
+        `an>`;
+
       String.prototype.toHtmlEntities = function () {
         return this.replace(/./gm, function (s) {
           // return "&#" + s.charCodeAt(0) + ";";
@@ -456,7 +464,7 @@
     const lingua = function (qual) {
       let aceed = ace.edit("editor_1");
 
-      document.getElementById("statusbar").innerHTML = qual;
+      document.getElementById("statusbar").innerHTML = mensagem + qual;
 
       if (qual == "html") {
         aceed.setOptions({ mode: "ace/mode/html" });
