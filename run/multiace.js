@@ -52,6 +52,9 @@ function runContent(data, who, predata, extras) {
     console.log(err);
     return false;
     }
+    console.log = function (msg) {
+        document.getElementById('ScreenConsole').innerHTML += msg + '<br>';
+    }
     </script>
     `;
 
