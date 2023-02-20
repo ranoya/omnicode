@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<head>
+    <style>
+        .fixed {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            /* magenta */
+            background-color: #eaa2ea; 
+            width: 100px;
+            height: 24px;
+        }
+
+        .static {
+            width: 120px;
+            /* cyan */
+            background-color: #a2d8ea;
+            float: right;
+        }
+
+        .absolute {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            /* yellow */
+            background-color: #e9b94f; 
+            width: 100px;
+            height: 24px;
+        }
+
+        .rellative1 {
+            position: relative;
+            top: -50px;
+            left: 40px;
+            /* pink */
+            background-color: #f1baba; 
+            width: 130px;
+            height: 24px;
+        }
+
+        .relative2 {
+            position: relative;
+            top: -150px;
+            left: -20px;
+            /* green */
+            background-color: #c9f1ba; 
+            width: 130px;
+            height: 24px;
+        }
+
+        .nothing {
+            border: 1px solid red;
+            width: 200px;
+            height: 400px;
+            overflow: scroll;
+        }
+
+        .sticky {
+            position: sticky;
+            top: 30px;
+            left: 0;
+            /* red */
+            background-color: #fd5050; 
+            color: white;
+            width: 130px;
+            height: 24px;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div class="fixed">FIXED</div>
+
+    <br><br><br>
+
+    <div class="static">STATIC</div>
+    <div class="absolute">ABSOLUTE</div>
+
+    <div class="relative1">
+        RELATIVE 1
+        <div class="relative2">
+            RELATIVE 2
+        </div>
+    </div>
+
+    <br><br><br>
+
+    <div class="nothing">
+
+        <br><br><br>
+        <br><br><br>
+        <br><br><br>
+        <div class="sticky">
+            STICKY
+        </div>
+        <br><br><br>
+        <br><br><br>
+        <br><br><br>
+        <br><br><br>
+        <br><br><br>
+        <br><br><br>
+        <br><br><br>
+        <br><br><br>
+        <br><br><br>
+
+    </div>
+
+</body>
+</html>

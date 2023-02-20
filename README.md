@@ -4,7 +4,7 @@
 
 Omnicode is an embedable editor and livecode editor for HTML + CSS + Javascript, Javascript only, Processing (Java mode), P5 (Processing + Javascript), Markdown, and other client side programing languages, eventually, with a built in preview. It was designed to assist HTML, Javascript, Processing and P5 lectures and documentation.
 
-Omnicode is an evolution from HTML/Processing/P5/Markdown [Playground](https://github.com/ranoya/Playground) and relies on [ACE Editor](https://ace.c9.io/) as it's core (wich is a favorite, since it was called _Bespin - Code in the Cloud_).
+Omnicode is an evolution from HTML/Processing/P5/Markdown [Playground](https://github.com/ranoya/Playground) and relies on [ACE Editor](https://ace.c9.io/) as it's core, wich is a favorite project since it was called _Bespin - Code in the Cloud_ (nice, right? don't know why they changed the name...).
 
 It's simplier than it's previous instance, and far more customizable. Also have a customizable [POE Instace](https://github.com/ranoya/poepalette) implementation as a command palette interface.
 
@@ -18,7 +18,11 @@ You can customize Omnicode with URL variables, like these:
 
 ## Some examples:
 
-Livecode with Borland Turbo-C color scheme (yes... i'm that old) in blue background and Cobalt code highlight, with no status bar or console:
+Livecode with all the default options:
+
+[https://omnicode.vercel.app](https://omnicode.vercel.app)
+
+Livecode with Borland Turbo-C color scheme (yes... i'm that old) in blue background and Cobalt code highlight, with no status bar or console, and with a different menu with examples only:
 
 [https://omnicode.vercel.app/?nostatus=true&noconsole=true&preview=65&bgcolor=000cd0&bordercolor=9fc5e866&gutcolor=000cd0&basepoe=https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/ExemplosHTML&theme=cobalt&poecss=https://poepalette.vercel.app/dev/lessblue.css](https://omnicode.vercel.app/?nostatus=true&noconsole=true&preview=65&bgcolor=000cd0&bordercolor=9fc5e866&gutcolor=000cd0&basepoe=https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/ExemplosHTML&theme=cobalt&poecss=https://poepalette.vercel.app/dev/lessblue.css)
 
@@ -48,3 +52,14 @@ These are the variables you can use:
 | poecss      | url                        | CSS customization for POE command palette                                                  | https://omnicode.vercel.app/?poecss=https://poepalette.vercel.app/dev/lesssolarized.css                                 |
 | noconsole   | boolean                    | don't show the console                                                                     | https://omnicode.vercel.app/run/?noconsole=true                                                                         |
 | nostatus    | boolean                    | don't show the status bar                                                                  | https://omnicode.vercel.app/?nostatus=true                                                                              |
+
+## TODO
+
+**Markdown**
+Yeah... markdown still not implemented yet.
+
+**Read only**
+If you just want to let some code run in a web document, and no let people change it.
+
+**Mobile ready**
+Allow touch to resize the editor and some media queries to resize things for comfortable use on mobile (I don't think it can really be comfortable).
