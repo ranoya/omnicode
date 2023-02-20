@@ -237,18 +237,16 @@
     <div id="right_panel">
       <div id="resize"></div>
 
-      
-        &#9658;
-      </div>
-
       <iframe id="View_editor_1" frameborder="0"></iframe>
     </div>
 
     <div id="statusbar">HTML</div>
     <div
-        id="roda"
-        onclick="javascript:runContent(String.fromHtmlEntities(localStorage.getItem('omnicodecode')),'View_editor_1',Predata_editor_1, Postdata_editor_1);"
-      >
+      id="roda"
+      onclick="javascript:runContent(String.fromHtmlEntities(localStorage.getItem('omnicodecode')),'View_editor_1',Predata_editor_1, Postdata_editor_1);"
+    >
+      &#9658;
+    </div>
 
     <script>
       String.prototype.toHtmlEntities = function () {
@@ -408,7 +406,6 @@
         $_GET["bordercolor"] != ""
       ) {
         corborda = $_GET["bordercolor"];
-
       }
 
       document.getElementById("statusbar").style.display = "none";
