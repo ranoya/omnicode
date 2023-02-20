@@ -7,9 +7,12 @@ function changeContent(data, who, predata, extras) {
 }
 
 var keymapping = {}; // You could also use an array
-onkeydown = onkeyup = function(e){
+onkeydown = onkeyup = function (e) {
+    e.preventDefault();
     e = e || event;
     keymapping[e.keyCode] = e.type == 'keydown';
+
+    //console.table(keymapping);
 
     // ctrl+shift+p
   if ((keymapping[93] || keymapping[91]) && keymapping[80] && keymapping[16] || (keymapping[93] || keymapping[91]) && keymapping[75]) {
@@ -22,10 +25,10 @@ onkeydown = onkeyup = function(e){
   }
     
     // ctrl+e
-  if ((keymapping[17] || keymapping[91]) && keymapping[69]) {
+  if ((keymapping[17] || keymapping[91]) && keymapping[83]) {
     keymapping[17] = false;
     keymapping[91] = false;
-    keymapping[69] = false;
+    keymapping[83] = false;
       runContent(String.fromHtmlEntities(localStorage.getItem('omnicodecode')),'View_editor_1',Predata_editor_1, Postdata_editor_1);
     }
   
