@@ -114,6 +114,9 @@ const tolivecode = function () {
     if (!url.match(/https:\/\/omnicode.vercel.app\/run/i)) {
      // do nothing
     } else {
+        document.addEventListener('DOMContentLoaded', function () { });
+        ace.edit("editor_1").getSession().on('change', function () { });
+
         if (!url.match(/https:\/\/omnicode.vercel.app\/run\//i)) {
             window.location.assign("https://omnicode.vercel.app");
         } else {
@@ -129,6 +132,9 @@ const toruncode = function () {
     if (url.match(/https:\/\/omnicode.vercel.app\/run/i)) {
      // do nothing
     } else {
+
+        document.addEventListener('DOMContentLoaded', function () { });
+        ace.edit("editor_1").getSession().on('change', function () { });
         if (!url.match(/https:\/\/omnicode.vercel.app\/run\//i)) {
             window.location.assign("https://omnicode.vercel.app/run");
         } else {
