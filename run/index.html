@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="UTF-8" />
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.2/ace.js"
+      type="text/javascript"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.2/ext-language_tools.min.js"
+      type="text/javascript"
+    ></script>
+    <script src="https://poepalette.vercel.app/poeinstance.js"></script>
+    <script src="multiace.js"></script>
+
+    <script>
+      if (
+        localStorage.getItem("omnicodecode") == "" ||
+        typeof localStorage.getItem("omnicodecode") == "undefined"
+      ) {
+        localStorage.setItem(
+          "omnicodecode",
+          "&lt;h1&gt;Hello World&lt;/h1&gt;"
+        );
+      }
+
+      let Predata_editor_1 = "";
+      let Postdata_editor_1 = "";
+
+      $_GET = [];
+      (function () {
+        let corte = window.location.href.toString().indexOf("?");
+        if (corte > 0) {
+          let argumento = window.location.href.toString().substring(corte + 1);
+          argumentos = argumento.split("&");
+          for (arg in argumentos) {
+            let argCorte = argumentos[arg].indexOf("=");
+            $_GET[argumentos[arg].substring(0, argCorte)] = argumentos[
+              arg
+            ].substring(argCorte + 1);
+          }
+        }
+      })();
+
+      let bgc = "e8e8e8";
+      if ($_GET["bgcolor"]) {
+        bgc = $_GET["bgcolor"];
+      }
+
+      let gcolr = "e1e1e1";
+      if ($_GET["gutcolor"]) {
+        gcolr = $_GET["gutcolor"];
+      }
+
+      let bdc = "cccccc";
+      if ($_GET["bordercolor"]) {
+        bdc = $_GET["bordercolor"];
+      }
+
+      let tema = "solarized_light";
+      let linguagem = "html";
+
+      if ($_GET["theme"]) {
+        tema = $_GET["theme"];
+      }
+
+      if ($_GET["lang"]) {
+        linguagem = $_GET["lang"];
+
+        if ($_GET["lang"] == "html") {
+          linguagem = "html";
+        }
+
+        if ($_GET["lang"] == "javascript") {
+          linguagem = "javascript";
+        }
+
+        if ($_GET["lang"] == "p5") {
+          linguagem = "javascript";
+        }
+
+        if ($_GET["lang"] == "processing") {
+          linguagem = "java";
+        }
+
+        let myTimeout4 = setTimeout(function () {
+          lingua($_GET["lang"]);
+        }, 2300);
+      }
+
+      let acegeneralconfig = {
+        theme: "ace/theme/" + tema,
+        mode: "ace/mode/" + linguagem,
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: false,
+        showPrintMargin: false,
+        highlightSelectedWord: true,
+        selectionStyle: "text",
+        highlightActiveLine: false,
+        cursorStyle: "wide",
+        wrapBehavioursEnabled: true,
+        wrap: true,
+        fontSize: "14px",
+        fontFamily: "Fira Code",
+        fadeFoldWidgets: true,
+      };
+    </script>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Fira+Code&display=swap");
+
+      body {
+        background-color: #e8e8e8;
+      }
+
+      .ace_gutter-layer {
+        background-color: #e1e1e1;
+      }
+
+      #right_panel {
+        position: fixed;
+        width: calc(60% - 36px);
+        padding-left: 4px;
+        height: 100%;
+        right: 15px;
+        top: 15px;
+        height: calc(100vh - 30px);
+        border: 1px solid #cccccc;
+        border-left: 0;
+        overflow-y: scroll;
+      }
+
+      #View_editor_1 {
+        border: 0;
+        position: absolute;
+        top: 0;
+        left: 10px;
+        width: calc(100% - 10px);
+        height: calc(100vh - 30px);
+        padding: 0;
+        margin: 0;
+      }
+
+      #editor_1 {
+        position: fixed;
+        width: 40%;
+        height: calc(100vh - 30px);
+        left: 15px;
+        top: 15px;
+        border: 1px solid #cccccc;
+        border-right: 0;
+        overflow-y: scroll;
+        margin: 0;
+        padding: 0;
+        background-color: transparent;
+        z-index: 4900;
+      }
+
+      #resize {
+        background-color: #ff000000;
+        position: absolute;
+        left: 0px;
+        top: 0;
+        width: 10px;
+        height: 100%;
+        cursor: w-resize;
+        z-index: 5000;
+        border-right: 1px solid #cccccc;
+      }
+    </style>
+  </head>
+
+  <body>
+    <pre
+      class="editor codefull"
+      data-name="editor_1"
+      id="editor_1"
+      data-linguagem="html"
+    ></pre>
+
+    <script>
+      document.getElementsByTagName("pre")[0].innerHTML =
+        localStorage.getItem("omnicodecode");
+    </script>
+
+    <div id="right_panel">
+      <div id="resize"></div>
+      <iframe id="View_editor_1" frameborder="0"></iframe>
+    </div>
+
+    <script>
+      String.prototype.toHtmlEntities = function () {
+        return this.replace(/./gm, function (s) {
+          // return "&#" + s.charCodeAt(0) + ";";
+          return s.match(/[a-z0-9\s]+/i) ? s : "&#" + s.charCodeAt(0) + ";";
+        });
+      };
+
+      String.fromHtmlEntities = function (string) {
+        return (string + "").replace(/&#\d+;/gm, function (s) {
+          return String.fromCharCode(s.match(/\d+/gm)[0]);
+        });
+      };
+
+      // FUNÇÃO DE FETCH DE ARQUIVO
+      if ($_GET["file"] != "" && typeof $_GET["file"] != "undefined") {
+        fetch($_GET["file"])
+          .then((response) => response.text())
+          .then((dada) => {
+            //let dados = dada.toHtmlEntities();
+            let aceed = ace.edit("editor_1");
+            aceed.setValue(dada);
+            localStorage.setItem("omnicodecode", dada);
+
+            if ($_GET["file"].match(/\.js/i) && $_GET["lang"] != "p5") {
+              lingua("javascript");
+            }
+
+            if ($_GET["file"].match(/\.html/i)) {
+              lingua("html");
+            }
+
+            if ($_GET["file"].match(/\.pde/i)) {
+              lingua("processing");
+            }
+          });
+      }
+
+      if ($_GET["preview"]) {
+        document.getElementById("right_panel").style.width =
+          "calc(" + $_GET["preview"] + "% - 36px)";
+        document.getElementById("editor_1").style.width =
+          "calc(100% - " + $_GET["preview"] + "%)";
+      }
+
+      let m_pos;
+      const resize = function (e) {
+        let parent = resize_el.parentNode;
+        let dx = m_pos - e.x;
+        m_pos = e.x;
+        if (m_pos > 5 && m_pos < window.innerWidth - 35) {
+          document.getElementById("editor_1").style.width = m_pos - 5 + "px";
+          document.getElementById("right_panel").style.width =
+            "calc(100vw - 30px - " + m_pos + "px)";
+        }
+      };
+
+      let resize_el = document.getElementById("resize");
+
+      resize_el.addEventListener(
+        "mousedown",
+        function (e) {
+          m_pos = e.x;
+          document.addEventListener("mousemove", resize, false);
+        },
+        false
+      );
+      document.addEventListener(
+        "mouseup",
+        function () {
+          document.removeEventListener("mousemove", resize, false);
+        },
+        false
+      );
+    </script>
+  </body>
+
+  <script>
+    let poecss = `https://poepalette.vercel.app/dev/lesspink.css`;
+    let basepoe = `https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/OmniCode`;
+
+    if ($_GET["basepoe"] != "" && typeof $_GET["basepoe"] != "undefined") {
+      basepoe = $_GET["basepoe"];
+    }
+
+    if ($_GET["poecss"] != "" && typeof $_GET["poecss"] != "undefined") {
+      poecss = $_GET["poecss"];
+    }
+
+    if ($_GET["nopoe"] == "" || typeof $_GET["nopoe"] == "undefined") {
+      startpoe(basepoe, poecss, "");
+    }
+
+    if ($_GET["bgcolor"]) {
+      document.getElementsByTagName("body")[0].style.backgroundColor =
+        "#" + $_GET["bgcolor"];
+    }
+
+    if ($_GET["gutcolor"]) {
+      let myTimeout1 = setTimeout(function () {
+        document.getElementsByClassName(
+          "ace_gutter-layer"
+        )[0].style.backgroundColor = "#" + $_GET["gutcolor"];
+      }, 2300);
+      gcolr = $_GET["gutcolor"];
+    }
+
+    if (
+      $_GET["bordercolor"] &&
+      ($_GET["minimal"] == "" || typeof $_GET["minimal"] == "undefined")
+    ) {
+      document.getElementById("editor_1").style.border =
+        "1px solid #" + $_GET["bordercolor"];
+      document.getElementById("resize").style.borderRight =
+        "1px solid #" + $_GET["bordercolor"];
+      document.getElementById("right_panel").style.border =
+        "1px solid #" + $_GET["bordercolor"];
+      document.getElementById("right_panel").style.borderLeft =
+        "0 none transparent";
+      document.getElementById("resize").style.borderLeft = "0 none transparent";
+      document.getElementById("editor_1").style.borderRight =
+        "0 none transparent";
+    }
+
+    if ($_GET["minimal"] != "" && typeof $_GET["minimal"] != "undefined") {
+      let corborda = "cccccc";
+      if (
+        typeof $_GET["bordercolor"] != "undefined" &&
+        $_GET["bordercolor"] != ""
+      ) {
+        corborda = $_GET["bordercolor"];
+      }
+
+      document.getElementById("editor_1").style.border = "0 transparent none";
+      document.getElementById("resize").style.border = "0 transparent none";
+      document.getElementById("right_panel").style.border =
+        "0 transparent none";
+
+      document.getElementById("resize").style.borderLeft =
+        "1px dotted #" + corborda;
+    }
+
+    const enviacomando = function (instr) {
+      let aceed = ace.edit("editor_1");
+      aceed.setOptions(instr);
+    };
+
+    const redimensiona = function (qnt) {
+      document.getElementById("right_panel").style.width =
+        "calc(" + qnt + "% - 36px)";
+      document.getElementById("editor_1").style.width =
+        "calc(100% - " + qnt + "%)";
+    };
+
+    const sobrescreve = function (arquivo) {
+      fetch(arquivo)
+        .then((response) => response.text())
+        .then((dados) => {
+          let aceed = ace.edit("editor_1");
+          aceed.setValue(dados);
+        });
+    };
+
+    const lingua = function (qual) {
+      let aceed = ace.edit("editor_1");
+      if (qual == "html") {
+        aceed.setOptions({ mode: "ace/mode/html" });
+
+        Predata_editor_1 = "";
+        Postdata_editor_1 = "";
+      }
+
+      if (qual == "javascript") {
+        aceed.setOptions({ mode: "ace/mode/javascript" });
+        Predata_editor_1 = `<scri` + `pt>`;
+        Postdata_editor_1 = `</scr` + `ipt>`;
+      }
+
+      if (qual == "p5") {
+        aceed.setOptions({ mode: "ace/mode/javascript" });
+        Predata_editor_1 =
+          `
+            <st` +
+          `yle>body,html { margin: 0; padding: 0; }</sty` +
+          `le>
+            <scr` +
+          `ipt src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></sc` +
+          `ript>
+            <scr` +
+          `ipt>`;
+        Postdata_editor_1 =
+          `</scr` +
+          `ipt>
+        `;
+      }
+
+      if (qual == "processing") {
+        aceed.setOptions({ mode: "ace/mode/java" });
+
+        Predata_editor_1 =
+          `
+            <sty` +
+          `le>body,html { margin: 0; padding: 0; }</sty` +
+          `le>
+            <ca` +
+          `nvas id='pjs' style='outline: none;'></canv` +
+          `as>
+            <scr` +
+          `ipt src="https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.6.6/processing.min.js"></scr` +
+          `ipt>
+            <scr` +
+          `ipt type="application/processing" data-processing-target='pjs'>`;
+        Postdata_editor_1 =
+          `
+            </sc` +
+          `ript>
+        <can` +
+          `vas> </canv` +
+          `as>`;
+      }
+
+      changeContent(
+        aceed.getSession().getValue(),
+        "View_editor_1",
+        Predata_editor_1,
+        Postdata_editor_1
+      );
+    };
+  </script>
+</html>
