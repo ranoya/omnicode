@@ -130,9 +130,9 @@ const toruncode = function () {
      // do nothing
     } else {
         if (!url.match(/https:\/\/omnicode.vercel.app\/run\//i)) {
-            window.location = "https://omnicode.vercel.app";
+            window.location = "https://omnicode.vercel.app/run";
         } else {
-            goto = url.replace("//omnicode.vercel.app/run/", "//omnicode.vercel.app/");
+            goto = url.replace("//omnicode.vercel.app/", "//omnicode.vercel.app/run/");
             window.location = goto;
         }
     }
