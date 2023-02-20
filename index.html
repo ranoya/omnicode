@@ -247,6 +247,10 @@
               lingua("javascript");
             }
 
+            if ($_GET["file"].match(/\.js/i) && $_GET["lang"] == "p5") {
+              lingua("p5");
+            }
+
             if ($_GET["file"].match(/\.html/i)) {
               lingua("html");
             }
