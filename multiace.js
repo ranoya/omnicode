@@ -107,12 +107,4 @@ if ($_GET['readonly'] != "" && typeof $_GET['readonly'] != "undefined") {
     }, 2400);
 }
 
-const snippetManager = ace.require('ace/snippets').snippetManager;
-
-snippet = snippetManager.parseSnippetFile(
-                "snippet hello\n" 
-                + "<one_tab_indent>hello world"
-                , "html");
-snippetManager.register(snippet, 'html');
-
 
