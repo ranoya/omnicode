@@ -52,14 +52,12 @@ These are the variables you can use:
 | poecss      | url                        | CSS customization for POE command palette                                                  | https://omnicode.vercel.app/?poecss=https://poepalette.vercel.app/dev/lesssolarized.css                                 |
 | noconsole   | boolean                    | don't show the console                                                                     | https://omnicode.vercel.app/run/?noconsole=true                                                                         |
 | nostatus    | boolean                    | don't show the status bar                                                                  | https://omnicode.vercel.app/?nostatus=true                                                                              |
+| readonly    | boolean                    | don't let changes to the actual code                                                       | https://omnicode.vercel.app/?readonly=true&file=https://omnicode.vercel.app/example/myfile.html                         |
 
 ## TODO
 
 **Markdown**
 Yeah... markdown still not implemented yet.
-
-**Read only**
-If you just want to let some code run in a web document, and no let people change it.
 
 **Mobile ready**
 Allow touch to resize the editor and some media queries to resize things for comfortable use on mobile (I don't think it can really be comfortable).

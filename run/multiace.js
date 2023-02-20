@@ -131,4 +131,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+if ($_GET['readonly'] != "" && typeof $_GET['readonly'] != "undefined") {
+    ace.edit("editor_1").setReadOnly(true);
+}
+
 
