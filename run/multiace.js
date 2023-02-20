@@ -132,7 +132,9 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 if ($_GET['readonly'] != "" && typeof $_GET['readonly'] != "undefined") {
-    enviacomando({ "readOnly": true });
+    let myTimeout12 = setTimeout(function () {
+        enviacomando({ "readOnly": true });
+    }, 2400);
 }
 
 
