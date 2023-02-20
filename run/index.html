@@ -146,12 +146,13 @@
         position: fixed;
         z-index: 10200000;
         display: inline-block;
-        top: 15px;
+        bottom: 15px;
+        height: 22px;
         right: 15px;
-        padding: 4px;
         border: 1px solid #cccccc;
         color: var(--color-link, #8e6e7b);
-        font-size: 12px;
+        font-size: 10px;
+        line-height: 23px;
         padding-left: 7px;
         padding-right: 5px;
       }
@@ -210,7 +211,7 @@
         color: #444444;
         text-transform: uppercase;
         font-size: 12px;
-        width: calc(100% - 50px);
+        width: calc(100% - 73px);
         padding-left: 10px;
         padding-right: 10px;
         line-height: 24px;
@@ -236,10 +237,7 @@
     <div id="right_panel">
       <div id="resize"></div>
 
-      <div
-        id="roda"
-        onclick="javascript:runContent(String.fromHtmlEntities(localStorage.getItem('omnicodecode')),'View_editor_1',Predata_editor_1, Postdata_editor_1);"
-      >
+      
         &#9658;
       </div>
 
@@ -247,6 +245,10 @@
     </div>
 
     <div id="statusbar">HTML</div>
+    <div
+        id="roda"
+        onclick="javascript:runContent(String.fromHtmlEntities(localStorage.getItem('omnicodecode')),'View_editor_1',Predata_editor_1, Postdata_editor_1);"
+      >
 
     <script>
       String.prototype.toHtmlEntities = function () {
@@ -395,6 +397,8 @@
         "calc(100vh - 30px)";
       document.getElementById("View_editor_1").style.height =
         "calc(100vh - 30px)";
+
+      document.getElementById("roda").style.top = "15px";
     }
 
     if ($_GET["minimal"] != "" && typeof $_GET["minimal"] != "undefined") {
@@ -404,6 +408,7 @@
         $_GET["bordercolor"] != ""
       ) {
         corborda = $_GET["bordercolor"];
+
       }
 
       document.getElementById("statusbar").style.display = "none";
@@ -414,6 +419,8 @@
         "height: calc(100vh - 30px)";
       document.getElementById("View_editor_1").style.height =
         "height: calc(100vh - 30px)";
+
+      document.getElementById("roda").style.top = "15px";
 
       document.getElementById("editor_1").style.border = "0 transparent none";
       document.getElementById("resize").style.border = "0 transparent none";
