@@ -8,8 +8,12 @@ function changeContent(data, who, predata, extras) {
 
 var keymapping = {}; // You could also use an array
 onkeydown = onkeyup = function (e) {
-    e.preventDefault();
+    
     e = e || event;
+
+    if (e.key === 's' && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+        e.preventDefault();
+    }
     keymapping[e.keyCode] = e.type == 'keydown';
 
     //console.table(keymapping);
