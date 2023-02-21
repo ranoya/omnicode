@@ -123,6 +123,14 @@ const tolivecode = function () {
     }
 }
 
+const setnoconsole = function (val) {
+    if (val == true) {
+        $_GET['noconsole'] = "true";
+    } else {
+        $_GET['noconsole'] = "";
+    }
+}
+
 const toruncode = function () {
     let url = window.location.href;
     let goto = "";

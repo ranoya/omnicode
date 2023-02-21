@@ -137,6 +137,14 @@ if ($_GET['readonly'] != "" && typeof $_GET['readonly'] != "undefined") {
     }, 2400);
 }
 
+const setnoconsole = function (val) {
+    if (val == true) {
+        $_GET['noconsole'] = "true";
+    } else {
+        $_GET['noconsole'] = "";
+    }
+}
+
 const tolivecode = function () {   
     let url = window.location.href;
     let goto = "";
