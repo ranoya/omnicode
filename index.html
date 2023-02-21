@@ -239,13 +239,40 @@
     <div id="statusbar">
       <div class="linkstatusbar" onclick="tolivecode();">LIVECODE</div>
       <div class="linkstatusbar" onclick="toruncode();">RUN CODE</div>
-      <span id="mensagem">menu: CTRL/CMD+SHIFT+P | </span
+      <span id="mensagem">menu: CTRL/CMD+SHIFT+P | LIVECODE | </span
       ><span id="tipoliguagem">HTML</span>
     </div>
 
     <script>
       let mensagem =
-        `<sp` + `an id='mensagem'>menu: CTRL/CMD+SHIFT+P | </sp` + `an>`;
+        `<sp` +
+        `an id='mensagem'>menu: CTRL/CMD+SHIFT+P | LIVECODE | </sp` +
+        `an>`;
+
+      // VARIANTES
+      if ($_GET["variant"] == "p") {
+        document.getElementById("statusbar").innerHTML =
+          `
+        <di` +
+          `v class="linkstatusbar" onclick="tolivecode();">LIVECODE</d` +
+          `iv>
+        <di` +
+          `v class="linkstatusbar" onclick="toruncode();">RUN CODE</d` +
+          `iv>
+        <di` +
+          `v class="linkstatusbar" onclick='lingua("processing");setnoconsole(true);''>PROCESSING</d` +
+          `iv>
+        <di` +
+          `v class="linkstatusbar" onclick='lingua("p5");setnoconsole("");'>P5</d` +
+          `iv>
+        <sp` +
+          `an id="mensagem">executar: CTRL/CMD+S | menu: CTRL/CMD+SHIFT+P | LIVECODE | </s` +
+          `pan
+        ><sp` +
+          `an id="tipoliguagem">HTML</sp` +
+          `an>
+        `;
+      }
 
       String.prototype.toHtmlEntities = function () {
         return this.replace(/./gm, function (s) {
