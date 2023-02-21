@@ -571,10 +571,19 @@
         document
           .getElementById("View_editor_1")
           .classList.add("View_editor_100");
+        document.getElementById("editor_1").classList.remove("editorfull");
       }
 
       if (parseInt(qnt) <= 0) {
         document.getElementById("editor_1").classList.add("editorfull");
+        document.getElementById("editor_1").classList.remove("editor100");
+        document.getElementById("resize").classList.remove("resize100");
+        document
+          .getElementById("right_panel")
+          .classList.remove("rightpanel100");
+        document
+          .getElementById("View_editor_1")
+          .classList.remove("View_editor_100");
       }
 
       if (parseInt(qnt) > 0 && parseInt(qnt) < 100) {
