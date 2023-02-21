@@ -545,6 +545,24 @@
         "calc(" + qnt + "% - 36px)";
       document.getElementById("editor_1").style.width =
         "calc(100% - " + qnt + "%)";
+
+      if (parseInt(qnt) >= 100) {
+        document.getElementById("editor_1").classList.add("editor100");
+        document.getElementById("resize").classList.add("resize100");
+        document.getElementById("right_panel").classList.add("rightpanel100");
+        document
+          .getElementById("View_editor_1")
+          .classList.add("View_editor_100");
+      } else {
+        document.getElementById("editor_1").classList.remove("editor100");
+        document.getElementById("resize").classList.remove("resize100");
+        document
+          .getElementById("right_panel")
+          .classList.remove("rightpanel100");
+        document
+          .getElementById("View_editor_1")
+          .classList.remove("View_editor_100");
+      }
     };
 
     const sobrescreve = function (arquivo) {
