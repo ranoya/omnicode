@@ -359,6 +359,15 @@
           document.getElementById("editor_1").style.width = m_pos - 5 + "px";
           document.getElementById("right_panel").style.width =
             "calc(100vw - 30px - " + m_pos + "px)";
+
+          document.getElementById("editor_1").classList.remove("editor100");
+          document.getElementById("resize").classList.remove("resize100");
+          document
+            .getElementById("right_panel")
+            .classList.remove("rightpanel100");
+          document
+            .getElementById("View_editor_1")
+            .classList.remove("View_editor_100");
         }
 
         if (m_pos <= 5) {
