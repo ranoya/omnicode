@@ -147,12 +147,9 @@ const tolivecode = function () {
         document.addEventListener('DOMContentLoaded', function () { });
         ace.edit("editor_1").getSession().on('change', function () { });
 
-        if (!url.match(/https:\/\/omnicode.vercel.app\/run\//i)) {
-            window.location.assign("https://omnicode.vercel.app");
-        } else {
-            goto = url.replace("//omnicode.vercel.app/run/", "//omnicode.vercel.app/");
-            window.location.assign(goto);
-        }
+        goto = url.replace("omnicode.vercel.app/run", "omnicode.vercel.app");
+        window.location.assign(goto);
+        
     }
 }
 
@@ -165,11 +162,9 @@ const toruncode = function () {
 
         document.addEventListener('DOMContentLoaded', function () { });
         ace.edit("editor_1").getSession().on('change', function () { });
-        if (!url.match(/https:\/\/omnicode.vercel.app\/run\//i)) {
-            window.location.assign("https://omnicode.vercel.app/run");
-        } else {
-            goto = url.replace("//omnicode.vercel.app/", "//omnicode.vercel.app/run/");
-            window.location.assign(goto);
-        }
+        
+        goto = url.replace("omnicode.vercel.app", "omnicode.vercel.app/run");
+        window.location.assign(goto);
+        
     }
 }
