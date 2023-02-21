@@ -65,7 +65,9 @@ function runContent(data, who, predata, extras) {
     return false;
     }
     console.log = function (msg) {
-        document.getElementById('ScreenConsole').innerHTML += msg + '<br>';
+        if (!msg.match('code is already using that name as a variable') && !msg.match('which was a p5 function')) {
+            document.getElementById('ScreenConsole').innerHTML += msg + '<br>';
+        }
     }
     </script>
     `;
