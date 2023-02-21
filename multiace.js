@@ -126,6 +126,7 @@ const tolivecode = function () {
 const setnoconsole = function (val) {
     if (val == true) {
         $_GET['noconsole'] = "true";
+        screenconsole = "";
     } else {
         $_GET['noconsole'] = "";
     }

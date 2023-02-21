@@ -140,6 +140,7 @@ if ($_GET['readonly'] != "" && typeof $_GET['readonly'] != "undefined") {
 const setnoconsole = function (val) {
     if (val == true) {
         $_GET['noconsole'] = "true";
+        screenconsole = "";
     } else {
         $_GET['noconsole'] = "";
     }
