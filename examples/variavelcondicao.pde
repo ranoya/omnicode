@@ -19,4 +19,11 @@ void draw() {
     line(0,0,mx,500);
     mx = mx + 1; // altere para 2, 3, ou 10
 
+    // se o valor de ultrapassar 400,
+    // encarramos a rotina draw()
+
+    if (mx > 400) {
+        noLoop();
+    }
+
 }
