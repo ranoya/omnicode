@@ -1,5 +1,6 @@
 function setup() {
     createCanvas(500, 500);
+    print("exemplo original do Processing");
 }
 
 function draw() {
