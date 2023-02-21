@@ -1,0 +1,105 @@
+{
+  "short_name": "Omnicode",
+  "name": "Omnicode Editor & Playground",
+  "icons": [
+    {
+      "src": "/assets/omnicode1024.svg",
+      "type": "image/svg+xml",
+      "sizes": "1024x1024"
+    },
+    {
+      "src": "/assets/omnicode1024.png",
+      "type": "image/png",
+      "sizes": "1024x1024"
+    },
+    {
+      "src": "/assets/omnicode512.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/assets/omnicode512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/assets/omnicode256.svg",
+      "type": "image/svg+xml",
+      "sizes": "256x256"
+    },
+    {
+      "src": "/assets/omnicode256.png",
+      "type": "image/png",
+      "sizes": "256x256"
+    },
+    {
+      "src": "/assets/omnicode128.svg",
+      "type": "image/svg+xml",
+      "sizes": "128x128"
+    },
+    {
+      "src": "/assets/omnicode128.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "/assets/omnicode64.svg",
+      "type": "image/svg+xml",
+      "sizes": "64x64"
+    },
+    {
+      "src": "/assets/omnicode64.png",
+      "type": "image/png",
+      "sizes": "64x64"
+    },
+    {
+      "src": "/assets/omnicode32.svg",
+      "type": "image/svg+xml",
+      "sizes": "32x32"
+    },
+    {
+      "src": "/assets/omnicode32.png",
+      "type": "image/png",
+      "sizes": "32x32"
+    },
+    {
+      "src": "/assets/omnicode16.svg",
+      "type": "image/svg+xml",
+      "sizes": "16x16"
+    },
+    {
+      "src": "/assets/omnicode16.png",
+      "type": "image/png",
+      "sizes": "16x16"
+    }
+  ],
+  "id": "/run/?bgcolor=fef6e4&preview=70&theme=solarized_light&gutcolor=fef6e4&guttext=647878&bordercolor=fef6e4&poecss=https://poepalette.vercel.app/dev/lesssolarized.css",
+  "start_url": "/run/?bgcolor=fef6e4&preview=70&theme=solarized_light&gutcolor=fef6e4&guttext=647878&bordercolor=fef6e4&poecss=https://poepalette.vercel.app/dev/lesssolarized.css",
+  "background_color": "#b1bdbd",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#fef6e4",
+  "shortcuts": [
+    {
+      "name": "Processing Family",
+      "short_name": "Processing",
+      "description": "Development with Processing Family languages",
+      "url": "/run/?variant=p&lang=processing&noconsole=true&bgcolor=40124d&gutcolor=40124d&guttext=e4b9e7&bordercolor=40124d&theme=tomorrow_night_blue&poecss=https://poepalette.vercel.app/dev/lessdeeppurple.css&basepoe=https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/ExemplosProcessing"
+    },
+    {
+      "name": "Web Development",
+      "short_name": "Web",
+      "description": "Development with basic Web technologies",
+      "url": "/?noconsole=true&preview=65&bgcolor=000cd0&bordercolor=9fc5e866&gutcolor=000cd0&basepoe=https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/ExemplosHTML&theme=cobalt&poecss=https://poepalette.vercel.app/dev/lessblue.css"
+    }
+  ],
+  "description": "Quick programing (Livecode and Run) environment",
+  "screenshots": [
+    {
+      "src": "/assets/screenshot.png",
+      "type": "image/png",
+      "sizes": "1387x779",
+      "form_factor": "wide"
+    }
+  ]
+}
