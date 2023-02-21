@@ -445,6 +445,7 @@
       document.addEventListener(
         "mouseup",
         function () {
+          ace.edit("editor_1").resize();
           document.removeEventListener("mousemove", resize, false);
         },
         false
