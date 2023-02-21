@@ -1,6 +1,6 @@
 void setup() {
     size(500, 500);
-    print("Exemplo original do Processing);
+    print("Exemplo original do Processing");
 }
 
 void draw() {
