@@ -371,6 +371,7 @@
       if ($_GET["preview"]) {
         if (parseInt($_GET["preview"]) <= 0) {
           document.getElementById("editor_1").classList.add("editorfull");
+          document.getElementById("right_panel").style.width = 0;
         }
         if (parseInt($_GET["preview"]) >= 100) {
           document.getElementById("editor_1").classList.add("editor100");
