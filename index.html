@@ -215,6 +215,23 @@
         font-family: "Fira Code";
         text-align: right;
       }
+
+      .rightpanel100 {
+        width: calc(100% - 35px);
+      }
+
+      .View_editor_100 {
+        left: 0;
+        width: 100%;
+      }
+
+      .resize100 {
+        left: -10px;
+      }
+
+      .editor100 {
+        width: 0;
+      }
     </style>
   </head>
 
@@ -318,10 +335,19 @@
       }
 
       if ($_GET["preview"]) {
-        document.getElementById("right_panel").style.width =
-          "calc(" + $_GET["preview"] + "% - 36px)";
-        document.getElementById("editor_1").style.width =
-          "calc(100% - " + $_GET["preview"] + "%)";
+        if (parseInt($_GET["preview"]) >= 100) {
+          document.getElementById("editor_1").classList.add("editor100");
+          document.getElementById("resize").classList.add("resize100");
+          document.getElementById("right_panel").classList.add("rightpanel100");
+          document
+            .getElementById("View_editor_1")
+            .classList.add("View_editor_100");
+        } else {
+          document.getElementById("right_panel").style.width =
+            "calc(" + $_GET["preview"] + "% - 36px)";
+          document.getElementById("editor_1").style.width =
+            "calc(100% - " + $_GET["preview"] + "%)";
+        }
       }
 
       let m_pos;
@@ -333,6 +359,15 @@
           document.getElementById("editor_1").style.width = m_pos - 5 + "px";
           document.getElementById("right_panel").style.width =
             "calc(100vw - 30px - " + m_pos + "px)";
+        }
+
+        if (m_pos <= 5) {
+          document.getElementById("editor_1").classList.add("editor100");
+          document.getElementById("resize").classList.add("resize100");
+          document.getElementById("right_panel").classList.add("rightpanel100");
+          document
+            .getElementById("View_editor_1")
+            .classList.add("View_editor_100");
         }
       };
 
