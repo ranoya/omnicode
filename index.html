@@ -361,6 +361,8 @@
           document.getElementById("editor_1").style.width =
             "calc(100% - " + $_GET["preview"] + "%)";
         }
+
+        ace.edit("editor_1").resize();
       }
 
       let m_pos;
@@ -396,6 +398,8 @@
         if (m_pos >= window.innerWidth - 35) {
           document.getElementById("editor_1").classList.add("editorfull");
         }
+
+        ace.edit("editor_1").resize();
       };
 
       let resize_el = document.getElementById("resize");
@@ -561,6 +565,8 @@
           .getElementById("View_editor_1")
           .classList.remove("View_editor_100");
       }
+
+      ace.edit("editor_1").resize();
     };
 
     const sobrescreve = function (arquivo) {
