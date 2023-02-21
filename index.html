@@ -232,6 +232,10 @@
       .editor100 {
         width: 0 !important;
       }
+
+      .editorfull {
+        width: calc(100% - 31px);
+      }
     </style>
   </head>
 
@@ -335,6 +339,9 @@
       }
 
       if ($_GET["preview"]) {
+        if (parseInt($_GET["preview"]) <= 0) {
+          document.getElementById("editor_1").classList.add("editorfull");
+        }
         if (parseInt($_GET["preview"]) >= 100) {
           document.getElementById("editor_1").classList.add("editor100");
           document.getElementById("resize").classList.add("resize100");
@@ -342,7 +349,12 @@
           document
             .getElementById("View_editor_1")
             .classList.add("View_editor_100");
-        } else {
+        }
+
+        if (
+          parseInt($_GET["preview"]) > 0 &&
+          parseInt($_GET["preview"]) < 100
+        ) {
           document.getElementById("right_panel").style.width =
             "calc(" + $_GET["preview"] + "% - 36px)";
           document.getElementById("editor_1").style.width =
@@ -361,6 +373,7 @@
             "calc(100vw - 30px - " + m_pos + "px)";
 
           document.getElementById("editor_1").classList.remove("editor100");
+          document.getElementById("editor_1").classList.remove("editorfull");
           document.getElementById("resize").classList.remove("resize100");
           document
             .getElementById("right_panel")
@@ -377,6 +390,10 @@
           document
             .getElementById("View_editor_1")
             .classList.add("View_editor_100");
+        }
+
+        if (m_pos >= window.innerWidth - 35) {
+          document.getElementById("editor_1").classList.add("editorfull");
         }
       };
 
@@ -517,7 +534,13 @@
         document
           .getElementById("View_editor_1")
           .classList.add("View_editor_100");
-      } else {
+      }
+
+      if (parseInt(qnt) <= 0) {
+        document.getElementById("editor_1").classList.add("editorfull");
+      }
+
+      if (parseInt(qnt) > 0 && parseInt(qnt) < 100) {
         document.getElementById("editor_1").classList.remove("editor100");
         document.getElementById("resize").classList.remove("resize100");
         document
