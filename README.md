@@ -65,3 +65,9 @@ Yeah... markdown still not implemented yet.
 
 **Mobile ready**
 Allow touch to resize the editor and some media queries to resize things for comfortable use on mobile (I don't think it can really be comfortable).
+
+**pyp5js**
+Include Bernardo Fontes' [pyp5js](https://github.com/berinhard/pyp5js) into Omnicode for Processing Python Mode to be avaliable too.
+
+**Cell Programing Mode**
+A new mode, like Jupyter ou Observable, with independent cells with code and obervable results of each cell instead of a big preview.
