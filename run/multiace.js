@@ -44,6 +44,13 @@ onkeydown = onkeyup = function (e) {
 
 function runContent(data, who, predata, extras) {
 
+
+    document.getElementById('View_editor_1').remove();
+    let ifr = document.createElement("iframe");
+    ifr.setAttribute('id', 'View_editor_1');
+    document.getElementById("right_panel").appendChild(ifr);
+
+    
     iframeA = document.getElementById(who);
     iframeA = iframeA.contentWindow || (iframeA.contentDocument.document || iframeA.contentDocument);
     iframeA.document.open();
@@ -65,7 +72,7 @@ function runContent(data, who, predata, extras) {
     return false;
     }
     console.log = function (msg) {
-        if (!msg.match('code is already using that name as a variable') && !msg.match('which was a p5 function')) {
+        if (!msg.toString().match('code is already using that name as a variable') && !msg.toString().match('which was a p5 function')) {
             document.getElementById('ScreenConsole').innerHTML += msg + '<br>';
         }
     }
