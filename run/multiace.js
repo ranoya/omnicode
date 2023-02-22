@@ -72,9 +72,7 @@ function runContent(data, who, predata, extras) {
     return false;
     }
     console.log = function (msg) {
-        if (!msg.toString().match('code is already using that name as a variable') && !msg.toString().match('which was a p5 function')) {
             document.getElementById('ScreenConsole').innerHTML += msg + '<br>';
-        }
     }
     </script>
     `;
