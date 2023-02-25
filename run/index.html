@@ -731,7 +731,7 @@
           <div class="sketch-holder" style="width: 100%; height: 100%;"></div>
           <scr` +
           `ipt>
-            window.runSketchCode(userCode);
+            let esperacarregar = setTimeout(function () { window.runSketchCode(userCode) }, 2000);
           </scr` +
           `ipt>
         `;
