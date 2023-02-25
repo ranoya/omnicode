@@ -4,7 +4,7 @@
 
 Omnicode is an embedable editor and livecode editor for HTML + CSS + Javascript, Javascript only, Processing (Java mode), P5 (Processing + Javascript), Markdown, and other client side programing languages, eventually, with a built in preview. It was designed to assist HTML, Javascript, Processing and P5 lectures and documentation.
 
-Omnicode is an evolution from HTML/Processing/P5/Markdown [Playground](https://github.com/ranoya/Playground) and relies on [ACE Editor](https://ace.c9.io/) as it's core, wich is a favorite project since it was called _Bespin - Code in the Cloud_ (nice, right? don't know why they changed the name...).
+Omnicode is an evolution from HTML/Processing/P5/Markdown [Playground](https://github.com/ranoya/Playground) and relies on [ACE Editor](https://ace.c9.io/) as it's core, wich is a favorite project since it was called _Bespin - Code in the Cloud_ (nice, right? don't know why they changed the name...). It also uses [Pyp5js](https://github.com/berinhard/pyp5js) with [Pyodide](https://github.com/pyodide/pyodide) for Processing Python Mode.
 
 It's simplier than it's previous instance, and far more customizable. Also have a customizable [POE Instace](https://github.com/ranoya/poepalette) implementation as a command palette interface.
 
@@ -38,6 +38,10 @@ Run mode with a "deep purple" theme (purple background and Tomorrow Night Blue h
 
 [https://omnicode.vercel.app/run/?variant=p&lang=p5&bgcolor=40124d&gutcolor=40124d&guttext=e4b9e7&bordercolor=652e68&theme=tomorrow_night_blue&poecss=https://poepalette.vercel.app/dev/lessdeeppurple.css&basepoe=https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/ExemplosProcessing&file=https://omnicode.vercel.app/examples/p5start.js](https://omnicode.vercel.app/run/?variant=p&lang=p5&bgcolor=40124d&gutcolor=40124d&guttext=e4b9e7&bordercolor=652e68&theme=tomorrow_night_blue&poecss=https://poepalette.vercel.app/dev/lessdeeppurple.css&basepoe=https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/ExemplosProcessing&file=https://omnicode.vercel.app/examples/p5start.js)
 
+A dedicated configuration for Processing (P5 / Original Java Mode / Python Mode) classes:
+
+https://omnicode.vercel.app/run/?variant=p&lang=p5&bgcolor=40124d&gutcolor=40124d&guttext=e4b9e7&bordercolor=652e68&theme=tomorrow_night_blue&poecss=https://poepalette.vercel.app/dev/lessdeeppurple.css&basepoe=https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/ExemplosProcessing
+
 These are the variables you can use:
 
 | variable    | type                       | description                                                                                | example                                                                                                                 |
@@ -65,9 +69,6 @@ Yeah... markdown still not implemented yet.
 
 **Mobile ready**
 Allow touch to resize the editor and some media queries to resize things for comfortable use on mobile (I don't think it can really be comfortable).
-
-**pyp5js**
-Include Bernardo Fontes' [pyp5js](https://github.com/berinhard/pyp5js) into Omnicode for Processing Python Mode to be avaliable too.
 
 **Cell Programing Mode**
 A new mode, like Jupyter ou Observable, with independent cells with code and obervable results of each cell instead of a big preview.
