@@ -1684,11 +1684,7 @@ async function main() {
         from js import p5, window, document
         print(sys.version)
   `));
-   window.runSketchCode = (code) => {
-      userCode = code;
-      runCode();
-    }
-
+   
     runCode();
 };
 
