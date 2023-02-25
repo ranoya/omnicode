@@ -381,6 +381,10 @@
             if ($_GET["file"].match(/\.pde/i)) {
               lingua("processing");
             }
+
+            if ($_GET["file"].match(/\.py$/i)) {
+              lingua("python");
+            }
           });
       }
 
@@ -653,6 +657,27 @@
           `le>
             <scr` +
           `ipt src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></sc` +
+          `ript>
+            <scr` +
+          `ipt>`;
+        Postdata_editor_1 =
+          `</scr` +
+          `ipt>
+        `;
+      }
+
+      if (qual == "python") {
+        aceed.setOptions({ mode: "ace/mode/python" });
+        Predata_editor_1 =
+          `
+            <st` +
+          `yle>body,html { margin: 0; padding: 0; }</sty` +
+          `le>
+            <scr` +
+          `ipt src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></sc` +
+          `ript>
+          <sc` +
+          `ript src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></sc` +
           `ript>
             <scr` +
           `ipt>`;
