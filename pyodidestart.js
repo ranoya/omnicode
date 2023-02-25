@@ -1629,8 +1629,6 @@ touchEnded = None
 windowResized = None
 `;
 
-let userCode = "";
-
 const startCode = `
 event_functions = {
     "deviceMoved": deviceMoved,
