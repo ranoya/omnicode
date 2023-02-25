@@ -721,9 +721,18 @@
           `ript src="https://omnicode.vercel.app/pyodidestart.js" type="module"></sc` +
           `ript>
             <scr` +
-          `ipt>`;
+          `ipt>
+          let userCode = \``;
         Postdata_editor_1 =
-          `</scr` +
+          `\`;
+          ;
+          </scr` +
+          `ipt>
+          <div class="sketch-holder" style="width: 100%; height: 100%;"></div>
+          <scr` +
+          `ipt>
+            window.runSketchCode(userCode);
+          </scr` +
           `ipt>
         `;
       }
