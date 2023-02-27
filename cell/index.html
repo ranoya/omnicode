@@ -60,6 +60,8 @@
     <script src="https://omnicode.vercel.app/run/multiace.js"></script>
 
     <script>
+      // COMO GUARDAR TODAS AS CELULAS NO LOCALSTORAGE?
+      /*
       if (
         localStorage.getItem("omnicodecode") == "" ||
         typeof localStorage.getItem("omnicodecode") == "undefined"
@@ -69,6 +71,7 @@
           "&lt;h1&gt;Hello World&lt;/h1&gt;"
         );
       }
+      */
 
       let Predata_editor_1 = "";
       let Postdata_editor_1 = "";
@@ -87,6 +90,8 @@
           }
         }
       })();
+
+      // DEFINIÇÕES DE CORES - OK
 
       let bgc = "e8e8e8";
       if ($_GET["bgcolor"]) {
@@ -115,6 +120,8 @@
         tema = $_GET["theme"];
       }
 
+      // DEFINIÇÃO DE LINGUAGEM - OK
+
       if ($_GET["lang"]) {
         linguagem = $_GET["lang"];
 
@@ -134,11 +141,17 @@
           linguagem = "java";
         }
 
+        // NADA DE ACE POR ENQUANTO
+        /*
         let myTimeout4 = setTimeout(function () {
           lingua($_GET["lang"]);
         }, 2300);
+        */
       }
 
+      // POR ENQUANTO NADA DE ACE
+
+      /*
       let acegeneralconfig = {
         theme: "ace/theme/" + tema,
         mode: "ace/mode/" + linguagem,
@@ -155,6 +168,139 @@
         fontSize: "14px",
         fontFamily: "Fira Code",
         fadeFoldWidgets: true,
+      };
+
+      */
+
+      // NODES
+      let lid = 1;
+      let linhas = 1;
+
+      reavalia = function () {
+        let c = 1;
+        for (
+          let i = 11;
+          i < document.getElementById("maintable").childNodes.length;
+          i = i + 4
+        ) {
+          console.log(document.getElementById("maintable").childNodes.length);
+          console.log("iniciando linha c=" + c + " / elemento i=" + i);
+          document.getElementById("maintable").childNodes[i].id = "cell_" + c;
+          //document.getElementById("maintable").childNodes[i].onclick = "addhere(" + c + ")";
+          document.getElementById("maintable").childNodes[i + 1].id =
+            "cellrem_" + c;
+          document
+            .getElementById("maintable")
+            .childNodes[i + 1].addEventListener("click", removeline(c));
+          document.getElementById("maintable").childNodes[i + 2].id =
+            "editor_" + c;
+          document.getElementById("maintable").childNodes[i + 3].id =
+            "View_editor_" + c;
+
+          c++;
+        }
+      };
+
+      addline = function () {
+        let cll = document.createElement("div");
+        let textNode = document.createTextNode("+");
+        cll.appendChild(textNode);
+        cll.setAttribute("id", "cel_" + lid);
+        cll.setAttribute("class", "action");
+        cll.setAttribute("onclick", "addhere(" + lid + ")");
+        document.getElementById("maintable").appendChild(cll);
+
+        let cllrem = document.createElement("div");
+        let textNoderem = document.createTextNode("-");
+        cllrem.appendChild(textNoderem);
+        cllrem.setAttribute("id", "celrem_" + lid);
+        cllrem.setAttribute("class", "actionrem");
+        cllrem.setAttribute("onclick", "removeline(" + lid + ")");
+        document.getElementById("maintable").appendChild(cllrem);
+
+        let edt = document.createElement("div");
+        edt.setAttribute("id", "editor_" + lid);
+        edt.setAttribute("class", "codeum");
+        document.getElementById("maintable").appendChild(edt);
+
+        document.getElementById("barra").style.gridRow = "2 / " + (linhas + 3);
+
+        let prev = document.createElement("div");
+        let textNodePrev = document.createTextNode(lid);
+        prev.appendChild(textNodePrev);
+        prev.setAttribute("id", "View_editor_" + lid);
+        prev.setAttribute("class", "previewum");
+        document.getElementById("maintable").appendChild(prev);
+
+        lid++;
+        linhas++;
+        reavalia();
+      };
+
+      addhere = function (id) {
+        reavalia();
+        let nlid = id + 1;
+        let prev = document.createElement("div");
+        let textNodePrev = document.createTextNode(nlid);
+        prev.appendChild(textNodePrev);
+        prev.setAttribute("id", "View_editor_" + nlid);
+        prev.setAttribute("class", "previewum");
+        document
+          .getElementById("maintable")
+          .insertBefore(
+            prev,
+            document.getElementById("maintable").children[id * 5 + 1]
+          );
+
+        let edt = document.createElement("div");
+        edt.setAttribute("id", "editor_" + nlid);
+        edt.setAttribute("class", "codeum");
+        document
+          .getElementById("maintable")
+          .insertBefore(
+            edt,
+            document.getElementById("maintable").children[id * 5 + 1]
+          );
+
+        let cllrem = document.createElement("div");
+        let textNoderem = document.createTextNode("-");
+        cllrem.appendChild(textNoderem);
+        cllrem.setAttribute("id", "celrem_" + nlid);
+        cllrem.setAttribute("class", "actionrem");
+        cllrem.setAttribute("onclick", "removeline(" + nlid + ")");
+        document
+          .getElementById("maintable")
+          .insertBefore(
+            cllrem,
+            document.getElementById("maintable").children[id * 5 + 1]
+          );
+
+        let cll = document.createElement("div");
+        let textNode = document.createTextNode("+");
+        cll.appendChild(textNode);
+        cll.setAttribute("id", "cel_" + nlid);
+        cll.setAttribute("class", "action");
+        cll.setAttribute("onclick", "addhere(" + nlid + ")");
+        document
+          .getElementById("maintable")
+          .insertBefore(
+            cll,
+            document.getElementById("maintable").children[id * 5 + 1]
+          );
+
+        document.getElementById("barra").style.gridRow = "2 / " + (linhas + 3);
+
+        linhas++;
+      };
+
+      removeline = function (id) {
+        document.getElementById("editor_" + id).remove();
+        document.getElementById("cell_" + id).remove();
+        document.getElementById("cellrem_" + id).remove();
+        document.getElementById("View_editor_" + id).remove();
+        linhas--;
+        document.getElementById("barra").style.gridRow = "2 / " + (linhas + 3);
+        reavalia();
       };
     </script>
 
@@ -225,32 +371,6 @@
         background-color: var(--bg-color, #eec3c3);
       }
 
-      #View_editor_1 {
-        border: 0;
-        position: absolute;
-        top: 0;
-        left: 10px;
-        width: calc(100% - 10px);
-        height: calc(100vh - 55px);
-        padding: 0;
-        margin: 0;
-      }
-
-      #editor_1 {
-        position: fixed;
-        width: 40%;
-        height: calc(100vh - 55px);
-        left: 15px;
-        top: 15px;
-        border: 1px solid #cccccc;
-        border-right: 0;
-        overflow-y: auto;
-        margin: 0;
-        padding: 0;
-        background-color: transparent;
-        z-index: 4900;
-      }
-
       #resize {
         background-color: #ff000000;
         position: absolute;
@@ -302,10 +422,45 @@
       .editorfull {
         width: calc(100% - 31px) !important;
       }
+
+      #maintable {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 24px 24px 1fr 10px 1fr;
+        gap: 4px 4px;
+        grid-auto-flow: row;
+      }
+
+      .action {
+        grid-column: 1 / span 1;
+        background-color: pink;
+      }
+
+      .actionrem {
+        grid-column: 2 / span 1;
+        background-color: #c0ffdd;
+      }
+
+      .codeum {
+        grid-column: 3 / span 1;
+        background-color: yellow;
+      }
+
+      .previewum {
+        grid-column: 5 / span 1;
+        background-color: cyan;
+      }
+
+      #barra {
+        grid-column: 4 / span 1;
+        grid-row: 1 / span 1;
+        background-color: red;
+      }
     </style>
   </head>
 
   <body>
+    <!-- NADA DE ACE POR ENQUANTO 
     <pre
       class="editor codefull"
       data-name="editor_1"
@@ -313,16 +468,25 @@
       data-linguagem="html"
     ></pre>
 
+    -->
+
     <script>
+      // NADA DE LOCALSTORAGE POR ENQUANTO
+      /*
       document.getElementsByTagName("pre")[0].innerHTML =
         localStorage.getItem("omnicodecode");
+        */
     </script>
 
-    <div id="right_panel">
-      <div id="resize"></div>
-
-      <iframe id="View_editor_1" frameborder="0"></iframe>
+    <div id="maintable">
+      <div id="cel_0" class="action"></div>
+      <div id="celrem_0" class="actionrem"></div>
+      <div id="editor_0" class="codeum"></div>
+      <div id="barra"></div>
+      <div id="View_editor_0" class="previewum"></div>
     </div>
+
+    <div onclick="addline()">+</div>
 
     <div id="statusbar">
       <div class="linkstatusbar" onclick="tolivecode();">LIVECODE</div>
@@ -331,12 +495,15 @@
         >executar: CTRL/CMD+S | menu: CTRL/CMD+SHIFT+P | RUN CODE | </span
       ><span id="tipoliguagem">HTML</span>
     </div>
+
+    <!-- O RODAR SERÁ POR CÉLULA 
     <div
       id="roda"
       onclick="javascript:runContent(String.fromHtmlEntities(localStorage.getItem('omnicodecode')),'View_editor_1',Predata_editor_1, Postdata_editor_1);"
     >
       &#9658;
     </div>
+    -->
 
     <script>
       let mensagem =
@@ -394,6 +561,8 @@
       };
 
       // FUNÇÃO DE FETCH DE ARQUIVO
+      // SEM FETCH DE ARQUIVO POR ENQUANTO
+      /*
       if ($_GET["file"] != "" && typeof $_GET["file"] != "undefined") {
         fetch($_GET["file"])
           .then((response) => response.text())
@@ -425,6 +594,10 @@
           });
       }
 
+      */
+
+      // NADA DE PREVIEW POR ENQUANTO
+      /*
       if ($_GET["preview"]) {
         if (parseInt($_GET["preview"]) <= 0) {
           document.getElementById("editor_1").classList.add("editorfull");
@@ -452,6 +625,10 @@
         ace.edit("editor_1").resize();
       }
 
+      */
+
+      // NADA DE RESIZE POR ENQUANTO
+      /*
       let m_pos;
       const resize = function (e) {
         let parent = resize_el.parentNode;
@@ -507,10 +684,14 @@
         },
         false
       );
+
+      */
     </script>
   </body>
 
   <script>
+    // POE - OK
+
     let poecss = `https://poepalette.vercel.app/dev/lesspink.css`;
     let basepoe = `https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/OmniCode`;
 
@@ -615,11 +796,16 @@
       document.getElementById("roda").style.top = "15px";
     }
 
+    // NADA DE ACE POR ENQUANTO
+    /*
     const enviacomando = function (instr) {
       let aceed = ace.edit("editor_1");
       aceed.setOptions(instr);
     };
+    */
 
+    // NADA DE RESIZE POR ENQUANTO
+    /*
     const redimensiona = function (qnt) {
       document.getElementById("right_panel").style.width =
         "calc(" + qnt + "% - 36px)";
@@ -663,6 +849,10 @@
       ace.edit("editor_1").resize();
     };
 
+    */
+
+    // NADA DE SOBRESCREVER POR ENQUANTO
+    /*
     const sobrescreve = function (arquivo) {
       fetch(arquivo)
         .then((response) => response.text())
@@ -672,6 +862,10 @@
         });
     };
 
+    */
+
+    // NADA DE ACE POR ENQUANTO
+    /*
     const lingua = function (qual) {
       let aceed = ace.edit("editor_1");
 
@@ -770,5 +964,7 @@
         Postdata_editor_1
       );
     };
+
+    */
   </script>
 </html>
