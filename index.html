@@ -348,6 +348,43 @@
         `;
       }
 
+      if ($_GET["variant"] == "pslides") {
+        mensagem = `<sp` + `an id='mensagem'>LIVECODE | </sp` + `an>`;
+
+        document.getElementById("statusbar").innerHTML =
+          `
+        <di` +
+          `v class="linkstatusbar" onclick='toggle("poeinst");''>MENU</d` +
+          `iv>
+        <di` +
+          `v class="linkstatusbar" onclick="tolivecode();">LIVECODE</d` +
+          `iv>
+        <di` +
+          `v class="linkstatusbar" onclick="toruncode();">RUN CODE</d` +
+          `iv>
+        <di` +
+          `v class="linkstatusbar" onclick='lingua("processing");setnoconsole(true);''>PROCESSING</d` +
+          `iv>
+        <di` +
+          `v class="linkstatusbar" onclick='lingua("p5");setnoconsole("");'>P5</d` +
+          `iv>
+        <di` +
+          `v class="linkstatusbar" onclick='lingua("python");'>python</d` +
+          `iv>
+        <sp` +
+          `an id="mensagem">LIVECODE | </s` +
+          `pan
+        ><sp` +
+          `an id="tipoliguagem">HTML</sp` +
+          `an>
+        `;
+
+        document.getElementById("statusbar").style.bottom = "80px";
+        document.getElementById("right_panel").style.height = "calc(100vh - 125px)";
+        document.getElementById("View_editor_1").style.height = "calc(100vh - 125px)";
+        document.getElementById("editor_1").style.height = "calc(100vh - 125px)";
+      }
+
       String.prototype.toHtmlEntities = function () {
         return this.replace(/./gm, function (s) {
           // return "&#" + s.charCodeAt(0) + ";";
