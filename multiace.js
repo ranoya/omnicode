@@ -50,9 +50,10 @@ function changeContent(data, who, predata, extras) {
             iframeA.document.close();
         } else {
 
-            let converter = new showdown.Converter(),
-            text  = data,
-            codigohtml = converter.makeHtml(text);
+            let converter = new showdown.Converter({ tables: true }),
+                text = data;
+            converter.setFlavor('github');
+            let codigohtml = converter.makeHtml(text);
             
             iframeA.document.open();
             iframeA.document.write(screenconsole + predata);
