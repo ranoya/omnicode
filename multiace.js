@@ -49,9 +49,14 @@ function changeContent(data, who, predata, extras) {
             iframeA.document.write(extras);
             iframeA.document.close();
         } else {
+
+            let converter = new showdown.Converter(),
+            text  = data,
+            codigohtml = converter.makeHtml(text);
+            
             iframeA.document.open();
             iframeA.document.write(screenconsole + predata);
-            iframeA.document.write(mdconv.markHtml(data));
+            iframeA.document.write(codigohtml);
             iframeA.document.write(extras);
             iframeA.document.close();
         }
