@@ -137,6 +137,10 @@
           linguagem = "java";
         }
 
+        if ($_GET["lang"] == "markdown") {
+          linguagem = "markdown";
+        }
+
         let myTimeout4 = setTimeout(function () {
           lingua($_GET["lang"]);
         }, 2300);
@@ -412,6 +416,10 @@
             let dados = dada.toHtmlEntities();
             let aceed = ace.edit("editor_1");
             aceed.setValue(dada);
+
+            if ($_GET["file"].match(/\.md/i) && $_GET["lang"] != "p5") {
+              lingua("markdown");
+            }
 
             if ($_GET["file"].match(/\.js/i) && $_GET["lang"] != "p5") {
               lingua("javascript");
@@ -778,7 +786,9 @@
         aceed.setOptions({ mode: "ace/mode/markdown" });
 
         Predata_editor_1 =
-          ` <sty` + `le>body,html { margin: 0; padding: 0; }</sty` + `le>`;
+          ` <sty` +
+          `le src="https://raw.githubusercontent.com/ranoya/markdown-css/master/md.css"></sty` +
+          `le>`;
         Postdata_editor_1 = "";
       }
 
