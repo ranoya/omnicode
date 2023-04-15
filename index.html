@@ -58,8 +58,10 @@
     ></script>
     <script src="https://poepalette.vercel.app/poeinstance.js"></script>
     <script src="multiace.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
     <script>
+      const mdconv = new showdown.Converter();
+
       if (
         localStorage.getItem("omnicodecode") == "" ||
         typeof localStorage.getItem("omnicodecode") == "undefined"
@@ -70,6 +72,7 @@
         );
       }
 
+      let modoMD = false;
       let Predata_editor_1 = "";
       let Postdata_editor_1 = "";
 
@@ -380,9 +383,12 @@
         `;
 
         document.getElementById("statusbar").style.bottom = "80px";
-        document.getElementById("right_panel").style.height = "calc(100vh - 125px)";
-        document.getElementById("View_editor_1").style.height = "calc(100vh - 125px)";
-        document.getElementById("editor_1").style.height = "calc(100vh - 125px)";
+        document.getElementById("right_panel").style.height =
+          "calc(100vh - 125px)";
+        document.getElementById("View_editor_1").style.height =
+          "calc(100vh - 125px)";
+        document.getElementById("editor_1").style.height =
+          "calc(100vh - 125px)";
       }
 
       String.prototype.toHtmlEntities = function () {
@@ -677,6 +683,7 @@
       document.getElementById("tipoliguagem").innerHTML = qual;
 
       if (qual == "html") {
+        modoMD = false;
         aceed.setOptions({ mode: "ace/mode/html" });
 
         Predata_editor_1 = "";
@@ -684,12 +691,14 @@
       }
 
       if (qual == "javascript") {
+        modoMD = false;
         aceed.setOptions({ mode: "ace/mode/javascript" });
         Predata_editor_1 = `<scri` + `pt>`;
         Postdata_editor_1 = `</scr` + `ipt>`;
       }
 
       if (qual == "p5") {
+        modoMD = false;
         aceed.setOptions({ mode: "ace/mode/javascript" });
         Predata_editor_1 =
           `
@@ -708,6 +717,7 @@
       }
 
       if (qual == "python") {
+        modoMD = false;
         aceed.setOptions({ mode: "ace/mode/python" });
         Predata_editor_1 =
           `
@@ -738,6 +748,7 @@
       }
 
       if (qual == "processing") {
+        modoMD = false;
         aceed.setOptions({ mode: "ace/mode/java" });
 
         Predata_editor_1 =
@@ -760,6 +771,15 @@
         <can` +
           `vas> </canv` +
           `as>`;
+      }
+
+      if (qual == "markdown") {
+        modoMD = true;
+        aceed.setOptions({ mode: "ace/mode/markdown" });
+
+        Predata_editor_1 =
+          ` <sty` + `le>body,html { margin: 0; padding: 0; }</sty` + `le>`;
+        Postdata_editor_1 = "";
       }
 
       changeContent(

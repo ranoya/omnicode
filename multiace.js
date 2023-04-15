@@ -41,11 +41,20 @@ function changeContent(data, who, predata, extras) {
     }
 
     delei = setTimeout(function () {
-        iframeA.document.open();
-        iframeA.document.write(screenconsole +predata);
-        iframeA.document.write(data);
-        iframeA.document.write(extras);
-        iframeA.document.close();
+
+        if (!modoMD) {
+            iframeA.document.open();
+            iframeA.document.write(screenconsole + predata);
+            iframeA.document.write(data);
+            iframeA.document.write(extras);
+            iframeA.document.close();
+        } else {
+            iframeA.document.open();
+            iframeA.document.write(screenconsole + predata);
+            iframeA.document.write(mdconv.markHtml(data));
+            iframeA.document.write(extras);
+            iframeA.document.close();
+        }
     }, 2000);
 
 
