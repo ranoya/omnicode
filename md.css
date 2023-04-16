@@ -44,7 +44,7 @@ Use:
 }
 
 body {
-  background-color: var(--md-bg, #ffffff);
+  background-color: var(--md-bg, transparent);
   font-family: "Crimson Pro", serif;
 
   column-count: 2;
