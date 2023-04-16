@@ -70,6 +70,7 @@
         );
       }
 
+      let modoMD = false;
       let Predata_editor_1 = "";
       let Postdata_editor_1 = "";
 
@@ -132,6 +133,10 @@
 
         if ($_GET["lang"] == "processing") {
           linguagem = "java";
+        }
+
+        if ($_GET["lang"] == "markdown") {
+          linguagem = "markdown";
         }
 
         let myTimeout4 = setTimeout(function () {
@@ -444,6 +449,10 @@
             aceed.setValue(dada);
             localStorage.setItem("omnicodecode", dada);
 
+            if ($_GET["file"].match(/\.md/i) && $_GET["lang"] != "p5") {
+              lingua("markdown");
+            }
+
             if ($_GET["file"].match(/\.js/i) && $_GET["lang"] != "p5") {
               lingua("javascript");
             }
@@ -719,6 +728,7 @@
       document.getElementById("tipoliguagem").innerHTML = qual;
 
       if (qual == "html") {
+        modoMD = false;
         aceed.setOptions({ mode: "ace/mode/html" });
 
         Predata_editor_1 = "";
@@ -726,12 +736,14 @@
       }
 
       if (qual == "javascript") {
+        modoMD = false;
         aceed.setOptions({ mode: "ace/mode/javascript" });
         Predata_editor_1 = `<scri` + `pt>`;
         Postdata_editor_1 = `</scr` + `ipt>`;
       }
 
       if (qual == "p5") {
+        modoMD = false;
         aceed.setOptions({ mode: "ace/mode/javascript" });
         Predata_editor_1 =
           `
@@ -750,6 +762,7 @@
       }
 
       if (qual == "python") {
+        modoMD = false;
         aceed.setOptions({ mode: "ace/mode/python" });
         Predata_editor_1 =
           `
@@ -780,6 +793,7 @@
       }
 
       if (qual == "processing") {
+        modoMD = false;
         aceed.setOptions({ mode: "ace/mode/java" });
 
         Predata_editor_1 =
@@ -802,6 +816,19 @@
         <can` +
           `vas> </canv` +
           `as>`;
+      }
+
+      if (qual == "markdown") {
+        modoMD = true;
+        aceed.setOptions({ mode: "ace/mode/markdown" });
+
+        Predata_editor_1 =
+          ` <lin` +
+          `k rel="styl` +
+          `esheet" type="te` +
+          `xt/cs` +
+          `s" href="../md.css">`;
+        Postdata_editor_1 = "";
       }
 
       changeContent(

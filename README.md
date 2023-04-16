@@ -64,9 +64,6 @@ These are the variables you can use:
 
 ## TODO
 
-**Markdown**
-Yeah... markdown still not implemented yet.
-
 **Mobile ready**
 Allow touch to resize the editor and some media queries to resize things for comfortable use on mobile (I don't think it can really be comfortable).
 

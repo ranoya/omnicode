@@ -78,11 +78,24 @@ function runContent(data, who, predata, extras) {
     `;
     }
 
-    iframeA.document.open();
-    iframeA.document.write(screenconsole + predata);
-    iframeA.document.write(data);
-    iframeA.document.write(extras);
-    iframeA.document.close();
+    if (!modoMD) {
+        iframeA.document.open();
+        iframeA.document.write(screenconsole + predata);
+        iframeA.document.write(data);
+        iframeA.document.write(extras);
+        iframeA.document.close();
+    } else {
+        let converter = new showdown.Converter({ tables: true }),
+                text = data;
+        converter.setFlavor('github');
+        let codigohtml = converter.makeHtml(text);
+        
+        iframeA.document.open();
+        iframeA.document.write(screenconsole + predata);
+        iframeA.document.write(codigohtml);
+        iframeA.document.write(extras);
+        iframeA.document.close();
+    }
 
 }
 
