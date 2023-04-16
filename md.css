@@ -1,0 +1,262 @@
+/*
+
+CSS for markdown to HTML transition
+Guilherme Ranoya, 2022
+
+
+
+Global Variables
+----------------------------------------------------
+
+--md-bg                -  background color
+--md-fg                -  text color
+--md-code              -  code color
+--md-h1                -  headings color (all, h1-h6)
+--md-mark              -  links and other differentiated markdown
+--md-highlight         -  mouse over color
+--md-hfont             -  headings font family
+--md-codefont          -  code font family
+--md-font              -  text font family
+--md-listfont          -  ul and ol (lists) font family
+--md-tablefont         -  tables font family
+--md-inlinecodebg      -  inline code background color
+--md-inlinecodepadding -  inline code block separation
+--md-inlinecoderound   -  inline code block round corner
+
+Use:
+
+:root {
+
+--md-bg: black;
+--md-fg: #eeeeee;
+--md-font: Helvetica, Arial, sans-serif;
+
+}
+
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,200;0,500;0,700;1,200;1,500;1,700&family=Noto+Sans+Mono:wght@300;500&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+  border: 0 transparent none;
+}
+
+body {
+  background-color: var(--md-bg, #ffffff);
+  font-family: "Crimson Pro", serif;
+
+  column-count: 2;
+  column-gap: 100px;
+  margin: 60px;
+  margin-top: 20px;
+  margin-right: 80px;
+  margin-bottom: 20px;
+}
+
+html,
+body {
+  font-size: 0.5vw;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--md-h1, #000000);
+  font-family: var(--md-hfont, "Crimson Pro"), serif;
+}
+
+h1 {
+  font-size: min(48px, 5rem);
+  line-height: min(50px, 4.7rem);
+  font-weight: 500;
+  margin-bottom: 75px;
+}
+
+h2 {
+  font-size: min(32px, 2.9rem);
+  line-height: min(32px, 2.9rem);
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+h3 {
+  font-size: min(26px, 2.71rem);
+  line-height: min(32px, 3.4rem);
+  font-weight: bolder;
+  margin-bottom: 16px;
+}
+
+h4 {
+  font-size: min(22px, 2.5rem);
+  line-height: min(24px, 2.6rem);
+  font-weight: bolder;
+  margin-bottom: 15px;
+}
+
+h5 {
+  font-size: min(20px, 1.34rem);
+  line-height: min(23px, 1.78rem);
+  font-weight: bolder;
+  margin-bottom: 20px;
+}
+
+h6 {
+  font-size: min(16px, 1.3rem);
+  line-height: min(18px, 1.35rem);
+  font-weight: bolder;
+  margin-bottom: 15px;
+}
+
+p {
+  color: var(--md-fg, #000000);
+  font-size: min(26px, 2.71rem);
+  line-height: min(32px, 3.4rem);
+  margin-bottom: 40px;
+  text-align: justify;
+  font-weight: 200;
+  font-family: var(--md-font, "Crimson Pro"), serif;
+}
+
+a {
+  color: var(--md-mark, #d4317d);
+  text-decoration: none;
+  font-family: var(--md-hfont, "Crimson Pro"), serif;
+}
+
+a:hover {
+  color: var(--md-highlight, #8f124c);
+  font-family: var(--md-hfont, "Crimson Pro"), serif;
+}
+
+blockquote {
+  padding-left: min(15px, 1.5rem);
+  border-left: 4px solid var(--md-h1, #000000);
+}
+
+code {
+  font-family: var(--md-codefont, "Noto Sans Mono"), "Courier New", Courier,
+    monospace;
+  color: var(--md-code, #000000);
+  font-size: min(21px, 2.3rem);
+  line-height: min(32px, 3.4rem);
+}
+
+pre {
+  font-family: var(--md-codefont, "Noto Sans Mono"), "Courier New", Courier,
+    monospace;
+  color: var(--md-code, #000000);
+  font-size: min(22px, 2.5rem);
+  line-height: min(22px, 2.5rem);
+  margin-bottom: 15px;
+  display: block;
+  overflow: scroll;
+  width: 100%;
+}
+
+pre code {
+  font-family: var(--md-codefont, "Noto Sans Mono"), "Courier New", Courier,
+    monospace;
+  color: var(--md-code, #000000);
+  font-size: min(22px, 2.4rem);
+  line-height: min(31px, 3rem);
+  margin-bottom: 15px;
+  display: block;
+  overflow: scroll;
+  width: 100%;
+}
+
+p code {
+  background-color: var(--md-inlinecodebg, #dddddd);
+  padding-left: var(--md-inlinecodepadding, 4px);
+  padding-right: var(--md-inlinecodepadding, 4px);
+  border-radius: var(--md-inlinecoderound, 2px);
+}
+
+ol {
+  list-style-type: decimal;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  margin-left: 20px;
+  font-family: var(--md-listfont, "Crimson Pro"), serif;
+  color: var(--md-fg, #000000);
+  font-size: min(22px, 2.5rem);
+  line-height: min(30px, 3rem);
+}
+
+ul,
+ol {
+  margin-bottom: 30px;
+}
+
+ul p,
+ol p {
+  margin: 0;
+  padding: 0;
+  margin-left: 20px;
+  font-family: var(--md-listfont, "Crimson Pro"), serif;
+  color: var(--md-fg, #000000);
+  font-size: min(22px, 2.5rem);
+  line-height: min(30px, 3rem);
+  margin-bottom: 8px;
+}
+
+.observablehq--function,
+.observablehq--inspect {
+  font-family: var(--md-codefont, "Noto Sans Mono"), "Courier New", Courier,
+    monospace;
+  color: var(--md-code, #000000);
+  font-size: min(20px, 1.34rem);
+  line-height: min(23px, 1.78rem);
+  margin-bottom: 15px;
+  font-weight: bolder;
+  display: block;
+  overflow: scroll;
+  width: 100%;
+}
+
+iframe {
+  width: 100%;
+  frameborder: 0;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+table {
+  width: 100%;
+  font-family: var(--md-tablefont, "Courier New"), Courier, monospace;
+  font-size: min(22px, 2.45rem);
+  line-height: min(24px, 2.51rem);
+  text-align: left;
+  margin-bottom: 40px;
+}
+
+thead {
+  color: var(--md-cabecalho, #888888);
+  font-family: var(--md-tablefont, "Courier New"), Courier, monospace;
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: lighter;
+  text-transform: uppercase;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+thead th,
+tbody td {
+  border-bottom: 1px solid var(--md-detalhe, #dddddd);
+  font-family: var(--md-tablefont, "Courier New"), Courier, monospace;
+}
+
+th {
+  font-family: var(--md-tablefont, "Courier New"), Courier, monospace;
+  font-weight: lighter;
+  padding-bottom: 2px;
+}
