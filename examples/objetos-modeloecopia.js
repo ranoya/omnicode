@@ -7,13 +7,21 @@ function setup() {
 // Cria um modelo para ser copiado, uma "classe" 
 let carro = {
     ligado: true,
-        nome: "Carro ",
-        velocidade: Math.random() * 5 + 2,
-        posicao: Math.random() * 100,
-        y: Math.random() * 600 + 30,
-        corR: Math.random() * 255,
-        corG: Math.random() * 255,
-        corB: Math.random() * 255,
+    nome: "Carro ",
+    inicializa: function () {
+            this.velocidade = Math.random() * 5 + 2;
+            this.posicao = Math.random() * 100;
+            this.y = Math.random() * 600 + 30;
+            this.corR = Math.random() * 255;
+            this.corG = Math.random() * 255;
+            this.corB = Math.random() * 255;
+        },
+        velocidade: 0,
+        posicao: 0,
+        y: 0,
+        corR: 0,
+        corG: 0,
+        corB: 0,
         anda: function () {
             if (this.ligado == true) {
                 this.posicao = this.posicao + this.velocidade;
@@ -37,14 +45,16 @@ let totaldecarros = 10;
 
 // Loop para gerar os objetos automaticamente
 for (let i = 0; i < totaldecarros; i = i + 1) {
-
-    // Cria um objeto dentro de cada posição da Array
-    varioscarros[i] = {};
-    
-    // Copia (instancia) dos carros tiradas do modelo original (classe)
+  
+    // Cria um objeto dentro da Array e o copia(instancia)
+    // do no modelo de carro original(classe)
     varioscarros[i] = { ...carro };
 
-    // Modificação do nome default
+    // Aciona a função para produzir dados aleatórios
+    // para o carro
+    varioscarros[i].inicializa();
+
+    // Modificação arbitrária do nome default
     varioscarros[i].nome = "Carro " + i        
 
 }
