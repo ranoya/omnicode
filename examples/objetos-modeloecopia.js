@@ -37,8 +37,11 @@ let totaldecarros = 10;
 
 // Loop para gerar os objetos automaticamente
 for (let i = 0; i < totaldecarros; i = i + 1) {
+
+    // Cria um objeto dentro de cada posição da Array
+    varioscarros[i] = {};
     
-    // Cópia (instância) dos carros tiradas do modelo original (classe)
+    // Copia (instancia) dos carros tiradas do modelo original (classe)
     varioscarros[i] = { ...carro };
 
     // Modificação do nome default
