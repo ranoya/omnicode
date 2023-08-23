@@ -29,9 +29,9 @@ let carroB = {
     },
     desenha: function () {
         fill("#FF0000");
-        rect(this.posicao, 70,30,30);
+        rect(this.posicao, 200,30,30);
         textSize(32);
-        text(this.nome, this.posicao, 50);
+        text(this.nome, this.posicao, 180);
     }
 }
 
