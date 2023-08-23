@@ -58,7 +58,7 @@ function draw() {
     carroB.anda();
 
     // Para um dos carros eventualmente
-    if (random(10) > 9) {
+    if (random(100) > 95) {
         carroB.ligado = false;
     }
 
