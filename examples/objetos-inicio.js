@@ -1,6 +1,7 @@
 function setup() {
     createCanvas(windowWidth, windowHeight);
     background(100);
+    noStroke();
 }
 
 // posição inicial em X dos dois carros
