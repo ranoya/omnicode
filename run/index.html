@@ -482,7 +482,10 @@
                   true,
                   function () {}
                 );
-              }, 2000);
+              }, 200);
+            } else {
+              aceed.gotoLine(0, 0, true);
+              aceed.scrollToLine(0, true, true, function () {});
             }
           });
       }
@@ -497,7 +500,7 @@
             true,
             function () {}
           );
-        }, 2000);
+        }, 200);
       }
 
       if ($_GET["preview"]) {
