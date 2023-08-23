@@ -20,7 +20,7 @@ for (let i = 0; i < totaldecarros; i = i + 1) {
         nome: "Carro " + i,
         velocidade: Math.random() * 5 + 2,
         posicao: Math.random() * 100,
-        y: Math.random() * 400 + 30,
+        y: Math.random() * 600 + 30,
         corR: Math.random() * 255,
         corG: Math.random() * 255,
         corB: Math.random() * 255,
