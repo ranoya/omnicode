@@ -472,7 +472,16 @@
             if ($_GET["file"].match(/\.py$/i)) {
               lingua("python");
             }
+
+            if ($_GET["line"] != "" && typeof $_GET["line"] != "undefined") {
+              aceed.gotoLine(parseInt($_GET["line"]), 0, true);
+            }
           });
+      }
+
+      if ($_GET["line"] != "" && typeof $_GET["line"] != "undefined") {
+        let aceed = ace.edit("editor_1");
+        aceed.gotoLine(parseInt($_GET["line"]), 0, true);
       }
 
       if ($_GET["preview"]) {
