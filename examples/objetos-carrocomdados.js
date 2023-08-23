@@ -13,15 +13,15 @@ let carroA = {
     y: 320,
     cor: "#00FF00",
     anda: function () {
-        this.posicao = this.posicao + this.velocidade;
+        if (this.ligado == true) {
+            this.posicao = this.posicao + this.velocidade;
+        }
     },
     desenha: function () {
-        if (this.ligado == true) {
             fill(this.cor);
             rect(this.posicao, this.y, 30, 30);
             textSize(32);
             text(this.nome, this.posicao, this.y - 20);
-        }
     }
 }
 
@@ -33,15 +33,15 @@ let carroB = {
     y: 50,
     cor: "#FF0000",
     anda: function () {
-        this.posicao = this.posicao + this.velocidade;
+        if (this.ligado == true) {
+            this.posicao = this.posicao + this.velocidade;
+        }
     },
     desenha: function () {
-        if (this.ligado == true) {
             fill(this.cor);
             rect(this.posicao, this.y, 30, 30);
             textSize(32);
             text(this.nome, this.posicao, this.y - 20);
-        }
     }
 }
 
