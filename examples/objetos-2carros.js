@@ -20,7 +20,8 @@ let carro = {
     },
     vai: false,
     cor: "#00FF00",
-    desenha: function() {
+    desenha: function () {
+        noStroke();
         fill(this.cor);
         rect(this.posicao, this.y,30,30);
         textSize(32);
@@ -45,7 +46,8 @@ let carro2 = {
         }
     },
     vai: false,
-    desenha: function() {
+    desenha: function () {
+        noStroke();
         fill(this.cor);
         rect(this.posicao, this.y,30,30);
         textSize(32);
