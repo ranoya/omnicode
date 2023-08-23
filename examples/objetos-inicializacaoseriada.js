@@ -17,7 +17,7 @@ for (let i = 0; i < totaldecarros; i = i + 1) {
     // Criação dos carros como objetos
     varioscarros[i] = {
         ligado: true,
-        nome: "Carro 1",
+        nome: "Carro " + i,
         velocidade: Math.random() * 5 + 2,
         posicao: Math.random() * 100,
         y: Math.random() * 400 + 30,
@@ -56,5 +56,5 @@ function draw() {
             varioscarros[0].ligado = false;
         }
     }
-    
+
 }
