@@ -50,11 +50,12 @@ function draw() {
         // Desenha e anda com os carros (todos)
         varioscarros[i].desenha();
         varioscarros[i].anda();
+  
+    }
 
-        // Para um dos carros eventualmente
-        if (random(100) > 98) {
-            varioscarros[0].ligado = false;
-        }
+    // Para um dos carros eventualmente
+    if (random(100) > 98) {
+        varioscarros[0].ligado = false;
     }
 
 }
