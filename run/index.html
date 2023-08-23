@@ -474,21 +474,30 @@
             }
 
             if ($_GET["line"] != "" && typeof $_GET["line"] != "undefined") {
-              aceed.gotoLine(parseInt($_GET["line"]), 0, true);
-              aceed.scrollToLine(
-                parseInt($_GET["line"]),
-                true,
-                true,
-                function () {}
-              );
+              let esperaumpouco = setTimeout(function () {
+                aceed.gotoLine(parseInt($_GET["line"]), 0, true);
+                aceed.scrollToLine(
+                  parseInt($_GET["line"]),
+                  true,
+                  true,
+                  function () {}
+                );
+              }, 2000);
             }
           });
       }
 
       if ($_GET["line"] != "" && typeof $_GET["line"] != "undefined") {
-        let aceed = ace.edit("editor_1");
-        aceed.gotoLine(parseInt($_GET["line"]), 0, true);
-        aceed.scrollToLine(parseInt($_GET["line"]), true, true, function () {});
+        let esperaumpouco = setTimeout(function () {
+          let aceed = ace.edit("editor_1");
+          aceed.gotoLine(parseInt($_GET["line"]), 0, true);
+          aceed.scrollToLine(
+            parseInt($_GET["line"]),
+            true,
+            true,
+            function () {}
+          );
+        }, 2000);
       }
 
       if ($_GET["preview"]) {
