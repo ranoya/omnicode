@@ -31,10 +31,17 @@ let carro = {
             }
 
             if (this.posicao > 600 && ganhador == "") {
-                ganhador = "O vencedor é " + this.nome;
+                ganhador = this.nome;
+            }
+            
+            if (this.nome == ganhador) {
                 fill(this.corR, this.corG, this.corB);
                 textSize(32);
-                text(ganhador, 30, 100);
+                text("O vencedor é " + ganhador, 30, 100);
+            }
+
+            if (this.posicao > 800) {
+                this.ligado = false;
             }
         },
         desenha: function () {
