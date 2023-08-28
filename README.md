@@ -61,6 +61,7 @@ These are the variables you can use:
 | noconsole   | boolean                    | don't show the console                                                                     | https://omnicode.vercel.app/run/?noconsole=true                                                                         |
 | nostatus    | boolean                    | don't show the status bar                                                                  | https://omnicode.vercel.app/?nostatus=true                                                                              |
 | readonly    | boolean                    | don't let changes to the actual code                                                       | https://omnicode.vercel.app/?readonly=true&file=https://omnicode.vercel.app/examples/myfile.html                        |
+| line        | integer                    | starts the editor at the desired line                                                      | https://omnicode.vercel.app/?line=10&readonly=true&file=https://omnicode.vercel.app/examples/myfile.html                |
 
 ## TODO
 
