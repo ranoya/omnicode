@@ -57,7 +57,7 @@
       type="text/javascript"
     ></script>
     <script src="https://poepalette.vercel.app/poeinstance.js"></script>
-    <script src="https://omnicode.vercel.app/run/multiace.js"></script>
+    <script src="./multiAceFull.js"></script>
 
     <script>
       // COMO GUARDAR TODAS AS CELULAS NO LOCALSTORAGE?
@@ -149,12 +149,10 @@
         */
       }
 
-      // POR ENQUANTO NADA DE ACE
-
-      /*
       let acegeneralconfig = {
         theme: "ace/theme/" + tema,
         mode: "ace/mode/" + linguagem,
+        maxLines: Infinity,
         enableBasicAutocompletion: true,
         enableSnippets: true,
         enableLiveAutocompletion: true,
@@ -170,136 +168,64 @@
         fadeFoldWidgets: true,
       };
 
-      */
-
       // NODES
-      let lid = 1;
-      let linhas = 1;
+      let celulas = [];
 
       reavalia = function () {
-        let c = 1;
-        for (
-          let i = 11;
-          i < document.getElementById("maintable").childNodes.length;
-          i = i + 4
-        ) {
-          console.log(document.getElementById("maintable").childNodes.length);
-          console.log("iniciando linha c=" + c + " / elemento i=" + i);
-          document.getElementById("maintable").childNodes[i].id = "cell_" + c;
-          //document.getElementById("maintable").childNodes[i].onclick = "addhere(" + c + ")";
-          document.getElementById("maintable").childNodes[i + 1].id =
-            "cellrem_" + c;
-          document
-            .getElementById("maintable")
-            .childNodes[i + 1].addEventListener("click", removeline(c));
-          document.getElementById("maintable").childNodes[i + 2].id =
-            "editor_" + c;
-          document.getElementById("maintable").childNodes[i + 3].id =
-            "View_editor_" + c;
+        //console.table(celulas);
 
-          c++;
+        let conteudo = `<div id="cel_0" class="action" onclick='addhere(0)'>+</div>
+          <div id="celrem_0" class="actionrem" onclick='removeline(0)'>-</div>
+          <div id="editor_0" class="editor" data-linguagem="${
+            celulas[0].type
+          }">${celulas[0].code}</div>
+          <div id="barra" style='grid-row: 1 / ${celulas.length + 1}'></div>
+          <div id="View_editor_0" class="previewum"></div>`;
+
+        for (let i = 1; i < celulas.length; i++) {
+          conteudo += `
+          <div id="cel_${i}" class="action" onclick='addhere(${i})'>+</div>
+          <div id="celrem_${i}" class="actionrem" onclick='removeline(${i})'>-</div>
+          <div id="editor_${i}" data-linguagem="${celulas[i].type}" class="editor">${celulas[i].code}</div>
+          <div id="barra"></div>
+          <div id="View_editor_${i}" class="previewum"></div>`;
         }
+
+        document.getElementById("maintable").innerHTML = conteudo;
+
+        refreshace();
       };
 
       addline = function () {
-        let cll = document.createElement("div");
-        let textNode = document.createTextNode("+");
-        cll.appendChild(textNode);
-        cll.setAttribute("id", "cel_" + lid);
-        cll.setAttribute("class", "action");
-        cll.setAttribute("onclick", "addhere(" + lid + ")");
-        document.getElementById("maintable").appendChild(cll);
-
-        let cllrem = document.createElement("div");
-        let textNoderem = document.createTextNode("-");
-        cllrem.appendChild(textNoderem);
-        cllrem.setAttribute("id", "celrem_" + lid);
-        cllrem.setAttribute("class", "actionrem");
-        cllrem.setAttribute("onclick", "removeline(" + lid + ")");
-        document.getElementById("maintable").appendChild(cllrem);
-
-        let edt = document.createElement("div");
-        edt.setAttribute("id", "editor_" + lid);
-        edt.setAttribute("class", "codeum");
-        document.getElementById("maintable").appendChild(edt);
-
-        document.getElementById("barra").style.gridRow = "2 / " + (linhas + 3);
-
-        let prev = document.createElement("div");
-        let textNodePrev = document.createTextNode(lid);
-        prev.appendChild(textNodePrev);
-        prev.setAttribute("id", "View_editor_" + lid);
-        prev.setAttribute("class", "previewum");
-        document.getElementById("maintable").appendChild(prev);
-
-        lid++;
-        linhas++;
+        let n = celulas.length;
+        celulas[n] = {};
+        celulas[n].code = "codigo " + celulas.length;
+        celulas[n].type = "javascript";
         reavalia();
       };
 
       addhere = function (id) {
+        let n = celulas.length;
+        celulas[n] = {};
+        celulas[n].code = "codigo " + celulas.length;
+        celulas[n].type = "javascript";
+
+        for (let i = celulas.length - 1; i >= 0; i--) {
+          if (i > id) {
+            celulas[i].code = celulas[i - 1].code;
+            celulas[i].type = celulas[i - 1].type;
+          }
+
+          if (i == id) {
+            celulas[i].code = "codigo novo " + i;
+            celulas[i].type = "javascript";
+          }
+        }
         reavalia();
-        let nlid = id + 1;
-        let prev = document.createElement("div");
-        let textNodePrev = document.createTextNode(nlid);
-        prev.appendChild(textNodePrev);
-        prev.setAttribute("id", "View_editor_" + nlid);
-        prev.setAttribute("class", "previewum");
-        document
-          .getElementById("maintable")
-          .insertBefore(
-            prev,
-            document.getElementById("maintable").children[id * 5 + 1]
-          );
-
-        let edt = document.createElement("div");
-        edt.setAttribute("id", "editor_" + nlid);
-        edt.setAttribute("class", "codeum");
-        document
-          .getElementById("maintable")
-          .insertBefore(
-            edt,
-            document.getElementById("maintable").children[id * 5 + 1]
-          );
-
-        let cllrem = document.createElement("div");
-        let textNoderem = document.createTextNode("-");
-        cllrem.appendChild(textNoderem);
-        cllrem.setAttribute("id", "celrem_" + nlid);
-        cllrem.setAttribute("class", "actionrem");
-        cllrem.setAttribute("onclick", "removeline(" + nlid + ")");
-        document
-          .getElementById("maintable")
-          .insertBefore(
-            cllrem,
-            document.getElementById("maintable").children[id * 5 + 1]
-          );
-
-        let cll = document.createElement("div");
-        let textNode = document.createTextNode("+");
-        cll.appendChild(textNode);
-        cll.setAttribute("id", "cel_" + nlid);
-        cll.setAttribute("class", "action");
-        cll.setAttribute("onclick", "addhere(" + nlid + ")");
-        document
-          .getElementById("maintable")
-          .insertBefore(
-            cll,
-            document.getElementById("maintable").children[id * 5 + 1]
-          );
-
-        document.getElementById("barra").style.gridRow = "2 / " + (linhas + 3);
-
-        linhas++;
       };
 
       removeline = function (id) {
-        document.getElementById("editor_" + id).remove();
-        document.getElementById("cell_" + id).remove();
-        document.getElementById("cellrem_" + id).remove();
-        document.getElementById("View_editor_" + id).remove();
-        linhas--;
-        document.getElementById("barra").style.gridRow = "2 / " + (linhas + 3);
+        celulas.splice(id, 1);
         reavalia();
       };
     </script>
@@ -427,6 +353,7 @@
         width: 100%;
         display: grid;
         grid-template-columns: 24px 24px 1fr 10px 1fr;
+        grid-template-rows: auto;
         gap: 4px 4px;
         grid-auto-flow: row;
       }
@@ -441,7 +368,7 @@
         background-color: #c0ffdd;
       }
 
-      .codeum {
+      .editor {
         grid-column: 3 / span 1;
         background-color: yellow;
       }
@@ -478,13 +405,7 @@
         */
     </script>
 
-    <div id="maintable">
-      <div id="cel_0" class="action"></div>
-      <div id="celrem_0" class="actionrem"></div>
-      <div id="editor_0" class="codeum"></div>
-      <div id="barra"></div>
-      <div id="View_editor_0" class="previewum"></div>
-    </div>
+    <div id="maintable"></div>
 
     <div onclick="addline()">+</div>
 
