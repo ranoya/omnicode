@@ -1,0 +1,30 @@
+<script>
+  // CRIA CÓDIGO SVG COM PROGRAMAÇÃO
+  let meusvg = `<svg width="300" height="300" viewBox="0 0 300 300">`;
+
+  for (let i = 10; i < 300; i = i + 50) {
+    meusvg +=
+      `<rect x="` + i + `" y="130" width="40" height="40" fill="#FF0000" />`;
+  }
+
+  meusvg += `</svg>`;
+</script>
+
+<div id="vesvg"></div>
+
+<a id="botao" href="#">download</a>
+
+<script>
+  // MOSTRA IMAGEM DENTRO DO DIV vesvg
+  document.getElementById("vesvg").innerHTML = meusvg;
+
+  // ATRIBUI UM ARQUIVO PARA DOWNLOAD NO LINK botao
+
+  let meulink = document.getElementById("botao");
+  meulink.setAttribute(
+    "href",
+    "data:image/svg+xml;utf-8," + encodeURIComponent(meusvg)
+  );
+
+  meulink.setAttribute("download", "minhaimagem.svg");
+</script>
