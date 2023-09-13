@@ -330,6 +330,7 @@
     </div>
 
     <div id="statusbar">
+      <div class="linkstatusbar" onclick="toggle('poeinst');">MENU</div>
       <div class="linkstatusbar" onclick="tolivecode();">LIVECODE</div>
       <div class="linkstatusbar" onclick="toruncode();">RUN CODE</div>
       <span id="mensagem"
@@ -350,6 +351,39 @@
         `an>`;
 
       // VARIANTES
+      if ($_GET["variant"] == "nomenubutton") {
+        document.getElementById("statusbar").innerHTML =
+          `
+        <di` +
+          `v class="linkstatusbar" onclick="tolivecode();">LIVECODE</d` +
+          `iv>
+        <di` +
+          `v class="linkstatusbar" onclick="toruncode();">RUN CODE</d` +
+          `iv>
+        <sp` +
+          `an id="mensagem">LIVECODE | </s` +
+          `pan
+        ><sp` +
+          `an id="tipoliguagem">HTML</sp` +
+          `an>
+        `;
+      }
+
+      if ($_GET["variant"] == "blank") {
+        document.getElementById("statusbar").innerHTML =
+          `
+        <di` +
+          `</d` +
+          `iv>
+        <sp` +
+          `an id="mensagem">LIVECODE | </s` +
+          `pan
+        ><sp` +
+          `an id="tipoliguagem">HTML</sp` +
+          `an>
+        `;
+      }
+
       if ($_GET["variant"] == "p") {
         mensagem =
           `<sp` +
