@@ -308,6 +308,7 @@
     </div>
 
     <div id="statusbar">
+      <div class="linkstatusbar" onclick="toggle('poeinst');">MENU</div>
       <div class="linkstatusbar" onclick="tolivecode();">LIVECODE</div>
       <div class="linkstatusbar" onclick="toruncode();">RUN CODE</div>
       <span id="mensagem">menu: CTRL/CMD+SHIFT+P | LIVECODE | </span
@@ -321,6 +322,27 @@
         `an>`;
 
       // VARIANTES
+      if ($_GET["variant"] == "nomenubutton") {
+        document.getElementById("statusbar").innerHTML =
+          `
+        <di` +
+          `v class="linkstatusbar" onclick="tolivecode();">LIVECODE</d` +
+          `iv>
+        <di` +
+          `v class="linkstatusbar" onclick="toruncode();">RUN CODE</d` +
+          `iv>
+        `;
+      }
+
+      if ($_GET["variant"] == "blank") {
+        document.getElementById("statusbar").innerHTML =
+          `
+        <di` +
+          `</d` +
+          `iv>
+        `;
+      }
+
       if ($_GET["variant"] == "p") {
         mensagem = `<sp` + `an id='mensagem'>LIVECODE | </sp` + `an>`;
 
