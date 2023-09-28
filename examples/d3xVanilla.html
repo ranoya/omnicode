@@ -30,7 +30,7 @@
           .attr("r", 10)
           .attr("cx", (d, i) => i * 30)
           .attr("cy", (d) => y(d))
-          .attr("fill", "black");
+          .attr("fill", "yellow");
 
         return svg.node();
       };
@@ -50,7 +50,7 @@
 
       dados.map((d, i) => {
         xpto.innerHTML += `
-        <circle cx="${i * 30}" cy="${500 - fy(d)}" r="10" fill="#000000" />
+        <circle cx="${i * 30}" cy="${500 - fy(d)}" r="10" fill="yellow" />
         `;
       });
     </script>
