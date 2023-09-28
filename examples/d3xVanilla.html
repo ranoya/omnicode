@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+
+    <style>
+      svg {
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      let dados = [50, 10, 25, 80, 90, 25, 40];
+
+      // D3
+
+      let teste = function () {
+        const svg = d3.create("svg").attr("width", 500).attr("height", 500);
+
+        const y = d3.scaleLinear().domain([100, 0]).range([0, 500]);
+
+        svg
+          .selectAll("circle")
+          .data(dados)
+          .join("circle")
+          .attr("r", 10)
+          .attr("cx", (d, i) => i * 30)
+          .attr("cy", (d) => y(d))
+          .attr("fill", "black");
+
+        return svg.node();
+      };
+
+      document.body.append(teste());
+
+      // VANILLA JS
+
+      document.write(`<svg id="outroteste"></svg>`);
+      let xpto = document.getElementById("outroteste");
+      xpto.style = "width: 500px; height: 500px;";
+      xpto.setAttribute("viewBox", "0 0 500 500");
+
+      const fy = function (v) {
+        return (500 / 100) * v;
+      };
+
+      dados.map((d, i) => {
+        xpto.innerHTML += `
+        <circle cx="${i * 30}" cy="${500 - fy(d)}" r="10" fill="#000000" />
+        `;
+      });
+    </script>
+  </body>
+</html>
