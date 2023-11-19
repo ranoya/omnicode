@@ -185,7 +185,7 @@
         height: 100%;
         right: 15px;
         top: 15px;
-        height: calc(100vh - 55px);
+        height: calc(100dvh - 55px);
         border: 1px solid #cccccc;
         border-left: 0;
         overflow-y: auto;
@@ -236,7 +236,7 @@
         top: 0;
         left: 10px;
         width: calc(100% - 10px);
-        height: calc(100vh - 55px);
+        height: calc(100dvh - 55px);
         padding: 0;
         margin: 0;
       }
@@ -244,7 +244,7 @@
       #editor_1 {
         position: fixed;
         width: 40%;
-        height: calc(100vh - 55px);
+        height: calc(100dvh - 55px);
         left: 15px;
         top: 15px;
         border: 1px solid #cccccc;
@@ -453,11 +453,11 @@
         document.getElementById("statusbar").style.bottom = "80px";
         document.getElementById("roda").style.bottom = "80px";
         document.getElementById("right_panel").style.height =
-          "calc(100vh - 125px)";
+          "calc(100dvh - 125px)";
         document.getElementById("View_editor_1").style.height =
-          "calc(100vh - 125px)";
+          "calc(100dvh - 125px)";
         document.getElementById("editor_1").style.height =
-          "calc(100vh - 125px)";
+          "calc(100dvh - 125px)";
       }
 
       String.prototype.toHtmlEntities = function () {
@@ -696,11 +696,11 @@
       document.getElementById("statusbar").style.display = "none";
 
       document.getElementById("editor_1").style.height =
-        "height: calc(100vh - 30px)";
+        "height: calc(100dvh - 30px)";
       document.getElementById("right_panel").style.height =
-        "height: calc(100vh - 30px)";
+        "height: calc(100dvh - 30px)";
       document.getElementById("View_editor_1").style.height =
-        "height: calc(100vh - 30px)";
+        "height: calc(100dvh - 30px)";
 
       document.getElementById("roda").style.top = "15px";
 
@@ -718,11 +718,11 @@
     if ($_GET["nostatus"] != "" && typeof $_GET["nostatus"] != "undefined") {
       document.getElementById("statusbar").style.display = "none";
 
-      document.getElementById("editor_1").style.height = "calc(100vh - 30px)";
+      document.getElementById("editor_1").style.height = "calc(100dvh - 30px)";
       document.getElementById("right_panel").style.height =
-        "calc(100vh - 30px)";
+        "calc(100dvh - 30px)";
       document.getElementById("View_editor_1").style.height =
-        "calc(100vh - 30px)";
+        "calc(100dvh - 30px)";
 
       document.getElementById("roda").style.top = "15px";
     }
