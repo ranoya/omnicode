@@ -68,8 +68,10 @@
 
       */
 
+      const myurl = $_GET["url"] + ".js?v=4";
+
       import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@5/dist/runtime.js";
-      import define from $_GET["url"] + ".js?v=4";
+      import define from myurl;
 
       /* "https://api.observablehq.com/@ranoya/javascript1@403.js?v=4"; */
 
