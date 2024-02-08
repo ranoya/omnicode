@@ -58,7 +58,7 @@
         typeof $_GET["url"] != "undefined" &&
         $_GET["url"] != ""
       ) {
-        document.getElementByTagName("iframe")[0].src = $_GET["url"];
+        document.getElementsByTagName("iframe")[0].src = $_GET["url"];
       }
     </script>
   </body>
