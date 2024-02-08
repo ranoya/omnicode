@@ -30,8 +30,17 @@
         overflow: auto;
       }
     </style>
+  </head>
 
-    <script>
+  <body>
+    <div id="obscontent"></div>
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@observablehq/inspector@5/dist/inspector.css"
+    />
+    <script type="module">
+
       $_GET = [];
       (function () {
         corte = window.location.href.toString().indexOf("?");
@@ -46,20 +55,28 @@
           }
         }
       })();
-    </script>
-  </head>
 
-  <body>
-    <iframe frameborder="0"></iframe>
-
-    <script>
+      /*
+      myurl = "";
       if (
-        $_GET["url"] != null &&
-        typeof $_GET["url"] != "undefined" &&
-        $_GET["url"] != ""
-      ) {
-        document.getElementsByTagName("iframe")[0].src = $_GET["url"];
-      }
+              $_GET["url"] != null &&
+              typeof $_GET["url"] != "undefined" &&
+              $_GET["url"] != ""
+            ) {
+              myurl = url; $_GET["url"];
+            }
+
+      */
+
+      import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@5/dist/runtime.js";
+      import define from $_GET["url"] + ".js?v=4";
+
+      /* "https://api.observablehq.com/@ranoya/javascript1@403.js?v=4"; */
+
+      new Runtime().module(define, name => {
+        if (name === "x") return new Inspector(document.querySelector("#obscontent"));
+
+      });
     </script>
   </body>
 </html>
