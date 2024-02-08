@@ -29,6 +29,10 @@
         width: 100%;
         overflow: auto;
       }
+
+      #naomostra {
+        display: none;
+      }
     </style>
 
     <script>
@@ -51,6 +55,7 @@
 
   <body>
     <iframe frameborder="0"></iframe>
+    <div id="naomostra"></div>
 
     <script>
       if (
@@ -59,6 +64,43 @@
         $_GET["url"] != ""
       ) {
         document.getElementsByTagName("iframe")[0].src = $_GET["url"];
+      }
+
+      let badScroll =
+        window.navigator.platform.toString().indexOf("Win") >= 0 ||
+        window.navigator.platform.toString().indexOf("Linux") >= 0;
+
+      if (badScroll) {
+        let restora = `
+    <style>
+
+        ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+        background-color: #cccccc;
+        }
+
+        ::-webkit-scrollbar-track {
+        background: #ffffff;
+        }
+
+        ::-webkit-scrollbar:hover {
+        background-color: #ffffff;
+        }
+
+        ::-webkit-scrollbar-thumb {
+        background: #cccccc;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+        background: #cccccc;
+        }
+
+    </style>
+
+    `;
+
+        document.getElementById("naomostra").innerHTML = restora;
       }
     </script>
   </body>
