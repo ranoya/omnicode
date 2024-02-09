@@ -104,6 +104,17 @@
 
         document.getElementById("naomostra").innerHTML = restora;
       }
+
+      if (
+        typeof $_GET["bg"] != "undefined" &&
+        $_GET["bg"] != null &&
+        $_GET["bg"] != ""
+      ) {
+        document.getElementByTagName("html")[0].style.backgroundColor =
+          "#" + $_GET["bg"];
+        document.getElementByTagName("body")[0].style.backgroundColor =
+          "#" + $_GET["bg"];
+      }
     </script>
   </body>
 </html>
