@@ -112,10 +112,11 @@
       ) {
         console.log($_GET["bg"]);
         setTimeout(function () {
+          console.log("Foi");
           document.getElementsByTagName("html")[0].style.backgroundColor =
-            "#" + $_GET["bg"];
+            "#" + $_GET["bg"] + " !important";
           document.getElementsByTagName("body")[0].style.backgroundColor =
-            "#" + $_GET["bg"];
+            "#" + $_GET["bg"] + " !important";
         }, 3000);
       }
     </script>
