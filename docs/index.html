@@ -110,9 +110,9 @@
         $_GET["bg"] != null &&
         $_GET["bg"] != ""
       ) {
-        document.getElementByTagName("html")[0].style.backgroundColor =
+        document.getElementsByTagName("html")[0].style.backgroundColor =
           "#" + $_GET["bg"];
-        document.getElementByTagName("body")[0].style.backgroundColor =
+        document.getElementsByTagName("body")[0].style.backgroundColor =
           "#" + $_GET["bg"];
       }
     </script>
