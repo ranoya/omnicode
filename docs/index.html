@@ -32,7 +32,8 @@
         overflow: auto;
       }
 
-      #naomostra {
+      #naomostra,
+      #naomostra2 {
         display: none;
       }
     </style>
@@ -58,6 +59,7 @@
   <body>
     <iframe frameborder="0"></iframe>
     <div id="naomostra"></div>
+    <div id="naomostra2"></div>
 
     <script>
       if (
@@ -110,14 +112,17 @@
         $_GET["bg"] != null &&
         $_GET["bg"] != ""
       ) {
-        console.log($_GET["bg"]);
-        setTimeout(function () {
-          console.log("Foi");
-          document.getElementsByTagName("html")[0].style.backgroundColor =
-            "#" + $_GET["bg"] + " !important";
-          document.getElementsByTagName("body")[0].style.backgroundColor =
-            "#" + $_GET["bg"] + " !important";
-        }, 3000);
+        document.getElementById("naomostra2").innerHTML =
+          `
+        
+          <style>
+            body,html {
+              background-color: #` +
+          $_GET["bg"] +
+          ` !important;
+            }
+          </style>
+        `;
       }
     </script>
   </body>
