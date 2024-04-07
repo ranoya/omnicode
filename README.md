@@ -24,7 +24,7 @@ Livecode with all the default options:
 
 Livecode with Borland Turbo-C color scheme (yes... i'm that old) in blue background and Cobalt code highlight, with no status bar or console, and with a different menu with examples only:
 
-[https://omnicode.vercel.app/?nostatus=true&noconsole=true&preview=65&bgcolor=000cd0&bordercolor=9fc5e866&gutcolor=000cd0&basepoe=https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/ExemplosHTML&theme=cobalt&poecss=https://poepalette.vercel.app/dev/lessblue.css](https://omnicode.vercel.app/?nostatus=true&noconsole=true&preview=65&bgcolor=000cd0&bordercolor=9fc5e866&gutcolor=000cd0&basepoe=https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/ExemplosHTML&theme=cobalt&poecss=https://poepalette.vercel.app/dev/lessblue.css)
+[https://omnicode.vercel.app/?nostatus=true&noconsole=true&preview=65&bgcolor=000cd0&bordercolor=9fc5e866&gutcolor=000cd0&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit#gid=911937453&theme=cobalt&poecss=https://poepalette.vercel.app/dev/lessblue.css](https://omnicode.vercel.app/?nostatus=true&noconsole=true&preview=65&bgcolor=000cd0&bordercolor=9fc5e866&gutcolor=000cd0&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit#gid=911937453&theme=cobalt&poecss=https://poepalette.vercel.app/dev/lessblue.css)
 
 Run mode with Solarized color scheme and background, loading a introductory P5 example:
 
@@ -36,11 +36,11 @@ Run mode with default background, Tomorrow code highlight, and minimal interface
 
 Run mode with a "deep purple" theme (purple background and Tomorrow Night Blue highlight), loading the introductory P5 example and a different menu with examples in both Processing and P5:
 
-[https://omnicode.vercel.app/run/?variant=p&lang=p5&bgcolor=40124d&gutcolor=40124d&guttext=e4b9e7&bordercolor=652e68&theme=tomorrow_night_blue&poecss=https://poepalette.vercel.app/dev/lessdeeppurple.css&basepoe=https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/ExemplosProcessing&file=https://omnicode.vercel.app/examples/p5start.js](https://omnicode.vercel.app/run/?variant=p&lang=p5&bgcolor=40124d&gutcolor=40124d&guttext=e4b9e7&bordercolor=652e68&theme=tomorrow_night_blue&poecss=https://poepalette.vercel.app/dev/lessdeeppurple.css&basepoe=https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/ExemplosProcessing&file=https://omnicode.vercel.app/examples/p5start.js)
+[https://omnicode.vercel.app/run/?variant=p&lang=p5&bgcolor=40124d&gutcolor=40124d&guttext=e4b9e7&bordercolor=652e68&theme=tomorrow_night_blue&poecss=https://poepalette.vercel.app/dev/lessdeeppurple.css&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit#gid=1860118124&file=https://omnicode.vercel.app/examples/p5start.js](https://omnicode.vercel.app/run/?variant=p&lang=p5&bgcolor=40124d&gutcolor=40124d&guttext=e4b9e7&bordercolor=652e68&theme=tomorrow_night_blue&poecss=https://poepalette.vercel.app/dev/lessdeeppurple.css&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit#gid=1860118124&file=https://omnicode.vercel.app/examples/p5start.js)
 
 A dedicated configuration for Processing (P5 / Original Java Mode / Python Mode) classes:
 
-https://omnicode.vercel.app/run/?variant=p&lang=p5&bgcolor=40124d&gutcolor=40124d&guttext=e4b9e7&bordercolor=652e68&theme=tomorrow_night_blue&poecss=https://poepalette.vercel.app/dev/lessdeeppurple.css&basepoe=https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/ExemplosProcessing
+https://omnicode.vercel.app/run/?variant=p&lang=p5&bgcolor=40124d&gutcolor=40124d&guttext=e4b9e7&bordercolor=652e68&theme=tomorrow_night_blue&poecss=https://poepalette.vercel.app/dev/lessdeeppurple.css&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit#gid=1860118124
 
 These are the variables you can use:
 
@@ -56,7 +56,7 @@ These are the variables you can use:
 | minimal     | boolean                    | remove the borders keeping only the border between the editor and the preview              | https://omnicode.vercel.app/?minimal=true&bordercolor=c0cf54                                                            |
 | file        | url                        | opens a external file in the editor                                                        | https://omnicode.vercel.app/?file=https://omnicode.vercel.app/examples/myfile.html                                      |
 | nopoe       | boolean                    | disable POE (command palette) from the editor                                              | https://omnicode.vercel.app/?nopoe=true                                                                                 |
-| basepoe     | url                        | JSON with the POE commands (see [POE Documentation](https://github.com/ranoya/poepalette)) | https://omnicode.vercel.app/?basepoe=https://opensheet.elk.sh/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/ExemplosHTML |
+| basepoe     | url                        | Google Sheet URL with the POE commands (see [POE Documentation](https://github.com/ranoya/poepalette)) | https://omnicode.vercel.app/?basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit#gid=911937453 |
 | poecss      | url                        | CSS customization for POE command palette                                                  | https://omnicode.vercel.app/?poecss=https://poepalette.vercel.app/dev/lesssolarized.css                                 |
 | noconsole   | boolean                    | don't show the console                                                                     | https://omnicode.vercel.app/run/?noconsole=true                                                                         |
 | nostatus    | boolean                    | don't show the status bar                                                                  | https://omnicode.vercel.app/?nostatus=true                                                                              |
