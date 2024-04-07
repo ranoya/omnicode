@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<head>
+    <style>
+
+        .textonormal {
+            color: #aaaaaa;
+        }
+
+        b {
+            color: red;
+        }
+
+        .textonormal b {
+            color: yellow;
+        }
+
+        .pequeno {
+            font-size: 10px;
+            line-height: 11px;
+        }
+
+        p a {
+            background-color: cyan;
+            padding-left: 5px;
+            padding-right: 5px;
+            text-decoration: none;
+        }
+
+        p a:hover {
+            background-color: #999999;
+        }
+
+        #meulink {
+            color: white;
+            font-weight: bolder;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <p class="textonormal">Este é um texto com classe "textonormal"</p>
+
+    <p>Este é um texto sem nenhuma classe</p>
+
+    <p class="textonormal">Neste texto, que é da classe "textonormal", temos um <b>elemento b</b></p>
+
+    <p>E este é um <b>elemento b</b> fora de uma tag com classe "textonormal"</p>
+
+    <p class="pequeno">Este é um texto com classe "pequeno"</p>
+
+    <p class="textonormal pequeno">E este é um texto com as classes "textonormal pequeno"</p>
+
+    <p>Este <a href="#" target="_blank">Link</a> possui a propriedade hover, que ativa quando o mouse passa por cima. Ele é definido pelo seletor de tags (p a), e não por uma classe ou ID</p>
+
+    <p>Já estre <a id="meulink" href="#" target="_blank">Outro Link</a> possui um ID, e suas definições irão sobrepor as definições do seletor de tags (p a)</p>
+
+</body>
+</html>
