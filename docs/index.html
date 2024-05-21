@@ -36,6 +36,19 @@
       #naomostra2 {
         display: none;
       }
+
+      #capitulos {
+        position: fixed;
+        width: 20vw;
+        top: 40px;
+        left: 20px;
+      }
+
+      @media screen and (max-width: 800px) {
+        #capitulos {
+          display: none;
+        }
+      }
     </style>
 
     <script>
@@ -57,6 +70,7 @@
   </head>
 
   <body>
+    <div id="capitulos"></div>
     <iframe frameborder="0"></iframe>
     <div id="naomostra"></div>
     <div id="naomostra2"></div>
@@ -124,6 +138,22 @@
           </style>
         `;
       }
+    </script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@observablehq/inspector@5/dist/inspector.css"
+    />
+    <script type="module">
+      import {
+        Runtime,
+        Inspector,
+      } from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@5/dist/runtime.js";
+      import define from "https://api.observablehq.com/@ranoya/capitulosaulas@21.js?v=4";
+      new Runtime().module(define, (name) => {
+        if (name === "capitulos")
+          return new Inspector(document.querySelector("#capitulos"));
+      });
     </script>
   </body>
 </html>
