@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="pinterest" content="nopin" />
+    <meta name="pinterest" content="nohover" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title id="titulo">Docs</title>
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: transparent;
+        text-align: center;
+        height: 100lvh;
+        width: 100%;
+      }
+
+      iframe {
+        max-width: 720px;
+        height: calc(100dvh - 24px);
+        margin: 10px;
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        overflow: auto;
+      }
+
+      #naomostra,
+      #naomostra2 {
+        display: none;
+      }
+    </style>
+
+    <script>
+      $_GET = [];
+      (function () {
+        corte = window.location.href.toString().indexOf("?");
+        if (corte > 0) {
+          argumento = window.location.href.toString().substring(corte + 1);
+          argumentos = argumento.split("&");
+          for (arg in argumentos) {
+            let argCorte = argumentos[arg].indexOf("=");
+            $_GET[argumentos[arg].substring(0, argCorte)] = argumentos[
+              arg
+            ].substring(argCorte + 1);
+          }
+        }
+      })();
+    </script>
+  </head>
+
+  <body>
+    <iframe frameborder="0"></iframe>
+    <div id="naomostra"></div>
+    <div id="naomostra2"></div>
+
+    <script>
+      if (
+        $_GET["url"] != null &&
+        typeof $_GET["url"] != "undefined" &&
+        $_GET["url"] != ""
+      ) {
+        document.getElementsByTagName("iframe")[0].src = $_GET["url"];
+      }
+
+      let badScroll =
+        window.navigator.platform.toString().indexOf("Win") >= 0 ||
+        window.navigator.platform.toString().indexOf("Linux") >= 0;
+
+      if (badScroll) {
+        let restora = `
+    <style>
+
+        ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+        background-color: #cccccc;
+        }
+
+        ::-webkit-scrollbar-track {
+        background: #ffffff;
+        }
+
+        ::-webkit-scrollbar:hover {
+        background-color: #ffffff;
+        }
+
+        ::-webkit-scrollbar-thumb {
+        background: #cccccc;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+        background: #cccccc;
+        }
+
+    </style>
+
+    `;
+
+        document.getElementById("naomostra").innerHTML = restora;
+      }
+
+      if (
+        typeof $_GET["bg"] != "undefined" &&
+        $_GET["bg"] != null &&
+        $_GET["bg"] != ""
+      ) {
+        document.getElementById("naomostra2").innerHTML =
+          `
+        
+          <style>
+            body,html {
+              background-color: #` +
+          $_GET["bg"] +
+          ` !important;
+            }
+          </style>
+        `;
+      }
+    </script>
+  </body>
+</html>
