@@ -150,7 +150,7 @@
         Runtime,
         Inspector,
       } from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@5/dist/runtime.js";
-      import define from "https://api.observablehq.com/@ranoya/capitulosaulas@21.js?v=4";
+      import define from "https://api.observablehq.com/@ranoya/capitulosaulas.js?v=4";
       new Runtime().module(define, (name) => {
         if (name === "capitulos")
           return new Inspector(document.querySelector("#capitulos"));
