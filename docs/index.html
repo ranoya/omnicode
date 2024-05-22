@@ -164,17 +164,17 @@
         $_GET["bgcolor"] != null &&
         $_GET["bgcolor"] != ""
       ) {
-        if ($_GET["bgcolor"] != "transparent") {
-          document.getElementsByTagName("html")[0].style.backgroundColor =
-            "#" + $_GET["bgcolor"];
-          document.getElementsByTagName("body")[0].style.backgroundColor =
-            "#" + $_GET["bgcolor"];
-        } else {
-          document.getElementsByTagName("html")[0].style.backgroundColor =
-            "transparent";
-          document.getElementsByTagName("body")[0].style.backgroundColor =
-            "transparent";
-        }
+        bg = "#" + $_GET["bgcolor"];
+      }
+
+      if ($_GET["bgcolor"] != "transparent") {
+        document.getElementsByTagName("html")[0].style.backgroundColor = bg;
+        document.getElementsByTagName("body")[0].style.backgroundColor = bg;
+      } else {
+        document.getElementsByTagName("html")[0].style.backgroundColor =
+          "transparent";
+        document.getElementsByTagName("body")[0].style.backgroundColor =
+          "transparent";
       }
     </script>
   </body>
