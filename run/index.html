@@ -528,11 +528,14 @@
           $_GET["startandrun"] != null &&
           $_GET["startandrun"] != ""
         ) {
-          runContent(
-            String.fromHtmlEntities(localStorage.getItem("omnicodecode")),
-            "View_editor_1",
-            Predata_editor_1,
-            Postdata_editor_1
+          setTimeout(
+            runContent(
+              String.fromHtmlEntities(localStorage.getItem("omnicodecode")),
+              "View_editor_1",
+              Predata_editor_1,
+              Postdata_editor_1
+            ),
+            2000
           );
         }
       }
