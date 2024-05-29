@@ -781,13 +781,13 @@
 
            let showlinegrid = function() {
 
-              for (let x=0; x<windowWidth; x=x+10) {
+              for (let x=0; x<=windowWidth; x=x+10) {
                 stroke(100);
                 strokeWeight(1);
                 line(x,0,x,windowHeight);
               }
 
-              for (let y=0; x<windowHeight; y=y+10) {
+              for (let y=0; y<=windowHeight; y=y+10) {
                 line(0,y,windowWidth,y);
               }
 
