@@ -832,7 +832,23 @@
           `ipt src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></sc` +
           `ript>
             <scr` +
-          `ipt>`;
+          `ipt>
+          
+          let showlinegrid = function() {
+
+              for (let x=0; x<=windowWidth; x=x+10) {
+                stroke(100);
+                strokeWeight(1);
+                line(x,0,x,windowHeight);
+              }
+
+              for (let y=0; y<=windowHeight; y=y+10) {
+                line(0,y,windowWidth,y);
+              }
+
+           }
+          
+          `;
         Postdata_editor_1 =
           `</scr` +
           `ipt>
