@@ -60,20 +60,6 @@
     <script src="multiace.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
     <script>
-      if (
-        localStorage.getItem("omnicodecode") == "" ||
-        typeof localStorage.getItem("omnicodecode") == "undefined"
-      ) {
-        localStorage.setItem(
-          "omnicodecode",
-          "&lt;h1&gt;Hello World&lt;/h1&gt;"
-        );
-      }
-
-      let modoMD = false;
-      let Predata_editor_1 = "";
-      let Postdata_editor_1 = "";
-
       $_GET = [];
       (function () {
         let corte = window.location.href.toString().indexOf("?");
@@ -88,6 +74,20 @@
           }
         }
       })();
+
+      if (
+        localStorage.getItem("omnicodecode") == "" ||
+        typeof localStorage.getItem("omnicodecode") == "undefined"
+      ) {
+        localStorage.setItem(
+          "omnicodecode",
+          "&lt;h1&gt;Hello World&lt;/h1&gt;"
+        );
+      }
+
+      let modoMD = false;
+      let Predata_editor_1 = "";
+      let Postdata_editor_1 = "";
 
       let bgc = "e8e8e8";
       if ($_GET["bgcolor"]) {
@@ -298,8 +298,14 @@
     ></pre>
 
     <script>
-      document.getElementsByTagName("pre")[0].innerHTML =
-        localStorage.getItem("omnicodecode");
+      if (
+        typeof $_GET["nocache"] == "undefined" ||
+        $_GET["nocache"] == null ||
+        $_GET["nocache"] == ""
+      ) {
+        document.getElementsByTagName("pre")[0].innerHTML =
+          localStorage.getItem("omnicodecode");
+      }
     </script>
 
     <div id="right_panel">
