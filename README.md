@@ -64,6 +64,7 @@ These are the variables you can use:
 | line        | integer                    | starts the editor at the desired line                                                      | https://omnicode.vercel.app/?line=10&readonly=true&file=https://omnicode.vercel.app/examples/myfile.html                |
 | variant     | nomenubutton / blank       | changes the status bar                                                                     | https://omnicode.vercel.app/?variant=blank                                                                              |
 | startandrun     | boolean       | run code as soon a file is loaded (for run mode only)      |  https://omnicode.vercel.app/run/?startandrun=true&file=https://omnicode.vercel.app/examples/myfile.html   |
+| nocache     | boolean       | don´t use code stored in the browser (important when using multiple instances in the same document)      |  https://omnicode.vercel.app/run/?nocache=true&file=https://omnicode.vercel.app/examples/myfile.html   |
 
 
 
