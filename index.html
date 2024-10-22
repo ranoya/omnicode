@@ -237,16 +237,30 @@
         overflow-y: hidden;
       }
 
-      pre::-webkit-scrollbar {
+      .ace_scrollbar::-webkit-scrollbar {
         background: transparent;
         width: 5px;
       }
 
-      pre::-webkit-scrollbar-track {
+      .ace_scrollbar::-webkit-scrollbar-track {
         background: transparent;
       }
 
-      pre::-webkit-scrollbar-thumb {
+      .ace_scrollbar::-webkit-scrollbar-thumb {
+        width: 5px;
+        background: var(--scroll-color, #8e6e7b);
+      }
+
+      .ace_scrollbar:-webkit-scrollbar {
+        background: transparent;
+        width: 5px;
+      }
+
+      .ace_scrollbar:-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .ace_scrollbar:-webkit-scrollbar-thumb {
         width: 5px;
         background: var(--scroll-color, #8e6e7b);
       }
