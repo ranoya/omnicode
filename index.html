@@ -103,6 +103,7 @@
       if ($_GET["guttext"]) {
         gtc = $_GET["guttext"];
       }
+      document.documentElement.style.setProperty("--scroll-color", "#" + gtc);
 
       let bdc = "cccccc";
       if ($_GET["bordercolor"]) {
@@ -233,6 +234,20 @@
         padding: 0;
         background-color: transparent;
         z-index: 4900;
+        overflow-y: hidden;
+      }
+
+      #editor_1::-webkit-scrollbar {
+        background: transparent;
+        width: 5px;
+      }
+
+      #editor_1::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      #editor_1::-webkit-scrollbar-thumb {
+        border-left: 5px solid var(--scroll-color, #8e6e7b);
       }
 
       #resize {
