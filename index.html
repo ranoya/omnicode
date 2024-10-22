@@ -103,7 +103,10 @@
       if ($_GET["guttext"]) {
         gtc = $_GET["guttext"];
       }
-      document.documentElement.style.setProperty("--scroll-color", "#" + gtc);
+      document.documentElement.style.setProperty(
+        "--scroll-color",
+        "#" + gtc + "55"
+      );
 
       let bdc = "cccccc";
       if ($_GET["bordercolor"]) {
@@ -239,7 +242,7 @@
 
       .ace_scrollbar::-webkit-scrollbar {
         background: transparent;
-        width: 8px;
+        width: 12px;
       }
 
       .ace_scrollbar::-webkit-scrollbar-track {
@@ -247,15 +250,14 @@
       }
 
       .ace_scrollbar::-webkit-scrollbar-thumb {
-        width: 8px;
+        width: 12px;
         background: var(--scroll-color, #8e6e7b);
         border-radius: 4px;
       }
 
       .ace_scrollbar::-webkit-scrollbar-thumb:hover {
-        width: 8px;
+        width: 12px;
         background: var(--scroll-color, #8e6e7b);
-        border-radius: 4px;
       }
 
       #resize {
