@@ -17,19 +17,23 @@
         margin: 0;
         padding: 0;
         background-color: transparent;
-        text-align: center;
+        /* text-align: center; */
         height: 100lvh;
         width: 100%;
       }
 
       iframe {
-        max-width: 720px;
-        height: calc(100dvh - 24px);
-        margin: 10px;
-        width: 100%;
-        margin-left: 0;
+        /* max-width: 720px; */
+        /* height: calc(100dvh - 24px); */
+        height: 100dvh;
+        /* margin: 10px; */
+        /* width: 100%; */
+        /* margin-left: 0; */
         margin-right: 0;
         overflow: auto;
+
+        width: calc(100% - (50% - (min(720px, 100%) / 2)));
+        margin-left: max(0px, calc(50% - (min(720px, 100%) / 2)));
       }
 
       #naomostra,
