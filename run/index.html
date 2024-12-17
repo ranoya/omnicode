@@ -75,14 +75,21 @@
         }
       })();
 
+      let buffer = "omnicodecode";
+
       if (
-        localStorage.getItem("omnicodecode") == "" ||
-        typeof localStorage.getItem("omnicodecode") == "undefined"
+        typeof $_GET["buffer"] != "undefined" &&
+        $_GET["buffer"] != null &&
+        $_GET["buffer"] != ""
       ) {
-        localStorage.setItem(
-          "omnicodecode",
-          "&lt;h1&gt;Hello World&lt;/h1&gt;"
-        );
+        buffer = $_GET["buffer"];
+      }
+
+      if (
+        localStorage.getItem(buffer) == "" ||
+        typeof localStorage.getItem(buffer) == "undefined"
+      ) {
+        localStorage.setItem(buffer, "&lt;h1&gt;Hello World&lt;/h1&gt;");
       }
 
       let modoMD = false;
@@ -353,7 +360,7 @@
         $_GET["nocache"] == ""
       ) {
         document.getElementsByTagName("pre")[0].innerHTML =
-          localStorage.getItem("omnicodecode");
+          localStorage.getItem(buffer);
       }
     </script>
 
@@ -515,7 +522,7 @@
             //let dados = dada.toHtmlEntities();
             let aceed = ace.edit("editor_1");
             aceed.setValue(dada);
-            localStorage.setItem("omnicodecode", dada);
+            localStorage.setItem(buffer, dada);
 
             if ($_GET["file"].match(/\.md/i) && $_GET["lang"] != "p5") {
               lingua("markdown");
@@ -563,7 +570,7 @@
             ) {
               setTimeout(
                 runContent(
-                  String.fromHtmlEntities(localStorage.getItem("omnicodecode")),
+                  String.fromHtmlEntities(localStorage.getItem(buffer)),
                   "View_editor_1",
                   Predata_editor_1,
                   Postdata_editor_1
