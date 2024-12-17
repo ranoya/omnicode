@@ -90,6 +90,13 @@
         typeof localStorage.getItem(buffer) == "undefined"
       ) {
         localStorage.setItem(buffer, "&lt;h1&gt;Hello World&lt;/h1&gt;");
+
+        console.log(
+          "BUFFER ---> VAR: " +
+            buffer +
+            " CONTEUDO: " +
+            localStorage.getItem(buffer)
+        );
       }
 
       let modoMD = false;
@@ -530,6 +537,15 @@
             let aceed = ace.edit("editor_1");
             aceed.setValue(dada);
             localStorage.setItem(buffer, dada);
+
+            console.log(
+              "BUFFER ---> VAR: " +
+                buffer +
+                " CONTEUDO: " +
+                localStorage.getItem(buffer) +
+                " " +
+                dada
+            );
 
             if ($_GET["file"].match(/\.md/i) && $_GET["lang"] != "p5") {
               lingua("markdown");
@@ -983,7 +999,8 @@
         aceed.getSession().getValue(),
         "View_editor_1",
         Predata_editor_1,
-        Postdata_editor_1
+        Postdata_editor_1,
+        buffer
       );
     };
   </script>
