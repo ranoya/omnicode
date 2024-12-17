@@ -90,13 +90,6 @@
         typeof localStorage.getItem(buffer) == "undefined"
       ) {
         localStorage.setItem(buffer, "&lt;h1&gt;Hello World&lt;/h1&gt;");
-
-        console.log(
-          "BUFFER ---> VAR: " +
-            buffer +
-            " CONTEUDO: " +
-            localStorage.getItem(buffer)
-        );
       }
 
       let modoMD = false;
@@ -368,13 +361,6 @@
       ) {
         document.getElementsByTagName("pre")[0].innerHTML =
           localStorage.getItem(buffer);
-
-        console.log(
-          "BUFFER ---> VAR: " +
-            buffer +
-            " CONTEUDO: " +
-            localStorage.getItem(buffer)
-        );
       }
     </script>
 
@@ -537,15 +523,6 @@
             let aceed = ace.edit("editor_1");
             aceed.setValue(dada);
             localStorage.setItem(buffer, dada);
-
-            console.log(
-              "BUFFER ---> VAR: " +
-                buffer +
-                " CONTEUDO: " +
-                localStorage.getItem(buffer) +
-                " " +
-                dada
-            );
 
             if ($_GET["file"].match(/\.md/i) && $_GET["lang"] != "p5") {
               lingua("markdown");

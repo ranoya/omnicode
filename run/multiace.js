@@ -5,7 +5,6 @@ let screenconsole = "";
 // Ace Editor Change Viewer
 function changeContent(data, who, predata, extras, buffer) {
   localStorage.setItem(buffer, data.toHtmlEntities());
-  console.log("BUFFER ----> " + buffer + " " + localStorage.getItem(buffer));
 }
 
 var keymapping = {}; // You could also use an array
