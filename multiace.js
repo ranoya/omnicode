@@ -10,6 +10,8 @@ function changeContent(data, who, predata, extras, buffer) {
   clearTimeout(delei);
   localStorage.setItem(buffer, data.toHtmlEntities());
 
+  console.log("BUFFER ---> " + buffer + " " + localStorage.getItem(buffer));
+
   document.getElementById("View_editor_1").remove();
   let ifr = document.createElement("iframe");
   ifr.setAttribute("id", "View_editor_1");
