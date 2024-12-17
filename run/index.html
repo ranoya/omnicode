@@ -972,6 +972,14 @@
         Postdata_editor_1 = "";
       }
 
+      if (
+        typeof $_GET["dark"] != "undefined" &&
+        $_GET["dark"] != null &&
+        $_GET["dark"] != ""
+      ) {
+        Predata_editor_1 += `<sty` + `le> * { color: #FFFFFF; } </sty` + `le>`;
+      }
+
       changeContent(
         aceed.getSession().getValue(),
         "View_editor_1",
