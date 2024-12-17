@@ -920,7 +920,8 @@
         $_GET["dark"] != null &&
         $_GET["dark"] != ""
       ) {
-        Postdata_editor_1 += `<sty` + `le> * { color: #FFFFFF; } </sty` + `le>`;
+        Predata_editor_1 =
+          `<sty` + `le> * { color: #FFFFFF; } </sty` + `le>` + Predata_editor_1;
       }
 
       changeContent(
