@@ -361,6 +361,13 @@
       ) {
         document.getElementsByTagName("pre")[0].innerHTML =
           localStorage.getItem(buffer);
+
+        console.log(
+          "BUFFER ---> VAR: " +
+            buffer +
+            " CONTEUDO: " +
+            localStorage.getItem(buffer)
+        );
       }
     </script>
 
