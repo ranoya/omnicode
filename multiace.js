@@ -153,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function () {
       _name +
       `.getSession().getValue(),'View_` +
       _name +
-      `', Predata_editor_1, Postdata_editor_1);
+      `', Predata_editor_1, Postdata_editor_1, buffer);
                ` +
       _name +
       `.getSession().on('change', function() {
@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", function () {
       _name +
       `.getSession().getValue(), 'View_` +
       _name +
-      `', Predata_editor_1, Postdata_editor_1);
+      `', Predata_editor_1, Postdata_editor_1, buffer);
                 });
             }`;
     eval(code);
