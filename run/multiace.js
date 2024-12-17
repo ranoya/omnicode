@@ -41,7 +41,7 @@ onkeydown = onkeyup = function (e) {
     keymapping[91] = false;
     keymapping[83] = false;
     runContent(
-      String.fromHtmlEntities(localStorage.getItem("omnicodecode")),
+      String.fromHtmlEntities(localStorage.getItem(buffer)),
       "View_editor_1",
       Predata_editor_1,
       Postdata_editor_1
