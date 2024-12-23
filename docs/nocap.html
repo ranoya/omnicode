@@ -276,6 +276,14 @@
         document.getElementsByTagName("body")[0].style.backgroundColor =
           "transparent";
       }
+
+      if (
+        typeof $_GET["titulo"] != "undefined" &&
+        $_GET["titulo"] != null &&
+        $_GET["titulo"] != ""
+      ) {
+        document.getElementById("titulo").innerHTML = $_GET["titulo"];
+      }
     </script>
   </body>
 </html>
