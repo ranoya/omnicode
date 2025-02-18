@@ -171,25 +171,25 @@ pre code {
   display: inline-block;
   max-height: 70vh;
   overflow: scroll;
-  width: 100%;
+  width: calc(100% - 4px);
+  padding-right: 4px;
 }
 
 pre code::-webkit-scrollbar {
-  background-color: #00000022;
-  width: 8px;
-  height: 8px;
-}
-
-pre code::-webkit-scrollbar {
-  background-color: #00000022;
+  background-color: transparent;
   width: 8px;
   height: 8px;
 }
 
 pre code::-webkit-scrollbar-thumb {
   border-radius: 4px;
-  color: #00000055;
-  background-color: #00000055;
+  color: #00000033;
+  background-color: #00000033;
+}
+
+pre code::-webkit-scrollbar-corner {
+  background-color: transparent;
+  color: transparent;
 }
 
 p code {
