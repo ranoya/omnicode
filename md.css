@@ -155,8 +155,9 @@ pre {
   font-size: min(22px, 2.5rem);
   line-height: min(22px, 2.5rem);
   margin-bottom: 15px;
-  display: block;
-  overflow: scroll;
+  display: inline-block;
+  /* overflow: scroll; */
+  height: auto;
   width: 100%;
 }
 
@@ -167,9 +168,28 @@ pre code {
   font-size: min(22px, 2.4rem);
   line-height: min(31px, 3rem);
   margin-bottom: 15px;
-  display: block;
+  display: inline-block;
+  max-height: 70vh;
   overflow: scroll;
   width: 100%;
+}
+
+pre code::-webkit-scrollbar {
+  background-color: #00000022;
+  width: 8px;
+  height: 8px;
+}
+
+pre code::-webkit-scrollbar {
+  background-color: #00000022;
+  width: 8px;
+  height: 8px;
+}
+
+pre code::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  color: #00000055;
+  background-color: #00000055;
 }
 
 p code {
