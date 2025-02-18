@@ -45,11 +45,11 @@ console.log(x);
 
 Outro parágrafo para separa os elementos de código de programação para tabelas:
 
-| Cabeçalho 1  | Cabeçalho 2 | Cabeçalho 3 | Cabeçalho 4                    |
-| ------------ | ----------- | ----------- | ------------------------------ |
-| Dado 1       | Dado 2      | Dado 3      | Dado 4                         |
-| Dado 5       | Dado 6      | Dado 7      | Não precisa ter o mesmo espaço |
-| Última linha | Dado 8      | Dado 9      | Dado 10                        |
+| Cabeçalho 1  | Cabeçalho 2 | Cabeçalho 3 | Cabeçalho 4  |
+| ------- | ------ | ------ | ------------ |
+| Dado 1   | Dado 2   | Dado 3   | Dado 4   |
+| Dado 5   | Dado 6   | Dado 7   | Não precisa ter o mesmo espaço |
+| Última linha | Dado 8    | Dado 9   | Dado 10     |
 
 Estes são os elementos principais do **Markdown**.
 
