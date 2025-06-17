@@ -53,6 +53,12 @@ Outro parágrafo para separa os elementos de código de programação para tabel
 
 Estes são os elementos principais do **Markdown**.
 
+Notas de rodapé<sup>1</sup>.
+
+Markdown possui uma estrutura sintática para notas de rodapé, mas nem todas as ferramentas capazes de exibir markdown tem este formato implementado. A sintaxe correta para criar uma nota de rodapé seria [^n] (onde n é o número da nota). O publicador Booklines aceita este formato, mas são poucos os visualizadores que o fazem. Para resolver a questão, utilize a marcação HTML para texto superposto: \<sup>n\<\\sup>.
+
+
+
 
 
 
