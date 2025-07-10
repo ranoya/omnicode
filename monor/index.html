@@ -491,8 +491,11 @@
           "calc(100dvh - 175px)";
         document.getElementById("editor_1").style.height =
           "calc(100dvh - 175px)";
-        document.getElementById("outputs").style.height =
-          "calc(100dvh - 178px)";
+
+        setTimeout(function () {
+          document.getElementById("outputs").style.height =
+            "calc(100dvh - 178px)";
+        }, 1500);
       }
 
       String.prototype.toHtmlEntities = function () {
