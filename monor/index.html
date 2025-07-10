@@ -684,17 +684,13 @@
       basepoe = $_GET["basepoe"];
     }
 
-    if ($_GET["poecss"] != "" && typeof $_GET["poecss"] != "undefined") {
-      poecss = $_GET["poecss"];
-    }
-
-    if ($_GET["nopoe"] == "" || typeof $_GET["nopoe"] == "undefined") {
-      startpoe(basepoe, poecss, "");
-    }
-
     if ($_GET["bgcolor"]) {
       document.getElementsByTagName("body")[0].style.backgroundColor =
         "#" + $_GET["bgcolor"];
+      document.documentElement.style.setProperty(
+        "--mono-bg-color",
+        "#" + $_GET["bgcolor"]
+      );
     }
 
     /*
@@ -738,6 +734,11 @@
             "#" + $_GET["guttext"];
           document.getElementById("statusbar").style.color =
             "#" + $_GET["guttext"];
+
+          document.documentElement.style.setProperty(
+            "--color-link",
+            "#" + $_GET["guttext"]
+          );
         }
 
         clearInterval(mudacores);
