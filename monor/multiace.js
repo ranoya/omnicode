@@ -226,7 +226,7 @@ const tolivecode = function () {
   let url = window.location.href;
   let goto = "";
 
-  if (!url.match(/https:\/\/omnicode.vercel.app\/run/i)) {
+  if (!url.match(/https:\/\/omnicode.vercel.app\/monor/i)) {
     // do nothing
   } else {
     document.addEventListener("DOMContentLoaded", function () {});
@@ -243,7 +243,7 @@ const tolivecode = function () {
 const toruncode = function () {
   let url = window.location.href;
   let goto = "";
-  if (url.match(/https:\/\/omnicode.vercel.app\/run/i)) {
+  if (url.match(/https:\/\/omnicode.vercel.app\/monor/i)) {
     // do nothing
   } else {
     document.addEventListener("DOMContentLoaded", function () {});
@@ -252,7 +252,10 @@ const toruncode = function () {
       .getSession()
       .on("change", function () {});
 
-    goto = url.replace("omnicode.vercel.app", "omnicode.vercel.app/run");
+    goto = url.replace(
+      "omnicode.vercel.app/monol",
+      "omnicode.vercel.app/monor"
+    );
     window.location.assign(goto);
   }
 };
