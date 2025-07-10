@@ -1,7 +1,7 @@
 :root {
   --text-color: #6d6b6b;
   --mono-bg-color: #e8e8e8;
-  --color-link: #5b5b5b;
+  --color-link: #1a1a1a;
 }
 
 ::-webkit-scrollbar-thumb:hover {
