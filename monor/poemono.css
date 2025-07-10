@@ -1,10 +1,6 @@
 :root {
-  --line-separator: #999999;
+  --line-separator: #88888855;
   --text-color: #6d6b6b;
-  --color-link: #684f58;
-  --input-text: #444444;
-  --scroll-track: #00078a00;
-  --color-shadow: #afa8a8;
   --mono-bg-color: #e8e8e8;
 }
 
