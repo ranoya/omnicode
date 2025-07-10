@@ -1,0 +1,38 @@
+:root {
+  --bg-color: #eec3c3;
+  --line-separator: #fdd0d0;
+  --text-color: #ffffff;
+  --color-link: #8e6e7b;
+  --color-hover: #a99595;
+  --input-text: #fbfbfb;
+  --scroll-track: #00078a00;
+  --color-shadow: #afa8a8;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #fff1f1;
+}
+
+#outputs::-webkit-scrollbar-thumb:hover {
+  background: #fff1f1;
+}
+
+a:hover {
+  color: var(--color-hover, #e6be10);
+  background-color: white;
+  cursor: pointer;
+}
+
+#poeinst {
+  min-width: calc(100% - 50px);
+  left: 15px;
+  border-radius: 0;
+  min-height: 8px;
+  max-height: 30px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+#outputs {
+  min-height: 170px;
+}
