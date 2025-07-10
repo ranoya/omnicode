@@ -69,3 +69,11 @@ a:hover {
   color: var(--input-text, #443535);
   margin-bottom: 0;
 }
+
+.outputgrid {
+  grid-template-columns: 1fr 1fr 1fr [fim];
+}
+
+.linksrecursos {
+  font-size: 12px;
+}
