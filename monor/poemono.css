@@ -27,7 +27,7 @@
 
 a {
   text-decoration: none;
-  color: var(--poe-border, #3498c7);
+  color: var(--color-link, #3498c7);
   padding: 2px 8px 2px 8px;
   margin: -4px -8px -4px -8px;
 }
@@ -43,7 +43,7 @@ a:hover {
 }
 
 .grouplink:hover {
-  background-color: var(--poe-border, #684f58) !important;
+  background-color: var(--color-link, #684f58) !important;
   color: var(--bg-color, black) !important;
 }
 
@@ -97,10 +97,10 @@ a:hover {
   outline: 0;
   margin-left: 0;
   background-color: transparent;
-  color: var(--input-text, #443535);
+  color: var(--color-link, #684f58);
   margin-bottom: 0;
   /* border-top: 1px solid #cccccc; */
-  border-bottom: 1px solid #cccccc;
+  border-bottom: 1px solid var(--poe-border, #684f58);
 }
 
 .outputgrid {
