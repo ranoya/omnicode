@@ -999,5 +999,13 @@
     };
 
     toggle("poeinst");
+
+    document.getElementById("entrada").addEventListener("input", (event) => {
+      if (document.getElementById("entrada").value == "") {
+        document.getElementById("outputs").style.display = "none";
+      } else {
+        document.getElementById("outputs").style.display = "block";
+      }
+    });
   </script>
 </html>
