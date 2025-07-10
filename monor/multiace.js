@@ -226,7 +226,7 @@ const tolivecode = function () {
   let url = window.location.href;
   let goto = "";
 
-  if (!url.match(/https:\/\/omnicode.vercel.app\/monol/i)) {
+  if (url.match(/https:\/\/omnicode.vercel.app\/monol/i)) {
     // do nothing
   } else {
     document.addEventListener("DOMContentLoaded", function () {});
