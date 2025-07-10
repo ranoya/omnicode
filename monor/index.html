@@ -373,8 +373,7 @@
     <div id="statusbar">
       <div class="linkstatusbar" onclick="tolivecode();">LIVECODE</div>
       <div class="linkstatusbar" onclick="toruncode();">RUN CODE</div>
-      <span id="mensagem"
-        >executar: CTRL/CMD+S | menu: CTRL/CMD+SHIFT+P | RUN CODE | </span
+      <span id="mensagem">executar: CTRL/CMD+S | RUN CODE | </span
       ><span id="tipoliguagem">HTML</span>
     </div>
     <div
@@ -387,7 +386,7 @@
     <script>
       let mensagem =
         `<sp` +
-        `an id='mensagem'>executar: CTRL/CMD+S | menu: CTRL/CMD+SHIFT+P | RUN CODE | </sp` +
+        `an id='mensagem'>executar: CTRL/CMD+S | RUN CODE | </sp` +
         `an>`;
 
       // VARIANTES
@@ -401,7 +400,7 @@
           `v class="linkstatusbar" onclick="toruncode();">RUN CODE</d` +
           `iv>
         <sp` +
-          `an id="mensagem">executar: CTRL/CMD+S | menu: CTRL/CMD+SHIFT+P | RUN CODE | </s` +
+          `an id="mensagem">executar: CTRL/CMD+S | RUN CODE | </s` +
           `pan
         ><sp` +
           `an id="tipoliguagem">HTML</sp` +
@@ -433,9 +432,6 @@
         document.getElementById("statusbar").innerHTML =
           `
         <di` +
-          `v class="linkstatusbar" onclick='toggle("poeinst");''>MENU</d` +
-          `iv>
-        <di` +
           `v class="linkstatusbar" onclick="tolivecode();">LIVECODE</d` +
           `iv>
         <di` +
@@ -464,9 +460,6 @@
 
         document.getElementById("statusbar").innerHTML =
           `
-        <di` +
-          `v class="linkstatusbar" onclick='toggle("poeinst");''>MENU</d` +
-          `iv>
         <di` +
           `v class="linkstatusbar" onclick="tolivecode();">LIVECODE</d` +
           `iv>
@@ -699,6 +692,7 @@
         "#" + $_GET["bgcolor"];
     }
 
+    /*
     if ($_GET["gutcolor"]) {
       let myTimeout1 = setTimeout(function () {
         document.getElementsByClassName(
@@ -717,6 +711,33 @@
       }, 2400);
       gtc = $_GET["guttext"];
     }
+    */
+
+    let mudacores = setInterval(function () {
+      if (
+        document.getElementById("editor_1").innerHTML.match(/textarea/i) &&
+        typeof document.getElementsByClassName("ace_gutter-layer")[0] !=
+          "undefined" &&
+        document.getElementsByClassName("ace_gutter-layer")[0] != null &&
+        document.getElementsByClassName("ace_gutter-layer")[0] != ""
+      ) {
+        if ($_GET["gutcolor"]) {
+          document.getElementsByClassName(
+            "ace_gutter-layer"
+          )[0].style.backgroundColor = "#" + $_GET["gutcolor"];
+          gcolr = $_GET["gutcolor"];
+        }
+
+        if ($_GET["guttext"]) {
+          document.getElementsByClassName("ace_gutter-layer")[0].style.color =
+            "#" + $_GET["guttext"];
+          document.getElementById("statusbar").style.color =
+            "#" + $_GET["guttext"];
+        }
+
+        clearInterval(mudacores);
+      }
+    }, 100);
 
     if (
       $_GET["bordercolor"] &&
@@ -768,12 +789,11 @@
       document.getElementById("resize").style.borderLeft =
         "1px dotted #" + corborda;
 
-      document.getElementById("poeinst").style.minWidth =
-        "min-width: calc(100% - 40px)";
+      document.getElementById("poeinst").style.minWidth = "calc(100% - 60px)";
       document.getElementById("poeinst").style.paddingRight = "0";
-      document.getElementById("entrada").style.minWidth =
-        "min-width: calc(100% - 20px)";
-      document.getElementById("outputs").style.height = "calc(100dvh - 83px)";
+      document.getElementById("entrada").style.width =
+        "calc(100% - 20px) !important";
+      document.getElementById("outputs").style.height = "calc(100dvh - 80px)";
 
       $_GET["nostatus"] = "true";
     }
@@ -789,12 +809,11 @@
 
       document.getElementById("roda").style.top = "15px";
 
-      document.getElementById("poeinst").style.minWidth =
-        "min-width: calc(100% - 40px)";
+      document.getElementById("poeinst").style.minWidth = "calc(100% - 60px)";
       document.getElementById("poeinst").style.paddingRight = "0";
-      document.getElementById("entrada").style.minWidth =
-        "min-width: calc(100% - 20px)";
-      document.getElementById("outputs").style.height = "calc(100dvh - 83px)";
+      document.getElementById("entrada").style.width =
+        "calc(100% - 20px) !important";
+      document.getElementById("outputs").style.height = "calc(100dvh - 80px)";
     }
 
     const enviacomando = function (instr) {
