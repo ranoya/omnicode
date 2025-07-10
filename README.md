@@ -91,6 +91,10 @@ Menu colors can be set with URL variables:
 
 All other variables also apply, except for **nopoe** and **poecss**.
 
+Example:
+
+[https://omnicode.vercel.app/monor/?&bgcolor=235b8d&fgcolor=ffffff&hgcolor=bbbbbb&guttext=ffffff&bordercolor=16bdbd&pborder=cccccc&gutcolor=276093&dark=true&theme=cobalt](https://omnicode.vercel.app/monor/?&bgcolor=235b8d&fgcolor=ffffff&hgcolor=bbbbbb&guttext=ffffff&bordercolor=16bdbd&pborder=cccccc&gutcolor=276093&dark=true&theme=cobalt)
+
 
 
 <br><br>
