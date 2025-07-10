@@ -43,7 +43,7 @@ a:hover {
 
 .grouplink:hover {
   background-color: var(--color-link, #684f58) !important;
-  color: var(--bg-color, black) !important;
+  color: var(--mono-bg-color, #c1c1c1c1) !important;
 }
 
 #poeinst {
