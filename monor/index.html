@@ -181,6 +181,7 @@
         --mono-bg-color: #e8e8e8;
         --color-link: #684f58;
         --bg-highlight: #808080;
+        --poe-border: #c1c1c1;
       }
 
       body {
@@ -708,6 +709,13 @@
       document.documentElement.style.setProperty(
         "--bg-highlight",
         "#" + $_GET["hgcolor"]
+      );
+    }
+
+    if ($_GET["pborder"]) {
+      document.documentElement.style.setProperty(
+        "--poe-border",
+        "#" + $_GET["pborder"]
       );
     }
 
