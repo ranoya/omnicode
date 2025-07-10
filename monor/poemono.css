@@ -1,5 +1,5 @@
 :root {
-  --bg-color: #e8e8e8;
+  --bg-color: $554040;
   --line-separator: #999999;
   --text-color: #6d6b6b;
   --color-link: #684f58;
@@ -7,6 +7,7 @@
   --input-text: #444444;
   --scroll-track: #00078a00;
   --color-shadow: #afa8a8;
+  --mono-bg-color: #e8e8e8;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -61,7 +62,7 @@ a:hover {
   position: fixed;
   top: 55px;
   width: calc(100% - 32px);
-  background-color: var(--bg-color, #e8e8e8);
+  background-color: var(--mono-bg-color, #e8e8e8);
   left: 35px;
   height: calc(100dvh - 108px);
   display: none;

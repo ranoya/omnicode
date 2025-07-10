@@ -752,11 +752,11 @@
       document.getElementById("statusbar").style.display = "none";
 
       document.getElementById("editor_1").style.height =
-        "height: calc(100dvh - 30px)";
+        "height: calc(100dvh - 70px)";
       document.getElementById("right_panel").style.height =
-        "height: calc(100dvh - 30px)";
+        "height: calc(100dvh - 70px)";
       document.getElementById("View_editor_1").style.height =
-        "height: calc(100dvh - 30px)";
+        "height: calc(100dvh - 70px)";
 
       document.getElementById("roda").style.top = "15px";
 
@@ -768,19 +768,25 @@
       document.getElementById("resize").style.borderLeft =
         "1px dotted #" + corborda;
 
+      document.getElementById("poeinst").style.minWidth =
+        "min-width: calc(100% - 70px)";
+
       $_GET["nostatus"] = "true";
     }
 
     if ($_GET["nostatus"] != "" && typeof $_GET["nostatus"] != "undefined") {
       document.getElementById("statusbar").style.display = "none";
 
-      document.getElementById("editor_1").style.height = "calc(100dvh - 30px)";
+      document.getElementById("editor_1").style.height = "calc(100dvh - 70px)";
       document.getElementById("right_panel").style.height =
-        "calc(100dvh - 30px)";
+        "calc(100dvh - 70px)";
       document.getElementById("View_editor_1").style.height =
-        "calc(100dvh - 30px)";
+        "calc(100dvh - 70px)";
 
       document.getElementById("roda").style.top = "15px";
+
+      document.getElementById("poeinst").style.minWidth =
+        "min-width: calc(100% - 70px)";
     }
 
     const enviacomando = function (instr) {
