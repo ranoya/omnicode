@@ -54,6 +54,7 @@ a:hover {
   font-size: 10px;
   line-height: 30px;
   background-color: transparent;
+  display: block !important;
 }
 
 .gridhead {
