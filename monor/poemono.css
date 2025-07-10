@@ -61,6 +61,7 @@ a:hover {
   background-color: #000000;
   left: 35px;
   height: calc(100dvh - 105px);
+  display: none;
 }
 
 #entrada {
