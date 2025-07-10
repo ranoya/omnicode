@@ -1,5 +1,4 @@
 :root {
-  --line-separator: #88888855;
   --text-color: #6d6b6b;
   --mono-bg-color: #e8e8e8;
 }
@@ -107,4 +106,8 @@ a:hover {
 
 .linksrecursos {
   font-size: 12px;
+}
+
+.categoria {
+  border-bottom: 1px solid var(--bg-highlight, #808080);
 }
