@@ -62,7 +62,7 @@ a:hover {
   position: fixed;
   top: 55px;
   width: calc(100% - 30px);
-  background-color: #000000;
+  background-color: var(--bg-color, #e8e8e8);
   left: 35px;
   height: calc(100dvh - 105px);
   display: none;
