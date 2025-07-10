@@ -378,20 +378,17 @@
     <div id="statusbar">
       <div class="linkstatusbar" onclick="tolivecode();">LIVECODE</div>
       <div class="linkstatusbar" onclick="toruncode();">RUN CODE</div>
-      <span id="mensagem">executar: CTRL/CMD+S | RUN CODE | </span
+      <span id="mensagem">| LIVECODE | </span
       ><span id="tipoliguagem">HTML</span>
     </div>
-    <div
-      id="roda"
-      onclick="javascript:runContent(String.fromHtmlEntities(localStorage.getItem(buffer)),'View_editor_1',Predata_editor_1, Postdata_editor_1);"
-    >
+    
       &#9658;
     </div>
 
     <script>
       let mensagem =
         `<sp` +
-        `an id='mensagem'>executar: CTRL/CMD+S | RUN CODE | </sp` +
+        `an id='mensagem'>| LIVECODE | </sp` +
         `an>`;
 
       // VARIANTES
@@ -405,7 +402,7 @@
           `v class="linkstatusbar" onclick="toruncode();">RUN CODE</d` +
           `iv>
         <sp` +
-          `an id="mensagem">executar: CTRL/CMD+S | RUN CODE | </s` +
+          `an id="mensagem">| LIVECODE | </s` +
           `pan
         ><sp` +
           `an id="tipoliguagem">HTML</sp` +
@@ -420,7 +417,7 @@
           `</d` +
           `iv>
         <sp` +
-          `an id="mensagem">RUN CODE | </s` +
+          `an id="mensagem">| LIVECODE | </s` +
           `pan
         ><sp` +
           `an id="tipoliguagem">HTML</sp` +
@@ -452,7 +449,7 @@
           `v class="linkstatusbar" onclick='lingua("python");'>python</d` +
           `iv>
         <sp` +
-          `an id="mensagem">executar: CTRL/CMD+S | RUN CODE | </s` +
+          `an id="mensagem">| LIVECODE | </s` +
           `pan
         ><sp` +
           `an id="tipoliguagem">HTML</sp` +
@@ -770,8 +767,6 @@
       document.getElementById("resize").style.borderLeft = "0 none transparent";
       document.getElementById("editor_1").style.borderRight =
         "0 none transparent";
-      document.getElementById("roda").style.border =
-        "1px solid #" + $_GET["bordercolor"];
 
       document.getElementById("statusbar").style.backgroundColor =
         "#" + $_GET["bordercolor"];
@@ -795,8 +790,6 @@
       document.getElementById("View_editor_1").style.height =
         "height: calc(100dvh - 75px)";
 
-      document.getElementById("roda").style.top = "15px";
-
       document.getElementById("editor_1").style.border = "0 transparent none";
       document.getElementById("resize").style.border = "0 transparent none";
       document.getElementById("right_panel").style.border =
@@ -805,10 +798,9 @@
       document.getElementById("resize").style.borderLeft =
         "1px dotted #" + corborda;
 
-      document.getElementById("poeinst").style.minWidth = "calc(100% - 60px)";
+
       document.getElementById("poeinst").style.paddingRight = "0";
-      document.getElementById("entrada").style.width =
-        "calc(100% - 20px) !important";
+
       document.getElementById("outputs").style.height = "calc(100dvh - 80px)";
 
       $_GET["nostatus"] = "true";
@@ -823,12 +815,9 @@
       document.getElementById("View_editor_1").style.height =
         "calc(100dvh - 75px)";
 
-      document.getElementById("roda").style.top = "15px";
 
-      document.getElementById("poeinst").style.minWidth = "calc(100% - 60px)";
       document.getElementById("poeinst").style.paddingRight = "0";
-      document.getElementById("entrada").style.width =
-        "calc(100% - 20px) !important";
+
       document.getElementById("outputs").style.height = "calc(100dvh - 78px)";
     }
 
