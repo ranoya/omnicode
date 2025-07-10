@@ -21,7 +21,8 @@ onkeydown = onkeyup = function (e) {
     ((keymapping[93] || keymapping[91] || keymapping[92] || keymapping[17]) &&
       keymapping[75]) ||
     (keymapping[16] && keymapping[92] && keymapping[79]) ||
-    (keymapping[17] && keymapping[191])
+    (keymapping[17] && keymapping[191]) ||
+    (keymapping[17] && keymapping[190])
   ) {
     e.preventDefault();
     this.document.getElementById("entrada").focus();
@@ -44,6 +45,7 @@ const toggle = function () {
     keymapping[16] = false;
     keymapping[17] = false;
     keymapping[191] = false;
+    keymapping[190] = false;
 
     document.getElementById("entrada").focus();
 
@@ -66,6 +68,8 @@ const toggle = function () {
     keymapping[80] = false;
     keymapping[16] = false;
     keymapping[17] = false;
+    keymapping[191] = false;
+    keymapping[190] = false;
   }
 };
 
