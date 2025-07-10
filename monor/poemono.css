@@ -2,7 +2,6 @@
   --line-separator: #999999;
   --text-color: #6d6b6b;
   --color-link: #684f58;
-  --color-hover: #554040;
   --input-text: #444444;
   --scroll-track: #00078a00;
   --color-shadow: #afa8a8;
@@ -33,7 +32,7 @@ a {
 }
 
 a:hover {
-  color: var(--color-hover, #e6be10);
+  color: var(--cor-fg, #555555);
   background-color: var(--bg-highlight, #808080);
   cursor: pointer;
 }

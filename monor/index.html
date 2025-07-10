@@ -182,6 +182,7 @@
         --color-link: #684f58;
         --bg-highlight: #808080;
         --poe-border: #c1c1c1;
+        --cor-fg: #555555;
       }
 
       body {
@@ -716,6 +717,13 @@
       document.documentElement.style.setProperty(
         "--poe-border",
         "#" + $_GET["pborder"]
+      );
+    }
+
+    if ($_GET["fgcolor"]) {
+      document.documentElement.style.setProperty(
+        "--cor-fg",
+        "#" + $_GET["fgcolor"]
       );
     }
 
