@@ -66,7 +66,34 @@ These are the variables you can use:
 | startandrun     | boolean       | run code as soon a file is loaded (for run mode only)      |  https://omnicode.vercel.app/run/?startandrun=true&file=https://omnicode.vercel.app/examples/myfile.html   |
 | nocache     | boolean       | don´t use code stored in the browser (important when using multiple instances in the same document)      |  https://omnicode.vercel.app/run/?nocache=true&file=https://omnicode.vercel.app/examples/myfile.html   |
 | buffer      | string        | specify a variable in local storage to store and retrieve code in the browser      |  https://omnicode.vercel.app/run/?buffer=tempcode  |
+| dark        | boolea        | sets the preview html element color to white (for dark backgrounds)                |  https://omnicode.vercel.app/run/?dark=true        |
 
+<br><br>
+
+## ALWAYS ON COMMAND PALETTE VERSIONS
+
+[https://omnicode.vercel.app/monor/](https://omnicode.vercel.app/monor/)
+
+This version always show de menu options. Use CTRL+/ or CTRL+. to focus the command palette menu.
+
+Menu colors can be set with URL variables:
+
+
+| variable    | type                       | description                               | example                                         |
+| ----------- | -------------------------- | ----------------------------------------- | ----------------------------------------------- |
+| bgcolor     | RGBA value (without the #) | sets the background color                 | https://omnicode.vercel.app/?bgcolor=fef6e4     |
+| gutcolor    | RGB value (without the #)  | sets the editor's lines column background | https://omnicode.vercel.app/?gutcolor=f8f0e0    |
+| guttext     | RGB value (without the #)  | sets the editor's lines color             | https://omnicode.vercel.app/?gutcolor=FF0000    |
+| bordercolor | RGBA value (without the #) | sets the line borders color               | https://omnicode.vercel.app/?bordercolor=c0cf54 |
+| pborder     | RGBA value (without the #) | sets the menu line borders color          | https://omnicode.vercel.app/?pborder=00FFFF     |
+| hgcolor     | RGBA value (without the #) | sets the highlight background color       | https://omnicode.vercel.app/?hgcolor=00FFFF     |
+| fgcolor     | RGBA value (without the #) | sets the foreground color                 | https://omnicode.vercel.app/?fgcolor=FFFFFF     |
+
+All other variables also apply, except for **nopoe** and **poecss**.
+
+
+
+<br><br>
 
 
 ## TODO
