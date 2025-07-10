@@ -34,8 +34,17 @@ a {
 
 a:hover {
   color: var(--color-hover, #e6be10);
-  background-color: white;
+  background-color: var(--bg-highlight, #808080);
   cursor: pointer;
+}
+
+.grouplink {
+  color: var(--bg-highlight, #808080) !important;
+}
+
+.grouplink:hover {
+  background-color: var(--color-link, #684f58) !important;
+  color: var(--bg-color, black) !important;
 }
 
 #poeinst {
