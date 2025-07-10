@@ -258,6 +258,8 @@ const toruncode = function () {
 };
 
 document.getElementById("entrada").addEventListener("input", (event) => {
+  console.log("veio");
+
   if (document.getElementById("entrada").value == "") {
     document.getElementById("outputs").style.display = "none";
   } else {
