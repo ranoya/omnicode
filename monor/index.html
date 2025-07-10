@@ -178,7 +178,8 @@
       @import url("https://fonts.googleapis.com/css2?family=Fira+Code&display=swap");
 
       :root {
-        --mono-bg-color: c1c1c1;
+        --mono-bg-color: #e8e8e8;
+        --color-link: #684f58;
       }
 
       body {
@@ -743,6 +744,11 @@
             "#" + $_GET["guttext"];
           document.getElementById("statusbar").style.color =
             "#" + $_GET["guttext"];
+
+          document.documentElement.style.setProperty(
+            "--color-link",
+            "#" + $_GET["guttext"]
+          );
         }
 
         clearInterval(mudacores);
