@@ -42,3 +42,18 @@ a:hover {
 #outputs {
   min-height: 170px;
 }
+
+#entrada {
+  padding: 0;
+  min-width: 0;
+  height: 30px;
+  font-size: 10px;
+  line-height: 30px;
+  width: 100% !important;
+  border: 0;
+  outline: 0;
+  margin-left: 0;
+  background-color: transparent;
+  color: var(--input-text, #443535);
+  margin-bottom: 0;
+}
