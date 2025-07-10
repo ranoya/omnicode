@@ -40,7 +40,19 @@ a:hover {
 }
 
 #outputs {
-  min-height: 170px;
+  width: calc(100% + 40px);
+  height: calc(50vh - 126px);
+  display: block;
+  margin-left: -20px;
+  color: var(--fg-color, #d2d2d2);
+  overflow-y: auto;
+  padding-top: 3px;
+  position: fixed;
+  top: 55px;
+  width: calc(100% - 30px);
+  background-color: #000000;
+  left: 35px;
+  height: calc(100dvh - 105px);
 }
 
 #entrada {
