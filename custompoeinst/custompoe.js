@@ -23,29 +23,15 @@ onkeydown = onkeyup = function (e) {
     (keymapping[16] && keymapping[92] && keymapping[79])
   ) {
     e.preventDefault();
-
-    if (keymapping[79]) {
-      trata = true;
-    }
-
-    keymapping[93] = false;
-    keymapping[92] = false;
-    keymapping[91] = false;
-    keymapping[75] = false;
-    keymapping[79] = false;
-    keymapping[80] = false;
-    keymapping[16] = false;
-    keymapping[17] = false;
-    toggle("poeinst");
   }
 };
 
-const toggle = function (who) {
+const toggle = function () {
   if (
-    document.getElementById(who).style.display == "none" ||
-    document.getElementById(who).style.display == ""
+    document.getElementById("outputs").style.display == "none" ||
+    document.getElementById("outputs").style.display == ""
   ) {
-    document.getElementById(who).style.display = "block";
+    document.getElementById("outputs").style.display = "block";
 
     keymapping[93] = false;
     keymapping[92] = false;
@@ -67,7 +53,7 @@ const toggle = function (who) {
       }, 20);
     }
   } else {
-    document.getElementById(who).style.display = "none";
+    document.getElementById("outputs").style.display = "none";
 
     keymapping[93] = false;
     keymapping[92] = false;
@@ -77,15 +63,6 @@ const toggle = function (who) {
     keymapping[80] = false;
     keymapping[16] = false;
     keymapping[17] = false;
-
-    // trata incidente CTRL+SHIT+O
-
-    if (trata) {
-      trata = false;
-      setTimeout(function () {
-        document.getElementById("entrada").value = "";
-      }, 20);
-    }
   }
 };
 
