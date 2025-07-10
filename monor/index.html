@@ -691,6 +691,11 @@
     if ($_GET["bgcolor"]) {
       document.getElementsByTagName("body")[0].style.backgroundColor =
         "#" + $_GET["bgcolor"];
+
+      document.documentElement.style.setProperty(
+        "--mono-bg-color",
+        "#" + $_GET["bgcolor"]
+      );
     }
 
     /*
