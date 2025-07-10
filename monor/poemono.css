@@ -1,5 +1,5 @@
 :root {
-  --bg-color: #554040;
+  --bg-color: #a77272;
   --line-separator: #999999;
   --text-color: #6d6b6b;
   --color-link: #684f58;
@@ -11,11 +11,19 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #fff1f1;
+  background: var(--color-link, #684f58);
 }
 
 #outputs::-webkit-scrollbar-thumb:hover {
-  background: #fff1f1;
+  background: var(--color-link, #684f58);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-link, #684f58);
+}
+
+#outputs::-webkit-scrollbar-thumb {
+  background: var(--color-link, #684f58);
 }
 
 a {
