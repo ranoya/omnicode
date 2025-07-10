@@ -236,8 +236,8 @@ const tolivecode = function () {
       .on("change", function () {});
 
     goto = url.replace(
-      "omnicode.vercel.app/monol",
-      "omnicode.vercel.app/monor"
+      "omnicode.vercel.app/monor",
+      "omnicode.vercel.app/monol"
     );
     window.location.assign(goto);
   }
