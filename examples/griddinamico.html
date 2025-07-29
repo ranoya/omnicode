@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <script src="https://datat.vercel.app/basicsmin.js"></script>
+
+    <style>
+      #resultado {
+        margin-top: 30px;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 20px 20px;
+      }
+
+      #resultado a {
+        width: calc(100% - 28px);
+        border: 14px solid white;
+        text-decoration: none;
+        background-color: white;
+      }
+
+      .texto {
+        text-decoration: none !important;
+        color: red;
+      }
+
+      #resultado a:hover {
+        border: 14px solid blue;
+        background-color: blue;
+      }
+
+      #resultado a:hover .texto {
+        color: white !important;
+      }
+
+      .quad {
+        background-color: red;
+        width: 100%;
+        aspect-ratio: 1/1;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center center;
+      }
+
+      @media screen and (max-width: 600px) {
+        #resultado {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <input id="entrada" type="text" />
+
+    <div id="resultado"></div>
+
+    <script>
+      omnifilter = function (arr) {
+        let dados = selecte(arr, "Artefato nytimes");
+        let codigo = "";
+        for (let i = 0; i < dados.length; i++) {
+          // Contrução do código HTML/CSS
+
+          codigo += `<a target="_blank" href="${dados[i].imagemurl}"><div class="quad" style="background-image: url(${dados[i].imagemurl});"></div><br><span class="texto">${dados[i].titulo}</span></a>`;
+        }
+
+        document.getElementById("resultado").innerHTML = codigo;
+      };
+
+      omnifilterfetchcsvdata(
+        GoogleSheetCsvURL(
+          "https://docs.google.com/spreadsheets/d/1d9eKw82lnM5GvVkBUe8wLcHSxpmDm5B6dUqWRbazOik/edit#gid=34423500"
+        ),
+        "entrada"
+      );
+    </script>
+  </body>
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+    <style>
+      body {
+        margin: 40px;
+        margin-top: 100px;
+        margin-bottom: 100px;
+      }
+      #galeria {
+        /* border: 1px solid red; */
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 22px 28px;
+      }
+
+      #galeria a {
+        box-shadow: 0px 0px 16px #00000044;
+        border: 14px solid transparent;
+        background-color: white;
+      }
+
+      #galeria a:hover {
+        border: 14px solid green;
+        background-color: green;
+      }
+
+      .quad {
+        width: 100%;
+        aspect-ratio: 1/1;
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+
+      @media screen and (min-width: 700px) {
+        #galeria {
+          grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        }
+      }
+
+      #lista,
+      #lista2 {
+        display: flex;
+        height: 120px;
+        border: 1px solid red;
+
+        gap: 20px 20px;
+      }
+
+      #lista2 {
+        justify-content: center !important;
+      }
+
+      #lista a,
+      #lista2 a {
+        /* width: calc(25% - 48px + (20px / 4) ); */
+        box-shadow: 0px 0px 16px #00000044;
+        border: 14px solid transparent;
+        background-color: white;
+        height: calc(120px - 28px);
+        aspect-ratio: 1/1;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Elementos Grid -->
+
+    <div id="galeria">
+      <a
+        target="_blank"
+        href="https://miro.medium.com/v2/resize:fit:1400/1*E86OGGNaI25g8dJAhRgg6A.png"
+      >
+        <div
+          class="quad"
+          style="
+            background-image: url(https://miro.medium.com/v2/resize:fit:1400/1*E86OGGNaI25g8dJAhRgg6A.png);
+          "
+        ></div>
+      </a>
+
+      <a target="_blank" href="#">
+        <div
+          class="quad"
+          style="
+            background-image: url(https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/f550af98912893.5ee750fb49659.jpg);
+          "
+        ></div>
+      </a>
+
+      <a target="_blank" href="#">
+        <div
+          class="quad"
+          style="
+            background-image: url(https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/c9f9b990110271.5e0e16e7d33f7.jpg);
+          "
+        ></div>
+      </a>
+
+      <a target="_blank" href="#">
+        <div
+          class="quad"
+          style="
+            background-image: url(https://mir-s3-cdn-cf.behance.net/project_modules/disp/c92a7f7654745.560af4ed87beb.jpg);
+          "
+        ></div>
+      </a>
+
+      <a target="_blank" href="#">
+        <div
+          class="quad"
+          style="
+            background-image: url(https://mir-s3-cdn-cf.behance.net/project_modules/disp/d5652b14174183.5627f6608466e.jpg);
+          "
+        ></div>
+      </a>
+
+      <a target="_blank" href="#">
+        <div
+          class="quad"
+          style="
+            background-image: url(https://cdn.vox-cdn.com/uploads/chorus_asset/file/13333243/large.png);
+          "
+        ></div>
+      </a>
+
+      <a target="_blank" href="#">
+        <div
+          class="quad"
+          style="
+            background-image: url(https://flowingdata.com/wp-content/uploads/2021/07/happiness-overall-2048x1447.png);
+          "
+        ></div>
+      </a>
+
+      <a
+        target="_blank"
+        href="https://miro.medium.com/v2/resize:fit:1400/1*E86OGGNaI25g8dJAhRgg6A.png"
+      >
+        <div
+          class="quad"
+          style="
+            background-image: url(https://miro.medium.com/v2/resize:fit:1400/1*E86OGGNaI25g8dJAhRgg6A.png);
+          "
+        ></div>
+      </a>
+
+      <a target="_blank" href="#">
+        <div
+          class="quad"
+          style="
+            background-image: url(https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/f550af98912893.5ee750fb49659.jpg);
+          "
+        ></div>
+      </a>
+
+      <a target="_blank" href="#">
+        <div
+          class="quad"
+          style="
+            background-image: url(https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/c9f9b990110271.5e0e16e7d33f7.jpg);
+          "
+        ></div>
+      </a>
+    </div>
+
+    <!-- Elementos Flex 1 -->
+
+    <br /><br /><br /><br />
+    <div id="lista">
+      <a
+        target="_blank"
+        href="https://miro.medium.com/v2/resize:fit:1400/1*E86OGGNaI25g8dJAhRgg6A.png"
+      >
+        <div
+          class="quad"
+          style="
+            background-image: url(https://miro.medium.com/v2/resize:fit:1400/1*E86OGGNaI25g8dJAhRgg6A.png);
+          "
+        ></div>
+      </a>
+
+      <a target="_blank" href="#">
+        <div
+          class="quad"
+          style="
+            background-image: url(https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/f550af98912893.5ee750fb49659.jpg);
+          "
+        ></div>
+      </a>
+
+      <a target="_blank" href="#">
+        <div
+          class="quad"
+          style="
+            background-image: url(https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/c9f9b990110271.5e0e16e7d33f7.jpg);
+          "
+        ></div>
+      </a>
+
+      <a target="_blank" href="#">
+        <div
+          class="quad"
+          style="
+            background-image: url(https://mir-s3-cdn-cf.behance.net/project_modules/disp/c92a7f7654745.560af4ed87beb.jpg);
+          "
+        ></div>
+      </a>
+
+      <a target="_blank" href="#">
+        <div
+          class="quad"
+          style="
+            background-image: url(https://mir-s3-cdn-cf.behance.net/project_modules/disp/d5652b14174183.5627f6608466e.jpg);
+          "
+        ></div>
+      </a>
+
+      <a target="_blank" href="#">
+        <div
+          class="quad"
+          style="
+            background-image: url(https://cdn.vox-cdn.com/uploads/chorus_asset/file/13333243/large.png);
+          "
+        ></div>
+      </a>
+
+      <a target="_blank" href="#">
+        <div
+          class="quad"
+          style="
+            background-image: url(https://flowingdata.com/wp-content/uploads/2021/07/happiness-overall-2048x1447.png);
+          "
+        ></div>
+      </a>
+
+      <a
+        target="_blank"
+        href="https://miro.medium.com/v2/resize:fit:1400/1*E86OGGNaI25g8dJAhRgg6A.png"
+      >
+        <div
+          class="quad"
+          style="
+            background-image: url(https://miro.medium.com/v2/resize:fit:1400/1*E86OGGNaI25g8dJAhRgg6A.png);
+          "
+        ></div>
+      </a>
+
+      <a target="_blank" href="#">
+        <div
+          class="quad"
+          style="
+            background-image: url(https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/f550af98912893.5ee750fb49659.jpg);
+          "
+        ></div>
+        ;
+      </a>
+
+      <a target="_blank" href="#">
+        <div
+          class="quad"
+          style="
+            background-image: url(https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/c9f9b990110271.5e0e16e7d33f7.jpg);
+          "
+        ></div>
+      </a>
+    </div>
+
+    <!-- Elementos Flex 2 -->
+
+    <br /><br /><br /><br />
+    <div id="lista2">
+      <a
+        target="_blank"
+        href="https://miro.medium.com/v2/resize:fit:1400/1*E86OGGNaI25g8dJAhRgg6A.png"
+      >
+        <div
+          class="quad"
+          style="
+            background-image: url(https://miro.medium.com/v2/resize:fit:1400/1*E86OGGNaI25g8dJAhRgg6A.png);
+          "
+        ></div>
+      </a>
+
+      <a target="_blank" href="#">
+        <div
+          class="quad"
+          style="
+            background-image: url(https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/f550af98912893.5ee750fb49659.jpg);
+          "
+        ></div>
+      </a>
+
+      <a target="_blank" href="#">
+        <div
+          class="quad"
+          style="
+            background-image: url(https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/c9f9b990110271.5e0e16e7d33f7.jpg);
+          "
+        ></div>
+      </a>
+
+      <a target="_blank" href="#">
+        <div
+          class="quad"
+          style="
+            background-image: url(https://mir-s3-cdn-cf.behance.net/project_modules/disp/c92a7f7654745.560af4ed87beb.jpg);
+          "
+        ></div>
+      </a>
+    </div>
+  </body>
+</html>

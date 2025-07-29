@@ -21,10 +21,13 @@ onkeydown = onkeyup = function (e) {
     ((keymapping[93] || keymapping[91] || keymapping[92] || keymapping[17]) &&
       keymapping[75]) ||
     (keymapping[16] && keymapping[92] && keymapping[79]) ||
-    (keymapping[17] && keymapping[191]) ||
-    (keymapping[17] && keymapping[190])
+    ((keymapping[17] || keumapping[18]) && (keymapping[191] || keymapping[190]))
   ) {
     e.preventDefault();
+    this.document.getElementById("entrada").value = " ";
+    this.document
+      .getElementById("entrada")
+      .dispatchEvent(new Event("input", { bubbles: true }));
     this.document.getElementById("entrada").focus();
   }
 };
@@ -44,9 +47,15 @@ const toggle = function () {
     keymapping[80] = false;
     keymapping[16] = false;
     keymapping[17] = false;
+    keymapping[18] = false;
     keymapping[191] = false;
     keymapping[190] = false;
 
+    this.document.getElementById("entrada").value = " ";
+    this.document
+      .getElementById("entrada")
+      .dispatchEvent(new Event("input", { bubbles: true }));
+    this.document.getElementById("entrada").focus();
     document.getElementById("entrada").focus();
 
     // trata incidente CTRL+SHIT+O
@@ -68,6 +77,7 @@ const toggle = function () {
     keymapping[80] = false;
     keymapping[16] = false;
     keymapping[17] = false;
+    keymapping[18] = false;
     keymapping[191] = false;
     keymapping[190] = false;
   }
