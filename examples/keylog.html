@@ -1,0 +1,11 @@
+<script>
+  let keymapping = {}; // You could also use an array
+  document.addEventListener("keydown", function (e) {
+    for (k in keymapping) {
+      console.log("Key code:" + k);
+    }
+  });
+  document.addEventListener("keyup", function (e) {
+    keymapping = {};
+  });
+</script>
