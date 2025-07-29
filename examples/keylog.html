@@ -1,6 +1,7 @@
 <script>
   let keymapping = {}; // You could also use an array
   document.addEventListener("keydown", function (e) {
+    keymapping[e.keyCode] = e.type == "keydown";
     for (k in keymapping) {
       console.log("Key code:" + k);
     }
