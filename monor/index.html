@@ -802,6 +802,11 @@
 
       document.getElementById("statusbar").style.backgroundColor =
         "#" + $_GET["bordercolor"];
+
+      document.documentElement.style.setProperty(
+        "--bg-highlight",
+        "#" + $_GET["bordercolor"]
+      );
     }
 
     if ($_GET["minimal"] != "" && typeof $_GET["minimal"] != "undefined") {
