@@ -23,15 +23,27 @@ onkeydown = onkeyup = function (e) {
 
   // ctrl+shift+p
   if (
-    ((keymapping[93] || keymapping[91]) && keymapping[80] && keymapping[16]) ||
-    ((keymapping[93] || keymapping[91]) && keymapping[75])
+    ((keymapping[17] || keymapping[91] || keymapping[92] || keymapping[17]) &&
+      keymapping[80] &&
+      keymapping[16]) ||
+    ((keymapping[93] || keymapping[91] || keymapping[92] || keymapping[17]) &&
+      keymapping[75]) ||
+    (keymapping[16] && keymapping[92] && keymapping[79]) ||
+    ((keymapping[17] || keymapping[18]) &&
+      (keymapping[191] || keymapping[190])) ||
+    (keymapping[9] && keymapping[16])
   ) {
     keymapping[93] = false;
     keymapping[91] = false;
     keymapping[75] = false;
     keymapping[80] = false;
     keymapping[16] = false;
-    toggle("poeinst");
+    e.preventDefault();
+    this.document.getElementById("entrada").value = " ";
+    this.document
+      .getElementById("entrada")
+      .dispatchEvent(new Event("input", { bubbles: true }));
+    this.document.getElementById("entrada").focus();
   }
 
   // ctrl+e
