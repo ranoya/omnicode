@@ -33,11 +33,18 @@ onkeydown = onkeyup = function (e) {
       (keymapping[191] || keymapping[190])) ||
     (keymapping[9] && keymapping[16])
   ) {
+    keymapping[9] = false;
     keymapping[93] = false;
+    keymapping[92] = false;
     keymapping[91] = false;
     keymapping[75] = false;
+    keymapping[79] = false;
     keymapping[80] = false;
     keymapping[16] = false;
+    keymapping[17] = false;
+    keymapping[18] = false;
+    keymapping[191] = false;
+    keymapping[190] = false;
     e.preventDefault();
     this.document.getElementById("entrada").value = " ";
     this.document
