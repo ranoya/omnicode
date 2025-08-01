@@ -807,6 +807,11 @@
         "--bg-highlight",
         "#" + $_GET["bordercolor"]
       );
+
+      document.documentElement.style.setProperty(
+        "--poe-border",
+        "#" + $_GET["bordercolor"]
+      );
     }
 
     if ($_GET["minimal"] != "" && typeof $_GET["minimal"] != "undefined") {
