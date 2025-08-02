@@ -14,7 +14,7 @@ H = W * (3 ** 0.5) * 0.5
 
 def setup():
     global w, h
-    size(windowHeight - 50, windowHeight - 50)
+    size(windowHeight - 10, windowHeight - 10)
     w, h = int(width / 2 / W - 5), int(height / 2 / W - 5)
     start(268)
 
