@@ -1,0 +1,64 @@
+<!--
+
+Gráfico de barras em SVG com 
+dados hardcoded
+
+-->
+
+<script src="https://datat.vercel.app/basicsmin.js"></script>
+
+<div
+  id="meudesenho"
+  style="border: 1px solid black; width: 540px; height: 500px"
+></div>
+
+<a id="botao" href="#">download</a>
+
+<script>
+  let dados = [12, 5, 14, 8, 7, 2, 9, 19, 13, 1];
+
+  // Desenha linhas e escala
+  let c = 0;
+  let num = 0;
+
+  let meusvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 700 700" style="width: 540px; height: 500px;">`;
+
+  for (let a = 500; a > 0; a = a - 20) {
+    meusvg += `<text x="-60" y="${
+      a + 5
+    }" fill="#000000" font-size="10">${num}</text>`;
+
+    num = num + 1;
+
+    meusvg += `<line x1="-20" y1="${a}" x2="520" y2="${a}" stroke="#aaaaaa" />`;
+  }
+
+  // Desenha barras com dados da planilha
+  num = 1;
+
+  for (let x = 0; x < 500; x = x + 50) {
+    let valor = dados[c] * 20;
+    let pyi = 500 - valor;
+    c = c + 1;
+
+    meusvg += `
+            <rect x="${x}" y="${pyi}" width="40" height="${valor}" fill="#000000" />
+            `;
+
+    meusvg += `<text x="${x + 12}" y="520" fill="#000000">L${num}</text>`;
+    num = num + 1;
+  }
+
+  meusvg += `</svg>`;
+
+  // Insere SVG no div meudesenho
+  document.getElementById("meudesenho").innerHTML = meusvg;
+
+  // Gera arquivo para download
+  let meulink = document.getElementById("botao");
+  meulink.setAttribute(
+    "href",
+    "data:image/svg+xml;utf-8," + encodeURIComponent(meusvg)
+  );
+  meulink.setAttribute("download", "minhaimagem.svg");
+</script>
