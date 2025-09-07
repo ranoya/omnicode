@@ -66,7 +66,8 @@ These are the variables you can use:
 | startandrun     | boolean       | run code as soon a file is loaded (for run mode only)      |  https://omnicode.vercel.app/run/?startandrun=true&file=https://omnicode.vercel.app/examples/myfile.html   |
 | nocache     | boolean       | don´t use code stored in the browser (important when using multiple instances in the same document)      |  https://omnicode.vercel.app/run/?nocache=true&file=https://omnicode.vercel.app/examples/myfile.html   |
 | buffer      | string        | specify a variable in local storage to store and retrieve code in the browser      |  https://omnicode.vercel.app/run/?buffer=tempcode  |
-| dark        | boolea        | sets the preview html element color to white (for dark backgrounds)                |  https://omnicode.vercel.app/run/?dark=true        |
+| dark        | boolean       | sets the preview html element color to white (for dark backgrounds)                |  https://omnicode.vercel.app/run/?dark=true        |
+| htmledit    | boolean       | enable text edit inside the rendered html document                                 |  https://omnicode.vercel.app/?htmledit=true        | 
 
 <br><br>
 
