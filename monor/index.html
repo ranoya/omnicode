@@ -386,6 +386,9 @@
       <span id="mensagem">executar: CTRL/CMD+S | RUN CODE | </span
       ><span id="tipoliguagem">HTML</span>
     </div>
+    <script>
+      let runContent = function () {};
+    </script>
     <div
       id="roda"
       onclick="javascript:runContent(String.fromHtmlEntities(localStorage.getItem(buffer)),'View_editor_1',Predata_editor_1, Postdata_editor_1);"
@@ -928,10 +931,12 @@
 
     let ligaeditatextonohtml = function () {
       editatextonohtml = "true";
+      console(editatextonohtml);
     };
 
     let desligaeditatextonohtml = function () {
-      editatextonohtml = "true";
+      editatextonohtml = "";
+      console(editatextonohtml);
     };
 
     if (
@@ -941,6 +946,7 @@
       editatextonohtml != ""
     ) {
       console.log("foi");
+      console(editatextonohtml);
       Postdata_editor_1 +=
         `<scr` + `ipt>document.designMode = "on";</scr` + `ipt>`;
     }
