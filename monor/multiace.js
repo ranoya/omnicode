@@ -53,7 +53,7 @@ onkeydown = onkeyup = function (e) {
     this.document.getElementById("entrada").focus();
   }
 
-  // ctrl+e
+  // ctrl+s
   if ((keymapping[17] || keymapping[91]) && keymapping[83]) {
     keymapping[17] = false;
     keymapping[91] = false;
@@ -68,6 +68,14 @@ onkeydown = onkeyup = function (e) {
 };
 
 function runContent(data, who, predata, extras) {
+  if (
+    typeof $_GET["htmledit"] != "undefined" &&
+    $_GET["htmledit"] != null &&
+    $_GET["htmledit"] != ""
+  ) {
+    extras += `<scr` + `ipt>document.designMode = "on";</scr` + `ipt>`;
+  }
+
   document.getElementById("View_editor_1").remove();
   let ifr = document.createElement("iframe");
   ifr.setAttribute("id", "View_editor_1");
