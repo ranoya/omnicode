@@ -75,8 +75,6 @@
         }
       })();
 
-      let editatextonohtml = "";
-
       let buffer = "omnicodecode";
 
       if (
@@ -921,24 +919,6 @@
           let aceed = ace.edit("editor_1");
           aceed.setValue(dados);
         });
-    };
-
-    let toggleeditatextonohtml = function () {
-      if (editatextonohtml == "") {
-        editatextonohtml = "true";
-      } else {
-        editatextonohtml = "";
-      }
-    };
-
-    let ligaeditatextonohtml = function () {
-      editatextonohtml = "true";
-      console.log(editatextonohtml);
-    };
-
-    let desligaeditatextonohtml = function () {
-      editatextonohtml = "";
-      console.log(editatextonohtml);
     };
 
     const lingua = function (qual) {

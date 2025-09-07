@@ -68,19 +68,6 @@ onkeydown = onkeyup = function (e) {
 };
 
 function runContent(data, who, predata, extras) {
-  if (
-    (typeof $_GET["htmledit"] != "undefined" &&
-      $_GET["htmledit"] != null &&
-      $_GET["htmledit"] != "") ||
-    (typeof editatextonohtml != "undefined" &&
-      editatextonohtml != null &&
-      editatextonohtml != "")
-  ) {
-    console.log("Design Mode ativado");
-    Postdata_editor_1 +=
-      `<scr` + `ipt>document.designMode = "on";</scr` + `ipt>`;
-  }
-
   document.getElementById("View_editor_1").remove();
   let ifr = document.createElement("iframe");
   ifr.setAttribute("id", "View_editor_1");
