@@ -879,16 +879,6 @@
       editatextonohtml = "true";
     };
 
-    if (
-      (typeof $_GET["htmledit"] != "undefined" &&
-        $_GET["htmledit"] != null &&
-        $_GET["htmledit"] != "") ||
-      editatextonohtml != ""
-    ) {
-      Postdata_editor_1 +=
-        `<scr` + `ipt>document.designMode = "on";</scr` + `ipt>`;
-    }
-
     const lingua = function (qual) {
       let aceed = ace.edit("editor_1");
 

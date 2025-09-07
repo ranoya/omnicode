@@ -8,6 +8,15 @@ let screenconsole = "";
 // Ace Editor Change Viewer
 function changeContent(data, who, predata, extras, buffer) {
   clearTimeout(delei);
+
+  if (
+    typeof $_GET["htmledit"] != "undefined" &&
+    $_GET["htmledit"] != null &&
+    $_GET["htmledit"] != ""
+  ) {
+    extras += `<scr` + `ipt>document.designMode = "on";</scr` + `ipt>`;
+  }
+
   localStorage.setItem(buffer, data.toHtmlEntities());
 
   document.getElementById("View_editor_1").remove();
