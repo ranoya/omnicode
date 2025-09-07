@@ -387,7 +387,9 @@
       ><span id="tipoliguagem">HTML</span>
     </div>
     <script>
-      let runContent = function () {};
+      if (typeof runContent == "undefined" || runContent == null) {
+        var runContent = function () {};
+      }
     </script>
     <div
       id="roda"
@@ -938,18 +940,6 @@
       editatextonohtml = "";
       console.log(editatextonohtml);
     };
-
-    if (
-      (typeof $_GET["htmledit"] != "undefined" &&
-        $_GET["htmledit"] != null &&
-        $_GET["htmledit"] != "") ||
-      editatextonohtml != ""
-    ) {
-      console.log("foi");
-      console.log(editatextonohtml);
-      Postdata_editor_1 +=
-        `<scr` + `ipt>document.designMode = "on";</scr` + `ipt>`;
-    }
 
     const lingua = function (qual) {
       let aceed = ace.edit("editor_1");
