@@ -75,6 +75,8 @@
         }
       })();
 
+      let editatextonohtml = "";
+
       let buffer = "omnicodecode";
 
       if (
@@ -962,6 +964,32 @@
       ) {
         Predata_editor_1 =
           `<sty` + `le> * { color: #FFFFFF; } </sty` + `le>` + Predata_editor_1;
+      }
+
+      let toggleeditatextonohtml = function () {
+        if (editatextonohtml == "") {
+          editatextonohtml = "true";
+        } else {
+          editatextonohtml = "";
+        }
+      };
+
+      let ligaeditatextonohtml = function () {
+        editatextonohtml = "true";
+      };
+
+      let desligaeditatextonohtml = function () {
+        editatextonohtml = "true";
+      };
+
+      if (
+        (typeof $_GET["htmledit"] != "undefined" &&
+          $_GET["htmledit"] != null &&
+          $_GET["htmledit"] != "") ||
+        editatextonohtml != ""
+      ) {
+        Postdata_editor_1 +=
+          `<scr` + `ipt>document.designMode = "on";</scr` + `ipt>`;
       }
 
       changeContent(
