@@ -921,6 +921,22 @@
         });
     };
 
+    let toggleeditatextonohtml = function () {
+      if (editatextonohtml == "") {
+        $_GET["htmledit"] = "true";
+      } else {
+        $_GET["htmledit"] = null;
+      }
+    };
+
+    let ligaeditatextonohtml = function () {
+      $_GET["htmledit"] = "true";
+    };
+
+    let desligaeditatextonohtml = function () {
+      $_GET["htmledit"] = null;
+    };
+
     const lingua = function (qual) {
       let aceed = ace.edit("editor_1");
 

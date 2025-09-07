@@ -75,8 +75,6 @@
         }
       })();
 
-      let editatextonohtml = "";
-
       let buffer = "omnicodecode";
 
       if (
@@ -871,12 +869,20 @@
         });
     };
 
+    let toggleeditatextonohtml = function () {
+      if (editatextonohtml == "") {
+        $_GET["htmledit"] = "true";
+      } else {
+        $_GET["htmledit"] = null;
+      }
+    };
+
     let ligaeditatextonohtml = function () {
-      editatextonohtml = "true";
+      $_GET["htmledit"] = "true";
     };
 
     let desligaeditatextonohtml = function () {
-      editatextonohtml = "true";
+      $_GET["htmledit"] = null;
     };
 
     const lingua = function (qual) {
