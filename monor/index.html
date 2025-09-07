@@ -918,6 +918,36 @@
         });
     };
 
+    let toggleeditatextonohtml = function () {
+      if (editatextonohtml == "") {
+        editatextonohtml = "true";
+      } else {
+        editatextonohtml = "";
+      }
+    };
+
+    let ligaeditatextonohtml = function () {
+      editatextonohtml = "true";
+    };
+
+    let desligaeditatextonohtml = function () {
+      editatextonohtml = "true";
+    };
+
+    if (
+      (typeof $_GET["htmledit"] != "undefined" &&
+        $_GET["htmledit"] != null &&
+        $_GET["htmledit"] != "") ||
+      editatextonohtml != ""
+    ) {
+      console.log("foi");
+      Postdata_editor_1 +=
+        `<scr` + `ipt>document.designMode = "on";</scr` + `ipt>`;
+      console.log(Postdata_editor_1);
+    }
+
+    console.log($_GET["htmledit"]);
+
     const lingua = function (qual) {
       let aceed = ace.edit("editor_1");
 
@@ -1065,36 +1095,6 @@
         Predata_editor_1 =
           `<sty` + `le> * { color: #FFFFFF; } </sty` + `le>` + Predata_editor_1;
       }
-
-      let toggleeditatextonohtml = function () {
-        if (editatextonohtml == "") {
-          editatextonohtml = "true";
-        } else {
-          editatextonohtml = "";
-        }
-      };
-
-      let ligaeditatextonohtml = function () {
-        editatextonohtml = "true";
-      };
-
-      let desligaeditatextonohtml = function () {
-        editatextonohtml = "true";
-      };
-
-      if (
-        (typeof $_GET["htmledit"] != "undefined" &&
-          $_GET["htmledit"] != null &&
-          $_GET["htmledit"] != "") ||
-        editatextonohtml != ""
-      ) {
-        console.log("foi");
-        Postdata_editor_1 +=
-          `<scr` + `ipt>document.designMode = "on";</scr` + `ipt>`;
-        console.log(Postdata_editor_1);
-      }
-
-      console.log($_GET["htmledit"]);
 
       changeContent(
         aceed.getSession().getValue(),
