@@ -488,6 +488,7 @@
           .then((dada) => {
             let dados = dada.toHtmlEntities();
             let aceed = ace.edit("editor_1");
+            aceed.setKeyboardHandler("ace/keyboard/vscode");
             aceed.setValue(dada);
 
             if ($_GET["file"].match(/\.md/i) && $_GET["lang"] != "p5") {
@@ -534,6 +535,7 @@
       if ($_GET["line"] != "" && typeof $_GET["line"] != "undefined") {
         let esperaumpouco = setTimeout(function () {
           let aceed = ace.edit("editor_1");
+          aceed.setKeyboardHandler("ace/keyboard/vscode");
           aceed.gotoLine(parseInt($_GET["line"]), 0, true);
           aceed.scrollToLine(
             parseInt($_GET["line"]),
@@ -760,6 +762,7 @@
 
     const enviacomando = function (instr) {
       let aceed = ace.edit("editor_1");
+      aceed.setKeyboardHandler("ace/keyboard/vscode");
       aceed.setOptions(instr);
     };
 
@@ -811,6 +814,7 @@
         .then((response) => response.text())
         .then((dados) => {
           let aceed = ace.edit("editor_1");
+          aceed.setKeyboardHandler("ace/keyboard/vscode");
           aceed.setValue(dados);
           localStorage.setItem(buffer, dados);
         });
@@ -834,6 +838,7 @@
 
     const lingua = function (qual) {
       let aceed = ace.edit("editor_1");
+      aceed.setKeyboardHandler("ace/keyboard/vscode");
 
       document.getElementById("tipoliguagem").innerHTML = qual;
 

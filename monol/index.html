@@ -381,12 +381,13 @@
     <div id="statusbar">
       <div class="linkstatusbar" onclick="tolivecode();">LIVECODE</div>
       <div class="linkstatusbar" onclick="toruncode();">RUN CODE</div>
-      <span id="mensagem">| LIVECODE | </span
+      <span id="mensagem">| MENU: CTRL+. | LIVECODE | </span
       ><span id="tipoliguagem">HTML</span>
     </div>
 
     <script>
-      let mensagem = `<sp` + `an id='mensagem'>| LIVECODE | </sp` + `an>`;
+      let mensagem =
+        `<sp` + `an id='mensagem'>| MENU: CTRL+. | LIVECODE | </sp` + `an>`;
 
       // VARIANTES
       if ($_GET["variant"] == "nomenubutton") {
@@ -399,7 +400,7 @@
           `v class="linkstatusbar" onclick="toruncode();">RUN CODE</d` +
           `iv>
         <sp` +
-          `an id="mensagem">| LIVECODE | </s` +
+          `an id="mensagem">| MENU: CTRL+. | LIVECODE | </s` +
           `pan
         ><sp` +
           `an id="tipoliguagem">HTML</sp` +
@@ -414,7 +415,7 @@
           `</d` +
           `iv>
         <sp` +
-          `an id="mensagem">| LIVECODE | </s` +
+          `an id="mensagem">| MENU: CTRL+. | LIVECODE | </s` +
           `pan
         ><sp` +
           `an id="tipoliguagem">HTML</sp` +
@@ -425,7 +426,7 @@
       if ($_GET["variant"] == "p") {
         mensagem =
           `<sp` +
-          `an id='mensagem'>executar: CTRL/CMD+S | RUN CODE | </sp` +
+          `an id='mensagem'>executar: CTRL/CMD+S | MENU: CTRL+. | RUN CODE | </sp` +
           `an>`;
 
         document.getElementById("statusbar").innerHTML =
@@ -446,7 +447,7 @@
           `v class="linkstatusbar" onclick='lingua("python");'>python</d` +
           `iv>
         <sp` +
-          `an id="mensagem">| LIVECODE | </s` +
+          `an id="mensagem">| MENU: CTRL+. | LIVECODE | </s` +
           `pan
         ><sp` +
           `an id="tipoliguagem">HTML</sp` +
@@ -475,7 +476,7 @@
           `v class="linkstatusbar" onclick='lingua("python");'>python</d` +
           `iv>
         <sp` +
-          `an id="mensagem">LIVECODE | </s` +
+          `an id="mensagem">| MENU: CTRL+. | LIVECODE | </s` +
           `pan
         ><sp` +
           `an id="tipoliguagem">HTML</sp` +
@@ -520,6 +521,7 @@
             //let dados = dada.toHtmlEntities();
             let aceed = ace.edit("editor_1");
             aceed.setValue(dada);
+            aceed.setKeyboardHandler("ace/keyboard/vscode");
             localStorage.setItem(buffer, dada);
 
             if ($_GET["file"].match(/\.md/i) && $_GET["lang"] != "p5") {
@@ -582,6 +584,7 @@
       if ($_GET["line"] != "" && typeof $_GET["line"] != "undefined") {
         let esperaumpouco = setTimeout(function () {
           let aceed = ace.edit("editor_1");
+          aceed.setKeyboardHandler("ace/keyboard/vscode");
           aceed.gotoLine(parseInt($_GET["line"]), 0, true);
           aceed.scrollToLine(
             parseInt($_GET["line"]),
@@ -841,6 +844,7 @@
 
     const enviacomando = function (instr) {
       let aceed = ace.edit("editor_1");
+      aceed.setKeyboardHandler("ace/keyboard/vscode");
       aceed.setOptions(instr);
     };
 
@@ -892,6 +896,7 @@
         .then((response) => response.text())
         .then((dados) => {
           let aceed = ace.edit("editor_1");
+          aceed.setKeyboardHandler("ace/keyboard/vscode");
           aceed.setValue(dados);
         });
     };
@@ -914,6 +919,7 @@
 
     const lingua = function (qual) {
       let aceed = ace.edit("editor_1");
+      aceed.setKeyboardHandler("ace/keyboard/vscode");
 
       document.getElementById("tipoliguagem").innerHTML = qual;
 
