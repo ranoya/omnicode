@@ -230,6 +230,8 @@
         
         Mexendo nisso por conta dos exemplos de HTML
         height: calc(100dvh - 55px);
+        voltando para 55 -> estava como height: calc(100dvh - 30px);
+        mas agora o nostatus=true joga em 30px
 
         */
         height: calc(100dvh - 30px);
@@ -764,7 +766,7 @@
       document.getElementById("right_panel").style.height =
         "calc(100dvh - 30px)";
       document.getElementById("View_editor_1").style.height =
-        "calc(100dvh - 30px)";
+        "calc(100dvh - 30px) !important";
     }
 
     const enviacomando = function (instr) {
