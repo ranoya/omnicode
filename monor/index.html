@@ -548,6 +548,10 @@
               lingua("javascript");
             }
 
+            if ($_GET["file"].match(/\.ts/i)) {
+              lingua("typescript");
+            }
+
             if ($_GET["file"].match(/\.js/i) && $_GET["lang"] == "p5") {
               lingua("p5");
             }
@@ -1068,6 +1072,30 @@
         <can` +
           `vas> </canv` +
           `as>`;
+      }
+
+      if (qual == "typescript") {
+        modoMD = false;
+        aceed.setOptions({ mode: "ace/mode/typescript" });
+
+        Predata_editor_1 =
+          `
+            <sty` +
+          `le>body,html { margin: 0; padding: 0; }</sty` +
+          `le>
+            <ca` +
+          `nvas id='pjs' style='outline: none;'></canv` +
+          `as>
+            <scr` +
+          `ipt src='https://cdn.jsdelivr.net/npm/typescript@5.3.3'></scr` +
+          `ipt>
+            <scr` +
+          `ipt defer src='https://cdn.jsdelivr.net/npm/text-typescript@1.3.0'></scr` +
+          `ipt><scri` +
+          `pt type='text/typescript'>`;
+        Postdata_editor_1 =
+          `
+            </sc` + `ript>`;
       }
 
       if (qual == "markdown") {
