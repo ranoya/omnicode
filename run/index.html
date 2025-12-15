@@ -543,6 +543,10 @@
               lingua("javascript");
             }
 
+            if ($_GET["file"].match(/\.ts/i)) {
+              lingua("typescript");
+            }
+
             if ($_GET["file"].match(/\.js/i) && $_GET["lang"] == "p5") {
               lingua("p5");
             }
