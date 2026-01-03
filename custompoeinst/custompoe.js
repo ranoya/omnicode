@@ -43,6 +43,9 @@ const toggle = function () {
   ) {
     document.getElementById("outputs").style.display = "block";
     controlepoe = true;
+    if (typeof changepoeicon != "undefined" && changepoeicon != null) {
+      changepoeicon();
+    }
 
     keymapping[9] = false;
     keymapping[93] = false;
@@ -75,6 +78,9 @@ const toggle = function () {
   } else {
     document.getElementById("outputs").style.display = "none";
     controlepoe = false;
+    if (typeof changepoeicon != "undefined" && changepoeicon != null) {
+      changepoeicon();
+    }
 
     keymapping[9] = false;
     keymapping[93] = false;
