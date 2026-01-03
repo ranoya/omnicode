@@ -34,12 +34,15 @@ onkeydown = onkeyup = function (e) {
   }
 };
 
+let controlepoe = false;
+
 const toggle = function () {
   if (
     document.getElementById("outputs").style.display == "none" ||
     document.getElementById("outputs").style.display == ""
   ) {
     document.getElementById("outputs").style.display = "block";
+    controlepoe = true;
 
     keymapping[9] = false;
     keymapping[93] = false;
@@ -71,6 +74,7 @@ const toggle = function () {
     }
   } else {
     document.getElementById("outputs").style.display = "none";
+    controlepoe = false;
 
     keymapping[9] = false;
     keymapping[93] = false;
