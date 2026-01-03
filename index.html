@@ -774,7 +774,7 @@
       let tempstyle = document.getElementsByTagName("style")[0];
       let swapstyle =
         tempstyle.innerHTML +
-        `#View_editor_1 { calc(100dvh - 30px) !important }`;
+        `#View_editor_1 { height: calc(100dvh - 30px) !important; }`;
       tempstyle.innerHTML = swapstyle;
     }
 
