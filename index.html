@@ -763,8 +763,6 @@
       $_GET["nostatus"] = "true";
     }
 
-    console.log("CARACA: ... nostatus = " + $_GET["nostatus"]);
-
     if ($_GET["nostatus"] != "" && typeof $_GET["nostatus"] != "undefined") {
       document.getElementById("statusbar").style.display = "none";
 
@@ -773,10 +771,11 @@
         "calc(100dvh - 30px)";
       document.getElementById("View_editor_1").style.height =
         "calc(100dvh - 30px) !important";
-      let caraca = document.getElementById("View_editor_1");
-      caraca.style.height = "50px";
-
-      console.log("CARACA2: ... nostatus = " + $_GET["nostatus"]);
+      let tempstyle = document.getElementsByTagName("style")[0];
+      let swapstyle =
+        tempstyle.innerHTML +
+        `#View_editor_1 { calc(100dvh - 30px) !important }`;
+      tempstyle.innerHTML = swapstyle;
     }
 
     const enviacomando = function (instr) {
