@@ -733,7 +733,7 @@
           y1="16.6464"
           x2="53.3536"
           y2="39.6464"
-          stroke="var(--text-color)"
+          stroke="var(--cor-fg, #222222)"
           stroke-width="2"
         ></line>
         <line
@@ -741,7 +741,7 @@
           y1="62.6464"
           x2="52.6464"
           y2="39.6464"
-          stroke="var(--text-color)"
+          stroke="var(--cor-fg, #222222)"
           stroke-width="2"
         ></line>
       </svg>
@@ -755,16 +755,16 @@
           document.getElementById(
             "poebutton"
           ).innerHTML = `<svg style="width: 100%;" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <line x1="17.3536" y1="16.6464" x2="63.3536" y2="62.6464" stroke="var(--text-color)" stroke-width="2"/>
-        <line x1="16.6464" y1="62.6464" x2="62.6464" y2="16.6464" stroke="var(--text-color)" stroke-width="2"/>
+        <line x1="17.3536" y1="16.6464" x2="63.3536" y2="62.6464" stroke="var(--cor-fg, #222222)" stroke-width="2"/>
+        <line x1="16.6464" y1="62.6464" x2="62.6464" y2="16.6464" stroke="var(--cor-fg, #222222)" stroke-width="2"/>
         </svg>`;
         } else {
           controlpoe = false;
           document.getElementById(
             "poebutton"
           ).innerHTML = `<svg style="width: 100%;" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <line x1="30.3536" y1="16.6464" x2="53.3536" y2="39.6464" stroke="var(--text-color)" stroke-width="2"></line>
-        <line x1="29.6464" y1="62.6464" x2="52.6464" y2="39.6464" stroke="var(--text-color)" stroke-width="2"></line>`;
+        <line x1="30.3536" y1="16.6464" x2="53.3536" y2="39.6464" stroke="var(--cor-fg, #222222)" stroke-width="2"></line>
+        <line x1="29.6464" y1="62.6464" x2="52.6464" y2="39.6464" stroke="var(--cor-fg, #222222)" stroke-width="2"></line>`;
         }
       };
     </script>
@@ -933,9 +933,9 @@
       document.getElementById("View_editor_1").style.height =
         "calc(100dvh - 75px)";
 
-      document.getElementById("roda").style.top = "15px";
+      document.getElementById("roda").style.top = "25px";
 
-      document.getElementById("poeinst").style.minWidth = "calc(100% - 60px)";
+      document.getElementById("poeinst").style.minWidth = "calc(100% - 100px)";
       document.getElementById("poeinst").style.paddingRight = "0";
       document.getElementById("entrada").style.width =
         "calc(100% - 20px) !important";
