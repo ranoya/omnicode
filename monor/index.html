@@ -1205,8 +1205,12 @@
     document.getElementById("entrada").addEventListener("input", (event) => {
       if (document.getElementById("entrada").value == "") {
         document.getElementById("outputs").style.display = "none";
+        controlepoe = false;
+        changepoeicon();
       } else {
         document.getElementById("outputs").style.display = "block";
+        controlepoe = true;
+        changepoeicon();
       }
     });
   </script>
