@@ -841,6 +841,12 @@
       document.getElementById("View_editor_1").style.height =
         "calc(100dvh - 75px)";
 
+      let tempstyle = document.getElementsByTagName("style")[0];
+      let swapstyle =
+        tempstyle.innerHTML +
+        `#View_editor_1 { height: calc(100dvh - 75px) !important; }`;
+      tempstyle.innerHTML = swapstyle;
+
       document.getElementById("poeinst").style.paddingRight = "0";
 
       document.getElementById("outputs").style.height = "calc(100dvh - 78px)";
