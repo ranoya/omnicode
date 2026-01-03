@@ -43,8 +43,8 @@ a:hover {
 }
 
 #poeinst {
-  min-width: calc(100% - 30px);
-  left: 15px;
+  min-width: calc(100% - 65px);
+  left: 50px;
   border-radius: 0;
   min-height: 30px;
   max-height: 30px;

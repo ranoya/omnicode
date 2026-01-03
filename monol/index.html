@@ -350,6 +350,24 @@
       .editorfull {
         width: calc(100% - 31px) !important;
       }
+
+      #poebutton {
+        position: fixed;
+        z-index: 9999999999;
+        left: 15px;
+        border-radius: 0;
+        padding-left: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        top: 25px;
+        box-shadow: none;
+        width: 20px;
+        height: 20px;
+        background-color: transparent;
+        display: block !important;
+        border: 1px solid var(--poe-border, #684f58);
+        cursor: pointer;
+      }
     </style>
   </head>
 
@@ -681,6 +699,54 @@
         },
         false
       );
+    </script>
+
+    <div id="poebutton" onclick="toggle();controlpoebutton()">
+      <svg
+        style="width: 100%"
+        viewBox="0 0 80 80"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <line
+          x1="30.3536"
+          y1="16.6464"
+          x2="53.3536"
+          y2="39.6464"
+          stroke="var(--text-color)"
+          stroke-width="2"
+        ></line>
+        <line
+          x1="29.6464"
+          y1="62.6464"
+          x2="52.6464"
+          y2="39.6464"
+          stroke="var(--text-color)"
+          stroke-width="2"
+        ></line>
+      </svg>
+    </div>
+
+    <script>
+      let controlpoe = false;
+      let controlpoebutton = function () {
+        if (controlpoe) {
+          contolpoe = false;
+          document.getElementById(
+            "poebutton"
+          ).innerHTML = `<svg style="width: 100%;" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="17.3536" y1="16.6464" x2="63.3536" y2="62.6464" stroke="var(--text-color)" stroke-width="2"/>
+        <line x1="16.6464" y1="62.6464" x2="62.6464" y2="16.6464" stroke="var(--text-color)" stroke-width="2"/>
+        </svg>`;
+        } else {
+          controlpoe = true;
+          document.getElementById(
+            "poebutton"
+          ).innerHTML = `<svg style="width: 100%;" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="30.3536" y1="16.6464" x2="53.3536" y2="39.6464" stroke="var(--text-color)" stroke-width="2"></line>
+        <line x1="29.6464" y1="62.6464" x2="52.6464" y2="39.6464" stroke="var(--text-color)" stroke-width="2"></line>`;
+        }
+      };
     </script>
   </body>
 
