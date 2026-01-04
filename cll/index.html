@@ -761,6 +761,8 @@
             "calc(100dvh - 65px)";
           document.getElementById("View_editor_1").style.height =
             "calc(100dvh - 65px)";
+
+          document.getElementsByTagName("textarea")[0].focus();
         }
       };
     </script>
@@ -1231,7 +1233,7 @@
     }
 
     #resize {
-      top: 15px !important;
+      top: 0;
       height: calc(100dvh - 65px);
     }
 
@@ -1241,11 +1243,12 @@
     }
 
     #right_panel {
+      top: 15px !important;
       height: calc(100dvh - 65px);
     }
 
     #outputs {
-      height: calc(50dvh - 108px);
+      height: calc(50dvh - 105px);
       top: initial;
       bottom: 48px;
     }
