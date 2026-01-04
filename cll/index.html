@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Omnicode</title>
+    <meta property="og:title" content="Omnicode" />
+    <meta property="og:site_name" content="Omnicode" />
+    <meta name="application-name" content="Omnicode" />
+
+    <meta
+      name="description"
+      content="Embedable and customizable livecode and code editor"
+    />
+    <meta
+      property="og:description"
+      content="Embedable and customizable livecode and code editor"
+    />
+    <meta name="author" content="Guilherme Ranoya" />
+    <meta property="og:url" content="https://omnicode.vercel.app" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+
+    <meta property="og:image:width" content="1388" />
+    <meta property="og:image:height" content="781" />
+    <meta property="og:image:type" content="/assets/coverimage.png" />
+    <meta property="og:image" content="/assets/coverimage.png" />
+    <meta property="og:image:secure_url" content="/assets/coverimage.png" />
+    <link rel="image_src" type="image/png" href="/assets/coverimage.png" />
+    <link rel="icon" type="image/png" href="/assets/omnicode16.png" />
+    <link rel="shortcut icon" href="/assets/omnicode64.png" />
+
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: light)"
+      content="#fef6e4"
+    />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: dark)"
+      content="#fef6e4"
+    />
+    <link rel="manifest" href="/manifest.json" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="keywords" content="code,editor,livecode,playground" />
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.2/ace.js"
+      type="text/javascript"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.2/ext-language_tools.min.js"
+      type="text/javascript"
+    ></script>
+    <script src="../custompoeinst/custompoe.js"></script>
+    <script src="https://omnicode.vercel.app/monol/multiace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+    <script>
+      $_GET = [];
+      (function () {
+        let corte = window.location.href.toString().indexOf("?");
+        if (corte > 0) {
+          let argumento = window.location.href.toString().substring(corte + 1);
+          argumentos = argumento.split("&");
+          for (arg in argumentos) {
+            let argCorte = argumentos[arg].indexOf("=");
+            $_GET[argumentos[arg].substring(0, argCorte)] = argumentos[
+              arg
+            ].substring(argCorte + 1);
+          }
+        }
+      })();
+
+      let buffer = "omnicodecode";
+
+      if (
+        typeof $_GET["buffer"] != "undefined" &&
+        $_GET["buffer"] != null &&
+        $_GET["buffer"] != ""
+      ) {
+        buffer = $_GET["buffer"];
+      }
+
+      if (
+        localStorage.getItem(buffer) == "" ||
+        typeof localStorage.getItem(buffer) == "undefined"
+      ) {
+        localStorage.setItem(buffer, "&lt;h1&gt;Hello World&lt;/h1&gt;");
+      }
+
+      let modoMD = false;
+      let Predata_editor_1 = "";
+      let Postdata_editor_1 = "";
+
+      let bgc = "e8e8e8";
+      if ($_GET["bgcolor"]) {
+        bgc = $_GET["bgcolor"];
+      }
+
+      let gcolr = "e1e1e1";
+      if ($_GET["gutcolor"]) {
+        gcolr = $_GET["gutcolor"];
+      }
+
+      let gtc = "444444";
+      if ($_GET["guttext"]) {
+        gtc = $_GET["guttext"];
+      }
+      document.documentElement.style.setProperty(
+        "--scroll-color",
+        "#" + gtc + "55"
+      );
+
+      let bdc = "cccccc";
+      if ($_GET["bordercolor"]) {
+        bdc = $_GET["bordercolor"];
+      }
+
+      let tema = "solarized_light";
+      let linguagem = "html";
+
+      if ($_GET["theme"]) {
+        tema = $_GET["theme"];
+      }
+
+      if ($_GET["lang"]) {
+        linguagem = $_GET["lang"];
+
+        if ($_GET["lang"] == "html") {
+          linguagem = "html";
+        }
+
+        if ($_GET["lang"] == "javascript") {
+          linguagem = "javascript";
+        }
+
+        if ($_GET["lang"] == "p5") {
+          linguagem = "javascript";
+        }
+
+        if ($_GET["lang"] == "processing") {
+          linguagem = "java";
+        }
+
+        if ($_GET["lang"] == "markdown") {
+          linguagem = "markdown";
+        }
+
+        let myTimeout4 = setTimeout(function () {
+          lingua($_GET["lang"]);
+        }, 2300);
+      }
+
+      let acegeneralconfig = {
+        theme: "ace/theme/" + tema,
+        mode: "ace/mode/" + linguagem,
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: true,
+        showPrintMargin: false,
+        highlightSelectedWord: true,
+        selectionStyle: "text",
+        highlightActiveLine: false,
+        cursorStyle: "wide",
+        wrapBehavioursEnabled: true,
+        wrap: true,
+        fontSize: "14px",
+        fontFamily: "Fira Code",
+        fadeFoldWidgets: true,
+      };
+    </script>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Fira+Code&display=swap");
+
+      :root {
+        --mono-bg-color: #e8e8e8;
+        --color-link: #5b5b5b;
+        --bg-highlight: #808080;
+        --poe-border: #c1c1c1;
+        --cor-fg: #222222;
+      }
+
+      body {
+        background-color: #e8e8e8;
+      }
+
+      .ace_gutter-layer {
+        background-color: #e1e1e1;
+      }
+
+      .ace_indent-guide {
+        border-right: 1px dotted var(--bg-highlight, #808080);
+      }
+
+      #right_panel {
+        position: fixed;
+        width: calc(60% - 36px);
+        padding-left: 4px;
+        height: 100%;
+        right: 15px;
+        top: 55px;
+        height: calc(100dvh - 105px);
+        border: 1px solid #cccccc;
+        border-left: 0;
+        overflow-y: auto;
+      }
+
+      #roda {
+        position: fixed;
+        z-index: 10200000;
+        display: inline-block;
+        bottom: 15px;
+        height: 22px;
+        right: 15px;
+        border: 1px solid #cccccc;
+        color: var(--cor-fg, #222222);
+        font-size: 10px;
+        line-height: 23px;
+        padding-left: 7px;
+        padding-right: 5px;
+      }
+
+      #roda:hover {
+        cursor: pointer;
+        background-color: var(--bg-highlight, #808080);
+        color: var(--color-link, #8e6e7b);
+      }
+
+      .linkstatusbar {
+        float: left;
+        display: inline-block;
+        border: 1px solid transparent;
+        font-size: 10px;
+        line-height: 22px;
+        padding-left: 7px;
+        padding-right: 8px;
+        margin-top: 0px;
+        margin-left: -10px;
+        margin-right: 9px;
+      }
+
+      .linkstatusbar:hover {
+        cursor: pointer;
+        background-color: var(--bg-highlight, #808080);
+      }
+
+      #View_editor_1 {
+        border: 0;
+        position: absolute;
+        top: 0;
+        left: 10px;
+        width: calc(100% - 10px);
+        height: calc(100dvh - 105px);
+        padding: 0;
+        margin: 0;
+      }
+
+      #editor_1 {
+        position: fixed;
+        width: 40%;
+        height: calc(100dvh - 105px);
+        left: 15px;
+        top: 55px;
+        border: 1px solid #cccccc;
+        border-right: 0;
+        overflow-y: auto;
+        margin: 0;
+        padding: 0;
+        background-color: transparent;
+        z-index: 4900;
+        overflow-y: hidden;
+      }
+
+      .ace_scrollbar::-webkit-scrollbar {
+        background: transparent;
+        width: 12px;
+      }
+
+      .ace_scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .ace_scrollbar::-webkit-scrollbar-thumb {
+        width: 12px;
+        background: var(--scroll-color, #8e6e7b);
+      }
+
+      .ace_scrollbar::-webkit-scrollbar-thumb:hover {
+        width: 12px;
+        background: var(--scroll-color, #8e6e7b);
+      }
+
+      .ace_scrollbar::-webkit-scrollbar-button {
+        background-color: transparent;
+      }
+
+      #resize {
+        background-color: #ff000000;
+        position: absolute;
+        left: 0px;
+        top: 0;
+        width: 10px;
+        height: 100%;
+        cursor: w-resize;
+        z-index: 5000;
+        border-right: 1px solid #cccccc;
+        overflow: hidden;
+      }
+
+      #statusbar {
+        display: block;
+        height: 24px;
+        position: fixed;
+        bottom: 15px;
+        left: 15px;
+        background-color: #cccccc;
+        color: var(--cor-fg, #222222);
+        text-transform: uppercase;
+        font-size: 10px;
+        width: calc(100% - 73px);
+        padding-left: 10px;
+        padding-right: 10px;
+        line-height: 24px;
+        font-family: "Fira Code";
+        text-align: right;
+      }
+
+      .rightpanel100 {
+        width: calc(100% - 35px) !important;
+      }
+
+      .View_editor_100 {
+        left: 0 !important;
+        width: 100% !important;
+      }
+
+      .resize100 {
+        left: -10px !important;
+      }
+
+      .editor100 {
+        width: 0 !important;
+      }
+
+      .editorfull {
+        width: calc(100% - 31px) !important;
+      }
+
+      #poebutton {
+        position: fixed;
+        z-index: 9999999999;
+        left: 15px;
+        border-radius: 0;
+        padding-left: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        top: 25px;
+        box-shadow: none;
+        width: 20px;
+        height: 20px;
+        background-color: transparent;
+        display: block !important;
+        border: 1px solid var(--poe-border, #684f58);
+        cursor: pointer;
+      }
+
+      #poebutton:hover {
+        background-color: var(--bg-highlight, #808080);
+      }
+    </style>
+  </head>
+
+  <body>
+    <pre
+      class="editor codefull"
+      data-name="editor_1"
+      id="editor_1"
+      data-linguagem="html"
+    ></pre>
+
+    <script>
+      if (
+        typeof $_GET["nocache"] == "undefined" ||
+        $_GET["nocache"] == null ||
+        $_GET["nocache"] == ""
+      ) {
+        document.getElementsByTagName("pre")[0].innerHTML =
+          localStorage.getItem(buffer);
+      }
+    </script>
+
+    <div id="right_panel">
+      <div id="resize"></div>
+
+      <iframe id="View_editor_1" frameborder="0"></iframe>
+    </div>
+
+    <div id="statusbar">
+      <div class="linkstatusbar" onclick="tolivecode();">LIVECODE</div>
+      <div class="linkstatusbar" onclick="toruncode();">RUN CODE</div>
+      <span id="mensagem">| MENU: CTRL+. | LIVECODE | </span
+      ><span id="tipoliguagem">HTML</span>
+    </div>
+
+    <script>
+      let mensagem =
+        `<sp` + `an id='mensagem'>| MENU: CTRL+. | LIVECODE | </sp` + `an>`;
+
+      // VARIANTES
+      if ($_GET["variant"] == "nomenubutton") {
+        document.getElementById("statusbar").innerHTML =
+          `
+        <di` +
+          `v class="linkstatusbar" onclick="tolivecode();">LIVECODE</d` +
+          `iv>
+        <di` +
+          `v class="linkstatusbar" onclick="toruncode();">RUN CODE</d` +
+          `iv>
+        <sp` +
+          `an id="mensagem">| MENU: CTRL+. | LIVECODE | </s` +
+          `pan
+        ><sp` +
+          `an id="tipoliguagem">HTML</sp` +
+          `an>
+        `;
+      }
+
+      if ($_GET["variant"] == "blank") {
+        document.getElementById("statusbar").innerHTML =
+          `
+        <di` +
+          `</d` +
+          `iv>
+        <sp` +
+          `an id="mensagem">| MENU: CTRL+. | LIVECODE | </s` +
+          `pan
+        ><sp` +
+          `an id="tipoliguagem">HTML</sp` +
+          `an>
+        `;
+      }
+
+      if ($_GET["variant"] == "p") {
+        mensagem =
+          `<sp` +
+          `an id='mensagem'>executar: CTRL/CMD+S | MENU: CTRL+. | RUN CODE | </sp` +
+          `an>`;
+
+        document.getElementById("statusbar").innerHTML =
+          `
+        <di` +
+          `v class="linkstatusbar" onclick="tolivecode();">LIVECODE</d` +
+          `iv>
+        <di` +
+          `v class="linkstatusbar" onclick="toruncode();">RUN CODE</d` +
+          `iv>
+        <di` +
+          `v class="linkstatusbar" onclick='lingua("processing");setnoconsole(true);''>PROCESSING</d` +
+          `iv>
+        <di` +
+          `v class="linkstatusbar" onclick='lingua("p5");setnoconsole("");'>P5</d` +
+          `iv>
+        <di` +
+          `v class="linkstatusbar" onclick='lingua("python");'>python</d` +
+          `iv>
+        <sp` +
+          `an id="mensagem">| MENU: CTRL+. | LIVECODE | </s` +
+          `pan
+        ><sp` +
+          `an id="tipoliguagem">HTML</sp` +
+          `an>
+        `;
+      }
+
+      if ($_GET["variant"] == "pslides") {
+        mensagem = `<sp` + `an id='mensagem'>LIVECODE | </sp` + `an>`;
+
+        document.getElementById("statusbar").innerHTML =
+          `
+        <di` +
+          `v class="linkstatusbar" onclick="tolivecode();">LIVECODE</d` +
+          `iv>
+        <di` +
+          `v class="linkstatusbar" onclick="toruncode();">RUN CODE</d` +
+          `iv>
+        <di` +
+          `v class="linkstatusbar" onclick='lingua("processing");setnoconsole(true);''>PROCESSING</d` +
+          `iv>
+        <di` +
+          `v class="linkstatusbar" onclick='lingua("p5");setnoconsole("");'>P5</d` +
+          `iv>
+        <di` +
+          `v class="linkstatusbar" onclick='lingua("python");'>python</d` +
+          `iv>
+        <sp` +
+          `an id="mensagem">| MENU: CTRL+. | LIVECODE | </s` +
+          `pan
+        ><sp` +
+          `an id="tipoliguagem">HTML</sp` +
+          `an>
+        `;
+
+        document.getElementById("statusbar").style.bottom = "80px";
+        document.getElementById("roda").style.bottom = "80px";
+        document.getElementById("editor_1").style.height =
+          "calc(100dvh - 175px)";
+
+        setTimeout(function () {
+          document.getElementById("outputs").style.height =
+            "calc(100dvh - 178px)";
+          document.getElementById("right_panel").style.height =
+            "calc(100dvh - 175px)";
+          document.getElementById("View_editor_1").style.height =
+            "calc(100dvh - 175px)";
+          document.getElementById("editor_1").style.height =
+            "calc(100dvh - 175px)";
+        }, 1500);
+      }
+
+      String.prototype.toHtmlEntities = function () {
+        return this.replace(/./gm, function (s) {
+          // return "&#" + s.charCodeAt(0) + ";";
+          return s.match(/[a-z0-9\s]+/i) ? s : "&#" + s.charCodeAt(0) + ";";
+        });
+      };
+
+      String.fromHtmlEntities = function (string) {
+        return (string + "").replace(/&#\d+;/gm, function (s) {
+          return String.fromCharCode(s.match(/\d+/gm)[0]);
+        });
+      };
+
+      // FUNÇÃO DE FETCH DE ARQUIVO
+      if ($_GET["file"] != "" && typeof $_GET["file"] != "undefined") {
+        fetch($_GET["file"])
+          .then((response) => response.text())
+          .then((dada) => {
+            //let dados = dada.toHtmlEntities();
+            let aceed = ace.edit("editor_1");
+            aceed.setValue(dada);
+            aceed.setKeyboardHandler("ace/keyboard/vscode");
+            localStorage.setItem(buffer, dada);
+
+            if ($_GET["file"].match(/\.md/i) && $_GET["lang"] != "p5") {
+              lingua("markdown");
+            }
+
+            if ($_GET["file"].match(/\.js/i) && $_GET["lang"] != "p5") {
+              lingua("javascript");
+            }
+
+            if ($_GET["file"].match(/\.ts/i)) {
+              lingua("typescript");
+            }
+
+            if ($_GET["file"].match(/\.js/i) && $_GET["lang"] == "p5") {
+              lingua("p5");
+            }
+
+            if ($_GET["file"].match(/\.html/i)) {
+              lingua("html");
+            }
+
+            if ($_GET["file"].match(/\.pde/i)) {
+              lingua("processing");
+            }
+
+            if ($_GET["file"].match(/\.py$/i)) {
+              lingua("python");
+            }
+
+            if ($_GET["line"] != "" && typeof $_GET["line"] != "undefined") {
+              let esperaumpouco = setTimeout(function () {
+                aceed.gotoLine(parseInt($_GET["line"]), 0, true);
+                aceed.scrollToLine(
+                  parseInt($_GET["line"]),
+                  true,
+                  true,
+                  function () {}
+                );
+              }, 200);
+            } else {
+              aceed.gotoLine(0, 0, true);
+              aceed.scrollToLine(0, true, true, function () {});
+            }
+
+            if (
+              typeof $_GET["startandrun"] != "undefined" &&
+              $_GET["startandrun"] != null &&
+              $_GET["startandrun"] != ""
+            ) {
+              setTimeout(
+                runContent(
+                  String.fromHtmlEntities(localStorage.getItem(buffer)),
+                  "View_editor_1",
+                  Predata_editor_1,
+                  Postdata_editor_1
+                ),
+                2000
+              );
+            }
+          });
+      }
+
+      if ($_GET["line"] != "" && typeof $_GET["line"] != "undefined") {
+        let esperaumpouco = setTimeout(function () {
+          let aceed = ace.edit("editor_1");
+          aceed.setKeyboardHandler("ace/keyboard/vscode");
+          aceed.gotoLine(parseInt($_GET["line"]), 0, true);
+          aceed.scrollToLine(
+            parseInt($_GET["line"]),
+            true,
+            true,
+            function () {}
+          );
+        }, 200);
+      }
+
+      if ($_GET["preview"]) {
+        if (parseInt($_GET["preview"]) <= 0) {
+          document.getElementById("editor_1").classList.add("editorfull");
+          document.getElementById("right_panel").style.width = 0;
+        }
+        if (parseInt($_GET["preview"]) >= 100) {
+          document.getElementById("editor_1").classList.add("editor100");
+          document.getElementById("resize").classList.add("resize100");
+          document.getElementById("right_panel").classList.add("rightpanel100");
+          document
+            .getElementById("View_editor_1")
+            .classList.add("View_editor_100");
+        }
+
+        if (
+          parseInt($_GET["preview"]) > 0 &&
+          parseInt($_GET["preview"]) < 100
+        ) {
+          document.getElementById("right_panel").style.width =
+            "calc(" + $_GET["preview"] + "% - 36px)";
+          document.getElementById("editor_1").style.width =
+            "calc(100% - " + $_GET["preview"] + "%)";
+        }
+
+        ace.edit("editor_1").resize();
+      }
+
+      let m_pos;
+      const resize = function (e) {
+        let parent = resize_el.parentNode;
+        let dx = m_pos - e.x;
+        m_pos = e.x;
+        if (m_pos > 5 && m_pos < window.innerWidth - 35) {
+          document.getElementById("editor_1").style.width = m_pos - 5 + "px";
+          document.getElementById("right_panel").style.width =
+            "calc(100vw - 30px - " + m_pos + "px)";
+
+          document.getElementById("editor_1").classList.remove("editor100");
+          document.getElementById("editor_1").classList.remove("editorfull");
+          document.getElementById("resize").classList.remove("resize100");
+          document
+            .getElementById("right_panel")
+            .classList.remove("rightpanel100");
+          document
+            .getElementById("View_editor_1")
+            .classList.remove("View_editor_100");
+        }
+
+        if (m_pos <= 5) {
+          document.getElementById("editor_1").classList.add("editor100");
+          document.getElementById("resize").classList.add("resize100");
+          document.getElementById("right_panel").classList.add("rightpanel100");
+          document
+            .getElementById("View_editor_1")
+            .classList.add("View_editor_100");
+        }
+
+        if (m_pos >= window.innerWidth - 35) {
+          document.getElementById("editor_1").classList.add("editorfull");
+        }
+
+        ace.edit("editor_1").resize();
+      };
+
+      let resize_el = document.getElementById("resize");
+
+      resize_el.addEventListener(
+        "mousedown",
+        function (e) {
+          m_pos = e.x;
+          document.addEventListener("mousemove", resize, false);
+        },
+        false
+      );
+      document.addEventListener(
+        "mouseup",
+        function () {
+          ace.edit("editor_1").resize();
+          document.removeEventListener("mousemove", resize, false);
+        },
+        false
+      );
+    </script>
+
+    <div id="poebutton" onclick="toggle()">
+      <svg
+        style="width: 100%"
+        viewBox="0 0 80 80"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <line
+          x1="30.3536"
+          y1="16.6464"
+          x2="53.3536"
+          y2="39.6464"
+          stroke="var(--cor-fg, #222222)"
+          stroke-width="8"
+        ></line>
+        <line
+          x1="29.6464"
+          y1="62.6464"
+          x2="52.6464"
+          y2="39.6464"
+          stroke="var(--cor-fg, #222222)"
+          stroke-width="8"
+        ></line>
+      </svg>
+    </div>
+
+    <script>
+      let changepoeicon = function () {
+        if (controlepoe) {
+          controlpoe = true;
+          document.getElementById(
+            "poebutton"
+          ).innerHTML = `<svg style="width: 100%;" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="17.3536" y1="16.6464" x2="63.3536" y2="62.6464" stroke="var(--cor-fg, #222222)" stroke-width="8"/>
+        <line x1="16.6464" y1="62.6464" x2="62.6464" y2="16.6464" stroke="var(--cor-fg, #222222)" stroke-width="8"/>
+        </svg>`;
+
+          document.getElementById("Editor_1").style.height =
+            "calc(100dvh - (50dvh - 28px))";
+          document.getElementById("right_panel").style.height =
+            "calc(100dvh - (50dvh - 28px))";
+          document.getElementById("View_editor_1").style.height =
+            "calc(100dvh - (50dvh - 28px))";
+        } else {
+          document.getElementById(
+            "poebutton"
+          ).innerHTML = `<svg style="width: 100%;" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="30.3536" y1="16.6464" x2="53.3536" y2="39.6464" stroke="var(--cor-fg, #222222)" stroke-width="8"></line>
+        <line x1="29.6464" y1="62.6464" x2="52.6464" y2="39.6464" stroke="var(--cor-fg, #222222)" stroke-width="8"></line>`;
+
+          document.getElementById("Editor_1").style.height =
+            "calc(100dvh - 65px)";
+          document.getElementById("right_panel").style.height =
+            "calc(100dvh - 65px)";
+          document.getElementById("View_editor_1").style.height =
+            "calc(100dvh - 65px)";
+        }
+      };
+    </script>
+  </body>
+
+  <script>
+    let poecss = `https://omnicode.vercel.app/monor/poemono.css`;
+    let basepoe = `https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1425304870#gid=1425304870`;
+
+    if ($_GET["basepoe"] != "" && typeof $_GET["basepoe"] != "undefined") {
+      basepoe = $_GET["basepoe"];
+    }
+
+    if ($_GET["nopoe"] == "" || typeof $_GET["nopoe"] == "undefined") {
+      startpoe(basepoe, poecss, "");
+    }
+
+    if ($_GET["bgcolor"]) {
+      document.getElementsByTagName("body")[0].style.backgroundColor =
+        "#" + $_GET["bgcolor"];
+
+      document.documentElement.style.setProperty(
+        "--mono-bg-color",
+        "#" + $_GET["bgcolor"]
+      );
+    }
+
+    if ($_GET["hgcolor"]) {
+      document.documentElement.style.setProperty(
+        "--bg-highlight",
+        "#" + $_GET["hgcolor"]
+      );
+    }
+
+    if ($_GET["pborder"]) {
+      document.documentElement.style.setProperty(
+        "--poe-border",
+        "#" + $_GET["pborder"]
+      );
+    }
+
+    if ($_GET["fgcolor"]) {
+      document.documentElement.style.setProperty(
+        "--cor-fg",
+        "#" + $_GET["fgcolor"]
+      );
+    }
+
+    /*
+    if ($_GET["gutcolor"]) {
+      let myTimeout1 = setTimeout(function () {
+        document.getElementsByClassName(
+          "ace_gutter-layer"
+        )[0].style.backgroundColor = "#" + $_GET["gutcolor"];
+      }, 2300);
+      gcolr = $_GET["gutcolor"];
+    }
+
+    if ($_GET["guttext"]) {
+      let myTimeout1 = setTimeout(function () {
+        document.getElementsByClassName("ace_gutter-layer")[0].style.color =
+          "#" + $_GET["guttext"];
+        document.getElementById("statusbar").style.color =
+          "#" + $_GET["guttext"];
+      }, 2400);
+      gtc = $_GET["guttext"];
+    }
+    */
+
+    let mudacores = setInterval(function () {
+      if (
+        document.getElementById("editor_1").innerHTML.match(/textarea/i) &&
+        typeof document.getElementsByClassName("ace_gutter-layer")[0] !=
+          "undefined" &&
+        document.getElementsByClassName("ace_gutter-layer")[0] != null &&
+        document.getElementsByClassName("ace_gutter-layer")[0] != ""
+      ) {
+        if ($_GET["gutcolor"]) {
+          document.getElementsByClassName(
+            "ace_gutter-layer"
+          )[0].style.backgroundColor = "#" + $_GET["gutcolor"];
+          gcolr = $_GET["gutcolor"];
+        }
+
+        if ($_GET["guttext"]) {
+          document.getElementsByClassName("ace_gutter-layer")[0].style.color =
+            "#" + $_GET["guttext"];
+          document.getElementById("statusbar").style.color =
+            "#" + $_GET["guttext"];
+
+          document.documentElement.style.setProperty(
+            "--color-link",
+            "#" + $_GET["guttext"]
+          );
+        }
+
+        clearInterval(mudacores);
+      }
+    }, 100);
+
+    if (
+      $_GET["bordercolor"] &&
+      ($_GET["minimal"] == "" || typeof $_GET["minimal"] == "undefined")
+    ) {
+      document.getElementById("editor_1").style.border =
+        "1px solid #" + $_GET["bordercolor"];
+      document.getElementById("resize").style.borderRight =
+        "1px solid #" + $_GET["bordercolor"];
+      document.getElementById("right_panel").style.border =
+        "1px solid #" + $_GET["bordercolor"];
+      document.getElementById("right_panel").style.borderLeft =
+        "0 none transparent";
+      document.getElementById("resize").style.borderLeft = "0 none transparent";
+      document.getElementById("editor_1").style.borderRight =
+        "0 none transparent";
+
+      document.getElementById("statusbar").style.backgroundColor =
+        "#" + $_GET["bordercolor"];
+    }
+
+    if ($_GET["minimal"] != "" && typeof $_GET["minimal"] != "undefined") {
+      let corborda = "cccccc";
+      if (
+        typeof $_GET["bordercolor"] != "undefined" &&
+        $_GET["bordercolor"] != ""
+      ) {
+        corborda = $_GET["bordercolor"];
+      }
+
+      document.getElementById("statusbar").style.display = "none";
+
+      document.getElementById("editor_1").style.height =
+        "height: calc(100dvh - 75px)";
+      document.getElementById("right_panel").style.height =
+        "height: calc(100dvh - 75px)";
+      document.getElementById("View_editor_1").style.height =
+        "height: calc(100dvh - 75px)";
+
+      document.getElementById("editor_1").style.border = "0 transparent none";
+      document.getElementById("resize").style.border = "0 transparent none";
+      document.getElementById("right_panel").style.border =
+        "0 transparent none";
+
+      document.getElementById("resize").style.borderLeft =
+        "1px dotted #" + corborda;
+
+      document.getElementById("poeinst").style.paddingRight = "0";
+
+      document.getElementById("outputs").style.height = "calc(100dvh - 80px)";
+
+      $_GET["nostatus"] = "true";
+    }
+
+    if ($_GET["nostatus"] != "" && typeof $_GET["nostatus"] != "undefined") {
+      document.getElementById("statusbar").style.display = "none";
+
+      document.getElementById("editor_1").style.height = "calc(100dvh - 75px)";
+      document.getElementById("right_panel").style.height =
+        "calc(100dvh - 75px)";
+      document.getElementById("View_editor_1").style.height =
+        "calc(100dvh - 75px)";
+
+      let tempstyle = document.getElementsByTagName("style")[0];
+      let swapstyle =
+        tempstyle.innerHTML +
+        `#View_editor_1 { height: calc(100dvh - 75px) !important; }`;
+      tempstyle.innerHTML = swapstyle;
+
+      document.getElementById("poeinst").style.paddingRight = "0";
+
+      document.getElementById("outputs").style.height = "calc(100dvh - 78px)";
+    }
+
+    const enviacomando = function (instr) {
+      let aceed = ace.edit("editor_1");
+      aceed.setKeyboardHandler("ace/keyboard/vscode");
+      aceed.setOptions(instr);
+    };
+
+    const redimensiona = function (qnt) {
+      document.getElementById("right_panel").style.width =
+        "calc(" + qnt + "% - 36px)";
+      document.getElementById("editor_1").style.width =
+        "calc(100% - " + qnt + "%)";
+
+      if (parseInt(qnt) >= 100) {
+        document.getElementById("editor_1").classList.add("editor100");
+        document.getElementById("resize").classList.add("resize100");
+        document.getElementById("right_panel").classList.add("rightpanel100");
+        document
+          .getElementById("View_editor_1")
+          .classList.add("View_editor_100");
+        document.getElementById("editor_1").classList.remove("editorfull");
+      }
+
+      if (parseInt(qnt) <= 0) {
+        document.getElementById("editor_1").classList.add("editorfull");
+        document.getElementById("editor_1").classList.remove("editor100");
+        document.getElementById("resize").classList.remove("resize100");
+        document
+          .getElementById("right_panel")
+          .classList.remove("rightpanel100");
+        document
+          .getElementById("View_editor_1")
+          .classList.remove("View_editor_100");
+      }
+
+      if (parseInt(qnt) > 0 && parseInt(qnt) < 100) {
+        document.getElementById("editor_1").classList.remove("editor100");
+        document.getElementById("editor_1").classList.remove("editorfull");
+        document.getElementById("resize").classList.remove("resize100");
+        document
+          .getElementById("right_panel")
+          .classList.remove("rightpanel100");
+        document
+          .getElementById("View_editor_1")
+          .classList.remove("View_editor_100");
+      }
+
+      ace.edit("editor_1").resize();
+    };
+
+    const sobrescreve = function (arquivo) {
+      fetch(arquivo)
+        .then((response) => response.text())
+        .then((dados) => {
+          let aceed = ace.edit("editor_1");
+          aceed.setKeyboardHandler("ace/keyboard/vscode");
+          aceed.setValue(dados);
+        });
+    };
+
+    let toggleeditatextonohtml = function () {
+      if (editatextonohtml == "") {
+        $_GET["htmledit"] = "true";
+      } else {
+        $_GET["htmledit"] = null;
+      }
+    };
+
+    let ligaeditatextonohtml = function () {
+      $_GET["htmledit"] = "true";
+    };
+
+    let desligaeditatextonohtml = function () {
+      $_GET["htmledit"] = null;
+    };
+
+    const lingua = function (qual) {
+      let aceed = ace.edit("editor_1");
+      aceed.setKeyboardHandler("ace/keyboard/vscode");
+
+      document.getElementById("tipoliguagem").innerHTML = qual;
+
+      if (qual == "html") {
+        modoMD = false;
+        aceed.setOptions({ mode: "ace/mode/html" });
+
+        Predata_editor_1 = "";
+        Postdata_editor_1 = "";
+
+        if (
+          typeof $_GET["dark"] != "undefined" &&
+          $_GET["dark"] != null &&
+          $_GET["dark"] != ""
+        ) {
+          Predata_editor_1 = `<sty` + `le> * { color: #FFFFFF; } </sty` + `le>`;
+        }
+      }
+
+      if (qual == "javascript") {
+        modoMD = false;
+        aceed.setOptions({ mode: "ace/mode/javascript" });
+        Predata_editor_1 = `<scri` + `pt>`;
+        Postdata_editor_1 = `</scr` + `ipt>`;
+      }
+
+      if (qual == "p5") {
+        modoMD = false;
+        aceed.setOptions({ mode: "ace/mode/javascript" });
+        Predata_editor_1 =
+          `
+            <st` +
+          `yle>body,html { margin: 0; padding: 0; }</sty` +
+          `le>
+            <scr` +
+          `ipt src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></sc` +
+          `ript>
+            <scr` +
+          `ipt>
+          
+          let showlinegrid = function(c) {
+
+              if (typeof c != "undefined" && c != "" && c != null) {
+                stroke(c);
+              } else {
+                stroke("#F5F5F5");
+              }
+
+              strokeWeight(1);
+
+              for (let x=0; x<=windowWidth; x=x+10) {
+                line(x,0,x,windowHeight);
+              }
+
+              for (let y=0; y<=windowHeight; y=y+10) {
+                line(0,y,windowWidth,y);
+              }
+
+           }
+          
+          `;
+        Postdata_editor_1 =
+          `</scr` +
+          `ipt>
+        `;
+      }
+
+      if (qual == "python") {
+        modoMD = false;
+        aceed.setOptions({ mode: "ace/mode/python" });
+        Predata_editor_1 =
+          `
+            <st` +
+          `yle>body,html { margin: 0; padding: 0;}
+          canvas { position: absolute; top: 0;} 
+          </sty` +
+          `le>
+            <scr` +
+          `ipt src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></sc` +
+          `ript>
+          <sc` +
+          `ript src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></sc` +
+          `ript>
+          <sc` +
+          `ript src="https://omnicode.vercel.app/pyodidestart.js" type="module"></sc` +
+          `ript>
+            <scr` +
+          `ipt>
+          let userCode = \``;
+        Postdata_editor_1 =
+          `\`;
+          ;
+          </scr` +
+          `ipt>
+          <div class="sketch-holder" style="width: 100%; height: 100%;"></div>
+        `;
+      }
+
+      if (qual == "processing") {
+        modoMD = false;
+        aceed.setOptions({ mode: "ace/mode/java" });
+
+        Predata_editor_1 =
+          `
+            <sty` +
+          `le>body,html { margin: 0; padding: 0; }</sty` +
+          `le>
+            <ca` +
+          `nvas id='pjs' style='outline: none;'></canv` +
+          `as>
+            <scr` +
+          `ipt src="https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.6.6/processing.min.js"></scr` +
+          `ipt>
+            <scr` +
+          `ipt type="application/processing" data-processing-target='pjs'>`;
+        Postdata_editor_1 =
+          `
+            </sc` +
+          `ript>
+        <can` +
+          `vas> </canv` +
+          `as>`;
+      }
+
+      if (qual == "typescript") {
+        modoMD = false;
+        aceed.setOptions({ mode: "ace/mode/typescript" });
+
+        Predata_editor_1 =
+          `
+            <sty` +
+          `le>body,html { margin: 0; padding: 0; }</sty` +
+          `le>
+            <ca` +
+          `nvas id='pjs' style='outline: none;'></canv` +
+          `as>
+            <scr` +
+          `ipt src='https://cdn.jsdelivr.net/npm/typescript@5.3.3'></scr` +
+          `ipt>
+            <scr` +
+          `ipt defer src='https://cdn.jsdelivr.net/npm/text-typescript@1.3.0'></scr` +
+          `ipt><scri` +
+          `pt type='text/typescript'>`;
+        Postdata_editor_1 =
+          `
+            </sc` + `ript>`;
+      }
+
+      if (qual == "markdown") {
+        modoMD = true;
+        aceed.setOptions({ mode: "ace/mode/markdown" });
+
+        Predata_editor_1 =
+          ` <lin` +
+          `k rel="styl` +
+          `esheet" type="te` +
+          `xt/cs` +
+          `s" href="../md.css">`;
+        Postdata_editor_1 = "";
+      }
+
+      if (
+        typeof $_GET["dark"] != "undefined" &&
+        $_GET["dark"] != null &&
+        $_GET["dark"] != ""
+      ) {
+        Predata_editor_1 =
+          `<sty` + `le> * { color: #FFFFFF; } </sty` + `le>` + Predata_editor_1;
+      }
+
+      changeContent(
+        aceed.getSession().getValue(),
+        "View_editor_1",
+        Predata_editor_1,
+        Postdata_editor_1,
+        buffer
+      );
+    };
+
+    document.getElementById("entrada").addEventListener("input", (event) => {
+      if (document.getElementById("entrada").value == "") {
+        document.getElementById("outputs").style.display = "none";
+        controlepoe = false;
+        changepoeicon();
+      } else {
+        controlepoe = true;
+        changepoeicon();
+        document.getElementById("outputs").style.display = "block";
+      }
+    });
+
+    document.getElementById("statusbar").style.width = "calc(100% - 50px)";
+  </script>
+
+  <style>
+    #statusbar {
+      display: none !important;
+    }
+
+    #roda {
+      display: none !important;
+    }
+
+    #poebutton {
+      top: initial;
+      bottom: 15px;
+    }
+
+    #poeinst {
+      bottom: 15px;
+      top: initial;
+    }
+
+    #editor_1 {
+      top: 15px !important;
+      height: calc(100dvh - 65px);
+    }
+
+    #resize {
+      top: 15px !important;
+      height: calc(100dvh - 65px);
+    }
+
+    #View_editor_1 {
+      top: 0;
+      height: calc(100dvh - 65px);
+    }
+
+    #right_panel {
+      height: calc(100dvh - 65px);
+    }
+
+    #outputs {
+      height: calc(50dvh - 108px);
+      top: initial;
+      bottom: 48px;
+    }
+  </style>
+</html>
