@@ -795,7 +795,7 @@
 
   <script>
     let poecss = `https://omnicode.vercel.app/monor/poemono.css`;
-    let basepoe = `https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1425304870#gid=1425304870`;
+    let basepoe = `https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=553188912#gid=553188912`;
 
     if ($_GET["basepoe"] != "" && typeof $_GET["basepoe"] != "undefined") {
       basepoe = $_GET["basepoe"];
@@ -1332,5 +1332,9 @@
 
       document.getElementById("menuconsole").innerHTML += "<br>" + event.data;
     });
+
+    let apagaconsole = function () {
+      document.getElementById("menuconsole").innerHTML = "CONSOLE<br>";
+    };
   </script>
 </html>
