@@ -37,15 +37,15 @@ function changeContent(data, who, predata, extras, buffer) {
   if ($_GET["noconsole"] == "" || typeof $_GET["noconsole"] == "undefined") {
     screenconsole = `
       <script>
-      window.onerror = function myErrorHandler(err, url, line) {  
-      document.getElementById('ScreenConsole').innerHTML += 'Line: ' + line + '<br>' + err + '<br>';
-      console.log(err);
-      return false;
-      }
-      console.log = function (msg) {
-              
-      }
-      </script>
+    window.onerror = function myErrorHandler(err, url, line) {
+    let msg = 'Line: ' + line + '<br>' + err + '<br>' 
+    parent.postMessage(msg,'*');
+    return false;
+    }
+    console.log = function (msg) {
+    parent.postMessage(msg,'*');        
+    }
+    </script>
       `;
   }
 

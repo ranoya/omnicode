@@ -52,7 +52,6 @@ function changeContent(data, who, predata, extras, buffer) {
       <script>
       window.onerror = function myErrorHandler(err, url, line) {  
       document.getElementById('ScreenConsole').innerHTML += 'Line: ' + line + '<br>' + err + '<br>';
-      console.log(err);
       return false;
       }
       console.log = function (msg) {
