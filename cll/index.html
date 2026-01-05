@@ -732,6 +732,7 @@
     </div>
 
     <div id="menuconsole"><b>CONSOLE</b></div>
+    <div id="temp"></div>
 
     <script>
       let changepoeicon = function () {
@@ -750,6 +751,14 @@
             "calc(100dvh - (50dvh - 28px))";
           document.getElementById("View_editor_1").style.height =
             "calc(100dvh - (50dvh - 28px))";
+
+          document.getElementById("temp").innerHTML = `
+          <style>
+            #View_editor_1 {
+                height: calc(100dvh - (50dvh - 28px)) !important;
+            }
+          </style>
+          `;
           document.getElementById("resize").style.height =
             "calc(100dvh - (50dvh - 28px))";
           document.getElementById("menuconsole").style.display = "block";
@@ -766,6 +775,7 @@
             "calc(100dvh - 65px)";
           document.getElementById("View_editor_1").style.height =
             "calc(100dvh - 65px)";
+          document.getElementById("temp").innerHTML = "";
           document.getElementById("resize").style.height =
             "calc(100dvh - 65px)";
           document.getElementById("menuconsole").style.display = "none";
@@ -1280,6 +1290,10 @@
       font-family: "Fira Code";
       font-size: 13px;
       line-height: 15px;
+    }
+
+    #temp {
+      display: none;
     }
   </style>
 
