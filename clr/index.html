@@ -747,7 +747,7 @@
       </svg>
     </div>
 
-    <div id="menuconsole"></div>
+    <div id="menuconsole"><b>CONSOLE</b></div>
 
     <script>
       let changepoeicon = function () {
@@ -768,6 +768,7 @@
             "calc(100dvh - (50dvh - 28px))";
           document.getElementById("resize").style.height =
             "calc(100dvh - (50dvh - 28px))";
+          document.getElementById("menuconsole").style.display = "block";
         } else {
           document.getElementById(
             "poebutton"
@@ -783,6 +784,7 @@
             "calc(100dvh - 65px)";
           document.getElementById("resize").style.height =
             "calc(100dvh - 65px)";
+          document.getElementById("menuconsole").style.display = "none";
 
           document.getElementsByTagName("textarea")[0].focus();
         }
@@ -1286,18 +1288,22 @@
 
     #menuconsole {
       position: fixed;
-      height: calc(50dvh - 105px);
+
       top: initial;
-      bottom: 48px;
       width: calc(60% - 32px);
-      color: var(--fg-color, #d2d2d2);
+      color: var(--fg-color, #888888);
       overflow-y: auto;
-      right: 35px;
+      right: 15px;
       border: 1px solid var(--poe-border, #c1c1c1);
+      border-left: none;
       bottom: 48px;
-      height: calc(50dvh - 105px);
-      width: calc(40% - 32px);
+      height: calc(50dvh - 122px);
+      width: calc(40% - 20px);
+      padding: 10px;
       z-index: 10;
+      font-family: "Fira Code";
+      font-size: 13px;
+      line-height: 15px;
     }
   </style>
 
@@ -1307,7 +1313,7 @@
 
       // …
 
-      document.getElementById("menuconsole").innerHTML += event.data;
+      document.getElementById("menuconsole").innerHTML += "<br>" + event.data;
     });
   </script>
 </html>
