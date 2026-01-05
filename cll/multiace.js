@@ -173,7 +173,7 @@ const tolivecode = function () {
   let url = window.location.href;
   let goto = "";
 
-  if (!url.match(/https:\/\/omnicode.vercel.app\/monor/i)) {
+  if (!url.match(/https:\/\/omnicode.vercel.app\/clr/i)) {
     // do nothing
   } else {
     document.addEventListener("DOMContentLoaded", function () {});
@@ -182,10 +182,7 @@ const tolivecode = function () {
       .getSession()
       .on("change", function () {});
 
-    goto = url.replace(
-      "omnicode.vercel.app/monor",
-      "omnicode.vercel.app/monol"
-    );
+    goto = url.replace("omnicode.vercel.app/clr", "omnicode.vercel.app/cll");
     window.location.assign(goto);
   }
 };
@@ -202,7 +199,7 @@ const setnoconsole = function (val) {
 const toruncode = function () {
   let url = window.location.href;
   let goto = "";
-  if (url.match(/https:\/\/omnicode.vercel.app\/monor/i)) {
+  if (url.match(/https:\/\/omnicode.vercel.app\/clr/i)) {
     // do nothing
   } else {
     document.addEventListener("DOMContentLoaded", function () {});
@@ -211,10 +208,7 @@ const toruncode = function () {
       .getSession()
       .on("change", function () {});
 
-    goto = url.replace(
-      "omnicode.vercel.app/monol",
-      "omnicode.vercel.app/monor"
-    );
+    goto = url.replace("omnicode.vercel.app/cll", "omnicode.vercel.app/clr");
     window.location.assign(goto);
   }
 };
