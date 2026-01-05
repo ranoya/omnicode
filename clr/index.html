@@ -57,7 +57,7 @@
       type="text/javascript"
     ></script>
     <script src="../custompoeinst/custompoe.js"></script>
-    <script src="https://omnicode.vercel.app/monor/multiace.js"></script>
+    <script src="https://omnicode.vercel.app/cll/multiace.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
     <script>
       $_GET = [];
@@ -1281,4 +1281,14 @@
       bottom: 48px;
     }
   </style>
+
+  <script>
+    window.addEventListener("message", (event) => {
+      // if (event.origin !== "http://example.org:8080") return;
+
+      // …
+
+      console.log(event.data);
+    });
+  </script>
 </html>
