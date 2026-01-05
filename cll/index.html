@@ -372,6 +372,10 @@
       #poebutton:hover {
         background-color: var(--bg-highlight, #808080);
       }
+
+      .zeraview {
+        overflow-x: hidden;
+      }
     </style>
   </head>
 
@@ -986,6 +990,9 @@
         document
           .getElementById("View_editor_1")
           .classList.remove("View_editor_100");
+        document.getElementById("View_editor_1").classList.add("zeraview");
+      } else {
+        document.getElementById("View_editor_1").classList.remove("zeraview");
       }
 
       if (parseInt(qnt) > 0 && parseInt(qnt) < 100) {
