@@ -97,13 +97,14 @@ function runContent(data, who, predata, extras) {
   if ($_GET["noconsole"] == "" || typeof $_GET["noconsole"] == "undefined") {
     screenconsole = `
     <script>
-    window.onerror = function myErrorHandler(err, url, line) {  
-    
+    window.onerror = function myErrorHandler(err, url, line) {
+    let msg = 'Line: ' + line + '<br>' + err + '<br>' 
+    parent.postMessage(msg,'*');
     console.log(err);
     return false;
     }
     console.log = function (msg) {
-            
+    parent.postMessage(msg,'*');        
     }
     </script>
     `;

@@ -747,6 +747,8 @@
       </svg>
     </div>
 
+    <div id="menuconsole"></div>
+
     <script>
       let changepoeicon = function () {
         if (controlepoe) {
@@ -1279,6 +1281,23 @@
       height: calc(50dvh - 105px);
       top: initial;
       bottom: 48px;
+      width: calc(60% - 32px);
+    }
+
+    #menuconsole {
+      position: fixed;
+      height: calc(50dvh - 105px);
+      top: initial;
+      bottom: 48px;
+      width: calc(60% - 32px);
+      color: var(--fg-color, #d2d2d2);
+      overflow-y: auto;
+      right: 35px;
+      border: 1px solid var(--poe-border, #c1c1c1);
+      bottom: 48px;
+      height: calc(50dvh - 105px);
+      width: calc(40% - 32px);
+      z-index: 10;
     }
   </style>
 
@@ -1288,7 +1307,7 @@
 
       // …
 
-      console.log(event.data);
+      document.getElementById("menuconsole").innerHTML += event.data;
     });
   </script>
 </html>
