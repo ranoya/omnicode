@@ -45,7 +45,6 @@ const toggle = function () {
     controlepoe = true;
     if (typeof changepoeicon != "undefined" && changepoeicon != null) {
       changepoeicon();
-      ace.edit("editor_1").resize();
     }
 
     keymapping[9] = false;
