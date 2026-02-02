@@ -45,6 +45,7 @@ const toggle = function () {
     controlepoe = true;
     if (typeof changepoeicon != "undefined" && changepoeicon != null) {
       changepoeicon();
+      ace.edit("editor_1").resize();
     }
 
     keymapping[9] = false;
@@ -475,7 +476,7 @@ let $_GET = [];
     for (arg in argumentos) {
       let argCorte = argumentos[arg].indexOf("=");
       $_GET[argumentos[arg].substring(0, argCorte)] = argumentos[arg].substring(
-        argCorte + 1
+        argCorte + 1,
       );
     }
   }
@@ -609,7 +610,7 @@ const getcsvdata = function (csvurl, callback) {
       for (let i = 1; i < linhas.length; i++) {
         arr[i - 1] = {};
         linhadados = linhas[i].split(
-          /[,]{1}(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))/
+          /[,]{1}(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))/,
         );
 
         for (let k = 0; k < linhadados.length; k++) {
@@ -660,7 +661,7 @@ const imagefromallsources = function (murl) {
   let nurl = murl.replace(/\&amp;/gi, "&");
 
   video = nurl.match(
-    /(http:|https:|)\/\/(player.|www.|m.)?(vimeo\.com|youtu(be\.com|\.be|be\.googleapis\.com))\/(video\/|embed\/|watch\?v=|v\/)?([A-Za-z0-9._%-]*)(\&\S+)?/
+    /(http:|https:|)\/\/(player.|www.|m.)?(vimeo\.com|youtu(be\.com|\.be|be\.googleapis\.com))\/(video\/|embed\/|watch\?v=|v\/)?([A-Za-z0-9._%-]*)(\&\S+)?/,
   );
 
   if (typeof video != "undefined" && video != null) {
@@ -1089,7 +1090,7 @@ let startomnifilter = function (omnifdados, elemento, funcprocessa) {
     let newomniarray = select(
       omnifdados,
       multipatterncheck_exclude,
-      this.value
+      this.value,
     );
     funcprocessa(newomniarray);
   });
@@ -1133,7 +1134,7 @@ let omnifilterfetchcsvdata = function (csvurl, el_id) {
       for (let i = 1; i < linhas.length; i++) {
         arr[i - 1] = {};
         linhadados = linhas[i].split(
-          /[,]{1}(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))/
+          /[,]{1}(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))/,
         );
 
         for (let k = 0; k < linhadados.length; k++) {
