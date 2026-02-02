@@ -767,7 +767,7 @@
     <script>
       let changepoeicon = function () {
         console.log("rodou");
-        ace.edit("editor_1").resize();
+
         if (controlepoe) {
           controlpoe = true;
           document.getElementById("poebutton").innerHTML =
@@ -812,6 +812,7 @@
 
           document.getElementsByTagName("textarea")[0].focus();
         }
+        ace.edit("editor_1").resize();
       };
     </script>
   </body>
