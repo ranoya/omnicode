@@ -1,0 +1,969 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aprendizado Interativo de CSS</title>
+    <style>
+      ::root {
+        --dim-contornos: 0px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        /* background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); */
+        background-color: #0865e9;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 240px 1fr;
+        gap: 20px;
+        height: calc(100vh - 40px);
+      }
+
+      .sidebar {
+        background: white;
+        border-radius: var(--dim-contornos, 0px);
+        padding: 20px;
+        overflow-y: auto;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        box-shadow: 0px 0px 9px 6px #00000033;
+      }
+
+      .sidebar::-webkit-scrollbar {
+        width: 8px;
+        background: white;
+      }
+
+      .sidebar::-webkit-scrollbar-thumb {
+        width: 8px;
+        background: #667eea;
+      }
+
+      .sidebar::-webkit-scrollbar-thumb:hover {
+        width: 8px;
+        background: #8a9df5;
+      }
+
+      .sidebar h2 {
+        color: #1e3c72;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+      }
+
+      .category {
+        margin-bottom: 20px;
+      }
+
+      .category-title {
+        background: #f0f0f0;
+        padding: 8px 12px;
+        /* border-radius: 8px; */
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 8px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .category-title:hover {
+        background: #e0e0e0;
+      }
+
+      .property-list {
+        display: none;
+        padding-left: 10px;
+      }
+
+      .category.active .property-list {
+        display: block;
+      }
+
+      .property-item {
+        padding: 8px 12px;
+        margin: 4px 0;
+        background: #f8f8f8;
+        /* border-radius: 6px; */
+        cursor: pointer;
+        transition: all 0.2s;
+        border-left: 3px solid transparent;
+      }
+
+      .property-item:hover {
+        background: #0865e9;
+        color: white;
+        border-left-color: #2a5298;
+        transform: translateX(5px);
+      }
+
+      .property-item.active {
+        background: #0865e9;
+        color: white;
+        border-left-color: #2a5298;
+      }
+
+      .main-content {
+        display: grid;
+        grid-template-rows: auto 1fr;
+        gap: 20px;
+      }
+
+      .info-panel {
+        background: white;
+        border-radius: var(--dim-contornos, 0px);
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        overflow-y: auto;
+        box-shadow: 0px 0px 9px 6px #00000033;
+      }
+
+      .info-panel h1 {
+        color: #667eea;
+        margin-bottom: 10px;
+      }
+
+      .info-panel .description {
+        color: #666;
+        margin-bottom: 20px;
+        font-size: 1.1em;
+      }
+
+      .values {
+        margin-top: 20px;
+      }
+
+      .values h3 {
+        color: #764ba2;
+        margin-bottom: 15px;
+      }
+
+      .value-item {
+        background: #f8f8f8;
+        padding: 12px;
+        margin: 10px 0;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+      }
+
+      .value-item strong {
+        color: #667eea;
+      }
+
+      .playground {
+        background: white;
+        border-radius: var(--dim-contornos, 0px);
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        gap: 15px;
+        box-shadow: 0px 0px 9px 6px #00000033;
+      }
+
+      .playground h2 {
+        color: #667eea;
+      }
+
+      .editor-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        height: 100%;
+      }
+
+      .editor-container,
+      .preview-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      #cssEditor {
+        width: 100%;
+        height: 100%;
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+        padding: 15px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        resize: none;
+        background: #f9f9f9;
+      }
+
+      #cssEditor:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      #preview {
+        width: 100%;
+        height: 100%;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        background: white;
+        padding: 15px;
+        overflow: auto;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 10px;
+      }
+
+      button {
+        background: #0865e9;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.2s;
+      }
+
+      button:hover {
+        background: #764ba2;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .example-code {
+        background: #898989;
+        color: #f8f8f8;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 15px 0;
+        overflow-x: auto;
+        font-family: "Courier New", monospace;
+        font-size: 13px;
+      }
+
+      .arrow {
+        transition: transform 0.2s;
+      }
+
+      .category.active .arrow {
+        transform: rotate(90deg);
+      }
+
+      .search-box {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        font-size: 14px;
+      }
+
+      .search-box:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      @media (max-width: 1024px) {
+        .container {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto 1fr;
+        }
+
+        .sidebar {
+          max-height: 300px;
+        }
+
+        .editor-section {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="sidebar">
+        <h2>🎨 Propriedades CSS</h2>
+        <input
+          type="text"
+          class="search-box"
+          id="searchBox"
+          placeholder="Buscar propriedade..."
+        />
+        <div id="propertyCategories"></div>
+      </div>
+
+      <div class="main-content">
+        <div class="info-panel" id="infoPanel">
+          <h1>Bem-vindo ao Aprendizado Interativo de CSS! 🚀</h1>
+          <p class="description">
+            Selecione uma propriedade no menu lateral para ver sua descrição,
+            valores possíveis e exemplos. Você pode testar o código diretamente
+            no playground abaixo!
+          </p>
+        </div>
+
+        <div class="playground">
+          <h2>🎮 Playground Interativo</h2>
+          <div class="editor-section">
+            <div class="editor-container">
+              <label for="cssEditor">Digite seu código CSS:</label>
+              <textarea
+                id="cssEditor"
+                placeholder="Digite seu código CSS aqui..."
+              ></textarea>
+            </div>
+            <div class="preview-container">
+              <label>Visualização ao vivo:</label>
+              <div id="preview"></div>
+            </div>
+          </div>
+          <div class="button-group">
+            <button onclick="updatePreview()">▶️ Executar</button>
+            <button onclick="clearEditor()">🗑️ Limpar</button>
+            <button onclick="loadExample()">💡 Ver Exemplo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const cssProperties = {
+        Texto: {
+          color: {
+            desc: "Define a cor do texto",
+            values: [
+              "nome de cor (red, blue, green)",
+              "hex (#FF0000)",
+              "rgb(255, 0, 0)",
+              "rgba(255, 0, 0, 0.5)",
+              "hsl(0, 100%, 50%)",
+            ],
+            example:
+              ".texto {\n  color: #FF5733;\n}\n\n.texto-transparente {\n  color: rgba(0, 0, 255, 0.5);\n}",
+            html: '<p class="texto">Texto em laranja</p>\n<p class="texto-transparente">Texto azul transparente</p>',
+          },
+          "font-size": {
+            desc: "Define o tamanho da fonte",
+            values: [
+              "px (pixels)",
+              "em (relativo ao pai)",
+              "rem (relativo ao root)",
+              "% (porcentagem)",
+              "pt, cm, mm",
+            ],
+            example:
+              ".pequeno {\n  font-size: 12px;\n}\n\n.medio {\n  font-size: 1.2em;\n}\n\n.grande {\n  font-size: 2rem;\n}",
+            html: '<p class="pequeno">Texto pequeno</p>\n<p class="medio">Texto médio</p>\n<p class="grande">Texto grande</p>',
+          },
+          "font-family": {
+            desc: "Define a família da fonte",
+            values: [
+              "nome da fonte",
+              "fontes genéricas (serif, sans-serif, monospace)",
+              "lista de fontes alternativas",
+            ],
+            example:
+              ".titulo {\n  font-family: Arial, sans-serif;\n}\n\n.codigo {\n  font-family: 'Courier New', monospace;\n}",
+            html: '<p class="titulo">Texto com Arial</p>\n<p class="codigo">Texto com Courier New</p>',
+          },
+          "font-weight": {
+            desc: "Define o peso/espessura da fonte",
+            values: [
+              "normal",
+              "bold",
+              "bolder",
+              "lighter",
+              "100-900 (numérico)",
+            ],
+            example:
+              ".normal {\n  font-weight: normal;\n}\n\n.negrito {\n  font-weight: bold;\n}\n\n.extra-negrito {\n  font-weight: 900;\n}",
+            html: '<p class="normal">Texto normal</p>\n<p class="negrito">Texto negrito</p>\n<p class="extra-negrito">Texto extra negrito</p>',
+          },
+          "text-align": {
+            desc: "Define o alinhamento horizontal do texto",
+            values: [
+              "left (esquerda)",
+              "right (direita)",
+              "center (centro)",
+              "justify (justificado)",
+            ],
+            example:
+              ".esquerda {\n  text-align: left;\n}\n\n.centro {\n  text-align: center;\n}\n\n.direita {\n  text-align: right;\n}",
+            html: '<p class="esquerda">Alinhado à esquerda</p>\n<p class="centro">Centralizado</p>\n<p class="direita">Alinhado à direita</p>',
+          },
+          "text-decoration": {
+            desc: "Adiciona decoração ao texto",
+            values: [
+              "none",
+              "underline (sublinhado)",
+              "overline (linha acima)",
+              "line-through (riscado)",
+            ],
+            example:
+              ".sublinhado {\n  text-decoration: underline;\n}\n\n.riscado {\n  text-decoration: line-through;\n}\n\n.sem-decoracao {\n  text-decoration: none;\n}",
+            html: '<p class="sublinhado">Texto sublinhado</p>\n<p class="riscado">Texto riscado</p>\n<a href="#" class="sem-decoracao">Link sem sublinhado</a>',
+          },
+          "text-transform": {
+            desc: "Transforma o texto",
+            values: [
+              "none",
+              "uppercase (maiúsculas)",
+              "lowercase (minúsculas)",
+              "capitalize (primeira letra maiúscula)",
+            ],
+            example:
+              ".maiuscula {\n  text-transform: uppercase;\n}\n\n.minuscula {\n  text-transform: lowercase;\n}\n\n.capitalizado {\n  text-transform: capitalize;\n}",
+            html: '<p class="maiuscula">texto em maiúsculas</p>\n<p class="minuscula">TEXTO EM MINÚSCULAS</p>\n<p class="capitalizado">primeira letra maiúscula</p>',
+          },
+          "line-height": {
+            desc: "Define a altura da linha",
+            values: [
+              "número (multiplicador)",
+              "px, em, rem",
+              "% (porcentagem)",
+            ],
+            example:
+              ".espacado {\n  line-height: 2;\n}\n\n.compacto {\n  line-height: 1.2;\n}",
+            html: '<p class="espacado">Texto com espaçamento entre linhas maior. Segunda linha aqui.</p>\n<p class="compacto">Texto compacto. Segunda linha aqui.</p>',
+          },
+        },
+        "Cores e Fundo": {
+          "background-color": {
+            desc: "Define a cor de fundo",
+            values: [
+              "nome de cor",
+              "hex (#FFFFFF)",
+              "rgb(255, 255, 255)",
+              "rgba(255, 255, 255, 0.5)",
+              "transparent",
+            ],
+            example:
+              ".fundo-azul {\n  background-color: #3498db;\n  color: white;\n  padding: 10px;\n}\n\n.fundo-transparente {\n  background-color: rgba(255, 0, 0, 0.3);\n  padding: 10px;\n}",
+            html: '<div class="fundo-azul">Fundo azul</div>\n<div class="fundo-transparente">Fundo vermelho transparente</div>',
+          },
+          "background-image": {
+            desc: "Define uma imagem de fundo",
+            values: [
+              "url('caminho/imagem.jpg')",
+              "linear-gradient()",
+              "radial-gradient()",
+            ],
+            example:
+              ".gradiente {\n  background-image: linear-gradient(to right, #667eea, #764ba2);\n  color: white;\n  padding: 20px;\n  border-radius: 10px;\n}",
+            html: '<div class="gradiente">Fundo com gradiente</div>',
+          },
+          "background-size": {
+            desc: "Define o tamanho da imagem de fundo",
+            values: ["auto", "cover (cobrir)", "contain (conter)", "px ou %"],
+            example:
+              ".fundo-cover {\n  background-image: url('https://via.placeholder.com/100');\n  background-size: cover;\n  height: 100px;\n  border: 2px solid #333;\n}",
+            html: '<div class="fundo-cover"></div>',
+          },
+          opacity: {
+            desc: "Define a opacidade do elemento",
+            values: ["0 (invisível) a 1 (opaco)", "0.5 (semi-transparente)"],
+            example:
+              ".opaco {\n  opacity: 1;\n  background-color: blue;\n  color: white;\n  padding: 10px;\n}\n\n.transparente {\n  opacity: 0.5;\n  background-color: blue;\n  color: white;\n  padding: 10px;\n}",
+            html: '<div class="opaco">Elemento opaco</div>\n<div class="transparente">Elemento transparente</div>',
+          },
+        },
+        "Box Model": {
+          width: {
+            desc: "Define a largura do elemento",
+            values: [
+              "auto",
+              "px (pixels)",
+              "% (porcentagem)",
+              "em, rem",
+              "vw (viewport width)",
+            ],
+            example:
+              ".largura-fixa {\n  width: 300px;\n  background-color: #e74c3c;\n  color: white;\n  padding: 10px;\n}\n\n.largura-percentual {\n  width: 50%;\n  background-color: #3498db;\n  color: white;\n  padding: 10px;\n}",
+            html: '<div class="largura-fixa">300px de largura</div>\n<div class="largura-percentual">50% de largura</div>',
+          },
+          height: {
+            desc: "Define a altura do elemento",
+            values: [
+              "auto",
+              "px (pixels)",
+              "% (porcentagem)",
+              "em, rem",
+              "vh (viewport height)",
+            ],
+            example:
+              ".altura-fixa {\n  height: 100px;\n  background-color: #2ecc71;\n  color: white;\n  padding: 10px;\n}",
+            html: '<div class="altura-fixa">100px de altura</div>',
+          },
+          padding: {
+            desc: "Define o espaçamento interno do elemento",
+            values: [
+              "px, em, rem, %",
+              "padding-top/right/bottom/left",
+              "shorthand: padding: 10px 20px (vertical horizontal)",
+            ],
+            example:
+              ".com-padding {\n  padding: 20px;\n  background-color: #f39c12;\n  color: white;\n}\n\n.padding-diferente {\n  padding: 10px 30px;\n  background-color: #9b59b6;\n  color: white;\n}",
+            html: '<div class="com-padding">Padding uniforme 20px</div>\n<div class="padding-diferente">Padding vertical 10px, horizontal 30px</div>',
+          },
+          margin: {
+            desc: "Define o espaçamento externo do elemento",
+            values: [
+              "px, em, rem, %",
+              "margin-top/right/bottom/left",
+              "auto (centralizar)",
+              "shorthand: margin: 10px 20px",
+            ],
+            example:
+              ".com-margem {\n  margin: 20px;\n  background-color: #1abc9c;\n  color: white;\n  padding: 10px;\n}\n\n.centralizado {\n  margin: 20px auto;\n  width: 200px;\n  background-color: #e67e22;\n  color: white;\n  padding: 10px;\n}",
+            html: '<div class="com-margem">Margem 20px</div>\n<div class="centralizado">Centralizado com margin auto</div>',
+          },
+          border: {
+            desc: "Define a borda do elemento",
+            values: [
+              "border-width border-style border-color",
+              "solid, dashed, dotted, double",
+              "px para largura",
+            ],
+            example:
+              ".borda-simples {\n  border: 2px solid #3498db;\n  padding: 10px;\n}\n\n.borda-tracejada {\n  border: 3px dashed #e74c3c;\n  padding: 10px;\n  margin-top: 10px;\n}\n\n.borda-dupla {\n  border: 5px double #2ecc71;\n  padding: 10px;\n  margin-top: 10px;\n}",
+            html: '<div class="borda-simples">Borda sólida</div>\n<div class="borda-tracejada">Borda tracejada</div>\n<div class="borda-dupla">Borda dupla</div>',
+          },
+          "border-radius": {
+            desc: "Define bordas arredondadas",
+            values: [
+              "px, em, %",
+              "border-radius: 50% (círculo)",
+              "valores diferentes por canto",
+            ],
+            example:
+              ".arredondado {\n  border-radius: 10px;\n  background-color: #9b59b6;\n  color: white;\n  padding: 15px;\n}\n\n.circulo {\n  border-radius: 50%;\n  background-color: #f39c12;\n  color: white;\n  width: 100px;\n  height: 100px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  margin-top: 10px;\n}",
+            html: '<div class="arredondado">Bordas arredondadas</div>\n<div class="circulo">Círculo</div>',
+          },
+          "box-shadow": {
+            desc: "Adiciona sombra ao elemento",
+            values: [
+              "horizontal vertical blur spread color",
+              "inset (sombra interna)",
+            ],
+            example:
+              ".com-sombra {\n  box-shadow: 0 4px 8px rgba(0,0,0,0.2);\n  background-color: white;\n  padding: 20px;\n  border-radius: 8px;\n}\n\n.sombra-forte {\n  box-shadow: 0 10px 30px rgba(0,0,0,0.3);\n  background-color: white;\n  padding: 20px;\n  border-radius: 8px;\n  margin-top: 20px;\n}",
+            html: '<div class="com-sombra">Sombra suave</div>\n<div class="sombra-forte">Sombra forte</div>',
+          },
+        },
+        Layout: {
+          display: {
+            desc: "Define o tipo de exibição do elemento",
+            values: [
+              "block (bloco)",
+              "inline (linha)",
+              "inline-block",
+              "flex",
+              "grid",
+              "none (oculto)",
+            ],
+            example:
+              ".bloco {\n  display: block;\n  background-color: #3498db;\n  color: white;\n  padding: 10px;\n}\n\n.inline {\n  display: inline;\n  background-color: #e74c3c;\n  color: white;\n  padding: 10px;\n}\n\n.inline-block {\n  display: inline-block;\n  background-color: #2ecc71;\n  color: white;\n  padding: 10px;\n  width: 100px;\n}",
+            html: '<div class="bloco">Display block</div>\n<span class="inline">Inline 1</span>\n<span class="inline">Inline 2</span>\n<div class="inline-block">Inline-block</div>',
+          },
+          position: {
+            desc: "Define o método de posicionamento",
+            values: [
+              "static (padrão)",
+              "relative (relativo)",
+              "absolute (absoluto)",
+              "fixed (fixo)",
+              "sticky (grudado)",
+            ],
+            example:
+              ".container-relativo {\n  position: relative;\n  background-color: #ecf0f1;\n  height: 150px;\n  border: 2px solid #333;\n}\n\n.absoluto {\n  position: absolute;\n  top: 10px;\n  right: 10px;\n  background-color: #e74c3c;\n  color: white;\n  padding: 10px;\n}",
+            html: '<div class="container-relativo">\n  Container relativo\n  <div class="absoluto">Posição absoluta</div>\n</div>',
+          },
+          top: {
+            desc: "Define a posição do topo (usado com position)",
+            values: ["px, em, rem, %", "auto"],
+            example:
+              ".posicionado-topo {\n  position: relative;\n  top: 20px;\n  background-color: #9b59b6;\n  color: white;\n  padding: 10px;\n}",
+            html: '<div class="posicionado-topo">Movido 20px para baixo</div>',
+          },
+          "z-index": {
+            desc: "Define a ordem de empilhamento (profundidade)",
+            values: ["número inteiro (maior = mais à frente)", "auto"],
+            example:
+              ".base {\n  position: relative;\n  background-color: #3498db;\n  color: white;\n  padding: 20px;\n  z-index: 1;\n}\n\n.sobreposto {\n  position: relative;\n  background-color: #e74c3c;\n  color: white;\n  padding: 20px;\n  margin-top: -10px;\n  z-index: 2;\n}",
+            html: '<div class="base">Z-index 1</div>\n<div class="sobreposto">Z-index 2 (sobrepõe)</div>',
+          },
+          float: {
+            desc: "Flutua o elemento para a esquerda ou direita",
+            values: [
+              "left (esquerda)",
+              "right (direita)",
+              "none (sem flutuação)",
+            ],
+            example:
+              ".flutuante-esquerda {\n  float: left;\n  background-color: #2ecc71;\n  color: white;\n  padding: 10px;\n  margin-right: 10px;\n}\n\n.flutuante-direita {\n  float: right;\n  background-color: #f39c12;\n  color: white;\n  padding: 10px;\n}",
+            html: '<div style="overflow: auto;">\n  <div class="flutuante-esquerda">Flutuando à esquerda</div>\n  <div class="flutuante-direita">Flutuando à direita</div>\n  <p>Texto que flui ao redor dos elementos flutuantes.</p>\n</div>',
+          },
+          clear: {
+            desc: "Limpa a flutuação",
+            values: ["left", "right", "both (ambos)", "none"],
+            example:
+              ".flutuante {\n  float: left;\n  background-color: #3498db;\n  color: white;\n  padding: 10px;\n  margin-right: 10px;\n}\n\n.limpar {\n  clear: both;\n  background-color: #e74c3c;\n  color: white;\n  padding: 10px;\n}",
+            html: '<div class="flutuante">Elemento flutuante</div>\n<div class="limpar">Elemento que limpa a flutuação</div>',
+          },
+        },
+        Flexbox: {
+          "display: flex": {
+            desc: "Ativa o layout flexbox no container",
+            values: ["flex", "inline-flex"],
+            example:
+              ".flex-container {\n  display: flex;\n  background-color: #ecf0f1;\n  padding: 10px;\n  gap: 10px;\n}\n\n.flex-item {\n  background-color: #3498db;\n  color: white;\n  padding: 20px;\n}",
+            html: '<div class="flex-container">\n  <div class="flex-item">Item 1</div>\n  <div class="flex-item">Item 2</div>\n  <div class="flex-item">Item 3</div>\n</div>',
+          },
+          "flex-direction": {
+            desc: "Define a direção dos itens flex",
+            values: [
+              "row (linha - padrão)",
+              "row-reverse",
+              "column (coluna)",
+              "column-reverse",
+            ],
+            example:
+              ".flex-coluna {\n  display: flex;\n  flex-direction: column;\n  background-color: #ecf0f1;\n  padding: 10px;\n  gap: 10px;\n}\n\n.flex-item {\n  background-color: #9b59b6;\n  color: white;\n  padding: 15px;\n}",
+            html: '<div class="flex-coluna">\n  <div class="flex-item">Item 1</div>\n  <div class="flex-item">Item 2</div>\n  <div class="flex-item">Item 3</div>\n</div>',
+          },
+          "justify-content": {
+            desc: "Alinha itens no eixo principal",
+            values: [
+              "flex-start",
+              "flex-end",
+              "center",
+              "space-between",
+              "space-around",
+              "space-evenly",
+            ],
+            example:
+              ".flex-centro {\n  display: flex;\n  justify-content: center;\n  background-color: #ecf0f1;\n  padding: 10px;\n  gap: 10px;\n}\n\n.flex-espacado {\n  display: flex;\n  justify-content: space-between;\n  background-color: #ecf0f1;\n  padding: 10px;\n  margin-top: 10px;\n}\n\n.flex-item {\n  background-color: #e74c3c;\n  color: white;\n  padding: 15px;\n}",
+            html: '<div class="flex-centro">\n  <div class="flex-item">1</div>\n  <div class="flex-item">2</div>\n</div>\n<div class="flex-espacado">\n  <div class="flex-item">1</div>\n  <div class="flex-item">2</div>\n  <div class="flex-item">3</div>\n</div>',
+          },
+          "align-items": {
+            desc: "Alinha itens no eixo transversal",
+            values: [
+              "flex-start",
+              "flex-end",
+              "center",
+              "stretch (esticar)",
+              "baseline",
+            ],
+            example:
+              ".flex-alinhado {\n  display: flex;\n  align-items: center;\n  background-color: #ecf0f1;\n  padding: 10px;\n  height: 150px;\n  gap: 10px;\n}\n\n.flex-item {\n  background-color: #2ecc71;\n  color: white;\n  padding: 15px;\n}",
+            html: '<div class="flex-alinhado">\n  <div class="flex-item">Item centralizado</div>\n  <div class="flex-item">Verticalmente</div>\n</div>',
+          },
+          "flex-wrap": {
+            desc: "Define se os itens devem quebrar linha",
+            values: ["nowrap (não quebra)", "wrap (quebra)", "wrap-reverse"],
+            example:
+              ".flex-quebra {\n  display: flex;\n  flex-wrap: wrap;\n  background-color: #ecf0f1;\n  padding: 10px;\n  gap: 10px;\n}\n\n.flex-item {\n  background-color: #f39c12;\n  color: white;\n  padding: 15px;\n  min-width: 100px;\n}",
+            html: '<div class="flex-quebra">\n  <div class="flex-item">1</div>\n  <div class="flex-item">2</div>\n  <div class="flex-item">3</div>\n  <div class="flex-item">4</div>\n  <div class="flex-item">5</div>\n</div>',
+          },
+          gap: {
+            desc: "Define espaçamento entre itens flex/grid",
+            values: ["px, em, rem", "gap: 10px 20px (linha coluna)"],
+            example:
+              ".flex-gap {\n  display: flex;\n  gap: 20px;\n  background-color: #ecf0f1;\n  padding: 10px;\n}\n\n.flex-item {\n  background-color: #1abc9c;\n  color: white;\n  padding: 15px;\n}",
+            html: '<div class="flex-gap">\n  <div class="flex-item">Item 1</div>\n  <div class="flex-item">Item 2</div>\n  <div class="flex-item">Item 3</div>\n</div>',
+          },
+        },
+        Grid: {
+          "display: grid": {
+            desc: "Ativa o layout grid no container",
+            values: ["grid", "inline-grid"],
+            example:
+              ".grid-container {\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr;\n  gap: 10px;\n  background-color: #ecf0f1;\n  padding: 10px;\n}\n\n.grid-item {\n  background-color: #3498db;\n  color: white;\n  padding: 20px;\n  text-align: center;\n}",
+            html: '<div class="grid-container">\n  <div class="grid-item">1</div>\n  <div class="grid-item">2</div>\n  <div class="grid-item">3</div>\n  <div class="grid-item">4</div>\n  <div class="grid-item">5</div>\n  <div class="grid-item">6</div>\n</div>',
+          },
+          "grid-template-columns": {
+            desc: "Define as colunas do grid",
+            values: ["px, %, fr (fração)", "repeat(3, 1fr)", "auto"],
+            example:
+              ".grid-colunas {\n  display: grid;\n  grid-template-columns: 200px 1fr 1fr;\n  gap: 10px;\n  background-color: #ecf0f1;\n  padding: 10px;\n}\n\n.grid-item {\n  background-color: #9b59b6;\n  color: white;\n  padding: 20px;\n  text-align: center;\n}",
+            html: '<div class="grid-colunas">\n  <div class="grid-item">200px</div>\n  <div class="grid-item">1fr</div>\n  <div class="grid-item">1fr</div>\n</div>',
+          },
+          "grid-template-rows": {
+            desc: "Define as linhas do grid",
+            values: ["px, %, fr (fração)", "repeat(3, 100px)", "auto"],
+            example:
+              ".grid-linhas {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  grid-template-rows: 100px 50px;\n  gap: 10px;\n  background-color: #ecf0f1;\n  padding: 10px;\n}\n\n.grid-item {\n  background-color: #e74c3c;\n  color: white;\n  padding: 20px;\n  text-align: center;\n}",
+            html: '<div class="grid-linhas">\n  <div class="grid-item">100px altura</div>\n  <div class="grid-item">100px altura</div>\n  <div class="grid-item">50px altura</div>\n  <div class="grid-item">50px altura</div>\n</div>',
+          },
+          "grid-column": {
+            desc: "Define a posição da coluna do item",
+            values: [
+              "número/número (início/fim)",
+              "span número (ocupar N colunas)",
+            ],
+            example:
+              ".grid-span {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 10px;\n  background-color: #ecf0f1;\n  padding: 10px;\n}\n\n.grid-item {\n  background-color: #2ecc71;\n  color: white;\n  padding: 20px;\n  text-align: center;\n}\n\n.item-largo {\n  grid-column: span 2;\n  background-color: #f39c12;\n}",
+            html: '<div class="grid-span">\n  <div class="grid-item item-largo">Ocupa 2 colunas</div>\n  <div class="grid-item">1</div>\n  <div class="grid-item">2</div>\n  <div class="grid-item">3</div>\n</div>',
+          },
+        },
+        Transformações: {
+          transform: {
+            desc: "Aplica transformações 2D/3D ao elemento",
+            values: [
+              "translate(x, y)",
+              "rotate(deg)",
+              "scale(x, y)",
+              "skew(x, y)",
+            ],
+            example:
+              ".rotacionado {\n  transform: rotate(10deg);\n  background-color: #3498db;\n  color: white;\n  padding: 20px;\n  display: inline-block;\n}\n\n.escalado {\n  transform: scale(1.2);\n  background-color: #e74c3c;\n  color: white;\n  padding: 20px;\n  display: inline-block;\n  margin-left: 20px;\n}",
+            html: '<div class="rotacionado">Rotacionado 10°</div>\n<div class="escalado">Escalado 1.2x</div>',
+          },
+          transition: {
+            desc: "Define transições suaves entre estados",
+            values: [
+              "propriedade duração timing-function delay",
+              "all 0.3s ease",
+            ],
+            example:
+              ".com-transicao {\n  background-color: #3498db;\n  color: white;\n  padding: 20px;\n  transition: all 0.3s ease;\n}\n\n.com-transicao:hover {\n  background-color: #e74c3c;\n  transform: scale(1.1);\n}",
+            html: '<div class="com-transicao">Passe o mouse aqui</div>',
+          },
+          animation: {
+            desc: "Aplica animação ao elemento",
+            values: [
+              "nome duração timing-function delay iteration-count direction",
+            ],
+            example:
+              "@keyframes pulsar {\n  0%, 100% { transform: scale(1); }\n  50% { transform: scale(1.1); }\n}\n\n.animado {\n  background-color: #9b59b6;\n  color: white;\n  padding: 20px;\n  animation: pulsar 2s infinite;\n}",
+            html: '<div class="animado">Elemento animado</div>',
+          },
+        },
+        Responsividade: {
+          "media queries": {
+            desc: "Aplica estilos baseados em condições (largura de tela, etc)",
+            values: [
+              "@media (max-width: 768px) { ... }",
+              "@media (min-width: 1024px) { ... }",
+            ],
+            example:
+              ".responsivo {\n  background-color: #3498db;\n  color: white;\n  padding: 20px;\n}\n\n@media (max-width: 600px) {\n  .responsivo {\n    background-color: #e74c3c;\n  }\n}",
+            html: '<div class="responsivo">Muda de cor em telas pequenas (redimensione a janela)</div>',
+          },
+          "max-width": {
+            desc: "Define largura máxima do elemento",
+            values: ["px, %, em, rem", "none (sem limite)"],
+            example:
+              ".largura-maxima {\n  max-width: 400px;\n  background-color: #2ecc71;\n  color: white;\n  padding: 20px;\n  margin: 0 auto;\n}",
+            html: '<div class="largura-maxima">Largura máxima de 400px, centralizado</div>',
+          },
+          "min-width": {
+            desc: "Define largura mínima do elemento",
+            values: ["px, %, em, rem"],
+            example:
+              ".largura-minima {\n  min-width: 200px;\n  background-color: #f39c12;\n  color: white;\n  padding: 20px;\n  display: inline-block;\n}",
+            html: '<div class="largura-minima">Largura mínima de 200px</div>',
+          },
+        },
+        Outros: {
+          cursor: {
+            desc: "Define o cursor do mouse",
+            values: [
+              "pointer (mãozinha)",
+              "default",
+              "text",
+              "move",
+              "not-allowed",
+              "wait",
+            ],
+            example:
+              ".cursor-pointer {\n  cursor: pointer;\n  background-color: #3498db;\n  color: white;\n  padding: 15px;\n  display: inline-block;\n}\n\n.cursor-nao-permitido {\n  cursor: not-allowed;\n  background-color: #e74c3c;\n  color: white;\n  padding: 15px;\n  display: inline-block;\n  margin-left: 10px;\n}",
+            html: '<div class="cursor-pointer">Cursor pointer</div>\n<div class="cursor-nao-permitido">Cursor não permitido</div>',
+          },
+          overflow: {
+            desc: "Define o comportamento do conteúdo que ultrapassa o container",
+            values: [
+              "visible (visível)",
+              "hidden (oculto)",
+              "scroll (barra de rolagem)",
+              "auto",
+            ],
+            example:
+              ".overflow-hidden {\n  width: 200px;\n  height: 80px;\n  overflow: hidden;\n  background-color: #ecf0f1;\n  border: 2px solid #333;\n  padding: 10px;\n}\n\n.overflow-scroll {\n  width: 200px;\n  height: 80px;\n  overflow: scroll;\n  background-color: #ecf0f1;\n  border: 2px solid #333;\n  padding: 10px;\n  margin-top: 10px;\n}",
+            html: '<div class="overflow-hidden">Este é um texto muito longo que ultrapassa o container e será cortado porque o overflow está hidden.</div>\n<div class="overflow-scroll">Este é um texto muito longo que ultrapassa o container mas você pode rolar para ver todo o conteúdo.</div>',
+          },
+          visibility: {
+            desc: "Define se o elemento é visível (mantém espaço)",
+            values: [
+              "visible (visível)",
+              "hidden (invisível mas mantém espaço)",
+              "collapse",
+            ],
+            example:
+              ".visivel {\n  visibility: visible;\n  background-color: #2ecc71;\n  color: white;\n  padding: 15px;\n}\n\n.invisivel {\n  visibility: hidden;\n  background-color: #e74c3c;\n  color: white;\n  padding: 15px;\n}",
+            html: '<div class="visivel">Elemento visível</div>\n<div class="invisivel">Elemento invisível (mas ocupa espaço)</div>\n<div class="visivel">Elemento visível depois do invisível</div>',
+          },
+          "list-style": {
+            desc: "Define o estilo de marcadores de lista",
+            values: [
+              "none (sem marcador)",
+              "disc, circle, square",
+              "decimal, lower-alpha, upper-roman",
+            ],
+            example:
+              ".lista-sem-marcador {\n  list-style: none;\n}\n\n.lista-quadrado {\n  list-style: square;\n}\n\n.lista-numeros {\n  list-style: decimal;\n}",
+            html: '<ul class="lista-sem-marcador">\n  <li>Sem marcador</li>\n  <li>Item 2</li>\n</ul>\n<ul class="lista-quadrado">\n  <li>Quadrado</li>\n  <li>Item 2</li>\n</ul>\n<ol class="lista-numeros">\n  <li>Número</li>\n  <li>Item 2</li>\n</ol>',
+          },
+        },
+      };
+
+      let currentExample = "";
+      let currentHtml = "";
+
+      function renderCategories() {
+        const container = document.getElementById("propertyCategories");
+        container.innerHTML = "";
+
+        Object.keys(cssProperties).forEach((category, index) => {
+          const categoryDiv = document.createElement("div");
+          categoryDiv.className = "category";
+          if (index === 0) categoryDiv.classList.add("active");
+
+          const categoryTitle = document.createElement("div");
+          categoryTitle.className = "category-title";
+          categoryTitle.innerHTML = `${category} <span class="arrow">▶</span>`;
+          categoryTitle.onclick = () => categoryDiv.classList.toggle("active");
+
+          const propertyList = document.createElement("div");
+          propertyList.className = "property-list";
+
+          Object.keys(cssProperties[category]).forEach((prop) => {
+            const propItem = document.createElement("div");
+            propItem.className = "property-item";
+            propItem.textContent = prop;
+            propItem.onclick = () => showPropertyInfo(prop, category);
+            propertyList.appendChild(propItem);
+          });
+
+          categoryDiv.appendChild(categoryTitle);
+          categoryDiv.appendChild(propertyList);
+          container.appendChild(categoryDiv);
+        });
+      }
+
+      function showPropertyInfo(property, category) {
+        const propData = cssProperties[category][property];
+        const panel = document.getElementById("infoPanel");
+
+        document.querySelectorAll(".property-item").forEach((item) => {
+          item.classList.remove("active");
+        });
+        event.target.classList.add("active");
+
+        currentExample = propData.example;
+        currentHtml = propData.html;
+
+        panel.innerHTML = `
+                <h1>${property}</h1>
+                <p class="description">${propData.desc}</p>
+                
+                <div class="values">
+                    <h3>📋 Valores Possíveis:</h3>
+                    ${propData.values
+                      .map(
+                        (value) => `
+                        <div class="value-item">
+                            <strong>${value.split(" -")[0]}</strong> ${value.includes(" -") ? "- " + value.split(" -")[1] : ""}
+                        </div>
+                    `,
+                      )
+                      .join("")}
+                </div>
+
+                <h3 style="margin-top: 25px; color: #2a5298;">💻 Exemplo de código CSS:</h3>
+                <div class="example-code">${escapeHtml(propData.example)}</div>
+                
+                <h3 style="margin-top: 20px; color: #2a5298;">📄 HTML usado no exemplo:</h3>
+                <div class="example-code">${escapeHtml(propData.html)}</div>
+                
+                <button onclick="loadExample()" style="margin-top: 15px;">📋 Copiar para o Playground</button>
+            `;
+      }
+
+      function escapeHtml(text) {
+        return text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function updatePreview() {
+        const css = document.getElementById("cssEditor").value;
+        const preview = document.getElementById("preview");
+
+        // Remove estilo anterior
+        const oldStyle = document.getElementById("preview-style");
+        if (oldStyle) oldStyle.remove();
+
+        // Adiciona novo estilo
+        const style = document.createElement("style");
+        style.id = "preview-style";
+        style.textContent = css;
+        document.head.appendChild(style);
+      }
+
+      function clearEditor() {
+        document.getElementById("cssEditor").value = "";
+        document.getElementById("preview").innerHTML = "";
+        const oldStyle = document.getElementById("preview-style");
+        if (oldStyle) oldStyle.remove();
+      }
+
+      function loadExample() {
+        if (currentExample && currentHtml) {
+          document.getElementById("cssEditor").value = currentExample;
+          document.getElementById("preview").innerHTML = currentHtml;
+          updatePreview();
+        }
+      }
+
+      // Atualização automática enquanto digita
+      document.addEventListener("DOMContentLoaded", () => {
+        renderCategories();
+
+        const editor = document.getElementById("cssEditor");
+        let timeout;
+        editor.addEventListener("input", () => {
+          clearTimeout(timeout);
+          timeout = setTimeout(updatePreview, 500);
+        });
+
+        // Busca de propriedades
+        const searchBox = document.getElementById("searchBox");
+        searchBox.addEventListener("input", (e) => {
+          const search = e.target.value.toLowerCase();
+          document.querySelectorAll(".property-item").forEach((item) => {
+            const propName = item.textContent.toLowerCase();
+            if (propName.includes(search)) {
+              item.style.display = "block";
+            } else {
+              item.style.display = "none";
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
