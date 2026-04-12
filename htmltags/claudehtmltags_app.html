@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aprendizado Interativo de HTML</title>
+    <style>
+      ::root {
+        --dim-contornos: 0px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+        background-color: #0865e9;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 240px 1fr;
+        gap: 20px;
+        height: calc(100vh - 40px);
+      }
+
+      .sidebar {
+        background: white;
+        border-radius: var(--dim-contornos, 0px);
+        padding: 20px;
+        overflow-y: auto;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        box-shadow: 0px 0px 9px 6px #00000033;
+      }
+
+      .sidebar::-webkit-scrollbar {
+        width: 8px;
+        background: white;
+      }
+
+      .sidebar::-webkit-scrollbar-thumb {
+        width: 8px;
+        background: #667eea;
+      }
+
+      .sidebar::-webkit-scrollbar-thumb:hover {
+        width: 8px;
+        background: #8a9df5;
+      }
+
+      .sidebar h2 {
+        color: #667eea;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+      }
+
+      .category {
+        margin-bottom: 20px;
+      }
+
+      .category-title {
+        background: #f0f0f0;
+        padding: 8px 12px;
+        /* border-radius: 8px; */
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 8px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .category-title:hover {
+        background: #e0e0e0;
+      }
+
+      .tag-list {
+        display: none;
+        padding-left: 10px;
+      }
+
+      .category.active .tag-list {
+        display: block;
+      }
+
+      .tag-item {
+        padding: 8px 12px;
+        margin: 4px 0;
+        background: #f8f8f8;
+        /* border-radius: 6px; */
+        cursor: pointer;
+        transition: all 0.2s;
+        border-left: 3px solid transparent;
+      }
+
+      .tag-item:hover {
+        background: #0865e9;
+        color: white;
+        /* border-left-color: #764ba2; */
+        transform: translateX(5px);
+      }
+
+      .tag-item.active {
+        background: #0865e9;
+        color: white;
+        border-left-color: #764ba2;
+      }
+
+      .main-content {
+        display: grid;
+        grid-template-rows: auto 1fr;
+        gap: 20px;
+      }
+
+      .info-panel {
+        background: white;
+        border-radius: var(--dim-contornos, 0px);
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        overflow-y: auto;
+        box-shadow: 0px 0px 9px 6px #00000033;
+      }
+
+      .info-panel h1 {
+        color: #667eea;
+        margin-bottom: 10px;
+      }
+
+      .info-panel .description {
+        color: #666;
+        margin-bottom: 20px;
+        font-size: 1.1em;
+      }
+
+      .attributes {
+        margin-top: 20px;
+      }
+
+      .attributes h3 {
+        color: #764ba2;
+        margin-bottom: 15px;
+      }
+
+      .attribute-item {
+        background: #f8f8f8;
+        padding: 12px;
+        margin: 10px 0;
+        /* border-radius: 8px; */
+        border-left: 4px solid #667eea;
+      }
+
+      .attribute-item strong {
+        color: #667eea;
+      }
+
+      .playground {
+        background: white;
+        border-radius: var(--dim-contornos, 0px);
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        gap: 15px;
+        box-shadow: 0px 0px 9px 6px #00000033;
+      }
+
+      .playground h2 {
+        color: #667eea;
+      }
+
+      .editor-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        height: 100%;
+      }
+
+      .editor-container,
+      .preview-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .editor-container label,
+      .preview-container label {
+        font-weight: bold;
+        color: #333;
+      }
+
+      #codeEditor {
+        width: 100%;
+        height: 100%;
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+        padding: 15px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        resize: none;
+        background: #f9f9f9;
+      }
+
+      #codeEditor:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      #preview {
+        width: 100%;
+        height: 100%;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        background: white;
+        padding: 15px;
+        overflow: auto;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 10px;
+      }
+
+      button {
+        background: #0865e9;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.2s;
+      }
+
+      button:hover {
+        background: #764ba2;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .example-code {
+        background: #898989;
+        color: #f8f8f8;
+        padding: 15px;
+        /* border-radius: 8px; */
+        margin: 15px 0;
+        overflow-x: auto;
+        font-family: "Courier New", monospace;
+        font-size: 13px;
+      }
+
+      .arrow {
+        transition: transform 0.2s;
+      }
+
+      .category.active .arrow {
+        transform: rotate(90deg);
+      }
+
+      .search-box {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        font-size: 14px;
+      }
+
+      .search-box:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      @media (max-width: 1024px) {
+        .container {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto 1fr;
+        }
+
+        .sidebar {
+          max-height: 300px;
+        }
+
+        .editor-section {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="sidebar">
+        <h2>📚 Tags HTML</h2>
+        <input
+          type="text"
+          class="search-box"
+          id="searchBox"
+          placeholder="Buscar tag..."
+        />
+        <div id="tagCategories"></div>
+      </div>
+
+      <div class="main-content">
+        <div class="info-panel" id="infoPanel">
+          <h1>Bem-vindo ao Aprendizado Interativo de HTML! 🚀</h1>
+          <p class="description">
+            Selecione uma tag no menu lateral para ver sua descrição, atributos
+            e exemplos. Você pode testar o código diretamente no playground
+            abaixo!
+          </p>
+        </div>
+
+        <div class="playground">
+          <h2>🎮 Playground Interativo</h2>
+          <div class="editor-section">
+            <div class="editor-container">
+              <label for="codeEditor">Digite seu código HTML:</label>
+              <textarea
+                id="codeEditor"
+                placeholder="Digite seu código HTML aqui..."
+              ></textarea>
+            </div>
+            <div class="preview-container">
+              <label>Visualização ao vivo:</label>
+              <div id="preview"></div>
+            </div>
+          </div>
+          <div class="button-group">
+            <button onclick="updatePreview()">▶️ Executar</button>
+            <button onclick="clearEditor()">🗑️ Limpar</button>
+            <button onclick="loadExample()">💡 Ver Exemplo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const htmlTags = {
+        Estrutura: {
+          html: {
+            desc: "Tag raiz do documento HTML",
+            attrs: [
+              "lang (idioma do documento)",
+              "dir (direção do texto: ltr/rtl)",
+            ],
+            example:
+              '<html lang="pt-BR">\n  <head>\n    <title>Minha Página</title>\n  </head>\n  <body>\n    <h1>Olá Mundo!</h1>\n  </body>\n</html>',
+          },
+          head: {
+            desc: "Contém metadados sobre o documento",
+            attrs: ["Apenas atributos globais"],
+            example:
+              '<head>\n  <meta charset="UTF-8">\n  <title>Título da Página</title>\n  <link rel="stylesheet" href="style.css">\n</head>',
+          },
+          body: {
+            desc: "Contém o conteúdo visível da página",
+            attrs: [
+              "onload (executa ao carregar)",
+              "onunload (executa ao fechar)",
+            ],
+            example:
+              "<body>\n  <h1>Bem-vindo!</h1>\n  <p>Este é o conteúdo visível.</p>\n</body>",
+          },
+          title: {
+            desc: "Define o título da página (aparece na aba)",
+            attrs: ["Sem atributos específicos"],
+            example: "<title>Meu Site - Página Inicial</title>",
+          },
+          meta: {
+            desc: "Define metadados sobre o documento",
+            attrs: [
+              "charset (codificação)",
+              "name (tipo de metadado)",
+              "content (conteúdo)",
+            ],
+            example:
+              '<meta charset="UTF-8">\n<meta name="description" content="Descrição da página">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">',
+          },
+        },
+        Texto: {
+          h1: {
+            desc: "Título principal (nível 1 - mais importante)",
+            attrs: ["Atributos globais (id, class, style, etc.)"],
+            example:
+              "<h1>Este é o Título Principal</h1>\n<h2>Subtítulo</h2>\n<h3>Seção</h3>",
+          },
+          p: {
+            desc: "Parágrafo de texto",
+            attrs: ["Atributos globais"],
+            example:
+              "<p>Este é um parágrafo de texto normal.</p>\n<p>Este é outro parágrafo com mais informações.</p>",
+          },
+          strong: {
+            desc: "Texto com forte ênfase (negrito semântico)",
+            attrs: ["Atributos globais"],
+            example:
+              "<p>Isso é <strong>muito importante</strong> de saber!</p>",
+          },
+          em: {
+            desc: "Texto com ênfase (itálico semântico)",
+            attrs: ["Atributos globais"],
+            example: "<p>Isso é <em>realmente</em> interessante.</p>",
+          },
+          br: {
+            desc: "Quebra de linha (tag vazia)",
+            attrs: ["Sem atributos específicos"],
+            example: "<p>Primeira linha<br>Segunda linha<br>Terceira linha</p>",
+          },
+          mark: {
+            desc: "Texto marcado/destacado",
+            attrs: ["Atributos globais"],
+            example:
+              "<p>Texto com <mark>destaque amarelo</mark> importante.</p>",
+          },
+          code: {
+            desc: "Código de computador inline",
+            attrs: ["Atributos globais"],
+            example:
+              "<p>Use a função <code>console.log()</code> para imprimir no console.</p>",
+          },
+          pre: {
+            desc: "Texto pré-formatado (preserva espaços)",
+            attrs: ["Atributos globais"],
+            example: "<pre>\nfunção soma(a, b) {\n  return a + b;\n}\n</pre>",
+          },
+        },
+        Listas: {
+          ul: {
+            desc: "Lista não ordenada (bullets)",
+            attrs: ["Atributos globais"],
+            example:
+              "<ul>\n  <li>Item 1</li>\n  <li>Item 2</li>\n  <li>Item 3</li>\n</ul>",
+          },
+          ol: {
+            desc: "Lista ordenada (numerada)",
+            attrs: [
+              "type (tipo: 1, A, a, I, i)",
+              "start (número inicial)",
+              "reversed (ordem reversa)",
+            ],
+            example:
+              '<ol type="A" start="3">\n  <li>Item C</li>\n  <li>Item D</li>\n  <li>Item E</li>\n</ol>',
+          },
+          li: {
+            desc: "Item de lista",
+            attrs: ["value (valor em listas ordenadas)"],
+            example:
+              "<ul>\n  <li>Café</li>\n  <li>Chá</li>\n  <li>Leite</li>\n</ul>",
+          },
+        },
+        "Links e Mídia": {
+          a: {
+            desc: "Hyperlink (link para outra página ou recurso)",
+            attrs: [
+              "href (URL de destino)",
+              "target (_blank, _self)",
+              "rel (relação)",
+              "download",
+            ],
+            example:
+              '<a href="https://google.com" target="_blank">Ir para Google</a>\n<a href="#secao">Link interno</a>',
+          },
+          img: {
+            desc: "Imagem (tag vazia)",
+            attrs: [
+              "src (URL da imagem) *obrigatório",
+              "alt (texto alternativo) *obrigatório",
+              "width",
+              "height",
+            ],
+            example:
+              '<img src="https://via.placeholder.com/300x200" alt="Imagem de exemplo" width="300">',
+          },
+          video: {
+            desc: "Vídeo incorporado",
+            attrs: [
+              "src (URL do vídeo)",
+              "controls (mostra controles)",
+              "autoplay",
+              "loop",
+              "muted",
+            ],
+            example:
+              '<video width="400" controls>\n  <source src="video.mp4" type="video/mp4">\n  Seu navegador não suporta vídeo.\n</video>',
+          },
+          audio: {
+            desc: "Áudio incorporado",
+            attrs: ["src (URL do áudio)", "controls", "autoplay", "loop"],
+            example:
+              '<audio controls>\n  <source src="audio.mp3" type="audio/mpeg">\n  Seu navegador não suporta áudio.\n</audio>',
+          },
+        },
+        Tabelas: {
+          table: {
+            desc: "Define uma tabela",
+            attrs: ["Atributos globais"],
+            example:
+              '<table border="1">\n  <tr>\n    <th>Nome</th>\n    <th>Idade</th>\n  </tr>\n  <tr>\n    <td>João</td>\n    <td>25</td>\n  </tr>\n</table>',
+          },
+          tr: {
+            desc: "Linha da tabela",
+            attrs: ["Atributos globais"],
+            example:
+              '<table border="1">\n  <tr>\n    <td>Célula 1</td>\n    <td>Célula 2</td>\n  </tr>\n</table>',
+          },
+          td: {
+            desc: "Célula de dados",
+            attrs: ["colspan (mesclar colunas)", "rowspan (mesclar linhas)"],
+            example:
+              '<table border="1">\n  <tr>\n    <td colspan="2">Célula mesclada</td>\n  </tr>\n  <tr>\n    <td>Normal</td>\n    <td>Normal</td>\n  </tr>\n</table>',
+          },
+          th: {
+            desc: "Célula de cabeçalho",
+            attrs: ["colspan", "rowspan", "scope (row, col)"],
+            example:
+              '<table border="1">\n  <tr>\n    <th>Nome</th>\n    <th>Email</th>\n  </tr>\n  <tr>\n    <td>Ana</td>\n    <td>ana@email.com</td>\n  </tr>\n</table>',
+          },
+        },
+        Formulários: {
+          form: {
+            desc: "Formulário para entrada de dados",
+            attrs: [
+              "action (URL de envio)",
+              "method (GET/POST)",
+              "enctype (codificação)",
+            ],
+            example:
+              '<form action="/submit" method="POST">\n  <label>Nome: <input type="text" name="nome"></label>\n  <button type="submit">Enviar</button>\n</form>',
+          },
+          input: {
+            desc: "Campo de entrada (vários tipos)",
+            attrs: [
+              "type (text, email, password, number, etc.)",
+              "name",
+              "value",
+              "placeholder",
+              "required",
+            ],
+            example:
+              '<input type="text" placeholder="Seu nome" required>\n<input type="email" placeholder="email@exemplo.com">\n<input type="checkbox" name="aceito"> Aceito',
+          },
+          textarea: {
+            desc: "Campo de texto multilinha",
+            attrs: [
+              "rows (linhas)",
+              "cols (colunas)",
+              "placeholder",
+              "maxlength",
+            ],
+            example:
+              '<textarea rows="4" cols="50" placeholder="Escreva sua mensagem...">\n</textarea>',
+          },
+          select: {
+            desc: "Lista de seleção (dropdown)",
+            attrs: ["name", "multiple (múltiplas seleções)", "size"],
+            example:
+              '<select name="pais">\n  <option value="br">Brasil</option>\n  <option value="pt">Portugal</option>\n  <option value="us">EUA</option>\n</select>',
+          },
+          button: {
+            desc: "Botão clicável",
+            attrs: ["type (submit, reset, button)", "name", "value"],
+            example:
+              '<button type="button" onclick="alert(\'Olá!\')">Clique aqui</button>\n<button type="submit">Enviar</button>',
+          },
+          label: {
+            desc: "Rótulo para campo de formulário",
+            attrs: ["for (id do campo associado)"],
+            example:
+              '<label for="email">Email:</label>\n<input type="email" id="email" name="email">',
+          },
+        },
+        Containers: {
+          div: {
+            desc: "Container genérico de bloco",
+            attrs: ["Atributos globais (id, class são os mais usados)"],
+            example:
+              '<div class="container">\n  <h2>Título da Seção</h2>\n  <p>Conteúdo agrupado.</p>\n</div>',
+          },
+          span: {
+            desc: "Container genérico inline",
+            attrs: ["Atributos globais"],
+            example:
+              '<p>Texto com <span style="color: red;">parte destacada</span> em vermelho.</p>',
+          },
+          header: {
+            desc: "Cabeçalho de seção ou página",
+            attrs: ["Atributos globais"],
+            example:
+              '<header>\n  <h1>Meu Site</h1>\n  <nav>\n    <a href="/">Início</a>\n  </nav>\n</header>',
+          },
+          nav: {
+            desc: "Seção de navegação",
+            attrs: ["Atributos globais"],
+            example:
+              '<nav>\n  <ul>\n    <li><a href="/">Início</a></li>\n    <li><a href="/sobre">Sobre</a></li>\n    <li><a href="/contato">Contato</a></li>\n  </ul>\n</nav>',
+          },
+          main: {
+            desc: "Conteúdo principal da página",
+            attrs: ["Atributos globais"],
+            example:
+              "<main>\n  <h1>Página Principal</h1>\n  <article>Conteúdo...</article>\n</main>",
+          },
+          section: {
+            desc: "Seção genérica de conteúdo",
+            attrs: ["Atributos globais"],
+            example:
+              "<section>\n  <h2>Sobre Nós</h2>\n  <p>Informações da empresa...</p>\n</section>",
+          },
+          article: {
+            desc: "Conteúdo independente e autossuficiente",
+            attrs: ["Atributos globais"],
+            example:
+              "<article>\n  <h2>Notícia do Dia</h2>\n  <p>Conteúdo da notícia...</p>\n</article>",
+          },
+          footer: {
+            desc: "Rodapé de seção ou página",
+            attrs: ["Atributos globais"],
+            example:
+              "<footer>\n  <p>&copy; 2025 Meu Site</p>\n  <p>Contato: email@exemplo.com</p>\n</footer>",
+          },
+        },
+      };
+
+      let currentExample = "";
+
+      function renderCategories() {
+        const container = document.getElementById("tagCategories");
+        container.innerHTML = "";
+
+        Object.keys(htmlTags).forEach((category, index) => {
+          const categoryDiv = document.createElement("div");
+          categoryDiv.className = "category";
+          if (index === 0) categoryDiv.classList.add("active");
+
+          const categoryTitle = document.createElement("div");
+          categoryTitle.className = "category-title";
+          categoryTitle.innerHTML = `${category} <span class="arrow">▶</span>`;
+          categoryTitle.onclick = () => categoryDiv.classList.toggle("active");
+
+          const tagList = document.createElement("div");
+          tagList.className = "tag-list";
+
+          Object.keys(htmlTags[category]).forEach((tag) => {
+            const tagItem = document.createElement("div");
+            tagItem.className = "tag-item";
+            tagItem.textContent = `<${tag}>`;
+            tagItem.onclick = () => showTagInfo(tag, category);
+            tagList.appendChild(tagItem);
+          });
+
+          categoryDiv.appendChild(categoryTitle);
+          categoryDiv.appendChild(tagList);
+          container.appendChild(categoryDiv);
+        });
+      }
+
+      function showTagInfo(tag, category) {
+        const tagData = htmlTags[category][tag];
+        const panel = document.getElementById("infoPanel");
+
+        document.querySelectorAll(".tag-item").forEach((item) => {
+          item.classList.remove("active");
+        });
+        event.target.classList.add("active");
+
+        currentExample = tagData.example;
+
+        panel.innerHTML = `
+                <h1>&lt;${tag}&gt;</h1>
+                <p class="description">${tagData.desc}</p>
+                
+                <div class="attributes">
+                    <h3>📋 Atributos:</h3>
+                    ${tagData.attrs
+                      .map(
+                        (attr) => `
+                        <div class="attribute-item">
+                            <strong>${attr.split(" ")[0]}</strong> ${attr.substring(attr.indexOf(" "))}
+                        </div>
+                    `,
+                      )
+                      .join("")}
+                </div>
+
+                <h3 style="margin-top: 25px; color: #764ba2;">💻 Exemplo de código:</h3>
+                <div class="example-code">${escapeHtml(tagData.example)}</div>
+                <button onclick="loadExample()" style="margin-top: 15px;">📋 Copiar para o Playground</button>
+            `;
+      }
+
+      function escapeHtml(text) {
+        return text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function updatePreview() {
+        const code = document.getElementById("codeEditor").value;
+        const preview = document.getElementById("preview");
+        preview.innerHTML = code;
+      }
+
+      function clearEditor() {
+        document.getElementById("codeEditor").value = "";
+        document.getElementById("preview").innerHTML = "";
+      }
+
+      function loadExample() {
+        if (currentExample) {
+          document.getElementById("codeEditor").value = currentExample;
+          updatePreview();
+        }
+      }
+
+      // Atualização automática enquanto digita
+      document.addEventListener("DOMContentLoaded", () => {
+        renderCategories();
+
+        const editor = document.getElementById("codeEditor");
+        let timeout;
+        editor.addEventListener("input", () => {
+          clearTimeout(timeout);
+          timeout = setTimeout(updatePreview, 500);
+        });
+
+        // Busca de tags
+        const searchBox = document.getElementById("searchBox");
+        searchBox.addEventListener("input", (e) => {
+          const search = e.target.value.toLowerCase();
+          document.querySelectorAll(".tag-item").forEach((item) => {
+            const tagName = item.textContent.toLowerCase();
+            if (tagName.includes(search)) {
+              item.style.display = "block";
+            } else {
+              item.style.display = "none";
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
