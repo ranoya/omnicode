@@ -703,9 +703,10 @@
         let dx = m_pos - e.x;
         m_pos = e.x;
         if (m_pos > 5 && m_pos < window.innerWidth - 35) {
-          document.getElementById("editor_1").style.width = m_pos - 5 + "px";
+          document.getElementById("editor_1").style.width =
+            "calc(" + m_pos - 5 + "px - 30%)";
           document.getElementById("right_panel").style.width =
-            "calc(80vw - 30px - " + m_pos + "px)";
+            "calc(60vw - 30px - " + m_pos + "px)";
 
           document.getElementById("editor_1").classList.remove("editor100");
           document.getElementById("editor_1").classList.remove("editorfull");
