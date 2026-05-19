@@ -560,7 +560,7 @@
           document.getElementById("right_panel").style.height =
             "calc(100dvh - 175px)";
           document.getElementById("codetour").style.height =
-            "calc(100dvh - 175px)";
+            "calc(100dvh - 195px)";
           document.getElementById("View_editor_1").style.height =
             "calc(100dvh - 175px)";
           document.getElementById("editor_1").style.height =
@@ -703,10 +703,9 @@
         let dx = m_pos - e.x;
         m_pos = e.x;
         if (m_pos > 5 && m_pos < window.innerWidth - 35) {
-          document.getElementById("editor_1").style.width =
-            "calc(" + m_pos - 5 + "px - 30%)";
+          document.getElementById("editor_1").style.width = m_pos - 5 + "px";
           document.getElementById("right_panel").style.width =
-            "calc(60vw - 30px - " + m_pos + "px)";
+            "calc(80vw - 30px - " + m_pos + "px)";
 
           document.getElementById("editor_1").classList.remove("editor100");
           document.getElementById("editor_1").classList.remove("editorfull");
@@ -799,7 +798,7 @@
           document.getElementById("right_panel").style.height =
             "calc(100dvh - (50dvh - 28px))";
           document.getElementById("codetour").style.height =
-            "calc(100dvh - (50dvh - 28px))";
+            "calc(100dvh - (50dvh - 48px))";
           document.getElementById("View_editor_1").style.height =
             "calc(100dvh - (50dvh - 28px))";
 
@@ -824,7 +823,7 @@
           document.getElementById("right_panel").style.height =
             "calc(100dvh - 65px)";
           document.getElementById("codetour").style.height =
-            "calc(100dvh - 65px)";
+            "calc(100dvh - 85px)";
           document.getElementById("View_editor_1").style.height =
             "calc(100dvh - 65px)";
           document.getElementById("temp").innerHTML = "";
@@ -976,7 +975,7 @@
       document.getElementById("View_editor_1").style.height =
         "height: calc(100dvh - 75px)";
       document.getElementById("codetour").style.height =
-        "height: calc(100dvh - 75px)";
+        "height: calc(100dvh - 95px)";
 
       document.getElementById("roda").style.top = "15px";
 
@@ -1006,7 +1005,7 @@
         "calc(100dvh - 75px)";
       document.getElementById("View_editor_1").style.height =
         "calc(100dvh - 75px)";
-      document.getElementById("codetour").style.height = "calc(100dvh - 75px)";
+      document.getElementById("codetour").style.height = "calc(100dvh - 95px)";
 
       document.getElementById("roda").style.top = "24px";
 
