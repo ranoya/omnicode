@@ -199,7 +199,7 @@
 
       #right_panel {
         position: fixed;
-        width: calc(60% - 36px);
+        width: calc(40% - 36px);
         padding-left: 4px;
         height: 100%;
         right: 15px;
@@ -263,9 +263,9 @@
       #codetour {
         position: fixed;
         width: calc(30% - 20px);
-        height: calc(100dvh - 125px);
+        height: calc(100dvh - 85px);
         left: 15px;
-        top: 55px;
+        top: 15px;
         border: 1px solid #cccccc;
         border-right: 0;
         overflow-y: auto;
@@ -559,6 +559,8 @@
             "calc(100dvh - 178px)";
           document.getElementById("right_panel").style.height =
             "calc(100dvh - 175px)";
+          document.getElementById("codetour").style.height =
+            "calc(100dvh - 175px)";
           document.getElementById("View_editor_1").style.height =
             "calc(100dvh - 175px)";
           document.getElementById("editor_1").style.height =
@@ -795,6 +797,8 @@
             "calc(100dvh - (50dvh - 28px))";
           document.getElementById("right_panel").style.height =
             "calc(100dvh - (50dvh - 28px))";
+          document.getElementById("codetour").style.height =
+            "calc(100dvh - (50dvh - 28px))";
           document.getElementById("View_editor_1").style.height =
             "calc(100dvh - (50dvh - 28px))";
 
@@ -817,6 +821,8 @@
           document.getElementById("editor_1").style.height =
             "calc(100dvh - 65px)";
           document.getElementById("right_panel").style.height =
+            "calc(100dvh - 65px)";
+          document.getElementById("codetour").style.height =
             "calc(100dvh - 65px)";
           document.getElementById("View_editor_1").style.height =
             "calc(100dvh - 65px)";
@@ -933,6 +939,8 @@
     ) {
       document.getElementById("editor_1").style.border =
         "1px solid #" + $_GET["bordercolor"];
+      document.getElementById("codetour").style.border =
+        "1px solid #" + $_GET["bordercolor"];
       document.getElementById("resize").style.borderRight =
         "1px solid #" + $_GET["bordercolor"];
       document.getElementById("right_panel").style.border =
@@ -966,6 +974,8 @@
         "height: calc(100dvh - 75px)";
       document.getElementById("View_editor_1").style.height =
         "height: calc(100dvh - 75px)";
+      document.getElementById("codetour").style.height =
+        "height: calc(100dvh - 75px)";
 
       document.getElementById("roda").style.top = "15px";
 
@@ -973,6 +983,7 @@
       document.getElementById("resize").style.border = "0 transparent none";
       document.getElementById("right_panel").style.border =
         "0 transparent none";
+      document.getElementById("codetour").style.border = "0 transparent none";
 
       document.getElementById("resize").style.borderLeft =
         "1px dotted #" + corborda;
@@ -994,6 +1005,7 @@
         "calc(100dvh - 75px)";
       document.getElementById("View_editor_1").style.height =
         "calc(100dvh - 75px)";
+      document.getElementById("codetour").style.height = "calc(100dvh - 75px)";
 
       document.getElementById("roda").style.top = "24px";
 
