@@ -135,6 +135,7 @@
       border-top: 1px solid black;
       border-bottom: 1px solid black;
       margin: 0;
+      background-color: transparent;
     }
 
     #right_panel {
@@ -524,8 +525,6 @@
     const lingua = function (qual) {
       let aceed = ace.edit("editor_1");
       aceed.setKeyboardHandler("ace/keyboard/vscode");
-
-      document.getElementById("tipoliguagem").innerHTML = qual;
 
       if (qual == "html") {
         modoMD = false;
