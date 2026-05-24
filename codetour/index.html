@@ -198,16 +198,12 @@
       }
 
       #right_panel {
-        position: fixed;
-        width: calc(40% - 36px);
-        padding-left: 4px;
-        height: 100%;
-        right: 15px;
-        top: 55px;
-        height: calc(100dvh - 105px);
-        border: 1px solid #cccccc;
-        border-left: 0;
         overflow-y: auto;
+        grid-area: comments;
+        resize: horizontal;
+        min-width: min-content;
+        direction: rtl;
+        border: 1px solid #cccccc;
       }
 
       #roda {
@@ -258,37 +254,28 @@
         height: calc(100dvh - 105px);
         padding: 0;
         margin: 0;
+
+        direction: ltr;
       }
 
       #codetour {
-        position: fixed;
-        width: calc(30% - 20px);
-        height: calc(100dvh - 85px);
-        left: 15px;
-        top: 15px;
         border: 1px solid #cccccc;
-        border-right: 0;
-        overflow-y: auto;
-        margin: 0;
-        padding: 10px;
+        grid-area: settings;
+        overflow-x: hidden;
+        resize: horizontal;
+        min-width: min-content;
         background-color: transparent;
-        z-index: 4900;
       }
 
       #editor_1 {
-        position: fixed;
-        width: 30%;
-        height: calc(100dvh - 105px);
-        left: calc(30% + 15px);
-        top: 55px;
-        border: 1px solid #cccccc;
-        border-right: 0;
         overflow-y: auto;
-        margin: 0;
-        padding: 0;
-        background-color: transparent;
-        z-index: 4900;
         overflow-y: hidden;
+
+        z-index: 1;
+        grid-area: contents;
+        background-color: transparent;
+        border-top: 1px solid #cccccc;
+        border-bottom: 1px solid #cccccc;
       }
 
       .ace_scrollbar::-webkit-scrollbar {
@@ -391,18 +378,39 @@
       .zeraview {
         overflow-x: hidden;
       }
+
+      #parent {
+        --settings-width: min-content;
+        --comments-width: min-content;
+
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        right: 10px;
+        bottom: 10px;
+        display: grid;
+        grid-template:
+          "settings contents comments" 1fr
+          / var(--settings-width) 1fr var(--comments-width);
+      }
     </style>
   </head>
 
   <body>
-    <div id="codetour"></div>
+    <div id="parent">
+      <div id="codetour"></div>
 
-    <pre
-      class="editor codefull"
-      data-name="editor_1"
-      id="editor_1"
-      data-linguagem="html"
-    ></pre>
+      <pre
+        class="editor codefull"
+        data-name="editor_1"
+        id="editor_1"
+        data-linguagem="html"
+      ></pre>
+
+      <div id="right_panel">
+        <iframe id="View_editor_1" frameborder="0"></iframe>
+      </div>
+    </div>
 
     <script>
       if (
@@ -414,12 +422,6 @@
           localStorage.getItem(buffer);
       }
     </script>
-
-    <div id="right_panel">
-      <div id="resize"></div>
-
-      <iframe id="View_editor_1" frameborder="0"></iframe>
-    </div>
 
     <div id="statusbar">
       <div class="linkstatusbar" onclick="tolivecode()">LIVECODE</div>
