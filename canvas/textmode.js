@@ -47,9 +47,9 @@ newframe(
   "https://slidelines.vercel.app/timelineh/?allblocks=true&startmiddle=true&pattern=true&allowverticalscroll=true&timeheight=110&followbg=true&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit?gid=1604470644#gid=1604470644&theme=https://slidelines.vercel.app/level/altsmall.css",
   "Workstations",
   1400,
-  -800,
-  900,
-  600,
+  -1000,
+  1100,
+  800,
 );
 
 connect("Comunicação Digital", "Workstations");
