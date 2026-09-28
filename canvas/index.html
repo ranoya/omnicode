@@ -1218,12 +1218,12 @@
 
       window.openquake = function (id, dados) {
         document.getElementById(id).innerHTML =
-          `<iframe src="https://mrdoob.github.io/three-quake/" style="width:100%;height:100%;border:none;display:block;"></iframe>`;
+          `<iframe src="https://mrdoob.github.io/three-quake/" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="width:100%;height:100%;border:none;display:block;"></iframe>`;
       };
 
       window.openwarphoto = function (id, dados) {
         document.getElementById(id).innerHTML =
-          `<iframe src="https://www.youtube.com/embed/Lt26LC71C1c?si=ppfCZ4LNhGsgXskB&amp;controls=0&amp;autoplay=1" style="width:100%;height:100%;border:none;display:block;"></iframe>`;
+          `<iframe src="https://www.youtube.com/embed/VtYEz4OKCn8?si=_FkvIpfSGMyBS8kg&controls=0&autoplay=1" style="width:100%;height:100%;border:none;display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
       };
 
       window.quake = function () {
@@ -1231,6 +1231,10 @@
       };
 
       window.hello = function () {
+        run("Yeah!", "openwarphoto", {}, 80, 80, 600, 400);
+      };
+
+      window.tortuga = function () {
         run("Yeah!", "openwarphoto", {}, 80, 80, 600, 400);
       };
 
