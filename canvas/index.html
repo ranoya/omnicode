@@ -1231,18 +1231,18 @@
         }
       })();
 
-      document.getElementById("console").style.display = "none !important";
+      document.getElementById("console").style.display = "none";
 
       if (
         typeof $_GET["devmode"] != "undefined" &&
         $_GET["devmode"] != null &&
         $_GET["devmode"] != ""
       ) {
-        document.getElementById("console").style.display = "flex !important";
+        document.getElementById("console").style.display = "flex";
       }
 
       window.devmode = function () {
-        document.getElementById("console").style.display = "flex !important";
+        document.getElementById("console").style.display = "flex";
       };
 
       window.openquake = function (id, dados) {
