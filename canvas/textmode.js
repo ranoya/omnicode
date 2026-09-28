@@ -33,8 +33,8 @@ connect("Modo Texto", "Comunicação Digital");
 newframe(
   "https://omniboards.vercel.app/?nomenu=true&filtra=_DEMOSCENE&limita=0&contentonly=true&titulo=Demoscene&temptheme=narrativas",
   "Demoscene",
-  120,
-  1100,
+  -120,
+  1300,
   900,
   650,
 );
@@ -46,7 +46,7 @@ connect("Demoscene", "Modo Texto");
 newframe(
   "https://slidelines.vercel.app/timelineh/?allblocks=true&startmiddle=true&pattern=true&allowverticalscroll=true&timeheight=110&followbg=true&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit?gid=1604470644#gid=1604470644&theme=https://slidelines.vercel.app/level/altsmall.css",
   "Workstations",
-  1000,
+  1400,
   -800,
   900,
   600,
