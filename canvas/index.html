@@ -1269,6 +1269,11 @@
           `<iframe src="https://mrdoob.github.io/three-quake/" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="width:100%;height:100%;border:none;display:block;"></iframe>`;
       };
 
+      window.openut = function (id, dados) {
+        document.getElementById(id).innerHTML =
+          `<iframe src="https://emupedia.net/emupedia-game-unreal-tournament/" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="width:100%;height:100%;border:none;display:block;"></iframe>`;
+      };
+
       window.openwarphoto = function (id, dados) {
         document.getElementById(id).innerHTML =
           `<iframe src="https://www.youtube.com/embed/VtYEz4OKCn8?si=_FkvIpfSGMyBS8kg&controls=0&autoplay=1" style="width:100%;height:100%;border:none;display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
@@ -1276,6 +1281,18 @@
 
       window.quake = function () {
         run("Quake", "openquake", {});
+      };
+
+      window.ultrakill = function () {
+        run("Unreal", "openut", {});
+      };
+
+      window.monsterkill = function () {
+        run("Unreal", "openut", {});
+      };
+
+      window.rampage = function () {
+        run("Unreal", "openut", {});
       };
 
       window.hello = function () {
