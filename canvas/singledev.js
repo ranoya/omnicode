@@ -4,7 +4,7 @@ newframe(
   "https://booklines.vercel.app/livros/javascript/?go=vars",
   "Javascript",
   800,
-  80,
-  800,
-  900,
+  30,
+  780,
+  880,
 );
