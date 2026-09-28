@@ -1281,6 +1281,13 @@
         });
       };
 
+      window.pcode = function () {
+        permarun("Code " + countcode, "codeeditor", {
+          contagem: countcode,
+          runcontagem: countruncode,
+        });
+      };
+
       window.runcode = function (id, conta, deonde) {
         run("Run " + countruncode, "codeout", {
           fromeditor: id,
