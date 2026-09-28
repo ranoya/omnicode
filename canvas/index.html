@@ -1240,6 +1240,15 @@
         }
       })();
 
+      /*
+      ATENÇÃO
+      É necessário alterar também um trecho do código do contexto:
+
+      updateUIVisibility()
+
+      consoleBar só se modifica se $_GET["devmode"] existir
+      */
+
       document.getElementById("console").style.display = "none";
 
       if (
