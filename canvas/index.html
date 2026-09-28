@@ -352,7 +352,16 @@
         var maximizedCount = 0;
         function updateUIVisibility() {
           var hide = maximizedCount > 0;
-          consoleBar.style.display = hide ? "none" : "";
+
+          // AJUSTE NECESSÁRIO PARA MUDANÇAS MANUAIS
+          if (
+            typeof $_GET["devmode"] != "undefined" &&
+            $_GET["devmode"] != null &&
+            $_GET["devmode"] != ""
+          ) {
+            consoleBar.style.display = hide ? "none" : "";
+          }
+
           viewControls.style.display = hide ? "none" : "";
         }
 
@@ -1243,6 +1252,7 @@
 
       window.devmode = function () {
         document.getElementById("console").style.display = "flex";
+        $_GET["devmode"] = "true";
       };
 
       window.openquake = function (id, dados) {
