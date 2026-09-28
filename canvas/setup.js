@@ -1,6 +1,4 @@
-window.autoexec = function () {
-  setTempTheme("light");
-  devmode();
-  code();
-  hello();
-};
+setTempTheme("light");
+devmode();
+code();
+hello();

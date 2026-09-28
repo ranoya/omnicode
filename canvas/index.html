@@ -1529,8 +1529,7 @@
       ) {
         let scrjs = document.createElement("script");
         scrjs.src = $_GET["plugin"];
-        document.head.appendChild(scrjs);
-        autoexec();
+        document.body.appendChild(scrjs);
       }
     </script>
   </body>
