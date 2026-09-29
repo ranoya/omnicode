@@ -1100,7 +1100,7 @@
             // sobre uma janela, o scroll pertence ao conteúdo dela: sem zoom do canvas
             if (e.target.closest && e.target.closest(".win")) return;
             e.preventDefault();
-            zoomBy(e.deltaY < 0 ? 1.12 : 1 / 1.12, e.clientX, e.clientY);
+            zoomBy(e.deltaY < 0 ? 1.008 : 1 / 1.008, e.clientX, e.clientY);
           },
           { passive: false },
         );
