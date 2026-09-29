@@ -1403,7 +1403,12 @@
             `ipt src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></sc` +
             `ript>
             <scr` +
-            `ipt>`;
+            `ipt>
+            
+            function windowResized() {
+             setup();
+             draw();
+            }`;
         }
 
         code += codex[p.fromeditor];
