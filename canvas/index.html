@@ -1,4 +1,4 @@
-<!doctype html>
+`<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
@@ -220,11 +220,11 @@
       }
       #console {
         position: fixed;
-        left: 12px;
-        right: 64px;
+        left: 50%;
+        transform: translateX(-50%);
         bottom: calc(12px + env(safe-area-inset-bottom, 0px));
         z-index: 9999;
-        max-width: 520px;
+        width: min(520px, calc(100vw - 24px));
         display: flex;
         align-items: center;
         gap: 8px;
@@ -234,6 +234,24 @@
         padding: 8px 10px;
         font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
         font-size: 13px;
+        opacity: 0.55;
+        box-shadow: 0 4px 14px var(--shadow);
+        transition:
+          opacity 0.15s ease,
+          box-shadow 0.15s ease;
+      }
+      /* após o 1º comando, o estado ocioso passa a ser totalmente transparente */
+      #console.used {
+        opacity: 0;
+      }
+      /* passar o mouse sempre mostra translúcido, mesmo já tendo sido usada */
+      #console:hover {
+        opacity: 0.55;
+      }
+      /* em uso (clicada ou com foco via teclado): sempre opaca, por cima de tudo */
+      #console:focus-within {
+        opacity: 1;
+        box-shadow: 0 16px 46px var(--shadow);
       }
       #console .prompt {
         color: var(--accent);
@@ -682,7 +700,7 @@
             '<div class="win-body no-padding">' +
             '<iframe src="' +
             safeUrl +
-            '" style="width:100%;height:100%;border:none;display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>' +
+            '" style="width:100%;height:100%;border:none;display:block;"></iframe>' +
             "</div>";
           return createWindowShell(name, pos, bodyHtml, permanent);
         }
@@ -1169,9 +1187,36 @@
         document.addEventListener("webkitfullscreenchange", updateFsButton);
         updateFsButton();
 
+        // ---- digitar em qualquer lugar (fora de janelas) foca a barra de comando ----
+        var lastMouse = { x: -1, y: -1 };
+        document.addEventListener(
+          "mousemove",
+          function (e) {
+            lastMouse.x = e.clientX;
+            lastMouse.y = e.clientY;
+          },
+          { passive: true },
+        );
+
+        function isTypingTriggerKey(e) {
+          if (e.key === "Enter" || e.key === " ") return true;
+          return e.key.length === 1 && /[a-zA-ZÀ-ÿ]/.test(e.key);
+        }
+        document.addEventListener("keydown", function (e) {
+          if (e.ctrlKey || e.metaKey || e.altKey) return;
+          var ae = document.activeElement;
+          if (ae === cmdInput) return; // já digitando ali, comportamento nativo cuida disso
+          if (ae && ae.closest && ae.closest(".win")) return; // já editando dentro de uma janela
+          if (!isTypingTriggerKey(e)) return;
+          var hoverEl = document.elementFromPoint(lastMouse.x, lastMouse.y);
+          if (hoverEl && hoverEl.closest && hoverEl.closest(".win")) return; // mouse sobre uma janela: não rouba o foco
+          cmdInput.focus();
+        });
+
         function runCommand(raw) {
           var cmd = raw.trim();
           if (!cmd) return;
+          consoleBar.classList.add("used"); // a partir do 1º comando, ela vira transparente quando ociosa
           try {
             // executa a instrução como JavaScript de verdade, com acesso às funções do canvas
             new Function(
