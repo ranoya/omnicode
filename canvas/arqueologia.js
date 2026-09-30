@@ -195,3 +195,36 @@ newframe(
 );
 
 connect("Erthos Albino de Souza", "ASCII Art");
+
+newframe(
+  "https://slidelines.vercel.app/timelineh/?allblocks=true&timeheight=110&followbg=true&startmiddle=true&allblocks=true&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit#gid=13412068&theme=https://slidelines.vercel.app/styles/pixelart.css",
+  "Tranformações na Pixel Art",
+  2430,
+  -1290,
+  720,
+  840,
+);
+
+connect("Tranformações na Pixel Art", "ASCII Art");
+
+newframe(
+  "https://slidelines.vercel.app/timelineh/?allblocks=true&timeheight=110&followbg=true&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit?gid=1898658317#gid=1898658317&theme=https://slidelines.vercel.app/level/hypermedia.css",
+  "Hipertexto",
+  1430,
+  530,
+  880,
+  780,
+);
+
+connect("Projeto", "Hipertexto");
+
+newframe(
+  "https://omniboards.vercel.app/?titulo=text%20mode&limita=0&contentonly=true&filtra=TEXT_MODE_INTERFACE",
+  "Acervo de Interfaces de Texto",
+  -2400,
+  -1450,
+  820,
+  840,
+);
+
+connect("Acervo de Interfaces de Texto", "Acervo de Interfaces de Texto");
