@@ -90,24 +90,56 @@
         padding: 0 0 14px;
       }
 
-      .cell-type {
-        position: absolute;
-        left: 36px;
-        top: -4px;
-        z-index: 4;
-        display: none;
-        font-size: 10px;
-        color: #888;
-        background: white;
-        padding: 2px 5px;
-        border: 1px solid #e5e5e5;
-        border-radius: 4px;
-        pointer-events: none;
+      .code-row {
+        display: grid;
+        grid-template-columns: 34px minmax(0, 1fr);
+        gap: 7px;
+        align-items: start;
       }
 
-      .cell:hover .cell-type,
-      .cell:focus-within .cell-type {
-        display: block;
+      .code-controls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        padding-top: 7px;
+        color: #a0a0a0;
+      }
+
+      .cell-type {
+        font-size: 9px;
+        line-height: 1;
+        color: #999;
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        letter-spacing: 0.02em;
+        user-select: none;
+      }
+
+      .code-toggle {
+        width: 22px;
+        height: 22px;
+        padding: 0;
+        border: 0;
+        border-radius: 4px;
+        background: transparent;
+        color: #999;
+        cursor: pointer;
+        font-size: 12px;
+        line-height: 22px;
+      }
+
+      .code-toggle:hover {
+        background: #f1f1f1;
+        color: #555;
+      }
+
+      .code-hidden .code-editor {
+        display: none;
+      }
+
+      .code-hidden .code-controls {
+        padding-top: 2px;
       }
 
       textarea {
@@ -441,6 +473,69 @@
         let activeCellId = null;
         let contextCellId = null;
 
+        const STORAGE_KEY = "vanilla-notebook-document-v1";
+
+        function saveDocument() {
+          try {
+            localStorage.setItem(
+              STORAGE_KEY,
+              JSON.stringify({
+                nextId,
+                cells: cells.map((cell) => ({
+                  id: cell.id,
+                  code: cell.code,
+                  type: cell.type,
+                  hidden: !!cell.hidden,
+                })),
+              }),
+            );
+          } catch (error) {
+            console.warn(
+              "Não foi possível salvar o documento no localStorage.",
+              error,
+            );
+          }
+        }
+
+        function loadDocument() {
+          try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return false;
+
+            const saved = JSON.parse(raw);
+            if (!saved || !Array.isArray(saved.cells) || !saved.cells.length)
+              return false;
+
+            cells.length = 0;
+            saved.cells.forEach((savedCell) => {
+              cells.push({
+                id: savedCell.id || "cell-" + nextId++,
+                code: typeof savedCell.code === "string" ? savedCell.code : "",
+                type: savedCell.type || "javascript",
+                hidden: !!savedCell.hidden,
+                output: [],
+              });
+            });
+
+            nextId = Math.max(
+              Number(saved.nextId) || 1,
+              ...cells.map((cell) => {
+                const match = String(cell.id).match(/(\d+)$/);
+                return match ? Number(match[1]) + 1 : 1;
+              }),
+            );
+
+            ensureTrailingEmptyCell();
+            return true;
+          } catch (error) {
+            console.warn(
+              "Não foi possível restaurar o documento do localStorage.",
+              error,
+            );
+            return false;
+          }
+        }
+
         function createCell(code = "", type = "javascript") {
           return {
             id: "cell-" + nextId++,
@@ -470,13 +565,16 @@ display(quadrados);`,
 
         cells.push(createCell("", "javascript"));
 
+        const restoredFromStorage = loadDocument();
+
         function isLastCell(cell) {
           return cells[cells.length - 1] === cell;
         }
 
         function ensureTrailingEmptyCell() {
           if (!cells.length || cells[cells.length - 1].code.trim() !== "") {
-            cells.push(createCell(""));
+            const previous = cells[cells.length - 1];
+            cells.push(createCell("", previous ? previous.type : "javascript"));
           }
 
           while (
@@ -538,16 +636,6 @@ display(quadrados);`,
           }
 
           return `<pre>${escapeHtml(String(value))}</pre>`;
-        }
-
-        function renderOutput(cell) {
-          if (!cell.output.length) return "";
-
-          return cell.output
-            .map(
-              (value) => `<div class="output-item">${renderValue(value)}</div>`,
-            )
-            .join("");
         }
 
         function languageFor(type) {
@@ -632,215 +720,6 @@ display(quadrados);`,
 
         window.addEventListener("scroll", closeContextMenu, true);
         window.addEventListener("resize", closeContextMenu);
-
-        function render() {
-          root.innerHTML = "";
-
-          cells.forEach((cell, index) => {
-            const last = isLastCell(cell);
-
-            const article = document.createElement("article");
-            article.className =
-              "cell" +
-              (last && cell.code.trim() === "" ? " empty-cell" : "") +
-              (!last ? " code-cell" : "");
-
-            article.dataset.id = cell.id;
-
-            const gutter = document.createElement("div");
-            gutter.className = "gutter";
-            gutter.title =
-              "Arraste para mover • botão direito para mudar o tipo";
-
-            gutter.addEventListener("contextmenu", (event) => {
-              openContextMenu(event, cell);
-            });
-
-            const content = document.createElement("div");
-            content.className = "cell-content";
-
-            const typeLabel = document.createElement("div");
-            typeLabel.className = "cell-type";
-            typeLabel.textContent =
-              cell.type === "p5"
-                ? "P5.js"
-                : cell.type.charAt(0).toUpperCase() + cell.type.slice(1);
-
-            const output = document.createElement("div");
-            output.className = "output";
-            output.innerHTML = renderOutput(cell);
-
-            const codeEditor = document.createElement("div");
-            codeEditor.className = "code-editor";
-
-            const highlighted = document.createElement("pre");
-            const codeElement = document.createElement("code");
-            codeElement.className = "language-" + languageFor(cell.type);
-            highlighted.appendChild(codeElement);
-
-            const textarea = document.createElement("textarea");
-            textarea.spellcheck = false;
-            textarea.autocomplete = "off";
-            textarea.setAttribute("aria-label", "Código");
-            textarea.value = cell.code;
-
-            function updateHighlight() {
-              codeElement.innerHTML = highlightCode(textarea.value, cell.type);
-              highlighted.scrollTop = textarea.scrollTop;
-              highlighted.scrollLeft = textarea.scrollLeft;
-              resizeTextarea(textarea);
-              highlighted.style.height = textarea.style.height;
-            }
-
-            textarea.addEventListener("input", () => {
-              cell.code = textarea.value;
-              updateHighlight();
-
-              if (isLastCell(cell) && cell.code.trim() !== "") {
-                const selectionStart = textarea.selectionStart;
-                const selectionEnd = textarea.selectionEnd;
-
-                cells.push(createCell("", cell.type));
-                render();
-
-                requestAnimationFrame(() => {
-                  const currentTextarea = document.querySelector(
-                    `[data-id="${cell.id}"] textarea`,
-                  );
-
-                  if (currentTextarea) {
-                    currentTextarea.focus();
-                    currentTextarea.selectionStart = selectionStart;
-                    currentTextarea.selectionEnd = selectionEnd;
-                  }
-                });
-              }
-            });
-
-            textarea.addEventListener("scroll", () => {
-              highlighted.scrollTop = textarea.scrollTop;
-              highlighted.scrollLeft = textarea.scrollLeft;
-            });
-
-            textarea.addEventListener("keydown", (event) => {
-              if (event.key === "Tab") {
-                event.preventDefault();
-
-                const start = textarea.selectionStart;
-                const end = textarea.selectionEnd;
-
-                textarea.value =
-                  textarea.value.slice(0, start) +
-                  "  " +
-                  textarea.value.slice(end);
-
-                textarea.selectionStart = textarea.selectionEnd = start + 2;
-                cell.code = textarea.value;
-                updateHighlight();
-              }
-
-              if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
-                event.preventDefault();
-                executeFromCell(cell.id);
-              }
-            });
-
-            codeEditor.append(highlighted, textarea);
-
-            const tools = document.createElement("div");
-            tools.className = "cell-tools";
-
-            const run = document.createElement("button");
-            run.className = "tool";
-            run.title = "Executar";
-            run.textContent = "▶";
-
-            const remove = document.createElement("button");
-            remove.className = "tool";
-            remove.title = "Excluir célula";
-            remove.textContent = "×";
-
-            run.onclick = () => executeFromCell(cell.id);
-
-            remove.onclick = () => {
-              if (isLastCell(cell)) return;
-
-              const i = cells.indexOf(cell);
-              cells.splice(i, 1);
-              ensureTrailingEmptyCell();
-              render();
-            };
-
-            tools.append(run, remove);
-
-            content.append(output, codeEditor, tools);
-            article.append(gutter, content, typeLabel);
-            root.appendChild(article);
-
-            // Drag somente pelo gutter.
-            gutter.addEventListener("mousedown", () => {
-              article.draggable = true;
-            });
-
-            article.addEventListener("dragstart", (event) => {
-              if (last) {
-                event.preventDefault();
-                article.draggable = false;
-                return;
-              }
-
-              draggedId = cell.id;
-              article.classList.add("dragging");
-              event.dataTransfer.effectAllowed = "move";
-              event.dataTransfer.setData("text/plain", cell.id);
-            });
-
-            article.addEventListener("dragend", () => {
-              article.draggable = false;
-              article.classList.remove("dragging");
-
-              document
-                .querySelectorAll(".drag-over")
-                .forEach((el) => el.classList.remove("drag-over"));
-
-              draggedId = null;
-            });
-
-            article.addEventListener("dragover", (event) => {
-              if (!draggedId || draggedId === cell.id || last) return;
-
-              event.preventDefault();
-              event.dataTransfer.dropEffect = "move";
-              article.classList.add("drag-over");
-            });
-
-            article.addEventListener("dragleave", () => {
-              article.classList.remove("drag-over");
-            });
-
-            article.addEventListener("drop", (event) => {
-              event.preventDefault();
-              article.classList.remove("drag-over");
-
-              if (!draggedId || draggedId === cell.id || last) return;
-
-              const from = cells.findIndex((c) => c.id === draggedId);
-              const to = cells.findIndex((c) => c.id === cell.id);
-
-              if (from < 0 || to < 0) return;
-
-              const [moved] = cells.splice(from, 1);
-              const adjustedTo = from < to ? to - 1 : to;
-
-              cells.splice(adjustedTo, 0, moved);
-
-              render();
-              focusCell(moved.id);
-            });
-
-            updateHighlight();
-          });
-        }
 
         function focusCell(id) {
           requestAnimationFrame(() => {
@@ -1308,16 +1187,49 @@ display(quadrados);`,
             const content = document.createElement("div");
             content.className = "cell-content";
 
+            const output = document.createElement("div");
+            output.className = "output";
+            output.innerHTML = renderOutput(cell);
+
+            const codeRow = document.createElement("div");
+            codeRow.className = "code-row";
+
+            if (cell.hidden) {
+              codeRow.classList.add("code-hidden");
+            }
+
+            const codeControls = document.createElement("div");
+            codeControls.className = "code-controls";
+
             const typeLabel = document.createElement("div");
             typeLabel.className = "cell-type";
             typeLabel.textContent =
               cell.type === "p5"
-                ? "P5.js"
-                : cell.type.charAt(0).toUpperCase() + cell.type.slice(1);
+                ? "P5"
+                : cell.type === "typescript"
+                  ? "TS"
+                  : cell.type === "javascript"
+                    ? "JS"
+                    : cell.type === "markdown"
+                      ? "MD"
+                      : "HTML";
+            typeLabel.title = cell.type === "p5" ? "P5.js" : cell.type;
 
-            const output = document.createElement("div");
-            output.className = "output";
-            output.innerHTML = renderOutput(cell);
+            const toggleCode = document.createElement("button");
+            toggleCode.type = "button";
+            toggleCode.className = "code-toggle";
+            toggleCode.title = cell.hidden
+              ? "Mostrar código"
+              : "Esconder código";
+            toggleCode.setAttribute("aria-label", toggleCode.title);
+            toggleCode.textContent = cell.hidden ? "›" : "‹";
+            toggleCode.onclick = () => {
+              cell.hidden = !cell.hidden;
+              saveDocument();
+              render();
+            };
+
+            codeControls.append(typeLabel, toggleCode);
 
             const codeEditor = document.createElement("div");
             codeEditor.className = "code-editor";
@@ -1347,6 +1259,7 @@ display(quadrados);`,
 
             textarea.addEventListener("input", () => {
               cell.code = textarea.value;
+              saveDocument();
               updateHighlight();
 
               if (isLastCell(cell) && cell.code.trim() !== "") {
@@ -1390,6 +1303,7 @@ display(quadrados);`,
                 textarea.selectionStart = textarea.selectionEnd = start + 2;
 
                 cell.code = textarea.value;
+                saveDocument();
                 updateHighlight();
               }
 
@@ -1400,6 +1314,10 @@ display(quadrados);`,
             });
 
             codeEditor.append(highlighted, textarea);
+
+            // O controle de linguagem e o editor precisam ficar dentro
+            // do bloco de código, para que o código possa ser ocultado.
+            codeRow.append(codeControls, codeEditor);
 
             const tools = document.createElement("div");
             tools.className = "cell-tools";
@@ -1423,13 +1341,14 @@ display(quadrados);`,
               cells.splice(i, 1);
 
               ensureTrailingEmptyCell();
+              saveDocument();
               render();
             };
 
             tools.append(run, remove);
 
-            content.append(output, codeEditor, tools);
-            article.append(gutter, content, typeLabel);
+            content.append(output, codeRow, tools);
+            article.append(gutter, content);
             root.appendChild(article);
 
             gutter.addEventListener("mousedown", () => {
@@ -1489,6 +1408,7 @@ display(quadrados);`,
 
               cells.splice(adjustedTo, 0, moved);
 
+              saveDocument();
               render();
               focusCell(moved.id);
             });
@@ -1498,9 +1418,14 @@ display(quadrados);`,
         }
 
         /*
-         * Primeiro desenho.
+         * Primeiro desenho. Se houver um documento salvo, recalcula para
+         * reconstruir os outputs a partir do código persistido.
          */
         render();
+        if (restoredFromStorage) {
+          const firstCodeCell = cells.find((cell) => cell.code.trim() !== "");
+          if (firstCodeCell) executeFromCell(firstCodeCell.id);
+        }
       })();
     </script>
   </body>
