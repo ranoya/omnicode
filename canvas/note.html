@@ -1260,6 +1260,26 @@ display(quadrados);`,
                 : "Esconder código";
               toggleCode.setAttribute("aria-label", toggleCode.title);
               toggleCode.textContent = cell.hidden ? "›" : "‹";
+
+              /*
+               * Quando o editor volta de display:none para display:block,
+               * o scrollHeight do textarea pode ainda refletir o estado oculto.
+               * Recalculamos depois que o navegador aplicar o novo layout.
+               *
+               * Não usamos render(): o canvas P5 e os demais outputs precisam
+               * permanecer exatamente onde estão.
+               */
+              if (!cell.hidden) {
+                requestAnimationFrame(() => {
+                  updateHighlight();
+
+                  // Um segundo frame garante que o layout já esteja estabilizado
+                  // antes da leitura final de scrollHeight.
+                  requestAnimationFrame(() => {
+                    updateHighlight();
+                  });
+                });
+              }
             };
 
             codeControls.append(typeLabel, toggleCode);
@@ -1456,11 +1476,387 @@ display(quadrados);`,
         }
 
         /*
-         * Primeiro desenho. Se houver um documento salvo, recalcula para
-         * reconstruir os outputs a partir do código persistido.
+         * ---------------------------------------------------------------
+         * Exportação / importação
+         * ---------------------------------------------------------------
          */
+
+        function escapeExportText(value) {
+          return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+        }
+
+        function decodeExportText(value) {
+          const area = document.createElement("textarea");
+          area.innerHTML = value;
+          return area.value;
+        }
+
+        function getExportCells() {
+          return cells
+            .filter((cell) => !isLastCell(cell) || cell.code.trim() !== "")
+            .map((cell) => ({
+              id: cell.id,
+              code: cell.code,
+              type: cell.type,
+              hidden: !!cell.hidden,
+            }));
+        }
+
+        function buildStandaloneCellsDocument(exportedCells) {
+          const blocks = exportedCells
+            .map(
+              (cell, index) => `
+<!-- VANILLA-NOTEBOOK-CELL
+id: ${cell.id}
+type: ${cell.type}
+hidden: ${cell.hidden ? "true" : "false"}
+index: ${index}
+-->
+<textarea class="notebook-source" data-notebook-cell style="display:none">${escapeExportText(cell.code)}</textarea>
+<!-- VANILLA-NOTEBOOK-CELL-END -->`,
+            )
+            .join("\n");
+
+          return `<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Notebook exportado</title>
+<style>
+  body{margin:0;padding:40px 24px 100px;font:15px/1.5 system-ui,sans-serif;color:#242424;background:#fff}
+  #notebook{width:min(900px,100%);margin:auto}
+  .cell{margin:0 0 22px}
+  .cell-header{display:flex;gap:8px;align-items:center;color:#888;font:11px ui-monospace,monospace;margin-bottom:5px}
+  .cell-code{margin:0;padding:12px;background:#f7f7f5;border-radius:6px;white-space:pre-wrap;overflow:auto;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}
+  .cell-code.hidden{display:none}
+  .output{margin-top:7px;padding:8px 12px;border-left:2px solid #ececec;overflow:auto}
+  .output pre{white-space:pre-wrap;font:13px/1.5 ui-monospace,monospace}
+  .error{color:#b42318;white-space:pre-wrap;font:13px/1.5 ui-monospace,monospace}
+  .p5-host{min-height:1px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"><${"/"}script>
+<script src="https://cdn.jsdelivr.net/npm/typescript@5.9.2/lib/typescript.min.js"><${"/"}script>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/p5.min.js"><${"/"}script>
+</head>
+<body>
+<div id="notebook">
+${blocks}
+</div>
+<script>
+(() => {
+  "use strict";
+
+  const sources = [...document.querySelectorAll(".notebook-source")];
+  const cells = sources.map((source, index) => {
+    let start = source.previousSibling;
+    while (start && start.nodeType !== Node.COMMENT) start = start.previousSibling;
+    const comment = start ? start.data : "";
+    const type = (comment.match(/\btype:\s*([^\n]+)/) || [,"javascript"])[1].trim();
+    const hidden = ((comment.match(/\bhidden:\s*(true|false)/) || [,"false"])[1] === "true");
+    return {source, code: source.value, type, hidden, index};
+  });
+
+  const root = document.querySelector("#notebook");
+  const state = Object.create(null);
+  const scope = new Proxy(state, {
+    has(target, property){
+      if(property === Symbol.unscopables) return false;
+      return property in target || property in globalThis;
+    },
+    get(target, property){
+      if(property === Symbol.unscopables) return undefined;
+      return property in target ? target[property] : globalThis[property];
+    },
+    set(target, property, value){target[property] = value; return true;}
+  });
+
+  function transformDeclarations(code){
+    return code.replace(/\b(let|const|var)\s+([A-Za-z_$][\w$]*)/g, "__state.$2");
+  }
+
+  function extractNames(code){
+    const names = new Set();
+    const re = /\b(?:let|const|var)\s+([^;]+)/g;
+    let m;
+    while((m = re.exec(code))){
+      const first = m[1].split(/\b(?:for|if|while|switch|catch)\b/)[0];
+      first.split(",").forEach(part => {
+        const name = part.split("=")[0].trim();
+        if(/^[A-Za-z_$][\w$]*$/.test(name)) names.add(name);
+      });
+    }
+    return [...names];
+  }
+
+  cells.forEach(cell => {
+    if(cell.type === "javascript" || cell.type === "typescript")
+      extractNames(cell.code).forEach(name => state[name] = undefined);
+  });
+
+  function addOutput(cell, node){
+    cell.output.appendChild(node);
+  }
+
+  function textOutput(value){
+    const pre = document.createElement("pre");
+    try { pre.textContent = typeof value === "string" ? value : JSON.stringify(value, null, 2); }
+    catch { pre.textContent = String(value); }
+    return pre;
+  }
+
+  async function runCell(cell){
+    const section = document.createElement("section");
+    section.className = "cell";
+
+    const header = document.createElement("div");
+    header.className = "cell-header";
+    header.textContent = String(cell.index + 1).padStart(2,"0") + " · " + cell.type + (cell.hidden ? " · escondido" : "");
+
+    const code = document.createElement("pre");
+    code.className = "cell-code" + (cell.hidden ? " hidden" : "");
+    code.textContent = cell.code;
+
+    const output = document.createElement("div");
+    output.className = "output";
+    cell.output = output;
+
+    section.append(header, code, output);
+    root.appendChild(section);
+
+    if(!cell.code.trim()) return;
+
+    try {
+      if(cell.type === "markdown"){
+        output.innerHTML = marked.parse(cell.code);
+        return;
+      }
+
+      if(cell.type === "html"){
+        output.innerHTML = cell.code;
+        return;
+      }
+
+      if(cell.type === "p5"){
+        const host = document.createElement("div");
+        host.className = "p5-host";
+        output.appendChild(host);
+
+        let source = cell.code;
+        const width = Math.max(1, host.clientWidth || root.clientWidth || 1);
+        source = source.replace(/\bwindowWidth\b/g, String(Math.round(width)));
+        source = source.replace(/\bwindowHeight\b/g, "550");
+        source = source.replace(/\bfunction\s+setup\s*\\(/g, "p.setup = function(");
+        source = source.replace(/\bfunction\s+draw\s*\\(/g, "p.draw = function(");
+        source = source.replace(/\bsetup\s*=\s*(?=(?:async\s*)?\\()/g, "p.setup = ");
+        source = source.replace(/\bdraw\s*=\s*(?=(?:async\s*)?\\()/g, "p.draw = ");
+
+        new p5(p => {
+          const originalCreateCanvas = p.createCanvas.bind(p);
+          p.createCanvas = (...args) => {
+            const canvas = originalCreateCanvas(...args);
+            try { canvas.parent(host); } catch {}
+            return canvas;
+          };
+          const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+          const runner = new AsyncFunction("p", "with (p) { " + source + " }");
+          runner(p);
+        });
+        return;
+      }
+
+      let source = cell.code;
+      if(cell.type === "typescript"){
+        source = ts.transpileModule(source, {
+          compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.None,strict:false}
+        }).outputText;
+      }
+      source = transformDeclarations(source);
+
+      const display = value => console.log(value);
+      const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+      const runner = new AsyncFunction("__state","display","__scope", "with (__scope) { " + source + " }");
+      await runner(state, display, scope);
+    } catch(error){
+      const div = document.createElement("div");
+      div.className = "error";
+      div.textContent = error.stack || error.message || String(error);
+      addOutput(cell, div);
+      console.error(error);
+    }
+  }
+
+  (async () => {
+    for(const cell of cells) await runCell(cell);
+  })();
+})();
+<${"/"}script>
+</body>
+</html>`;
+        }
+
+        function buildNotebookDocument(exportedCells) {
+          const json = JSON.stringify({
+            nextId,
+            cells: exportedCells,
+          }).replace(/</g, "\\u003c");
+
+          const bootstrap = `<script id="notebook-bootstrap">window.__EXPORTED_NOTEBOOK__=${json};<${"/"}script>\n`;
+          return document.documentElement.outerHTML.replace(
+            "<script>\n(() => {",
+            bootstrap + "<script>\n(() => {",
+          );
+        }
+
+        function downloadText(filename, content) {
+          const blob = new Blob([content], { type: "text/html;charset=utf-8" });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = filename;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+
+        function exportCells() {
+          downloadText(
+            "documento-exportado.html",
+            buildStandaloneCellsDocument(getExportCells()),
+          );
+        }
+
+        function exportNotebook() {
+          downloadText(
+            "notebook.html",
+            buildNotebookDocument(getExportCells()),
+          );
+        }
+
+        function parseExportedDocument(html) {
+          const parsed = new DOMParser().parseFromString(html, "text/html");
+          const result = [];
+          const sourceNodes = [
+            ...parsed.querySelectorAll(
+              "textarea.notebook-source[data-notebook-cell]",
+            ),
+          ];
+
+          sourceNodes.forEach((source, index) => {
+            let commentNode = source.previousSibling;
+            while (commentNode && commentNode.nodeType !== Node.COMMENT)
+              commentNode = commentNode.previousSibling;
+            const comment = commentNode ? commentNode.data : "";
+            const typeMatch = comment.match(/\btype:\s*([^\n]+)/i);
+            const hiddenMatch = comment.match(/\bhidden:\s*(true|false)/i);
+            const idMatch = comment.match(/\bid:\s*([^\n]+)/i);
+            const type = typeMatch ? typeMatch[1].trim() : "javascript";
+            const hidden = hiddenMatch
+              ? hiddenMatch[1].toLowerCase() === "true"
+              : false;
+            const id = idMatch
+              ? idMatch[1].trim()
+              : "cell-imported-" + (index + 1);
+            result.push({ id, code: source.value, type, hidden, output: [] });
+          });
+
+          return result;
+        }
+
+        async function loadExternalDocument(url) {
+          try {
+            const response = await fetch(url, { cache: "no-store" });
+            if (!response.ok) throw new Error("HTTP " + response.status);
+            const html = await response.text();
+            const imported = parseExportedDocument(html);
+            if (!imported.length)
+              throw new Error("Nenhuma célula exportada foi encontrada.");
+
+            cells.length = 0;
+            imported.forEach((cell) => cells.push(cell));
+            nextId = Math.max(
+              1,
+              ...cells.map((cell) => {
+                const match = String(cell.id).match(/(\\d+)$/);
+                return match ? Number(match[1]) + 1 : 1;
+              }),
+            );
+            ensureTrailingEmptyCell();
+            saveDocument();
+            render();
+
+            const firstCodeCell = cells.find((cell) => cell.code.trim() !== "");
+            if (firstCodeCell) await executeFromCell(firstCodeCell.id);
+          } catch (error) {
+            console.error(
+              "Não foi possível carregar o notebook pela URL:",
+              error,
+            );
+          }
+        }
+
+        function loadEmbeddedNotebook() {
+          const data = window.__EXPORTED_NOTEBOOK__;
+          if (!data || !Array.isArray(data.cells)) return false;
+
+          cells.length = 0;
+          data.cells.forEach((savedCell) =>
+            cells.push({
+              id: savedCell.id || "cell-" + nextId++,
+              code: typeof savedCell.code === "string" ? savedCell.code : "",
+              type: savedCell.type || "javascript",
+              hidden: !!savedCell.hidden,
+              output: [],
+            }),
+          );
+          nextId = Math.max(
+            Number(data.nextId) || 1,
+            ...cells.map((cell) => {
+              const match = String(cell.id).match(/(\\d+)$/);
+              return match ? Number(match[1]) + 1 : 1;
+            }),
+          );
+          ensureTrailingEmptyCell();
+          return true;
+        }
+
+        document.addEventListener("keydown", (event) => {
+          if (!(event.ctrlKey || event.metaKey)) return;
+
+          if (event.key.toLowerCase() === "s") {
+            event.preventDefault();
+            exportCells();
+            return;
+          }
+
+          if (event.key.toLowerCase() === "n") {
+            event.preventDefault();
+            exportNotebook();
+          }
+        });
+
+        /*
+         * Primeiro desenho. A prioridade de inicialização é:
+         * 1. notebook embutido (Ctrl+N);
+         * 2. documento remoto (?load= ou ?url=);
+         * 3. localStorage.
+         */
+        const embeddedNotebook = loadEmbeddedNotebook();
+        const query = new URLSearchParams(window.location.search);
+        const externalLoadUrl = query.get("load") || query.get("url");
+
         render();
-        if (restoredFromStorage) {
+
+        if (embeddedNotebook) {
+          const firstCodeCell = cells.find((cell) => cell.code.trim() !== "");
+          if (firstCodeCell) executeFromCell(firstCodeCell.id);
+        } else if (externalLoadUrl) {
+          loadExternalDocument(externalLoadUrl);
+        } else if (restoredFromStorage) {
           const firstCodeCell = cells.find((cell) => cell.code.trim() !== "");
           if (firstCodeCell) executeFromCell(firstCodeCell.id);
         }
