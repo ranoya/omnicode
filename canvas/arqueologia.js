@@ -115,6 +115,17 @@ newframe(
 connect("Pixel Art", "Projeto");
 
 newframe(
+  "https://omniboards.vercel.app/?nomenu=true&filtra=_DEMOSCENE&limita=0&contentonly=true&titulo=Demoscene&temptheme=narrativas",
+  "Demoscene",
+  1030,
+  -1730,
+  720,
+  840,
+);
+
+connect("Pixel Art", "Demoscene");
+
+newframe(
   "https://www.ranoya.com/pt/textos/culturavisual.php?id=T018&temptheme=cleantext&nomenu=true",
   "Cultura Visual",
   2830,
