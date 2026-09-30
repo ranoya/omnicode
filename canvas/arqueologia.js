@@ -126,12 +126,37 @@ newframe(
 connect("Pixel Art", "Cultura Visual");
 
 newframe(
-  "https://www.ranoya.com/pt/textos/interfacetexto.php?id=T003?temptheme=cleantext&nomenu=tru",
+  "https://www.ranoya.com/pt/textos/interfacetexto.php?id=T003&temptheme=cleantext&nomenu=tru",
   "Interfaces de Texto",
-  -2200,
-  -650,
+  -2700,
+  -550,
   1050,
   800,
 );
 
 connect("Interfaces de Texto", "Arqueologia do Design");
+connect("Interfaces de Texto", "Emulação");
+
+newframe(
+  "https://www.ranoya.com/pt/textos/transformacaointerfaces.php?id=T005&temptheme=cleantext&nomenu=true",
+  "Mais Interfaces de Texto",
+  -3900,
+  -950,
+  1050,
+  800,
+);
+
+connect("Interfaces de Texto", "Mais Interfaces de Texto");
+connect("Emulação", "Mais Interfaces de Texto");
+
+newframe(
+  "https://www.ranoya.com/pt/textos/dropdown.php?id=T002&temptheme=cleantext&nomenu=true",
+  "Menus",
+  -5000,
+  -450,
+  1050,
+  800,
+);
+
+connect("Menus", "Mais Interfaces de Texto");
+connect("Menus", "Emulação");
