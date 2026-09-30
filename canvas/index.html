@@ -374,6 +374,20 @@
         color: var(--muted);
         font-size: 12px;
       }
+      body.controls-centered #viewControls {
+        top: 50%;
+        bottom: auto;
+        transform: translateY(-50%);
+      }
+      body.controls-centered #searchPanel {
+        top: 50%;
+        bottom: auto;
+        transform: translateY(-50%);
+      }
+      body.bg-transparent,
+      body.bg-transparent html {
+        background: transparent !important;
+      }
     </style>
   </head>
   <body>
@@ -398,7 +412,7 @@
       <span class="prompt">&gt;</span>
       <input
         id="cmdInput"
-        placeholder="digite help() para ver todos os comandos"
+        placeholder="digite help() para ver todos os comandos (w,h,x,y)"
         autocomplete="off"
       />
       <span id="hint">Enter</span>
@@ -440,6 +454,10 @@
 
     <script>
       (function () {
+        var ICON_WIN_MAX =
+          '<svg width="10" height="10" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5"/></svg>';
+        var ICON_WIN_RESTORE =
+          '<svg width="10" height="10" viewBox="0 0 14 14" fill="currentColor"><circle cx="7" cy="7" r="4"/></svg>';
         var viewport = document.getElementById("viewport");
         var canvas = document.getElementById("canvas");
         var linksLayer = document.getElementById("linksLayer");
@@ -701,23 +719,56 @@
         }
 
         // ---- criação de janelas ----
-        function resolvePosition(name, x, y, w, h, id) {
+        // aceita número (px no espaço do canvas) ou string terminada em "%" (porcentagem da tela visível)
+        function resolveDim(val, refScreenPx) {
+          if (typeof val === "number") return val;
+          if (typeof val === "string") {
+            var t = val.trim();
+            if (/%$/.test(t)) {
+              var p = parseFloat(t);
+              if (!isNaN(p)) return (refScreenPx * p) / 100 / zoom;
+            }
+          }
+          return undefined;
+        }
+        function resolveCoord(val, isX) {
+          if (typeof val === "number") return val;
+          if (typeof val === "string") {
+            var t = val.trim();
+            if (/%$/.test(t)) {
+              var p = parseFloat(t);
+              if (!isNaN(p)) {
+                var sx = isX ? (viewport.clientWidth * p) / 100 : 0;
+                var sy = isX ? 0 : (viewport.clientHeight * p) / 100;
+                var c = screenToCanvas(sx, sy);
+                return isX ? c.x : c.y;
+              }
+            }
+          }
+          return undefined;
+        }
+
+        function resolvePosition(name, w, h, x, y, id) {
           var center = screenToCanvas(
             viewport.clientWidth / 2,
             viewport.clientHeight / 2,
           );
           var noPosArgs =
-            x === undefined &&
-            y === undefined &&
             w === undefined &&
-            h === undefined;
+            h === undefined &&
+            x === undefined &&
+            y === undefined;
           var saved = noPosArgs ? loadWinState(name) : null;
           if (saved) return saved;
+          var rw = resolveDim(w, viewport.clientWidth);
+          var rh = resolveDim(h, viewport.clientHeight);
+          var rx = resolveCoord(x, true);
+          var ry = resolveCoord(y, false);
           return {
-            left: typeof x === "number" ? x : center.x - 130 + (id % 5) * 20,
-            top: typeof y === "number" ? y : center.y - 90 + (id % 5) * 20,
-            width: typeof w === "number" ? w : 260,
-            height: typeof h === "number" ? h : 180,
+            left: typeof rx === "number" ? rx : center.x - 130 + (id % 5) * 20,
+            top: typeof ry === "number" ? ry : center.y - 90 + (id % 5) * 20,
+            width: typeof rw === "number" ? rw : 260,
+            height: typeof rh === "number" ? rh : 180,
           };
         }
 
@@ -737,7 +788,9 @@
             name +
             "</span>" +
             '<span class="win-header-btns">' +
-            '<button class="win-max" title="Maximizar">⤢</button>' +
+            '<button class="win-max" title="Maximizar">' +
+            ICON_WIN_MAX +
+            "</button>" +
             (permanent
               ? ""
               : '<button class="win-close" title="Fechar">✕</button>') +
@@ -752,28 +805,28 @@
           return win;
         }
 
-        function makeWindow(permanent, title, x, y, w, h) {
+        function makeWindow(permanent, title, w, h, x, y) {
           var id = idSeq++;
           var name = title || "Janela " + id;
-          var pos = resolvePosition(name, x, y, w, h, id);
+          var pos = resolvePosition(name, w, h, x, y, id);
           var bodyHtml =
             '<div class="win-body" contenteditable="true" spellcheck="false">Escreva aqui…</div>';
           return createWindowShell(name, pos, bodyHtml, permanent);
         }
-        function newwindow(title, x, y, w, h) {
-          return makeWindow(false, title, x, y, w, h);
+        function newwindow(title, w, h, x, y) {
+          return makeWindow(false, title, w, h, x, y);
         }
-        function newpermawindow(title, x, y, w, h) {
-          return makeWindow(true, title, x, y, w, h);
+        function newpermawindow(title, w, h, x, y) {
+          return makeWindow(true, title, w, h, x, y);
         }
         window.newwindow = newwindow; // pode ser chamado pelo console do navegador também
         window.newpermawindow = newpermawindow;
 
         // ---- janela com iframe ----
-        function makeFrame(permanent, url, title, x, y, w, h) {
+        function makeFrame(permanent, url, title, w, h, x, y) {
           var id = idSeq++;
           var name = title || url || "Frame " + id;
-          var pos = resolvePosition(name, x, y, w, h, id);
+          var pos = resolvePosition(name, w, h, x, y, id);
           var safeUrl = String(url || "").replace(/"/g, "&quot;");
           var bodyHtml =
             '<div class="win-body no-padding">' +
@@ -783,20 +836,20 @@
             "</div>";
           return createWindowShell(name, pos, bodyHtml, permanent);
         }
-        function newframe(url, title, x, y, w, h) {
-          return makeFrame(false, url, title, x, y, w, h);
+        function newframe(url, title, w, h, x, y) {
+          return makeFrame(false, url, title, w, h, x, y);
         }
-        function newpermaframe(url, title, x, y, w, h) {
-          return makeFrame(true, url, title, x, y, w, h);
+        function newpermaframe(url, title, w, h, x, y) {
+          return makeFrame(true, url, title, w, h, x, y);
         }
         window.newframe = newframe; // pode ser chamado pelo console do navegador também
         window.newpermaframe = newpermaframe;
 
         // ---- janela que executa uma função JS definida pelo usuário ----
-        function makeRun(permanent, title, fnName, params, x, y, w, h) {
+        function makeRun(permanent, title, fnName, params, w, h, x, y) {
           var id = idSeq++;
           var name = title || "Run " + id;
-          var pos = resolvePosition(name, x, y, w, h, id);
+          var pos = resolvePosition(name, w, h, x, y, id);
           var domId = "newrun" + id;
           var bodyHtml =
             '<div class="win-body no-padding" id="' + domId + '"></div>';
@@ -822,11 +875,11 @@
           }
           return win;
         }
-        function run(title, fnName, params, x, y, w, h) {
-          return makeRun(false, title, fnName, params, x, y, w, h);
+        function run(title, fnName, params, w, h, x, y) {
+          return makeRun(false, title, fnName, params, w, h, x, y);
         }
-        function permarun(title, fnName, params, x, y, w, h) {
-          return makeRun(true, title, fnName, params, x, y, w, h);
+        function permarun(title, fnName, params, w, h, x, y) {
+          return makeRun(true, title, fnName, params, w, h, x, y);
         }
         window.run = run; // pode ser chamado pelo console do navegador também
         window.permarun = permarun;
@@ -835,21 +888,21 @@
         var HELP_HTML = `
 <h4>Como usar</h4>
 <p>Digite uma instrução JavaScript na barra de comando e pressione Enter. As funções abaixo também podem ser chamadas pelo console do navegador (DevTools). Para navegar, arraste o fundo vazio com o botão direito ou o do meio do mouse. O scroll dá zoom apenas quando o mouse está sobre o fundo, não sobre uma janela.</p>
-<p>Posição e tamanho são em pixels do canvas. <code>x</code>, <code>y</code>, <code>w</code>, <code>h</code> são sempre opcionais. Se uma janela é criada só com um nome já registrado (sem x, y, w, h), ela reabre na posição e no tamanho em que foi deixada. Coordenadas explícitas têm prioridade sobre o registro.</p>
+<p>A ordem dos parâmetros de posição/tamanho é sempre <code>w, h, x, y</code> (largura, altura, x, y) — dá para informar só <code>w</code> e <code>h</code> e deixar <code>x, y</code> de fora. Cada um aceita um número (pixels do espaço do canvas) ou uma string terminada em <code>%</code> (porcentagem da tela visível no momento, ex.: <code>"50%"</code>, <code>"40%"</code>). Todos são sempre opcionais. Se uma janela é criada só com um nome já registrado (sem w, h, x, y), ela reabre na posição e no tamanho em que foi deixada. Valores explícitos têm prioridade sobre o registro.</p>
 <hr>
 <h4>Janelas</h4>
-<code class="sig">newwindow(título, x, y, w, h)</code>
+<code class="sig">newwindow(título, w, h, x, y)</code>
 <p>Janela de texto editável, com padding. Sem título, usa "Janela N".</p>
-<code class="sig">newpermawindow(título, x, y, w, h)</code>
+<code class="sig">newpermawindow(título, w, h, x, y)</code>
 <p>Igual à <code>newwindow</code>, mas sem botão de fechar (permanente no canvas).</p>
-<code class="sig">newframe(url, título, x, y, w, h)</code>
+<code class="sig">newframe(url, título, w, h, x, y)</code>
 <p>Janela com um iframe ocupando todo o espaço, sem padding. Sem título, usa a url. Muitos sites bloqueiam exibição em iframe.</p>
-<code class="sig">newpermaframe(url, título, x, y, w, h)</code>
+<code class="sig">newpermaframe(url, título, w, h, x, y)</code>
 <p>Igual à <code>newframe</code>, mas sem botão de fechar.</p>
-<code class="sig">run(título, nomeDaFuncao, params, x, y, w, h)</code>
+<code class="sig">run(título, nomeDaFuncao, params, w, h, x, y)</code>
 <p>Cria uma janela sem padding, cujo corpo recebe um id gerado (<code>newrun1</code>, <code>newrun2</code>...) e executa <code>window[nomeDaFuncao](id, params)</code>. O primeiro argumento da sua função é sempre a string com o id; o segundo é o valor de <code>params</code>. A função precisa existir em <code>window</code> (ex.: <code>window.minhaFuncao = function(id, params){...}</code>).</p>
-<p>Exemplo: <code>run("Label", "minhaFuncao", {a: 1}, 300, 200, 600, 400)</code></p>
-<code class="sig">permarun(título, nomeDaFuncao, params, x, y, w, h)</code>
+<p>Exemplo: <code>run("Label", "minhaFuncao", {a: 1}, 600, 400, 300, 200)</code> (largura 600, altura 400, x=300, y=200) — ou <code>run("Label", "minhaFuncao", {a: 1}, "50%", "40%")</code> para 50% da largura e 40% da altura da tela, sem fixar posição.</p>
+<code class="sig">permarun(título, nomeDaFuncao, params, w, h, x, y)</code>
 <p>Igual à <code>run</code>, mas sem botão de fechar.</p>
 <hr>
 <h4>Conexões</h4>
@@ -864,6 +917,16 @@
 <code class="sig">setTempTheme(nome)</code>
 <p>Aplica o tema sem registrar no localStorage.</p>
 <p>Nomes aceitos: <code>auto</code> (segue o sistema), <code>light</code>, <code>dark</code>, <code>dracula</code>, <code>nord</code>, <code>solarized-dark</code>, <code>solarized-light</code>, <code>monokai</code>, <code>one-dark</code>, <code>gruvbox-dark</code>, <code>github-dark</code>.</p>
+<hr>
+<h4>Embutir / integrar</h4>
+<code class="sig">centerControls()</code>
+<p>Move o bloco de controles (lupa, zoom, centralizar, tela cheia) e o painel de busca para o centro vertical da tela, em vez do canto inferior direito.</p>
+<code class="sig">bottomControls()</code>
+<p>Devolve o bloco de controles e o painel de busca para a posição padrão, no canto inferior direito.</p>
+<code class="sig">setTransparentBackground()</code>
+<p>Torna o fundo do ambiente transparente, para integrar melhor quando o Canvas Infinito é embutido sobre outra interface.</p>
+<code class="sig">setOpaqueBackground()</code>
+<p>Devolve o fundo do ambiente à cor sólida do tema atual.</p>
 <hr>
 <h4>Ajuda</h4>
 <code class="sig">help()</code>
@@ -1029,7 +1092,7 @@
               win.style.width = r.width;
               win.style.height = r.height;
               win.style.zIndex = r.zIndex;
-              maxBtn.textContent = "⤢";
+              maxBtn.innerHTML = ICON_WIN_MAX;
               maxBtn.title = "Maximizar";
               maximizedCount--;
               updateUIVisibility();
@@ -1044,7 +1107,7 @@
               win.classList.add("maximized");
               win.style.zIndex = ++zTop;
               fitMaximizedWindow(win);
-              maxBtn.textContent = "⤡";
+              maxBtn.innerHTML = ICON_WIN_RESTORE;
               maxBtn.title = "Restaurar";
               maximizedCount++;
               updateUIVisibility();
@@ -1061,7 +1124,8 @@
 
           // mover
           header.addEventListener("pointerdown", function (e) {
-            if (e.target === closeBtn || e.target === maxBtn) return;
+            if (e.target.closest(".win-close") || e.target.closest(".win-max"))
+              return;
             if (win.classList.contains("maximized")) return;
             e.preventDefault();
             bringToFront(win);
@@ -1225,6 +1289,26 @@
             applyTransform();
           });
 
+        // ---- posição do bloco de controles (zoom/lupa/tela cheia/centralizar + painel de busca) ----
+        function centerControls() {
+          document.body.classList.add("controls-centered");
+        }
+        function bottomControls() {
+          document.body.classList.remove("controls-centered");
+        }
+        window.centerControls = centerControls; // pode ser chamado pelo console do navegador também
+        window.bottomControls = bottomControls;
+
+        // ---- fundo transparente (útil para embutir o Canvas Infinito sobre outra interface) ----
+        function setTransparentBackground() {
+          document.body.classList.add("bg-transparent");
+        }
+        function setOpaqueBackground() {
+          document.body.classList.remove("bg-transparent");
+        }
+        window.setTransparentBackground = setTransparentBackground; // pode ser chamado pelo console do navegador também
+        window.setOpaqueBackground = setOpaqueBackground;
+
         // ---- buscar / localizar janela ----
         var btnSearch = document.getElementById("btnSearch");
         var searchPanel = document.getElementById("searchPanel");
@@ -1376,6 +1460,10 @@
               "setTheme",
               "setTempTheme",
               "help",
+              "centerControls",
+              "bottomControls",
+              "setTransparentBackground",
+              "setOpaqueBackground",
               cmd,
             )(
               newwindow,
@@ -1389,6 +1477,10 @@
               setTheme,
               setTempTheme,
               help,
+              centerControls,
+              bottomControls,
+              setTransparentBackground,
+              setOpaqueBackground,
             );
           } catch (err) {
             console.warn("Comando inválido:", err.message);

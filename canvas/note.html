@@ -92,9 +92,10 @@
 
       .code-row {
         display: grid;
-        grid-template-columns: 34px minmax(0, 1fr);
-        gap: 7px;
+        grid-template-columns: 36px 34px minmax(0, 1fr);
+        column-gap: 0;
         align-items: start;
+        margin-left: -36px;
       }
 
       .code-controls {
@@ -160,6 +161,7 @@
 
       .code-editor {
         position: relative;
+        margin-left: 7px;
         border-radius: 5px;
         overflow: hidden;
         background: var(--code);
@@ -1249,7 +1251,15 @@ display(quadrados);`,
             toggleCode.onclick = () => {
               cell.hidden = !cell.hidden;
               saveDocument();
-              render();
+
+              // Não usamos render() aqui: no caso do P5, reconstruir o DOM
+              // destruiria o canvas que já está montado no bloco de output.
+              codeRow.classList.toggle("code-hidden", cell.hidden);
+              toggleCode.title = cell.hidden
+                ? "Mostrar código"
+                : "Esconder código";
+              toggleCode.setAttribute("aria-label", toggleCode.title);
+              toggleCode.textContent = cell.hidden ? "›" : "‹";
             };
 
             codeControls.append(typeLabel, toggleCode);
@@ -1338,9 +1348,14 @@ display(quadrados);`,
 
             codeEditor.append(highlighted, textarea);
 
-            // O controle de linguagem e o editor precisam ficar dentro
-            // do bloco de código, para que o código possa ser ocultado.
-            codeRow.append(codeControls, codeEditor);
+            // O primeiro espaço do codeRow coincide com o gutter.
+            // Assim o label e o botão ficam horizontalmente alinhados
+            // com o controle de mover a célula.
+            codeRow.append(
+              document.createElement("div"),
+              codeControls,
+              codeEditor,
+            );
 
             const tools = document.createElement("div");
             tools.className = "cell-tools";
