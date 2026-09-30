@@ -23,8 +23,8 @@ connect("Projeto", "Palestra");
 newframe(
   "https://omnidocs.vercel.app/materiais/arqueologiadesign",
   "Arqueologia do Design",
-  -1000,
-  -800,
+  -1200,
+  -750,
   900,
   500,
 );
@@ -70,7 +70,7 @@ newframe(
   "https://visse.vercel.app/v2-arqueologia/bulletpoint.html?bg=555555&fg=ffffff&",
   "Acervo de Pesquisa (v.1)",
   -1400,
-  1900,
+  1700,
   900,
   700,
 );
@@ -91,7 +91,7 @@ connect("Método de Pesquisa", "Acervo de Pesquisa (v.2)");
 newframe(
   "https://visse.vercel.app/v2-arqueologia/more.html?filtra=_appsonly&bg=6e4106&fg=ffffff&",
   "Emulação",
-  -3000,
+  -2600,
   1000,
   700,
   600,
@@ -102,3 +102,36 @@ connect("Emulação", "Arqueologia do Design");
 connect("Emulação", "Bullet Points");
 connect("Emulação", "Acervo de Pesquisa (v.2)");
 connect("Emulação", "Acervo de Pesquisa (v.1)");
+
+newframe(
+  "https://omniboards.vercel.app/?nomenu=true&filtra=PIXELART_PESSOAL&limita=0&contentonly=true&titulo=Pixel%20Art&temptheme=narrativas",
+  "Pixel Art",
+  1230,
+  -430,
+  720,
+  640,
+);
+
+connect("Pixel Art", "Projeto");
+
+newframe(
+  "https://www.ranoya.com/pt/textos/culturavisual.php?id=T018&temptheme=cleantext&nomenu=true",
+  "Cultura Visual",
+  2230,
+  -130,
+  1080,
+  840,
+);
+
+connect("Pixel Art", "Cultura Visual");
+
+newframe(
+  "https://www.ranoya.com/pt/textos/interfacetexto.php?id=T003?temptheme=cleantext&nomenu=tru",
+  "Interfaces de Texto",
+  -2200,
+  -650,
+  1050,
+  800,
+);
+
+connect("Interfaces de Texto", "Arqueologia do Design");
