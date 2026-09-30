@@ -1716,13 +1716,19 @@ ${blocks}
           const json = JSON.stringify({
             nextId,
             cells: exportedCells,
-          }).replace(/</g, "\\u003c");
+          })
+            .replace(/&/g, "\\u0026")
+            .replace(/</g, "\\u003c")
+            .replace(/>/g, "\\u003e")
+            .replace(/\u2028/g, "\\u2028")
+            .replace(/\u2029/g, "\\u2029");
 
-          const bootstrap = `<script id="notebook-bootstrap">window.__EXPORTED_NOTEBOOK__=${json};<\/script>\n`;
-          return document.documentElement.outerHTML.replace(
-            "<script>\n(() => {",
-            bootstrap + "<script>\n(() => {",
-          );
+          const bootstrap = `<script type="application/json" id="notebook-bootstrap">${json}<\/script>\n`;
+          const html = document.documentElement.outerHTML;
+          const marker = "<script>\n(() => {";
+          return html.includes(marker)
+            ? html.replace(marker, bootstrap + marker)
+            : html.replace("</body>", bootstrap + "</body>");
         }
 
         function downloadText(filename, content) {
@@ -1815,7 +1821,21 @@ ${blocks}
         }
 
         function loadEmbeddedNotebook() {
-          const data = window.__EXPORTED_NOTEBOOK__;
+          let data = window.__EXPORTED_NOTEBOOK__;
+          if (!data) {
+            const bootstrap = document.getElementById("notebook-bootstrap");
+            if (bootstrap) {
+              try {
+                data = JSON.parse(bootstrap.textContent || "");
+              } catch (error) {
+                console.error(
+                  "Não foi possível ler os dados embutidos do notebook:",
+                  error,
+                );
+                return false;
+              }
+            }
+          }
           if (!data || !Array.isArray(data.cells)) return false;
 
           cells.length = 0;
@@ -1859,7 +1879,7 @@ ${blocks}
 
         /*
          * Primeiro desenho. A prioridade de inicialização é:
-         * 1. notebook embutido (Ctrl+N);
+         * 1. notebook embutido (Ctrl+Shift+S);
          * 2. documento remoto (?load= ou ?url=);
          * 3. localStorage.
          */
