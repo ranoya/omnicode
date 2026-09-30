@@ -1,4 +1,4 @@
-<!doctype html>
+`<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
@@ -319,61 +319,6 @@
         stroke-width: 2;
         opacity: 0.85;
       }
-      #searchPanel {
-        position: fixed;
-        right: 64px;
-        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-        z-index: 9999;
-        width: 220px;
-        max-height: 360px;
-        display: none;
-        flex-direction: column;
-        background: var(--panel);
-        border: 1px solid var(--panel-border);
-        border-radius: 8px;
-        box-shadow: 0 8px 24px var(--shadow);
-        overflow: hidden;
-      }
-      #searchPanel.open {
-        display: flex;
-      }
-      #searchInput {
-        padding: 8px 10px;
-        border: none;
-        border-bottom: 1px solid var(--panel-border);
-        outline: none;
-        background: transparent;
-        color: var(--text);
-        font-size: 13px;
-        font-family: inherit;
-      }
-      #searchList {
-        overflow: auto;
-        padding: 4px;
-      }
-      #searchList button {
-        display: block;
-        width: 100%;
-        text-align: left;
-        background: transparent;
-        border: none;
-        color: var(--text);
-        padding: 6px 8px;
-        border-radius: 6px;
-        font-size: 13px;
-        cursor: pointer;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      #searchList button:hover {
-        background: var(--panel-border);
-      }
-      #searchEmpty {
-        padding: 8px 10px;
-        color: var(--muted);
-        font-size: 12px;
-      }
     </style>
   </head>
   <body>
@@ -404,32 +349,7 @@
       <span id="hint">Enter</span>
     </div>
 
-    <div id="searchPanel">
-      <input
-        id="searchInput"
-        placeholder="Filtrar janelas..."
-        autocomplete="off"
-      />
-      <div id="searchList"></div>
-    </div>
-
     <div id="viewControls">
-      <button id="btnSearch" title="Buscar janela">
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.6"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <circle cx="7" cy="7" r="5" />
-          <path d="M11 11l3.5 3.5" />
-        </svg>
-      </button>
-      <hr />
       <button id="btnZoomIn" title="Aumentar zoom">+</button>
       <span id="zoomLabel">100%</span>
       <button id="btnZoomOut" title="Diminuir zoom">−</button>
@@ -450,7 +370,16 @@
         var maximizedCount = 0;
         function updateUIVisibility() {
           var hide = maximizedCount > 0;
-          consoleBar.style.display = hide ? "none" : "";
+
+          // AJUSTE NECESSÁRIO PARA MUDANÇAS MANUAIS
+          if (
+            typeof $_GET["devmode"] != "undefined" &&
+            $_GET["devmode"] != null &&
+            $_GET["devmode"] != ""
+          ) {
+            consoleBar.style.display = hide ? "none" : "";
+          }
+
           viewControls.style.display = hide ? "none" : "";
         }
 
@@ -1217,72 +1146,6 @@
             applyTransform();
           });
 
-        // ---- buscar / localizar janela ----
-        var btnSearch = document.getElementById("btnSearch");
-        var searchPanel = document.getElementById("searchPanel");
-        var searchInput = document.getElementById("searchInput");
-        var searchList = document.getElementById("searchList");
-
-        function panToWindow(win) {
-          var cx = parseFloat(win.style.left) + win.offsetWidth / 2;
-          var cy = parseFloat(win.style.top) + win.offsetHeight / 2;
-          pan.x = viewport.clientWidth / (2 * zoom) - cx;
-          pan.y = viewport.clientHeight / (2 * zoom) - cy;
-          applyTransform();
-        }
-
-        function renderSearchList(filter) {
-          var q = (filter || "").trim().toLowerCase();
-          searchList.innerHTML = "";
-          var matches = windows.filter(function (w) {
-            return w.dataset.name.toLowerCase().indexOf(q) !== -1;
-          });
-          if (matches.length === 0) {
-            var empty = document.createElement("div");
-            empty.id = "searchEmpty";
-            empty.textContent = "Nenhuma janela encontrada.";
-            searchList.appendChild(empty);
-            return;
-          }
-          matches.forEach(function (w) {
-            var btn = document.createElement("button");
-            btn.textContent = w.dataset.name;
-            btn.addEventListener("click", function () {
-              panToWindow(w);
-              closeSearch();
-            });
-            searchList.appendChild(btn);
-          });
-        }
-        function openSearch() {
-          searchPanel.classList.add("open");
-          searchInput.value = "";
-          renderSearchList("");
-          searchInput.focus();
-        }
-        function closeSearch() {
-          searchPanel.classList.remove("open");
-        }
-
-        btnSearch.addEventListener("click", function (e) {
-          e.stopPropagation();
-          if (searchPanel.classList.contains("open")) closeSearch();
-          else openSearch();
-        });
-        searchInput.addEventListener("input", function () {
-          renderSearchList(searchInput.value);
-        });
-        searchInput.addEventListener("keydown", function (e) {
-          e.stopPropagation();
-          if (e.key === "Escape") closeSearch();
-        });
-        document.addEventListener("pointerdown", function (e) {
-          if (!searchPanel.classList.contains("open")) return;
-          if (searchPanel.contains(e.target) || btnSearch.contains(e.target))
-            return;
-          closeSearch();
-        });
-
         // ---- tela cheia do documento ----
         var btnFullscreen = document.getElementById("btnFullscreen");
         var ICON_ENTER_FS =
@@ -1342,7 +1205,7 @@
         document.addEventListener("keydown", function (e) {
           if (e.ctrlKey || e.metaKey || e.altKey) return;
           var ae = document.activeElement;
-          if (ae === cmdInput || ae === searchInput) return; // já digitando ali, comportamento nativo cuida disso
+          if (ae === cmdInput) return; // já digitando ali, comportamento nativo cuida disso
           if (ae && ae.closest && ae.closest(".win")) return; // já editando dentro de uma janela
           if (!isTypingTriggerKey(e)) return;
           var hoverEl = document.elementFromPoint(lastMouse.x, lastMouse.y);
@@ -1403,6 +1266,23 @@
           } catch (e) {}
           applyTheme(saved || "auto");
         })();
+      })();
+
+      // --- IMPLEMENTAÇÕES PRÓPRIAS ------------------------------------------------------------------
+
+      $_GET = [];
+      (function () {
+        corte = window.location.href.toString().indexOf("?");
+        if (corte > 0) {
+          argumento = window.location.href.toString().substring(corte + 1);
+          argumentos = argumento.split("&");
+          for (arg in argumentos) {
+            let argCorte = argumentos[arg].indexOf("=");
+            $_GET[argumentos[arg].substring(0, argCorte)] = argumentos[
+              arg
+            ].substring(argCorte + 1);
+          }
+        }
       })();
 
       /*
