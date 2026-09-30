@@ -910,6 +910,29 @@ display(quadrados);`,
                  */
                 let code = cell.code;
 
+                /*
+                 * No notebook, o sketch ocupa o bloco de output da célula.
+                 * Portanto, windowWidth/windowHeight não devem representar
+                 * a janela inteira do navegador:
+                 *
+                 *   windowWidth  -> largura interna do bloco P5
+                 *   windowHeight -> altura padrão de 550px
+                 *
+                 * A substituição é feita apenas em células P5 e somente para
+                 * referências ao identificador, preservando nomes maiores.
+                 */
+                const notebookWidth = Math.max(
+                  1,
+                  host.clientWidth || host.getBoundingClientRect().width || 1,
+                );
+
+                code = code.replace(
+                  /\bwindowWidth\b/g,
+                  String(Math.round(notebookWidth)),
+                );
+
+                code = code.replace(/\bwindowHeight\b/g, "550");
+
                 code = code.replace(
                   /\bfunction\s+setup\s*\(/g,
                   "p.setup = function(",
