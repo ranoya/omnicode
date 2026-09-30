@@ -223,7 +223,7 @@ newframe(
   "https://omniboards.vercel.app/?titulo=text%20mode&limita=0&contentonly=true&filtra=TEXT_MODE_INTERFACE",
   "Acervo de Interfaces de Texto",
   -3000,
-  -1850,
+  -2250,
   820,
   840,
 );
@@ -233,10 +233,21 @@ connect("Acervo de Interfaces de Texto", "Interfaces de Texto");
 newframe(
   "https://pointandclick.vercel.app",
   "Point and Clicks",
-  3530,
+  4330,
   -730,
   1100,
   940,
 );
 
 connect("Point and Clicks", "Pixel Art");
+
+newframe(
+  "https://slidelines.vercel.app/timelineh/?startmiddle=true&pattern=true&allowverticalscroll=true&timeheight=110&followbg=true&bgscroll=true&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit#gid=81325473&theme=https://slidelines.vercel.app/level/small.css",
+  "História das Interfaces Computacionais",
+  -5000,
+  -1450,
+  900,
+  800,
+);
+
+connect("História das Interfaces Computacionais", "Mais Interfaces de Texto");
