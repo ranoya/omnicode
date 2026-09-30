@@ -13,7 +13,7 @@ newframe(
   "https://www.youtube.com/embed/0r0-RjoZ8Wk?si=x-7b-UhhOZuRt8Dj&start=920%22",
   "Palestra",
   -630,
-  -900,
+  -820,
   670,
   500,
 );
@@ -24,7 +24,7 @@ newframe(
   "https://omnidocs.vercel.app/materiais/arqueologiadesign",
   "Arqueologia do Design",
   -1200,
-  -350,
+  -200,
   900,
   500,
 );
@@ -35,8 +35,8 @@ connect("Arqueologia do Design", "Projeto");
 newframe(
   "https://omnidocs.vercel.app/materiais/arqueologiaeditorial",
   "Arqueologia do Editorial",
-  -1300,
-  550,
+  -1340,
+  650,
   900,
   550,
 );
@@ -165,24 +165,17 @@ newframe(
   "https://omniboards.vercel.app/?limita=0&titulo=ASCII%20Art&subtitulo=Refer%C3%AAncia&filtra=ANSI_ASCII_ART&nomenu=true&temptheme=ayu",
   "ASCII Art",
   230,
-  -1130,
+  -1330,
   820,
   640,
 );
+
+connect("ASCII Art", "Pixel Art");
 
 connect("ASCII Art", "Interfaces de Texto");
 
 newframe(
-  "https://omniboards.vercel.app/?limita=0&titulo=ASCII%20Art&subtitulo=Refer%C3%AAncia&filtra=ANSI_ASCII_ART&nomenu=true&temptheme=ayu",
-  "ASCII Art",
-  230,
-  -1130,
-  820,
-  640,
-);
-
-newframe(
-  "https://drive.google.com/file/d/1yNAfpLxgX3xW1JQtY2KSI2xsSiLSV8K_/view?usp=drive_link",
+  "https://drive.google.com/file/d/1yNAfpLxgX3xW1JQtY2KSI2xsSiLSV8K_/preview",
   "Erthos Albino de Souza",
   -230,
   -2030,
