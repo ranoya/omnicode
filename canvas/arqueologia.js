@@ -12,7 +12,7 @@ newframe(
 newframe(
   "https://www.youtube.com/embed/0r0-RjoZ8Wk?si=x-7b-UhhOZuRt8Dj&start=920%22",
   "Palestra",
-  130,
+  -630,
   -900,
   670,
   500,
@@ -24,7 +24,7 @@ newframe(
   "https://omnidocs.vercel.app/materiais/arqueologiadesign",
   "Arqueologia do Design",
   -1200,
-  -750,
+  -350,
   900,
   500,
 );
@@ -36,7 +36,7 @@ newframe(
   "https://omnidocs.vercel.app/materiais/arqueologiaeditorial",
   "Arqueologia do Editorial",
   -1300,
-  150,
+  550,
   900,
   550,
 );
@@ -106,7 +106,7 @@ connect("Emulação", "Acervo de Pesquisa (v.1)");
 newframe(
   "https://omniboards.vercel.app/?nomenu=true&filtra=PIXELART_PESSOAL&limita=0&contentonly=true&titulo=Pixel%20Art&temptheme=narrativas",
   "Pixel Art",
-  1230,
+  1530,
   -430,
   720,
   640,
@@ -117,7 +117,7 @@ connect("Pixel Art", "Projeto");
 newframe(
   "https://www.ranoya.com/pt/textos/culturavisual.php?id=T018&temptheme=cleantext&nomenu=true",
   "Cultura Visual",
-  2230,
+  2830,
   -130,
   1080,
   840,
@@ -152,11 +152,42 @@ connect("Emulação", "Mais Interfaces de Texto");
 newframe(
   "https://www.ranoya.com/pt/textos/dropdown.php?id=T002&temptheme=cleantext&nomenu=true",
   "Menus",
-  -5000,
-  -450,
+  -4400,
+  150,
   1050,
   800,
 );
 
 connect("Menus", "Mais Interfaces de Texto");
 connect("Menus", "Emulação");
+
+newframe(
+  "https://omniboards.vercel.app/?limita=0&titulo=ASCII%20Art&subtitulo=Refer%C3%AAncia&filtra=ANSI_ASCII_ART&nomenu=true&temptheme=ayu",
+  "ASCII Art",
+  230,
+  -1130,
+  820,
+  640,
+);
+
+connect("ASCII Art", "Interfaces de Texto");
+
+newframe(
+  "https://omniboards.vercel.app/?limita=0&titulo=ASCII%20Art&subtitulo=Refer%C3%AAncia&filtra=ANSI_ASCII_ART&nomenu=true&temptheme=ayu",
+  "ASCII Art",
+  230,
+  -1130,
+  820,
+  640,
+);
+
+newframe(
+  "https://drive.google.com/file/d/1yNAfpLxgX3xW1JQtY2KSI2xsSiLSV8K_/view?usp=drive_link",
+  "Erthos Albino de Souza",
+  -230,
+  -2030,
+  780,
+  900,
+);
+
+connect("Erthos Albino de Souza", "ASCII Art");
