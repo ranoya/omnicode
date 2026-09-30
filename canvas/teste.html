@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Notebook exportado</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 40px 24px 100px;
+        font:
+          15px/1.5 system-ui,
+          sans-serif;
+        color: #242424;
+        background: #fff;
+      }
+      #notebook {
+        width: min(900px, 100%);
+        margin: auto;
+      }
+      .cell {
+        margin: 0 0 22px;
+      }
+      .cell-header {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        color: #888;
+        font:
+          11px ui-monospace,
+          monospace;
+        margin-bottom: 5px;
+      }
+      .cell-code {
+        margin: 0;
+        padding: 12px;
+        background: #f7f7f5;
+        border-radius: 6px;
+        white-space: pre-wrap;
+        overflow: auto;
+        font:
+          13px/1.5 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+      }
+      .cell-code.hidden {
+        display: none;
+      }
+      .output {
+        margin-top: 7px;
+        padding: 8px 12px;
+        border-left: 2px solid #ececec;
+        overflow: auto;
+      }
+      .output pre {
+        white-space: pre-wrap;
+        font:
+          13px/1.5 ui-monospace,
+          monospace;
+      }
+      .error {
+        color: #b42318;
+        white-space: pre-wrap;
+        font:
+          13px/1.5 ui-monospace,
+          monospace;
+      }
+      .p5-host {
+        min-height: 1px;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typescript@5.9.2/lib/typescript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/p5.min.js"></script>
+  </head>
+  <body>
+    <script>
+      // display() existe antes das células exportadas para que scripts JavaScript
+      // possam ser executados normalmente pelo navegador.
+      window.display = (value) => console.log(value);
+    </script>
+    <div id="notebook">
+      <!-- VANILLA-NOTEBOOK-CELL
+id: cell-5
+type: markdown
+hidden: false
+index: 0
+-->
+      <script
+        type="text/markdown"
+        data-notebook-cell
+        data-cell-id="cell-5"
+        data-cell-type="markdown"
+      >
+        # Meu Notebook
+      </script>
+      <!-- VANILLA-NOTEBOOK-CELL-END -->
+
+      <!-- VANILLA-NOTEBOOK-CELL
+id: cell-3
+type: javascript
+hidden: false
+index: 1
+-->
+      <script
+        data-notebook-cell
+        data-cell-id="cell-3"
+        data-cell-type="javascript"
+      >
+        var teste = 0;
+      </script>
+      <!-- VANILLA-NOTEBOOK-CELL-END -->
+
+      <!-- VANILLA-NOTEBOOK-CELL
+id: cell-1
+type: javascript
+hidden: false
+index: 2
+-->
+      <script
+        data-notebook-cell
+        data-cell-id="cell-1"
+        data-cell-type="javascript"
+      >
+        const numeros = [1, 2, 3, 4, 5];
+
+        display(numeros);
+      </script>
+      <!-- VANILLA-NOTEBOOK-CELL-END -->
+
+      <!-- VANILLA-NOTEBOOK-CELL
+id: cell-2
+type: javascript
+hidden: false
+index: 3
+-->
+      <script
+        data-notebook-cell
+        data-cell-id="cell-2"
+        data-cell-type="javascript"
+      >
+        const quadrados = numeros.map((n) => n * n);
+
+        display(quadrados);
+      </script>
+      <!-- VANILLA-NOTEBOOK-CELL-END -->
+
+      <!-- VANILLA-NOTEBOOK-CELL
+id: cell-4
+type: p5
+hidden: false
+index: 4
+-->
+      <script data-notebook-cell data-cell-id="cell-4" data-cell-type="p5">
+        function setup() {
+          createCanvas(windowWidth, windowHeight);
+          stroke(0);
+          background("#00000000");
+          angleMode(DEGREES);
+        }
+
+        let a = 0;
+        function draw() {
+          push();
+          translate(windowWidth / 2, windowHeight / 2);
+          rotate(a);
+          line(120, 0, -50, 190);
+          pop();
+
+          a = a + 3;
+
+          if (a >= 360) {
+            noLoop();
+          }
+        }
+      </script>
+      <!-- VANILLA-NOTEBOOK-CELL-END -->
+    </div>
+    <script>
+      (() => {
+        "use strict";
+
+        const root = document.querySelector("#notebook");
+        const state = Object.create(null);
+        const scope = new Proxy(state, {
+          has(target, property) {
+            if (property === Symbol.unscopables) return false;
+            return property in target || property in globalThis;
+          },
+          get(target, property) {
+            if (property === Symbol.unscopables) return undefined;
+            return property in target ? target[property] : globalThis[property];
+          },
+          set(target, property, value) {
+            target[property] = value;
+            return true;
+          },
+        });
+
+        // No documento exportado, display() deliberadamente usa o console.
+        window.display = (value) => console.log(value);
+
+        function transformDeclarations(code) {
+          return code.replace(
+            /\b(let|const|var)\s+([A-Za-z_$][\w$]*)/g,
+            "__state.$2",
+          );
+        }
+
+        function extractNames(code) {
+          const names = new Set();
+          const re = /\b(?:let|const|var)\s+([^;]+)/g;
+          let m;
+          while ((m = re.exec(code))) {
+            const first = m[1].split(/\b(?:for|if|while|switch|catch)\b/)[0];
+            first.split(",").forEach((part) => {
+              const name = part.split("=")[0].trim();
+              if (/^[A-Za-z_$][\w$]*$/.test(name)) names.add(name);
+            });
+          }
+          return [...names];
+        }
+
+        const nodes = [...document.querySelectorAll("[data-notebook-cell]")];
+        const cells = nodes.map((node, index) => {
+          const comment = (() => {
+            let n = node.previousSibling;
+            while (n && n.nodeType !== Node.COMMENT) n = n.previousSibling;
+            return n ? n.data : "";
+          })();
+          const type = (comment.match(/\btype:\s*([^\n]+)/i) || [
+            ,
+            node.dataset.cellType || "javascript",
+          ])[1].trim();
+          const hidden =
+            (comment.match(/\bhidden:\s*(true|false)/i) || [, "false"])[1] ===
+            "true";
+          return { node, type, hidden, index };
+        });
+
+        cells.forEach((cell) => {
+          if (cell.type === "javascript" || cell.type === "typescript") {
+            const code = cell.node.textContent;
+            extractNames(
+              cell.type === "typescript" && window.ts
+                ? ts.transpileModule(code, {
+                    compilerOptions: {
+                      target: ts.ScriptTarget.ES2020,
+                      module: ts.ModuleKind.None,
+                      strict: false,
+                    },
+                  }).outputText
+                : code,
+            ).forEach((name) => (state[name] = undefined));
+          }
+        });
+
+        function makeCellShell(cell, codeText) {
+          const section = document.createElement("section");
+          section.className = "cell";
+          const header = document.createElement("div");
+          header.className = "cell-header";
+          header.textContent =
+            String(cell.index + 1).padStart(2, "0") +
+            " · " +
+            cell.type +
+            (cell.hidden ? " · escondido" : "");
+          const code = document.createElement("pre");
+          code.className = "cell-code" + (cell.hidden ? " hidden" : "");
+          code.textContent = codeText;
+          const output = document.createElement("div");
+          output.className = "output";
+          section.append(header, code, output);
+          root.appendChild(section);
+          return output;
+        }
+
+        async function runCell(cell) {
+          const codeText = cell.node.textContent;
+          const output = makeCellShell(cell, codeText);
+          if (!codeText.trim()) return;
+
+          try {
+            if (cell.type === "markdown") {
+              output.innerHTML = marked.parse(codeText);
+              return;
+            }
+
+            if (cell.type === "html") {
+              output.appendChild(cell.node.content.cloneNode(true));
+              return;
+            }
+
+            if (cell.type === "p5") {
+              const host = document.createElement("div");
+              host.className = "p5-host";
+              output.appendChild(host);
+              new p5((p) => {
+                const originalCreateCanvas = p.createCanvas.bind(p);
+                p.createCanvas = (...args) => {
+                  const canvas = originalCreateCanvas(...args);
+                  try {
+                    canvas.parent(host);
+                  } catch {}
+                  return canvas;
+                };
+                const source = codeText
+                  .replace(
+                    /\bwindowWidth\b/g,
+                    String(
+                      Math.max(1, host.clientWidth || root.clientWidth || 1),
+                    ),
+                  )
+                  .replace(/\bwindowHeight\b/g, "550");
+                const AsyncFunction = Object.getPrototypeOf(
+                  async function () {},
+                ).constructor;
+                const runner = new AsyncFunction(
+                  "p",
+                  "with (p) { " + source + " }",
+                );
+                runner(p);
+              });
+              return;
+            }
+
+            let source = codeText;
+            if (cell.type === "typescript") {
+              source = ts.transpileModule(source, {
+                compilerOptions: {
+                  target: ts.ScriptTarget.ES2020,
+                  module: ts.ModuleKind.None,
+                  strict: false,
+                },
+              }).outputText;
+            }
+            source = transformDeclarations(source);
+            const AsyncFunction = Object.getPrototypeOf(
+              async function () {},
+            ).constructor;
+            const runner = new AsyncFunction(
+              "__state",
+              "display",
+              "__scope",
+              "with (__scope) { " + source + " }",
+            );
+            await runner(state, window.display, scope);
+          } catch (error) {
+            const div = document.createElement("div");
+            div.className = "error";
+            div.textContent = error.stack || error.message || String(error);
+            output.appendChild(div);
+            console.error(error);
+          }
+        }
+
+        (async () => {
+          for (const cell of cells) await runCell(cell);
+        })();
+      })();
+    </script>
+  </body>
+</html>
