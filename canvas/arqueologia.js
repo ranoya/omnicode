@@ -106,7 +106,7 @@ connect("Emulação", "Acervo de Pesquisa (v.1)");
 newframe(
   "https://omniboards.vercel.app/?nomenu=true&filtra=PIXELART_PESSOAL&limita=0&contentonly=true&titulo=Pixel%20Art&temptheme=narrativas",
   "Pixel Art",
-  1330,
+  1530,
   -730,
   720,
   840,
@@ -117,8 +117,8 @@ connect("Pixel Art", "Projeto");
 newframe(
   "https://omniboards.vercel.app/?nomenu=true&filtra=_DEMOSCENE&limita=0&contentonly=true&titulo=Demoscene&temptheme=narrativas",
   "Demoscene",
-  1030,
-  -1730,
+  1430,
+  -1930,
   720,
   840,
 );
@@ -176,7 +176,7 @@ newframe(
   "https://omniboards.vercel.app/?limita=0&titulo=ASCII%20Art&subtitulo=Refer%C3%AAncia&filtra=ANSI_ASCII_ART&nomenu=true&temptheme=ayu",
   "ASCII Art",
   -50,
-  -1530,
+  -1830,
   820,
   840,
 );
@@ -188,7 +188,7 @@ connect("ASCII Art", "Interfaces de Texto");
 newframe(
   "https://drive.google.com/file/d/1yNAfpLxgX3xW1JQtY2KSI2xsSiLSV8K_/preview",
   "Erthos Albino de Souza",
-  -530,
+  -1030,
   -2430,
   780,
   900,
