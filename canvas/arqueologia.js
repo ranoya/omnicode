@@ -46,8 +46,8 @@ connect("Arqueologia do Design", "Arqueologia do Editorial");
 newframe(
   "https://slidelines.vercel.app/level/?s=init&allowverticalscroll=true&file=jhttps://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit#gid=1688013862&theme=https://slidelines.vercel.app/styles/fit.css",
   "Bullet Points",
-  180,
-  1000,
+  280,
+  1100,
   700,
   600,
 );
@@ -91,9 +91,9 @@ connect("Método de Pesquisa", "Acervo de Pesquisa (v.2)");
 newframe(
   "https://visse.vercel.app/v2-arqueologia/more.html?filtra=_appsonly&bg=6e4106&fg=ffffff&",
   "Emulação",
-  -2600,
+  -2700,
   1000,
-  700,
+  900,
   600,
 );
 
@@ -106,10 +106,10 @@ connect("Emulação", "Acervo de Pesquisa (v.1)");
 newframe(
   "https://omniboards.vercel.app/?nomenu=true&filtra=PIXELART_PESSOAL&limita=0&contentonly=true&titulo=Pixel%20Art&temptheme=narrativas",
   "Pixel Art",
-  1530,
-  -430,
+  1330,
+  -730,
   720,
-  640,
+  840,
 );
 
 connect("Pixel Art", "Projeto");
@@ -164,10 +164,10 @@ connect("Menus", "Emulação");
 newframe(
   "https://omniboards.vercel.app/?limita=0&titulo=ASCII%20Art&subtitulo=Refer%C3%AAncia&filtra=ANSI_ASCII_ART&nomenu=true&temptheme=ayu",
   "ASCII Art",
-  230,
-  -1330,
+  -50,
+  -1530,
   820,
-  640,
+  840,
 );
 
 connect("ASCII Art", "Pixel Art");
@@ -177,8 +177,8 @@ connect("ASCII Art", "Interfaces de Texto");
 newframe(
   "https://drive.google.com/file/d/1yNAfpLxgX3xW1JQtY2KSI2xsSiLSV8K_/preview",
   "Erthos Albino de Souza",
-  -230,
-  -2030,
+  -530,
+  -2430,
   780,
   900,
 );
