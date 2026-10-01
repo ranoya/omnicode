@@ -241,6 +241,11 @@
       }
 
       .cell-content:hover .output {
+        border-left-color: transparent;
+      }
+
+      .cell-content:has(.output:hover) .output,
+      .cell-content:has(.code-editor:hover) .output {
         border-left-color: #ececec;
       }
 
@@ -487,7 +492,7 @@
       }
       .output {
         color: var(--theme-text);
-        border-left-color: var(--theme-line);
+        border-left-color: transparent;
       }
       .context-menu {
         background: var(--theme-bg);
@@ -533,6 +538,12 @@
   </head>
 
   <body>
+    <input
+      id="local-notebook-import"
+      type="file"
+      accept=".html,.htm,text/html"
+      hidden
+    />
     <main id="document"></main>
 
     <div id="context-menu">
@@ -2212,18 +2223,121 @@ ${blocks}
           setTimeout(() => URL.revokeObjectURL(url), 1000);
         }
 
-        function exportCells() {
-          downloadText(
+        async function saveTextFile(suggestedName, content) {
+          // File System Access API: lets the user choose the filename and location.
+          // It is intentionally attempted only from a direct user gesture
+          // (Ctrl+S / Ctrl+Shift+S).
+          if (typeof window.showSaveFilePicker === "function") {
+            try {
+              const handle = await window.showSaveFilePicker({
+                suggestedName,
+                types: [
+                  {
+                    description: "Documento HTML",
+                    accept: { "text/html": [".html", ".htm"] },
+                  },
+                ],
+              });
+
+              const writable = await handle.createWritable();
+              await writable.write(content);
+              await writable.close();
+              return true;
+            } catch (error) {
+              // Canceling the native dialog should do nothing.
+              if (error && error.name === "AbortError") return false;
+              console.warn(
+                "O seletor nativo de salvamento não pôde ser usado; usando download.",
+                error,
+              );
+            }
+          }
+
+          // Fallback for browsers that do not expose showSaveFilePicker().
+          // The browser's normal download mechanism is still used.
+          downloadText(suggestedName, content);
+          return true;
+        }
+
+        async function exportCells() {
+          await saveTextFile(
             "documento-exportado.html",
             buildStandaloneCellsDocument(getExportCells()),
           );
         }
 
-        function exportNotebook() {
-          downloadText(
+        async function exportNotebook() {
+          await saveTextFile(
             "notebook.html",
             buildNotebookDocument(getExportCells()),
           );
+        }
+
+        function parseLocalNotebookDocument(html) {
+          // First try the standalone cell format.
+          let imported = parseExportedDocument(html);
+          if (imported.length) return imported;
+
+          // Then try the complete notebook export, whose cell data lives in a
+          // JSON bootstrap block so arbitrary HTML/JS cannot break the document.
+          const parsed = new DOMParser().parseFromString(html, "text/html");
+          const bootstrap = parsed.getElementById("notebook-bootstrap");
+
+          if (bootstrap) {
+            try {
+              const data = JSON.parse(bootstrap.textContent || "");
+              if (data && Array.isArray(data.cells)) {
+                return data.cells.map((savedCell, index) => ({
+                  id: savedCell.id || "cell-imported-" + (index + 1),
+                  code:
+                    typeof savedCell.code === "string" ? savedCell.code : "",
+                  type: savedCell.type || "javascript",
+                  hidden: !!savedCell.hidden,
+                  output: [],
+                }));
+              }
+            } catch (error) {
+              console.error(
+                "Não foi possível interpretar o notebook HTML importado:",
+                error,
+              );
+            }
+          }
+
+          return [];
+        }
+
+        async function loadLocalDocument(file) {
+          try {
+            const html = await file.text();
+            const imported = parseLocalNotebookDocument(html);
+            if (!imported.length) {
+              throw new Error(
+                "Nenhuma célula de notebook foi encontrada no arquivo.",
+              );
+            }
+
+            cells.length = 0;
+            imported.forEach((cell) => cells.push(cell));
+
+            nextId = Math.max(
+              1,
+              ...cells.map((cell) => {
+                const match = String(cell.id).match(/(\\d+)$/);
+                return match ? Number(match[1]) + 1 : 1;
+              }),
+            );
+
+            ensureTrailingEmptyCell();
+            saveDocument();
+            render();
+
+            const firstCodeCell = cells.find((cell) => cell.code.trim() !== "");
+            if (firstCodeCell) await executeFromCell(firstCodeCell.id);
+          } catch (error) {
+            console.error("Não foi possível importar o notebook:", error);
+            alert("Não foi possível importar este arquivo como notebook HTML.");
+          }
         }
 
         function parseExportedDocument(html) {
@@ -2328,16 +2442,35 @@ ${blocks}
           return true;
         }
 
+        const localImportInput = document.getElementById(
+          "local-notebook-import",
+        );
+
+        localImportInput.addEventListener("change", async (event) => {
+          const file = event.target.files && event.target.files[0];
+          // Reset the value so choosing the same file twice still fires change.
+          event.target.value = "";
+          if (file) await loadLocalDocument(file);
+        });
+
         document.addEventListener("keydown", (event) => {
           if (!(event.ctrlKey || event.metaKey)) return;
 
-          if (event.shiftKey && event.key.toLowerCase() === "s") {
+          const key = event.key.toLowerCase();
+
+          if (!event.shiftKey && key === "i") {
+            event.preventDefault();
+            localImportInput.click();
+            return;
+          }
+
+          if (event.shiftKey && key === "s") {
             event.preventDefault();
             exportNotebook();
             return;
           }
 
-          if (event.key.toLowerCase() === "s") {
+          if (!event.shiftKey && key === "s") {
             event.preventDefault();
             exportCells();
             return;
