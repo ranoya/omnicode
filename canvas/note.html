@@ -75,7 +75,7 @@
           5px 12px 0 transparent;
       }
 
-      .cell:hover .gutter::before {
+      .gutter:hover::before {
         background: #b8b8b8;
         box-shadow:
           0 6px 0 #b8b8b8,
@@ -140,7 +140,17 @@
       }
 
       .code-hidden .code-controls {
-        padding-top: 2px;
+        padding-top: 0;
+        height: 22px;
+      }
+
+      .code-hidden .cell-type {
+        display: none;
+      }
+
+      .code-hidden .code-row {
+        min-height: 22px;
+        height: 22px;
       }
 
       textarea {
@@ -225,8 +235,13 @@
       .output {
         margin: 0 0 6px;
         padding: 0 13px 10px;
-        border-left: 2px solid #ececec;
+        border-left: 2px solid transparent;
         color: #303030;
+        transition: border-color 0.12s ease;
+      }
+
+      .cell-content:hover .output {
+        border-left-color: #ececec;
       }
 
       .output:empty {
@@ -1186,6 +1201,51 @@ display(quadrados);`,
          * O render precisa ser capaz de criar os hosts de P5 antes de o
          * requestAnimationFrame executá-lo.
          */
+        let dragAutoScrollFrame = null;
+        let dragPointerY = null;
+
+        function updateDragAutoScroll(clientY) {
+          dragPointerY = clientY;
+          if (dragAutoScrollFrame !== null) return;
+          const edge = 80;
+          const maxSpeed = 22;
+          const tick = () => {
+            if (dragPointerY === null) {
+              dragAutoScrollFrame = null;
+              return;
+            }
+            const y = dragPointerY;
+            const h = window.innerHeight;
+            let delta = 0;
+            if (y < edge)
+              delta = -Math.max(2, Math.round(((edge - y) / edge) * maxSpeed));
+            else if (y > h - edge)
+              delta = Math.max(
+                2,
+                Math.round(((y - (h - edge)) / edge) * maxSpeed),
+              );
+            if (delta) {
+              window.scrollBy(0, delta);
+              dragAutoScrollFrame = requestAnimationFrame(tick);
+            } else dragAutoScrollFrame = null;
+          };
+          dragAutoScrollFrame = requestAnimationFrame(tick);
+        }
+
+        function stopDragAutoScroll() {
+          dragPointerY = null;
+          if (dragAutoScrollFrame !== null) {
+            cancelAnimationFrame(dragAutoScrollFrame);
+            dragAutoScrollFrame = null;
+          }
+        }
+
+        document.addEventListener("dragover", (event) => {
+          if (draggedId !== null) updateDragAutoScroll(event.clientY);
+        });
+        document.addEventListener("dragend", stopDragAutoScroll);
+        window.addEventListener("blur", stopDragAutoScroll);
+
         function render() {
           root.innerHTML = "";
 
@@ -1421,6 +1481,7 @@ display(quadrados);`,
               }
 
               draggedId = cell.id;
+              updateDragAutoScroll(event.clientY);
               article.classList.add("dragging");
 
               event.dataTransfer.effectAllowed = "move";
@@ -1428,6 +1489,7 @@ display(quadrados);`,
             });
 
             article.addEventListener("dragend", () => {
+              stopDragAutoScroll();
               article.draggable = false;
               article.classList.remove("dragging");
 
