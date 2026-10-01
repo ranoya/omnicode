@@ -7,6 +7,22 @@
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
     <title>Canvas Infinito</title>
+    <script>
+      $_GET = [];
+      (function () {
+        corte = window.location.href.toString().indexOf("?");
+        if (corte > 0) {
+          argumento = window.location.href.toString().substring(corte + 1);
+          argumentos = argumento.split("&");
+          for (arg in argumentos) {
+            let argCorte = argumentos[arg].indexOf("=");
+            $_GET[argumentos[arg].substring(0, argCorte)] = argumentos[
+              arg
+            ].substring(argCorte + 1);
+          }
+        }
+      })();
+    </script>
     <style>
       :root {
         --bg: #f4f4f6;
@@ -1505,33 +1521,27 @@
         })();
       })();
 
-      // --- IMPLEMENTAÇÕES PRÓPRIAS ------------------------------------------------------------------
+      window.openquake = function (id, dados) {
+        document.getElementById(id).innerHTML =
+          `<iframe src="https://mrdoob.github.io/three-quake/" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="width:100%;height:100%;border:none;display:block;"></iframe>`;
+      };
 
-      $_GET = [];
-      (function () {
-        corte = window.location.href.toString().indexOf("?");
-        if (corte > 0) {
-          argumento = window.location.href.toString().substring(corte + 1);
-          argumentos = argumento.split("&");
-          for (arg in argumentos) {
-            let argCorte = argumentos[arg].indexOf("=");
-            $_GET[argumentos[arg].substring(0, argCorte)] = argumentos[
-              arg
-            ].substring(argCorte + 1);
-          }
-        }
-      })();
+      window.quake = function () {
+        run("Quake", "openquake", {});
+      };
 
-      /*
-      ATENÇÃO
-      É necessário alterar também um trecho do código do contexto:
+      window.fun = function () {
+        run("Quake", "openquake", {});
+      };
 
-      updateUIVisibility()
+      window.openwarphoto = function (id, dados) {
+        document.getElementById(id).innerHTML =
+          `<iframe src="https://www.youtube.com/embed/VtYEz4OKCn8?si=_FkvIpfSGMyBS8kg&controls=0&autoplay=1" style="width:100%;height:100%;border:none;display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
+      };
 
-      consoleBar só se modifica se $_GET["devmode"] existir
-      */
-
-      document.getElementById("console").style.display = "none";
+      window.hello = function () {
+        run("Yeah!", "openwarphoto", {});
+      };
 
       if (
         typeof $_GET["devmode"] != "undefined" &&
@@ -1546,23 +1556,32 @@
         $_GET["devmode"] = "true";
       };
 
-      window.openquake = function (id, dados) {
-        document.getElementById(id).innerHTML =
-          `<iframe src="https://mrdoob.github.io/three-quake/" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="width:100%;height:100%;border:none;display:block;"></iframe>`;
-      };
+      if (
+        typeof $_GET["plugin"] != "undefined" &&
+        $_GET["plugin"] != null &&
+        $_GET["plugin"] != ""
+      ) {
+        let scrjs = document.createElement("script");
+        scrjs.src = $_GET["plugin"];
+        document.body.appendChild(scrjs);
+      }
+
+      // --- IMPLEMENTAÇÕES PRÓPRIAS ------------------------------------------------------------------
+
+      /*
+      ATENÇÃO
+      É necessário alterar também um trecho do código do contexto:
+
+      updateUIVisibility()
+
+      consoleBar só se modifica se $_GET["devmode"] existir
+      */
+
+      document.getElementById("console").style.display = "none";
 
       window.openut = function (id, dados) {
         document.getElementById(id).innerHTML =
           `<iframe src="https://emupedia.net/emupedia-game-unreal-tournament/" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="width:100%;height:100%;border:none;display:block;"></iframe>`;
-      };
-
-      window.openwarphoto = function (id, dados) {
-        document.getElementById(id).innerHTML =
-          `<iframe src="https://www.youtube.com/embed/VtYEz4OKCn8?si=_FkvIpfSGMyBS8kg&controls=0&autoplay=1" style="width:100%;height:100%;border:none;display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
-      };
-
-      window.quake = function () {
-        run("Quake", "openquake", {});
       };
 
       window.ultrakill = function () {
@@ -1575,10 +1594,6 @@
 
       window.rampage = function () {
         run("Unreal", "openut", {});
-      };
-
-      window.hello = function () {
-        run("Yeah!", "openwarphoto", {});
       };
 
       window.tortuga = function () {
@@ -1855,16 +1870,6 @@
           codex[id] = thisace.getSession().getValue();
         });
       };
-
-      if (
-        typeof $_GET["plugin"] != "undefined" &&
-        $_GET["plugin"] != null &&
-        $_GET["plugin"] != ""
-      ) {
-        let scrjs = document.createElement("script");
-        scrjs.src = $_GET["plugin"];
-        document.body.appendChild(scrjs);
-      }
     </script>
   </body>
 </html>
