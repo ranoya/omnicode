@@ -838,19 +838,72 @@
         window.newwindow = newwindow; // pode ser chamado pelo console do navegador também
         window.newpermawindow = newpermawindow;
 
+        // ---- carregamento preguiçoso de iframes (só recebem "src" quando entram na área visível) ----
+        var IFRAME_ALLOW =
+          "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; allowfullscreen";
+        var LAZY_MARGIN = 200; // px de folga antes de a área ficar visível, pra já ir carregando um pouco antes
+        var lazyFrames = [];
+
+        function buildLazyIframeHtml(url) {
+          var safeUrl = String(url || "").replace(/"/g, "&quot;");
+          // "temp" guarda a url real; "src" só é preenchido quando o iframe entra na área visível do canvas
+          return (
+            '<iframe temp="' +
+            safeUrl +
+            '" allow="' +
+            IFRAME_ALLOW +
+            '" allowfullscreen ' +
+            'style="width:100%;height:100%;border:none;display:block;"></iframe>'
+          );
+        }
+        // outros pontos do código (inclusive implementações manuais futuras) podem registrar
+        // um iframe próprio pra entrar nesse mesmo esquema de carregamento preguiçoso
+        function registerLazyFrame(iframeEl) {
+          if (iframeEl && iframeEl.getAttribute("temp"))
+            lazyFrames.push(iframeEl);
+        }
+        window.registerLazyFrame = registerLazyFrame;
+
+        function checkLazyFrames() {
+          if (lazyFrames.length === 0) return;
+          var vw = viewport.clientWidth,
+            vh = viewport.clientHeight;
+          for (var i = lazyFrames.length - 1; i >= 0; i--) {
+            var ifr = lazyFrames[i];
+            if (!ifr.isConnected) {
+              lazyFrames.splice(i, 1);
+              continue;
+            }
+            // getBoundingClientRect já reflete a posição real na tela, incluindo o zoom/pan do canvas —
+            // não precisamos fazer nenhuma conta extra de zoom, o navegador já faz isso por nós
+            var r = ifr.getBoundingClientRect();
+            var visible =
+              r.right > -LAZY_MARGIN &&
+              r.left < vw + LAZY_MARGIN &&
+              r.bottom > -LAZY_MARGIN &&
+              r.top < vh + LAZY_MARGIN;
+            if (visible) {
+              if (!ifr.getAttribute("src")) {
+                var temp = ifr.getAttribute("temp");
+                if (temp) ifr.setAttribute("src", temp);
+              }
+              lazyFrames.splice(i, 1); // já carregou uma vez: não precisa mais verificar essa janela
+            }
+          }
+        }
+
         // ---- janela com iframe ----
         function makeFrame(permanent, url, title, w, h, x, y) {
           var id = idSeq++;
           var name = title || url || "Frame " + id;
           var pos = resolvePosition(name, w, h, x, y, id);
-          var safeUrl = String(url || "").replace(/"/g, "&quot;");
           var bodyHtml =
             '<div class="win-body no-padding">' +
-            '<iframe src="' +
-            safeUrl +
-            '" style="width:100%;height:100%;border:none;display:block;"></iframe>' +
+            buildLazyIframeHtml(url) +
             "</div>";
-          return createWindowShell(name, pos, bodyHtml, permanent);
+          var win = createWindowShell(name, pos, bodyHtml, permanent);
+          registerLazyFrame(win.querySelector("iframe[temp]"));
+          return win;
         }
         function newframe(url, title, w, h, x, y) {
           return makeFrame(false, url, title, w, h, x, y);
@@ -912,7 +965,7 @@
 <code class="sig">newpermawindow(título, w, h, x, y)</code>
 <p>Igual à <code>newwindow</code>, mas sem botão de fechar (permanente no canvas).</p>
 <code class="sig">newframe(url, título, w, h, x, y)</code>
-<p>Janela com um iframe ocupando todo o espaço, sem padding. Sem título, usa a url. Muitos sites bloqueiam exibição em iframe.</p>
+<p>Janela com um iframe ocupando todo o espaço, sem padding. Sem título, usa a url. Muitos sites bloqueiam exibição em iframe. O carregamento é preguiçoso: o iframe só recebe a url de verdade quando entra na área visível da tela (considerando zoom e pan), para não pesar quando há muitas janelas abertas de uma vez.</p>
 <code class="sig">newpermaframe(url, título, w, h, x, y)</code>
 <p>Igual à <code>newframe</code>, mas sem botão de fechar.</p>
 <code class="sig">run(título, nomeDaFuncao, params, w, h, x, y)</code>
@@ -1064,6 +1117,7 @@
 
         (function frameLoop() {
           updateLinks();
+          checkLazyFrames();
           windows.forEach(function (w) {
             if (w.classList.contains("maximized")) fitMaximizedWindow(w);
           });
@@ -1522,8 +1576,9 @@
       })();
 
       window.openquake = function (id, dados) {
-        document.getElementById(id).innerHTML =
-          `<iframe src="https://mrdoob.github.io/three-quake/" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="width:100%;height:100%;border:none;display:block;"></iframe>`;
+        var el = document.getElementById(id);
+        el.innerHTML = `<iframe temp="https://mrdoob.github.io/three-quake/" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; allowfullscreen" allowfullscreen style="width:100%;height:100%;border:none;display:block;"></iframe>`;
+        window.registerLazyFrame(el.querySelector("iframe[temp]"));
       };
 
       window.quake = function () {
@@ -1535,8 +1590,9 @@
       };
 
       window.openwarphoto = function (id, dados) {
-        document.getElementById(id).innerHTML =
-          `<iframe src="https://www.youtube.com/embed/VtYEz4OKCn8?si=_FkvIpfSGMyBS8kg&controls=0&autoplay=1" style="width:100%;height:100%;border:none;display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
+        var el = document.getElementById(id);
+        el.innerHTML = `<iframe temp="https://www.youtube.com/embed/VtYEz4OKCn8?si=_FkvIpfSGMyBS8kg&controls=0&autoplay=1" style="width:100%;height:100%;border:none;display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; allowfullscreen" allowfullscreen></iframe>`;
+        window.registerLazyFrame(el.querySelector("iframe[temp]"));
       };
 
       window.hello = function () {
