@@ -464,6 +464,7 @@
         --theme-hover: #f4f4f4;
         --theme-code: #f8f8f7;
         --theme-accent: #4b72d8;
+        --theme-secondary: #6a5acd;
         --theme-error: #b42318;
       }
       body {
@@ -473,12 +474,20 @@
       .code-editor {
         background: var(--theme-code);
       }
+      .code-editor pre {
+        background: transparent;
+      }
+      .code-editor pre code.hljs {
+        background: transparent;
+        color: var(--theme-text);
+      }
       .code-toggle:hover {
         background: var(--theme-hover);
         color: var(--theme-text);
       }
       .output {
         color: var(--theme-text);
+        border-left-color: var(--theme-line);
       }
       .context-menu {
         background: var(--theme-bg);
@@ -490,6 +499,35 @@
       }
       .menu-item:hover {
         background: var(--theme-hover);
+      }
+      .menu-item.active {
+        background: var(--theme-hover);
+        color: var(--theme-accent);
+      }
+      .cell-type {
+        color: var(--theme-muted);
+      }
+      .cell-type:hover {
+        color: var(--theme-text);
+      }
+      .gutter:hover::before {
+        background: var(--theme-muted);
+        box-shadow:
+          0 6px 0 var(--theme-muted),
+          0 12px 0 var(--theme-muted),
+          5px 0 0 var(--theme-muted),
+          5px 6px 0 var(--theme-muted),
+          5px 12px 0 var(--theme-muted);
+      }
+      .error {
+        color: var(--theme-error);
+      }
+      .markdown-output a {
+        color: var(--theme-accent);
+      }
+      ::selection {
+        background: var(--theme-accent);
+        color: var(--theme-bg);
       }
     </style>
   </head>
@@ -534,119 +572,207 @@
 
         const STORAGE_KEY = "vanilla-notebook-document-v1";
 
-        const THEMES = {
-          light: {
-            bg: "#ffffff",
-            text: "#242424",
-            muted: "#8a8a8a",
-            line: "#e8e8e8",
-            hover: "#f4f4f4",
-            code: "#f8f8f7",
-            accent: "#4b72d8",
-            error: "#b42318",
-          },
-          dark: {
-            bg: "#1e1e1e",
-            text: "#d4d4d4",
-            muted: "#858585",
-            line: "#383838",
-            hover: "#2a2d2e",
-            code: "#252526",
-            accent: "#569cd6",
-            error: "#f48771",
-          },
-          dracula: {
-            bg: "#282a36",
-            text: "#f8f8f2",
-            muted: "#6272a4",
-            line: "#44475a",
-            hover: "#343746",
-            code: "#21222c",
-            accent: "#bd93f9",
-            error: "#ff5555",
-          },
-          nord: {
-            bg: "#2e3440",
-            text: "#d8dee9",
-            muted: "#81a1c1",
-            line: "#434c5e",
-            hover: "#3b4252",
-            code: "#242933",
-            accent: "#88c0d0",
-            error: "#bf616a",
-          },
-          "solarized-dark": {
-            bg: "#002b36",
-            text: "#839496",
-            muted: "#586e75",
-            line: "#073642",
-            hover: "#073642",
-            code: "#002b36",
-            accent: "#268bd2",
-            error: "#dc322f",
-          },
-          "solarized-light": {
-            bg: "#fdf6e3",
-            text: "#657b83",
-            muted: "#93a1a1",
-            line: "#eee8d5",
-            hover: "#eee8d5",
-            code: "#eee8d5",
-            accent: "#268bd2",
-            error: "#dc322f",
-          },
-          monokai: {
-            bg: "#272822",
-            text: "#f8f8f2",
-            muted: "#a6a6a6",
-            line: "#49483e",
-            hover: "#35362f",
-            code: "#1f201b",
-            accent: "#a6e22e",
-            error: "#f92672",
-          },
-          "one-dark": {
-            bg: "#282c34",
-            text: "#abb2bf",
-            muted: "#7f848e",
-            line: "#3e4451",
-            hover: "#2c313a",
-            code: "#21252b",
-            accent: "#61afef",
-            error: "#e06c75",
-          },
-          "gruvbox-dark": {
-            bg: "#282828",
-            text: "#ebdbb2",
-            muted: "#928374",
-            line: "#504945",
-            hover: "#3c3836",
-            code: "#1d2021",
-            accent: "#83a598",
-            error: "#fb4934",
-          },
-          "github-dark": {
-            bg: "#0d1117",
-            text: "#e6edf3",
-            muted: "#8b949e",
-            line: "#30363d",
-            hover: "#161b22",
-            code: "#161b22",
-            accent: "#58a6ff",
-            error: "#f85149",
-          },
+        const HIGHLIGHT_CDN =
+          "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/styles/";
+
+        // Nomes amigáveis podem ser usados diretamente em ?temptheme=...
+        // Também aceitamos o caminho relativo de qualquer tema disponível no
+        // pacote do Highlight.js, por exemplo:
+        // ?temptheme=base16%2Fgruvbox-dark-hard
+        const THEME_ALIASES = {
+          auto: null,
+          light: "github",
+          github: "github",
+          "github dark": "github-dark",
+          "github-dark": "github-dark",
+          "github dark dimmed": "github-dark-dimmed",
+          dracula: "dracula",
+          nord: "nord",
+          monokai: "monokai",
+          "one dark": "atom-one-dark",
+          "one-dark": "atom-one-dark",
+          "solarized dark": "solarized-dark",
+          "solarized-dark": "solarized-dark",
+          "solarized light": "solarized-light",
+          "solarized-light": "solarized-light",
+          "gruvbox dark": "base16/gruvbox-dark-medium",
+          "gruvbox-dark": "base16/gruvbox-dark-medium",
+          "gruvbox light": "base16/gruvbox-light-medium",
+          "gruvbox-light": "base16/gruvbox-light-medium",
         };
 
-        function applyTheme(requested) {
-          let name = String(requested || "auto").toLowerCase();
-          if (name === "auto") {
-            name = window.matchMedia("(prefers-color-scheme: dark)").matches
-              ? "dark"
-              : "light";
+        function normalizeThemeName(value) {
+          return String(value || "")
+            .trim()
+            .replace(/\.css$/i, "")
+            .replace(/\s+/g, " ")
+            .toLowerCase();
+        }
+
+        function resolveHighlightTheme(value) {
+          let raw = String(value || "").trim();
+          if (!raw || normalizeThemeName(raw) === "auto") {
+            return window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "github-dark"
+              : "github";
           }
-          if (!THEMES[name]) name = "light";
-          const t = THEMES[name];
+
+          const normalized = normalizeThemeName(raw);
+          if (THEME_ALIASES[normalized]) return THEME_ALIASES[normalized];
+
+          // Permite qualquer nome de arquivo/caminho existente no diretório
+          // de estilos do Highlight.js.
+          return raw
+            .replace(/^styles\//i, "")
+            .replace(/\.css$/i, "")
+            .replace(/^\/+|\/+$/g, "");
+        }
+
+        function hexToRgb(value) {
+          const m = String(value || "")
+            .trim()
+            .match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+          if (!m) return null;
+          const h =
+            m[1].length === 3
+              ? m[1]
+                  .split("")
+                  .map((x) => x + x)
+                  .join("")
+              : m[1];
+          return {
+            r: parseInt(h.slice(0, 2), 16),
+            g: parseInt(h.slice(2, 4), 16),
+            b: parseInt(h.slice(4, 6), 16),
+          };
+        }
+
+        function rgbToHex(rgb) {
+          const c = (n) =>
+            Math.max(0, Math.min(255, Math.round(n)))
+              .toString(16)
+              .padStart(2, "0");
+          return "#" + c(rgb.r) + c(rgb.g) + c(rgb.b);
+        }
+
+        function mixColors(a, b, amount) {
+          const ca = hexToRgb(a),
+            cb = hexToRgb(b);
+          if (!ca || !cb) return a || b;
+          return rgbToHex({
+            r: ca.r + (cb.r - ca.r) * amount,
+            g: ca.g + (cb.g - ca.g) * amount,
+            b: ca.b + (cb.b - ca.b) * amount,
+          });
+        }
+
+        function createHighlightProbe() {
+          const host = document.createElement("div");
+          host.setAttribute("aria-hidden", "true");
+          host.style.cssText =
+            "position:fixed;left:-10000px;top:-10000px;width:1px;height:1px;" +
+            "overflow:hidden;pointer-events:none;opacity:0;";
+          host.innerHTML =
+            '<pre class="hljs"><code class="hljs">' +
+            '<span class="hljs-comment">comment</span>' +
+            '<span class="hljs-keyword">keyword</span>' +
+            '<span class="hljs-string">string</span>' +
+            '<span class="hljs-number">123</span>' +
+            '<span class="hljs-built_in">built_in</span>' +
+            '<span class="hljs-title">title</span>' +
+            '<span class="hljs-deletion">deletion</span>' +
+            "</code></pre>";
+          document.body.appendChild(host);
+          return host;
+        }
+
+        function readHighlightColors() {
+          const probe = createHighlightProbe();
+          const code = probe.querySelector("code");
+          const read = (selector) => {
+            const el = probe.querySelector(selector);
+            if (!el) return null;
+            const cs = getComputedStyle(el);
+            return cs.color && cs.color !== "rgba(0, 0, 0, 0)"
+              ? cs.color
+              : null;
+          };
+          const bg = getComputedStyle(code).backgroundColor;
+          const text = read("code") || getComputedStyle(code).color;
+          const comment = read(".hljs-comment") || text;
+          const keyword = read(".hljs-keyword") || text;
+          const string = read(".hljs-string") || keyword;
+          const deletion = read(".hljs-deletion") || keyword;
+
+          document.body.removeChild(probe);
+
+          function cssColorToHex(value, fallback) {
+            const m = String(value || "").match(
+              /^rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)/,
+            );
+            return m ? rgbToHex({ r: +m[1], g: +m[2], b: +m[3] }) : fallback;
+          }
+
+          const bgHex = cssColorToHex(
+            bg,
+            getComputedStyle(document.body).backgroundColor,
+          );
+          const textHex = cssColorToHex(text, "#242424");
+          const mutedHex = cssColorToHex(
+            comment,
+            mixColors(textHex, bgHex, 0.55),
+          );
+          const accentHex = cssColorToHex(keyword, "#4b72d8");
+          const secondaryHex = cssColorToHex(string, accentHex);
+          const errorHex = cssColorToHex(deletion, "#b42318");
+
+          return {
+            bg: bgHex,
+            text: textHex,
+            muted: mutedHex,
+            line: mixColors(bgHex, textHex, 0.16),
+            hover: mixColors(bgHex, textHex, 0.07),
+            code: bgHex,
+            accent: accentHex,
+            secondary: secondaryHex,
+            error: errorHex,
+          };
+        }
+
+        function applyTheme(requested) {
+          const highlightName = resolveHighlightTheme(requested);
+          const highlightLink = document.getElementById("highlight-theme");
+
+          if (highlightLink) {
+            const desiredHref = HIGHLIGHT_CDN + highlightName + ".min.css";
+            if (highlightLink.getAttribute("href") !== desiredHref) {
+              highlightLink.href = desiredHref;
+            }
+            const sync = () => syncNotebookToHighlightTheme();
+            highlightLink.addEventListener("load", sync, { once: true });
+            highlightLink.addEventListener(
+              "error",
+              () => {
+                // Se um nome arbitrário não existir, voltamos ao GitHub.
+                if (highlightName !== "github") {
+                  highlightLink.href = HIGHLIGHT_CDN + "github.min.css";
+                  highlightLink.addEventListener("load", sync, { once: true });
+                }
+              },
+              { once: true },
+            );
+          }
+
+          document.documentElement.dataset.theme = highlightName;
+          // Aplica imediatamente uma paleta provisória derivada do tema anterior.
+          syncNotebookToHighlightTheme();
+        }
+
+        function syncNotebookToHighlightTheme() {
+          if (!document.body) return;
+          const t = readHighlightColors();
           const rootStyle = document.documentElement.style;
+
           rootStyle.setProperty("--theme-bg", t.bg);
           rootStyle.setProperty("--theme-text", t.text);
           rootStyle.setProperty("--theme-muted", t.muted);
@@ -654,6 +780,7 @@
           rootStyle.setProperty("--theme-hover", t.hover);
           rootStyle.setProperty("--theme-code", t.code);
           rootStyle.setProperty("--theme-accent", t.accent);
+          rootStyle.setProperty("--theme-secondary", t.secondary);
           rootStyle.setProperty("--theme-error", t.error);
 
           // Compatibilidade com o CSS original do notebook.
@@ -664,36 +791,20 @@
           rootStyle.setProperty("--code", t.code);
           rootStyle.setProperty("--accent", t.accent);
           rootStyle.setProperty("--error", t.error);
-
-          document.documentElement.dataset.theme = name;
-
-          const highlightThemes = {
-            light: "github",
-            dark: "github-dark",
-            dracula: "dracula",
-            nord: "nord",
-            "solarized-dark": "solarized-dark",
-            "solarized-light": "solarized-light",
-            monokai: "monokai",
-            "one-dark": "atom-one-dark",
-            "gruvbox-dark": "gruvbox-dark",
-            "github-dark": "github-dark",
-          };
-
-          const highlightLink = document.getElementById("highlight-theme");
-          if (highlightLink) {
-            const hlName = highlightThemes[name] || "github";
-            highlightLink.href =
-              "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/styles/" +
-              hlName +
-              ".min.css";
-          }
         }
 
         const urlTheme = new URLSearchParams(window.location.search).get(
           "temptheme",
         );
-        applyTheme(urlTheme || "auto");
+        if (document.readyState === "loading") {
+          document.addEventListener(
+            "DOMContentLoaded",
+            () => applyTheme(urlTheme || "auto"),
+            { once: true },
+          );
+        } else {
+          applyTheme(urlTheme || "auto");
+        }
 
         function saveDocument() {
           try {
@@ -1844,17 +1955,65 @@ display(quadrados);`,
 <script src="https://cdn.jsdelivr.net/npm/typescript@5.9.2/lib/typescript.min.js"><\/script>
 <script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/p5.min.js"><\/script>
 <style>
-:root{--bg:#fff;--fg:#242424;--code:#f7f7f5}
+:root{
+  --bg:#fff;--fg:#242424;--code:#f7f7f5;
+  --muted:#888;--line:#ececec;--hover:#f3f3f3;--accent:#4b72d8;--error:#b42318
+}
 body{background:var(--bg);color:var(--fg)}
 .cell-code{background:var(--code)}
+.cell-header{color:var(--muted)}
+.output{border-left-color:var(--line)}
+.error{color:var(--error)}
 </style>
+<link id="highlight-theme-export" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/styles/github.min.css">
 <script>
 (function(){
-const themes={light:["#fff","#242424","#f7f7f5"],dark:["#1e1e1e","#d4d4d4","#252526"],dracula:["#282a36","#f8f8f2","#21222c"],nord:["#2e3440","#d8dee9","#242933"],"solarized-dark":["#002b36","#839496","#002b36"],"solarized-light":["#fdf6e3","#657b83","#eee8d5"],monokai:["#272822","#f8f8f2","#1f201b"],"one-dark":["#282c34","#abb2bf","#21252b"],"gruvbox-dark":["#282828","#ebdbb2","#1d2021"],"github-dark":["#0d1117","#e6edf3","#161b22"]};
-let n=new URLSearchParams(location.search).get("temptheme")||"auto";
-if(n==="auto") n=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";
-if(!themes[n])n="light";
-const t=themes[n];document.documentElement.style.setProperty("--bg",t[0]);document.documentElement.style.setProperty("--fg",t[1]);document.documentElement.style.setProperty("--code",t[2]);
+const CDN="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/styles/";
+const aliases={
+  "light":"github","github":"github","github dark":"github-dark","github-dark":"github-dark",
+  "dracula":"dracula","nord":"nord","monokai":"monokai","one dark":"atom-one-dark","one-dark":"atom-one-dark",
+  "solarized dark":"solarized-dark","solarized-dark":"solarized-dark",
+  "solarized light":"solarized-light","solarized-light":"solarized-light",
+  "gruvbox dark":"base16/gruvbox-dark-medium","gruvbox-dark":"base16/gruvbox-dark-medium",
+  "gruvbox light":"base16/gruvbox-light-medium","gruvbox-light":"base16/gruvbox-light-medium"
+};
+function norm(v){return String(v||"").trim().replace(/\.css$/i,"").replace(/\s+/g," ").toLowerCase()}
+function resolve(v){
+  if(!v||norm(v)==="auto")return matchMedia("(prefers-color-scheme:dark)").matches?"github-dark":"github";
+  return aliases[norm(v)]||String(v).trim().replace(/^styles\//i,"").replace(/\.css$/i,"").replace(/^\/+|\/+$/g,"");
+}
+function rgb(v){
+  const m=String(v||"").match(/^rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)/);return m?{r:+m[1],g:+m[2],b:+m[3]}:null
+}
+function hex(v){const c=n=>Math.max(0,Math.min(255,Math.round(n))).toString(16).padStart(2,"0");return"#"+c(v.r)+c(v.g)+c(v.b)}
+function mix(a,b,p){const x=rgb(a),y=rgb(b);return x&&y?hex({r:x.r+(y.r-x.r)*p,g:x.g+(y.g-x.g)*p,b:x.b+(y.b-x.b)*p}):a}
+function sync(){
+  const host=document.createElement("div");
+  host.style.cssText="position:fixed;left:-10000px;top:-10000px;opacity:0";
+  host.innerHTML='<pre class="hljs"><code class="hljs"><span class="hljs-comment">c</span><span class="hljs-keyword">k</span><span class="hljs-string">s</span><span class="hljs-deletion">d</span></code></pre>';
+  document.body.appendChild(host);
+  const q=s=>host.querySelector(s);
+  const c=e=>e?getComputedStyle(e).color:null;
+  const bg=getComputedStyle(q("code")).backgroundColor;
+  const fg=c(q("code"))||"rgb(36,36,36)";
+  const b=rgb(bg)||{r:255,g:255,b:255}, f=rgb(fg)||{r:36,g:36,b:36};
+  const bhex=hex(b), fhex=hex(f);
+  const muted=c(q(".hljs-comment"))||fg, accent=c(q(".hljs-keyword"))||fg, error=c(q(".hljs-deletion"))||fg;
+  document.documentElement.style.setProperty("--bg",bhex);
+  document.documentElement.style.setProperty("--fg",fhex);
+  document.documentElement.style.setProperty("--code",bhex);
+  document.documentElement.style.setProperty("--muted",rgb(muted)?hex(rgb(muted)):mix(fhex,bhex,.55));
+  document.documentElement.style.setProperty("--line",mix(fhex,bhex,.16));
+  document.documentElement.style.setProperty("--hover",mix(fhex,bhex,.07));
+  document.documentElement.style.setProperty("--accent",rgb(accent)?hex(rgb(accent)):fhex);
+  document.documentElement.style.setProperty("--error",rgb(error)?hex(rgb(error)):"#b42318");
+  document.body.removeChild(host);
+}
+const link=document.getElementById("highlight-theme-export");
+const theme=new URLSearchParams(location.search).get("temptheme")||"auto";
+link.href=CDN+resolve(theme)+".min.css";
+link.addEventListener("load",sync,{once:true});
+document.addEventListener("DOMContentLoaded",sync,{once:true});
 })();
 <\/script>
 </head>
