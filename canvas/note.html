@@ -439,6 +439,7 @@
     </style>
 
     <link
+      id="highlight-theme"
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/styles/github.min.css"
     />
@@ -453,6 +454,44 @@
 
     <!-- p5.js -->
     <script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/p5.min.js"></script>
+
+    <style id="notebook-theme-system">
+      :root {
+        --theme-bg: #ffffff;
+        --theme-text: #242424;
+        --theme-muted: #8a8a8a;
+        --theme-line: #e8e8e8;
+        --theme-hover: #f4f4f4;
+        --theme-code: #f8f8f7;
+        --theme-accent: #4b72d8;
+        --theme-error: #b42318;
+      }
+      body {
+        background: var(--theme-bg);
+        color: var(--theme-text);
+      }
+      .code-editor {
+        background: var(--theme-code);
+      }
+      .code-toggle:hover {
+        background: var(--theme-hover);
+        color: var(--theme-text);
+      }
+      .output {
+        color: var(--theme-text);
+      }
+      .context-menu {
+        background: var(--theme-bg);
+        color: var(--theme-text);
+        border-color: var(--theme-line);
+      }
+      .menu-item {
+        color: var(--theme-text);
+      }
+      .menu-item:hover {
+        background: var(--theme-hover);
+      }
+    </style>
   </head>
 
   <body>
@@ -471,6 +510,9 @@
       </button>
       <button class="menu-item" data-type="html">
         <span class="menu-icon">&lt;/&gt;</span> HTML
+      </button>
+      <button class="menu-item" data-type="css">
+        <span class="menu-icon">CSS</span> CSS
       </button>
       <button class="menu-item" data-type="markdown">
         <span class="menu-icon">MD</span> Markdown
@@ -491,6 +533,167 @@
         let contextCellId = null;
 
         const STORAGE_KEY = "vanilla-notebook-document-v1";
+
+        const THEMES = {
+          light: {
+            bg: "#ffffff",
+            text: "#242424",
+            muted: "#8a8a8a",
+            line: "#e8e8e8",
+            hover: "#f4f4f4",
+            code: "#f8f8f7",
+            accent: "#4b72d8",
+            error: "#b42318",
+          },
+          dark: {
+            bg: "#1e1e1e",
+            text: "#d4d4d4",
+            muted: "#858585",
+            line: "#383838",
+            hover: "#2a2d2e",
+            code: "#252526",
+            accent: "#569cd6",
+            error: "#f48771",
+          },
+          dracula: {
+            bg: "#282a36",
+            text: "#f8f8f2",
+            muted: "#6272a4",
+            line: "#44475a",
+            hover: "#343746",
+            code: "#21222c",
+            accent: "#bd93f9",
+            error: "#ff5555",
+          },
+          nord: {
+            bg: "#2e3440",
+            text: "#d8dee9",
+            muted: "#81a1c1",
+            line: "#434c5e",
+            hover: "#3b4252",
+            code: "#242933",
+            accent: "#88c0d0",
+            error: "#bf616a",
+          },
+          "solarized-dark": {
+            bg: "#002b36",
+            text: "#839496",
+            muted: "#586e75",
+            line: "#073642",
+            hover: "#073642",
+            code: "#002b36",
+            accent: "#268bd2",
+            error: "#dc322f",
+          },
+          "solarized-light": {
+            bg: "#fdf6e3",
+            text: "#657b83",
+            muted: "#93a1a1",
+            line: "#eee8d5",
+            hover: "#eee8d5",
+            code: "#eee8d5",
+            accent: "#268bd2",
+            error: "#dc322f",
+          },
+          monokai: {
+            bg: "#272822",
+            text: "#f8f8f2",
+            muted: "#a6a6a6",
+            line: "#49483e",
+            hover: "#35362f",
+            code: "#1f201b",
+            accent: "#a6e22e",
+            error: "#f92672",
+          },
+          "one-dark": {
+            bg: "#282c34",
+            text: "#abb2bf",
+            muted: "#7f848e",
+            line: "#3e4451",
+            hover: "#2c313a",
+            code: "#21252b",
+            accent: "#61afef",
+            error: "#e06c75",
+          },
+          "gruvbox-dark": {
+            bg: "#282828",
+            text: "#ebdbb2",
+            muted: "#928374",
+            line: "#504945",
+            hover: "#3c3836",
+            code: "#1d2021",
+            accent: "#83a598",
+            error: "#fb4934",
+          },
+          "github-dark": {
+            bg: "#0d1117",
+            text: "#e6edf3",
+            muted: "#8b949e",
+            line: "#30363d",
+            hover: "#161b22",
+            code: "#161b22",
+            accent: "#58a6ff",
+            error: "#f85149",
+          },
+        };
+
+        function applyTheme(requested) {
+          let name = String(requested || "auto").toLowerCase();
+          if (name === "auto") {
+            name = window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+          }
+          if (!THEMES[name]) name = "light";
+          const t = THEMES[name];
+          const rootStyle = document.documentElement.style;
+          rootStyle.setProperty("--theme-bg", t.bg);
+          rootStyle.setProperty("--theme-text", t.text);
+          rootStyle.setProperty("--theme-muted", t.muted);
+          rootStyle.setProperty("--theme-line", t.line);
+          rootStyle.setProperty("--theme-hover", t.hover);
+          rootStyle.setProperty("--theme-code", t.code);
+          rootStyle.setProperty("--theme-accent", t.accent);
+          rootStyle.setProperty("--theme-error", t.error);
+
+          // Compatibilidade com o CSS original do notebook.
+          rootStyle.setProperty("--text", t.text);
+          rootStyle.setProperty("--muted", t.muted);
+          rootStyle.setProperty("--line", t.line);
+          rootStyle.setProperty("--hover", t.hover);
+          rootStyle.setProperty("--code", t.code);
+          rootStyle.setProperty("--accent", t.accent);
+          rootStyle.setProperty("--error", t.error);
+
+          document.documentElement.dataset.theme = name;
+
+          const highlightThemes = {
+            light: "github",
+            dark: "github-dark",
+            dracula: "dracula",
+            nord: "nord",
+            "solarized-dark": "solarized-dark",
+            "solarized-light": "solarized-light",
+            monokai: "monokai",
+            "one-dark": "atom-one-dark",
+            "gruvbox-dark": "gruvbox-dark",
+            "github-dark": "github-dark",
+          };
+
+          const highlightLink = document.getElementById("highlight-theme");
+          if (highlightLink) {
+            const hlName = highlightThemes[name] || "github";
+            highlightLink.href =
+              "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/styles/" +
+              hlName +
+              ".min.css";
+          }
+        }
+
+        const urlTheme = new URLSearchParams(window.location.search).get(
+          "temptheme",
+        );
+        applyTheme(urlTheme || "auto");
 
         function saveDocument() {
           try {
@@ -851,6 +1054,20 @@ display(quadrados);`,
 
         /*
          * -------------------------
+         * CSS
+         * -------------------------
+         */
+
+        function executeCss(cell) {
+          cell.output = [
+            {
+              __css: cell.code,
+            },
+          ];
+        }
+
+        /*
+         * -------------------------
          * P5.js
          * -------------------------
          *
@@ -1148,6 +1365,11 @@ display(quadrados);`,
                 continue;
               }
 
+              if (cell.type === "css") {
+                executeCss(cell);
+                continue;
+              }
+
               if (cell.type === "p5") {
                 executeP5(cell);
                 continue;
@@ -1297,8 +1519,13 @@ display(quadrados);`,
                     ? "JS"
                     : cell.type === "markdown"
                       ? "MD"
-                      : "HTML";
-            typeLabel.title = cell.type === "p5" ? "P5.js" : cell.type;
+                      : cell.type === "css"
+                        ? "CSS"
+                        : "HTML";
+            typeLabel.title = "Clique com o botão direito para mudar o tipo";
+            typeLabel.addEventListener("contextmenu", (event) => {
+              openContextMenu(event, cell);
+            });
 
             const toggleCode = document.createElement("button");
             toggleCode.type = "button";
@@ -1616,6 +1843,20 @@ display(quadrados);`,
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"><\/script>
 <script src="https://cdn.jsdelivr.net/npm/typescript@5.9.2/lib/typescript.min.js"><\/script>
 <script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/p5.min.js"><\/script>
+<style>
+:root{--bg:#fff;--fg:#242424;--code:#f7f7f5}
+body{background:var(--bg);color:var(--fg)}
+.cell-code{background:var(--code)}
+</style>
+<script>
+(function(){
+const themes={light:["#fff","#242424","#f7f7f5"],dark:["#1e1e1e","#d4d4d4","#252526"],dracula:["#282a36","#f8f8f2","#21222c"],nord:["#2e3440","#d8dee9","#242933"],"solarized-dark":["#002b36","#839496","#002b36"],"solarized-light":["#fdf6e3","#657b83","#eee8d5"],monokai:["#272822","#f8f8f2","#1f201b"],"one-dark":["#282c34","#abb2bf","#21252b"],"gruvbox-dark":["#282828","#ebdbb2","#1d2021"],"github-dark":["#0d1117","#e6edf3","#161b22"]};
+let n=new URLSearchParams(location.search).get("temptheme")||"auto";
+if(n==="auto") n=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";
+if(!themes[n])n="light";
+const t=themes[n];document.documentElement.style.setProperty("--bg",t[0]);document.documentElement.style.setProperty("--fg",t[1]);document.documentElement.style.setProperty("--code",t[2]);
+})();
+<\/script>
 </head>
 <body>
 <script>
@@ -1714,6 +1955,13 @@ ${blocks}
 
       if(cell.type === "html"){
         output.appendChild(cell.node.content.cloneNode(true));
+        return;
+      }
+
+      if(cell.type === "css"){
+        const style = document.createElement("style");
+        style.textContent = codeText;
+        output.appendChild(style);
         return;
       }
 
