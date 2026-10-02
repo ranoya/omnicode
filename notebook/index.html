@@ -18,6 +18,34 @@
 
   *{box-sizing:border-box}
 
+  /* Scrollbars globais */
+  *{
+    scrollbar-color:var(--accent) transparent;
+    scrollbar-width:thin;
+  }
+
+  *::-webkit-scrollbar{
+    width:10px;
+    height:10px;
+    background-color:transparent;
+  }
+
+  *::-webkit-scrollbar-track{
+    background-color:transparent;
+  }
+
+  *::-webkit-scrollbar-thumb{
+    background-color:transparent;
+    background-image:repeating-linear-gradient(45deg, transparent 0, transparent 1px, var(--accent) 0, var(--accent) 25%);
+    background-size:4px 4px;
+    opacity:.5;
+  }
+
+  *::-webkit-scrollbar-thumb:hover,
+  *::-webkit-scrollbar-thumb:active{
+    opacity:1;
+  }
+
   body{
     margin:0;
     background:white;
@@ -1906,8 +1934,8 @@ ${blocks}
       while(n && n.nodeType !== Node.COMMENT) n = n.previousSibling;
       return n ? n.data : "";
     })();
-    const type = (comment.match(/\\btype:\\s*([^\\n]+)/i) || [, node.dataset.cellType || "javascript"])[1].trim();
-    const hidden = ((comment.match(/\\bhidden:\\s*(true|false)/i) || [,"false"])[1] === "true");
+    const type = (comment.match(/\btype:\s*([^\n]+)/i) || [, node.dataset.cellType || "javascript"])[1].trim();
+    const hidden = ((comment.match(/\bhidden:\s*(true|false)/i) || [,"false"])[1] === "true");
     return {node, type, hidden, index};
   });
 
@@ -2165,9 +2193,9 @@ ${blocks}
       let commentNode = node.previousSibling;
       while(commentNode && commentNode.nodeType !== Node.COMMENT) commentNode = commentNode.previousSibling;
       const comment = commentNode ? commentNode.data : "";
-      const typeMatch = comment.match(/\\btype:\\s*([^\\n]+)/i);
-      const hiddenMatch = comment.match(/\\bhidden:\\s*(true|false)/i);
-      const idMatch = comment.match(/\\bid:\\s*([^\\n]+)/i);
+      const typeMatch = comment.match(/\btype:\s*([^\n]+)/i);
+      const hiddenMatch = comment.match(/\bhidden:\s*(true|false)/i);
+      const idMatch = comment.match(/\bid:\s*([^\n]+)/i);
       const type = typeMatch ? typeMatch[1].trim() : (node.dataset.cellType || "javascript");
       const hidden = hiddenMatch ? hiddenMatch[1].toLowerCase() === "true" : false;
       const id = idMatch ? idMatch[1].trim() : (node.dataset.cellId || "cell-imported-" + (index + 1));
