@@ -95,7 +95,7 @@ type: markdown
 hidden: false
 index: 0
 -->
-<script type="text/markdown" data-notebook-cell data-cell-id="cell-5" data-cell-type="markdown"># Notebook Computacional de programação criativa
+<script type="text/markdown" data-notebook-cell data-cell-id="cell-5" data-cell-type="markdown"># Notebook Computacional de Programação Criativa
 </script>
 <!-- VANILLA-NOTEBOOK-CELL-END -->
 
@@ -144,10 +144,54 @@ function draw() {
 <!-- VANILLA-NOTEBOOK-CELL-END -->
 
 <!-- VANILLA-NOTEBOOK-CELL
-id: cell-11
+id: cell-16
 type: p5
 hidden: false
 index: 3
+-->
+<script data-notebook-cell data-cell-id="cell-16" data-cell-type="p5">function setup() {
+  createCanvas(windowWidth, windowHeight);
+  stroke("#81a1c1");
+  strokeWeight(2);
+  background("#00000000");
+  angleMode(DEGREES);
+  strokeCap(SQUARE);
+}
+
+let a = 0;
+let r1 = 50;
+let a2 = 0;
+
+function draw() {
+  push();
+  translate(windowWidth / 2, windowHeight / 2);
+  rotate(a);
+
+  strokeWeight(2.5);
+
+  line(50 + 70 * Math.abs(cos(a2)), 0, 150, 0);
+
+  strokeWeight(1);
+
+  line(r1 + 105 + 20 * Math.abs(cos(a2 + 90)), 0, 150, 0);
+
+  pop();
+
+  a = a + 2;
+  a2 = a2 + 3;
+
+  if (a >= 360) {
+    noLoop();
+  }
+}
+</script>
+<!-- VANILLA-NOTEBOOK-CELL-END -->
+
+<!-- VANILLA-NOTEBOOK-CELL
+id: cell-11
+type: p5
+hidden: false
+index: 4
 -->
 <script data-notebook-cell data-cell-id="cell-11" data-cell-type="p5">function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -201,8 +245,8 @@ function draw() {
 <!-- VANILLA-NOTEBOOK-CELL
 id: cell-13
 type: markdown
-hidden: false
-index: 4
+hidden: true
+index: 5
 -->
 <script type="text/markdown" data-notebook-cell data-cell-id="cell-13" data-cell-type="markdown">Em outras palavras:
 
@@ -211,26 +255,10 @@ Você poderá executar códigos diferentes, suas variações, e seus experimento
 Esta ferramenta foi desenvolvida para que possa ser utilizada prioritamente com linguagens `javascript` e `P5` (que na verdade é também `javascript`). Mas além destas duas, o notebook também trabalha com `typescript`, `HTML`, `CSS` e `Markdown`.
 
 Como em todos os notebooks computacionais (à exemplo do Jupyter, Colab ou Observable), as informações apresentadas são construídas em blocos de código que ficam logo embaixo dos conteúdos. Estes blocos podem ser ocultados ou exibidos, mas tudo que é mostrado no notebook é construído dentro destes blocos de código, até os textos (que são feitos com `HTML` ou `Markdown`).
-</script>
-<!-- VANILLA-NOTEBOOK-CELL-END -->
 
-<!-- VANILLA-NOTEBOOK-CELL
-id: cell-14
-type: markdown
-hidden: false
-index: 5
--->
-<script type="text/markdown" data-notebook-cell data-cell-id="cell-14" data-cell-type="markdown">Você pode mover os códigos e conteúdos para cima e para baixo no documento, lhes arrastando à partir do ícone que aparece no lado esquerdo de cada bloco quando se passa o mouse por cima dele. É através deste ícone também que se altera o tipo de código utilizado em cada bloco, clicando nele com o botão direito do mouse.
-</script>
-<!-- VANILLA-NOTEBOOK-CELL-END -->
+Você pode mover os códigos e conteúdos para cima e para baixo no documento, lhes arrastando à partir do ícone que aparece no lado esquerdo de cada bloco quando se passa o mouse por cima dele. É através deste ícone também que se altera o tipo de código utilizado em cada bloco, clicando nele com o botão direito do mouse.
 
-<!-- VANILLA-NOTEBOOK-CELL
-id: cell-15
-type: markdown
-hidden: false
-index: 6
--->
-<script type="text/markdown" data-notebook-cell data-cell-id="cell-15" data-cell-type="markdown">Tudo que você faz neste documento fica guardado no navegador, para que quando retorne a ele, seu trabalho continue lá. Mas isso só funciona se utilizar o mesmo navegador, no mesmo computador, e no mesmo endereço da URL.
+Tudo que você faz neste documento fica guardado no navegador, para que quando retorne a ele, seu trabalho continue lá. Mas isso só funciona se utilizar o mesmo navegador, no mesmo computador, e no mesmo endereço da URL.
 
 Para guardar seus códigos em um documento separado e poder levá-lo para outros lugares, utilize **CTRL+S**. Isso gerará um código `HTML` que poderá ser novamente carregado em outros lugares utilizando **CTRL+I**.
 
