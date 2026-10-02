@@ -1743,19 +1743,19 @@ display(quadrados);`,
       const meta = `<!-- VANILLA-NOTEBOOK-CELL\nid: ${escapeCommentText(cell.id)}\ntype: ${escapeCommentText(cell.type)}\nhidden: ${cell.hidden ? "true" : "false"}\nindex: ${index}\n-->`;
 
       if (cell.type === "javascript") {
-        return `${meta}\n<script data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="javascript">\n${escapeScriptText(cell.code)}\n<\/script>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
+        return `${meta}\n<script data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="javascript">${escapeScriptText(cell.code)}\n<\/script>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
       }
 
       if (cell.type === "p5") {
-        return `${meta}\n<script data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="p5">\n${escapeScriptText(cell.code)}\n<\/script>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
+        return `${meta}\n<script data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="p5">${escapeScriptText(cell.code)}\n<\/script>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
       }
 
       if (cell.type === "typescript") {
-        return `${meta}\n<script type="typescript" data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="typescript">\n${escapeScriptText(cell.code)}\n<\/script>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
+        return `${meta}\n<script type="typescript" data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="typescript">${escapeScriptText(cell.code)}\n<\/script>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
       }
 
       if (cell.type === "markdown") {
-        return `${meta}\n<script type="text/markdown" data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="markdown">\n${escapeScriptText(cell.code)}\n<\/script>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
+        return `${meta}\n<script type="text/markdown" data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="markdown">${escapeScriptText(cell.code)}\n<\/script>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
       }
 
       if (cell.type === "css") {
