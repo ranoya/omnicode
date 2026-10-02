@@ -1,13 +1,6 @@
 setTempTheme("solarized-light");
 
-newframe(
-  "https://visse.vercel.app/v3-projetoarqueologia",
-  "Projeto",
-  1100,
-  780,
-  30,
-  30,
-);
+
 
 newframe(
   "https://www.youtube.com/embed/0r0-RjoZ8Wk?si=x-7b-UhhOZuRt8Dj&start=920%22",
