@@ -96,8 +96,10 @@ hidden: false
 index: 0
 -->
 <script type="text/markdown" data-notebook-cell data-cell-id="cell-5" data-cell-type="markdown">
+
 # Notebook Computacional
 Esta ferramenta executa múltiplos códigos através de uma interface de notebook computacional. Os códigos que são executados são Markdown, HTML, CSS, Javascript, Typescript e P5.
+
 </script>
 <!-- VANILLA-NOTEBOOK-CELL-END -->
 
@@ -108,7 +110,9 @@ hidden: false
 index: 1
 -->
 <script type="text/markdown" data-notebook-cell data-cell-id="cell-6" data-cell-type="markdown">
+
 A função `display()` exibe resultados dos códigos Javascript e Typescript em células do notebook.
+
 </script>
 <!-- VANILLA-NOTEBOOK-CELL-END -->
 
@@ -119,8 +123,10 @@ hidden: false
 index: 2
 -->
 <script data-notebook-cell data-cell-id="cell-1" data-cell-type="javascript">
+
 const numeros = [1, 2, 3, 4, 5];
 display(numeros);
+
 </script>
 <!-- VANILLA-NOTEBOOK-CELL-END -->
 
@@ -131,8 +137,10 @@ hidden: false
 index: 3
 -->
 <script data-notebook-cell data-cell-id="cell-2" data-cell-type="javascript">
+
 const quadrados = numeros.map((n) => n * n);
 display(quadrados);
+
 </script>
 <!-- VANILLA-NOTEBOOK-CELL-END -->
 
@@ -143,8 +151,10 @@ hidden: false
 index: 4
 -->
 <script type="text/markdown" data-notebook-cell data-cell-id="cell-8" data-cell-type="markdown">
+
 Para se alterar o tipo de linguagem, clique com o botão da direita do mouse no símbolo que aparece no lado esquerdo da célula quando se passa o mouse nessa região (o mesmo símbolo que permite mover as células).
       
+
 </script>
 <!-- VANILLA-NOTEBOOK-CELL-END -->
 
@@ -155,6 +165,7 @@ hidden: false
 index: 5
 -->
 <script data-notebook-cell data-cell-id="cell-4" data-cell-type="p5">
+
 function setup() {
     createCanvas(windowWidth, windowHeight);
     stroke(0);
@@ -177,6 +188,7 @@ function draw() {
     }
 }
 
+
 </script>
 <!-- VANILLA-NOTEBOOK-CELL-END -->
 
@@ -187,6 +199,7 @@ hidden: false
 index: 6
 -->
 <script type="text/markdown" data-notebook-cell data-cell-id="cell-7" data-cell-type="markdown">
+
 O conteúdo do notebook pode ser exportado com `CTRL+S`. O arquivo `HTML` gerado pode ser importado novamente para o notebook através de `CTRL+I`, ou de uma variável de url se este arquivo estiver disponível online:
 
 ```
@@ -204,6 +217,7 @@ https://www.meusite.com.br/notebook/?temptheme=far
 O ambiente de notebook criará sempre uma célula vazia no final do documento para que novos códigos sejam inseridos. Você poderá mové-la para o lugar que desejar no documento após incluir algum código nela.
 
 Se desejar alterar o tamanho dos caracteres, ou a família tipográfica para algum elemento (h1, h2, h3, p, div, etc.), pode fazer isso através do CSS:
+
 </script>
 <!-- VANILLA-NOTEBOOK-CELL-END -->
 
@@ -213,9 +227,9 @@ type: css
 hidden: false
 index: 7
 -->
-<template data-notebook-cell data-cell-id="cell-9" data-cell-type="html">h1 {
+<style data-notebook-cell data-cell-id="cell-9" data-cell-type="css">h1 {
    font-family: Times New Roman, serif;
-}</template>
+}</style>
 <!-- VANILLA-NOTEBOOK-CELL-END -->
 
 <!-- VANILLA-NOTEBOOK-CELL
@@ -225,7 +239,9 @@ hidden: false
 index: 8
 -->
 <script type="text/markdown" data-notebook-cell data-cell-id="cell-10" data-cell-type="markdown">
+
 Esta ferramenta ainda se encontra em um estado "beta" e experimental. Ela provavelmente conterá falhas e poderá apresentar comportamentos estranhos e imprevistos. 
+
 </script>
 <!-- VANILLA-NOTEBOOK-CELL-END -->
 </div>
