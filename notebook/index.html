@@ -1,0 +1,2515 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Notebook</title>
+
+    <style>
+      :root {
+        --text: #242424;
+        --muted: #8a8a8a;
+        --line: #e8e8e8;
+        --hover: #f4f4f4;
+        --code: #f8f8f7;
+        --accent: #4b72d8;
+        --error: #b42318;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: white;
+        color: var(--text);
+        font-family:
+          ui-sans-serif,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          Helvetica,
+          Arial,
+          sans-serif;
+        font-size: 15px;
+      }
+
+      #document {
+        width: min(900px, calc(100vw - 48px));
+        margin: 70px auto 160px;
+      }
+
+      .cell {
+        position: relative;
+        display: grid;
+        grid-template-columns: 36px minmax(0, 1fr);
+        min-height: 38px;
+      }
+
+      .gutter {
+        position: relative;
+        user-select: none;
+        cursor: grab;
+      }
+
+      .gutter:active {
+        cursor: grabbing;
+      }
+
+      .gutter::before {
+        content: "";
+        position: absolute;
+        left: 12px;
+        top: 12px;
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: transparent;
+        box-shadow:
+          0 6px 0 transparent,
+          0 12px 0 transparent,
+          5px 0 0 transparent,
+          5px 6px 0 transparent,
+          5px 12px 0 transparent;
+      }
+
+      .gutter:hover::before {
+        background: #b8b8b8;
+        box-shadow:
+          0 6px 0 #b8b8b8,
+          0 12px 0 #b8b8b8,
+          5px 0 0 #b8b8b8,
+          5px 6px 0 #b8b8b8,
+          5px 12px 0 #b8b8b8;
+      }
+
+      .cell-content {
+        min-width: 0;
+        padding: 0 0 14px;
+      }
+
+      .code-row {
+        display: grid;
+        grid-template-columns: 36px 34px minmax(0, 1fr);
+        column-gap: 0;
+        align-items: start;
+        margin-left: -36px;
+      }
+
+      .code-controls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        padding-top: 7px;
+        color: #a0a0a0;
+      }
+
+      .cell-type {
+        font-size: 9px;
+        line-height: 1;
+        color: #999;
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        letter-spacing: 0.02em;
+        user-select: none;
+      }
+
+      .code-toggle {
+        width: 22px;
+        height: 22px;
+        padding: 0;
+        border: 0;
+        border-radius: 4px;
+        background: transparent;
+        color: #999;
+        cursor: pointer;
+        font-size: 12px;
+        line-height: 22px;
+      }
+
+      .code-toggle:hover {
+        background: #f1f1f1;
+        color: #555;
+      }
+
+      .code-hidden .code-editor {
+        display: none;
+      }
+
+      .code-hidden .code-controls {
+        padding-top: 0;
+        height: 22px;
+      }
+
+      .code-hidden .cell-type {
+        display: none;
+      }
+
+      .code-hidden .code-row {
+        min-height: 22px;
+        height: 22px;
+      }
+
+      textarea {
+        display: block;
+        width: 100%;
+        min-height: 38px;
+        padding: 7px 0;
+        margin: 0;
+        border: 0;
+        outline: none;
+        resize: none;
+        overflow: hidden;
+        background: transparent;
+        color: var(--text);
+        font: inherit;
+        line-height: 1.55;
+      }
+
+      .code-editor {
+        position: relative;
+        margin-left: 7px;
+        border-radius: 5px;
+        overflow: hidden;
+        background: #aaaaaa55;
+      }
+
+      .code-editor pre,
+      .code-editor textarea {
+        margin: 0;
+        padding: 9px 13px;
+        width: 100%;
+        min-height: 38px;
+        border: 0;
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", monospace;
+        font-size: 13px;
+        line-height: 1.55;
+        tab-size: 2;
+        white-space: pre-wrap;
+        overflow: auto;
+        word-break: normal;
+      }
+
+      .code-editor pre {
+        position: relative;
+        z-index: 1;
+        pointer-events: none;
+        min-height: 100%;
+      }
+
+      .code-editor pre code {
+        font: inherit;
+        white-space: inherit;
+        word-break: inherit;
+      }
+
+      .code-editor textarea {
+        position: absolute;
+        z-index: 2;
+        inset: 0;
+        height: 100%;
+        resize: none;
+        outline: none;
+        background: transparent;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+        caret-color: var(--text);
+        overflow: hidden;
+      }
+
+      .code-editor textarea::selection {
+        background: rgba(75, 114, 216, 0.25);
+        -webkit-text-fill-color: transparent;
+      }
+
+      .code-editor:focus-within {
+        box-shadow: inset 0 0 0 1px #e2e2e2;
+      }
+
+      .output {
+        margin: 0 0 6px;
+        padding: 0 13px 10px;
+        border-left: 2px solid transparent;
+        color: #303030;
+        transition: border-color 0.12s ease;
+      }
+
+      .cell-content:hover .output {
+        border-left-color: transparent;
+      }
+
+      .cell-content:has(.output:hover) .output,
+      .cell-content:has(.code-editor:hover) .output {
+        border-left-color: #ececec;
+      }
+
+      .output:empty {
+        display: none;
+      }
+
+      .output-item {
+        padding: 4px 0;
+        overflow: auto;
+      }
+
+      .output-item + .output-item {
+        border-top: 1px solid var(--line);
+      }
+
+      .output pre {
+        margin: 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+        font:
+          13px/1.5 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          Consolas,
+          monospace;
+      }
+
+      .output .text {
+        white-space: pre-wrap;
+      }
+
+      .output table {
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+
+      .output th,
+      .output td {
+        border: 1px solid #ddd;
+        padding: 4px 8px;
+        text-align: left;
+      }
+
+      .error {
+        color: var(--error);
+        white-space: pre-wrap;
+        font:
+          13px/1.5 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          Consolas,
+          monospace;
+      }
+
+      .empty-cell {
+        min-height: 44px;
+      }
+
+      .empty-cell textarea {
+        color: transparent;
+        caret-color: var(--text);
+      }
+
+      .empty-cell textarea:focus {
+        background: #fafafa;
+        border-radius: 5px;
+      }
+
+      .dragging {
+        opacity: 0.35;
+      }
+
+      .drag-over {
+        position: relative;
+      }
+
+      .drag-over::before {
+        content: "";
+        position: absolute;
+        left: 36px;
+        right: 0;
+        top: -4px;
+        height: 2px;
+        background: var(--accent);
+        border-radius: 2px;
+        z-index: 5;
+      }
+
+      .cell-tools {
+        position: absolute;
+        right: 4px;
+        top: 4px;
+        display: none;
+        gap: 3px;
+        z-index: 3;
+      }
+
+      .cell:hover .cell-tools,
+      .cell:focus-within .cell-tools {
+        display: flex;
+      }
+
+      .tool {
+        border: 0;
+        background: white;
+        color: #888;
+        border-radius: 4px;
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+        font-size: 13px;
+      }
+
+      .tool:hover {
+        background: var(--hover);
+        color: #333;
+      }
+
+      /* Menu contextual do gutter */
+      #context-menu {
+        position: fixed;
+        z-index: 1000;
+        display: none;
+        min-width: 190px;
+        padding: 5px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14);
+      }
+
+      #context-menu.open {
+        display: block;
+      }
+
+      .menu-title {
+        padding: 6px 9px 5px;
+        color: #999;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .menu-item {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        width: 100%;
+        padding: 7px 9px;
+        border: 0;
+        border-radius: 5px;
+        background: transparent;
+        cursor: pointer;
+        color: #333;
+        text-align: left;
+        font: 13px inherit;
+      }
+
+      .menu-item:hover {
+        background: #f3f4f6;
+      }
+
+      .menu-item.active {
+        background: #edf2ff;
+        color: #315cc2;
+      }
+
+      .menu-icon {
+        width: 20px;
+        color: #777;
+        font:
+          11px ui-monospace,
+          monospace;
+      }
+
+      @media (max-width: 600px) {
+        #document {
+          width: calc(100vw - 24px);
+          margin-top: 35px;
+        }
+
+        .cell {
+          grid-template-columns: 28px minmax(0, 1fr);
+        }
+        .gutter::before {
+          left: 7px;
+        }
+        .drag-over::before {
+          left: 28px;
+        }
+        .cell-type {
+          left: 28px;
+        }
+      }
+    </style>
+
+    <link
+      id="highlight-theme"
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/styles/github.min.css"
+    />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/highlight.min.js"></script>
+
+    <!-- Markdown -> HTML -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- TypeScript -> JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/typescript@5.9.2/lib/typescript.min.js"></script>
+
+    <!-- p5.js -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/p5.min.js"></script>
+
+    <style id="notebook-theme-system">
+      :root {
+        --theme-bg: #ffffff;
+        --theme-text: #242424;
+        --theme-muted: #8a8a8a;
+        --theme-line: #e8e8e8;
+        --theme-hover: #f4f4f4;
+        --theme-code: #f8f8f7;
+        --theme-accent: #4b72d8;
+        --theme-secondary: #6a5acd;
+        --theme-error: #b42318;
+      }
+      body {
+        background: var(--theme-bg);
+        color: var(--theme-text);
+      }
+      .code-editor {
+        background: #aaaaaa55;
+      }
+      .code-editor pre {
+        background: transparent !important;
+      }
+      .code-editor pre code.hljs {
+        background: transparent !important;
+        color: var(--theme-text);
+      }
+      .code-toggle:hover {
+        background: var(--theme-hover);
+        color: var(--theme-text);
+      }
+      .output {
+        color: var(--theme-text);
+        border-left-color: transparent;
+      }
+      .context-menu {
+        background: var(--theme-bg);
+        color: var(--theme-text);
+        border-color: var(--theme-line);
+      }
+      .menu-item {
+        color: var(--theme-text);
+      }
+      .menu-item:hover {
+        background: var(--theme-hover);
+      }
+      .menu-item.active {
+        background: var(--theme-hover);
+        color: var(--theme-accent);
+      }
+      .cell-type {
+        color: var(--theme-muted);
+      }
+      .cell-type:hover {
+        color: var(--theme-text);
+      }
+      .gutter:hover::before {
+        background: var(--theme-muted);
+        box-shadow:
+          0 6px 0 var(--theme-muted),
+          0 12px 0 var(--theme-muted),
+          5px 0 0 var(--theme-muted),
+          5px 6px 0 var(--theme-muted),
+          5px 12px 0 var(--theme-muted);
+      }
+      .error {
+        color: var(--theme-error);
+      }
+      .markdown-output a {
+        color: var(--theme-accent);
+      }
+      ::selection {
+        background: var(--theme-accent);
+        color: var(--theme-bg);
+      }
+    </style>
+  </head>
+
+  <body>
+    <input
+      id="local-notebook-import"
+      type="file"
+      accept=".html,.htm,text/html"
+      hidden
+    />
+    <style id="notebook-global-css"></style>
+    <main id="document"></main>
+
+    <div id="context-menu">
+      <div class="menu-title">Tipo da célula</div>
+      <button class="menu-item" data-type="javascript">
+        <span class="menu-icon">JS</span> JavaScript
+      </button>
+      <button class="menu-item" data-type="typescript">
+        <span class="menu-icon">TS</span> TypeScript
+      </button>
+      <button class="menu-item" data-type="p5">
+        <span class="menu-icon">p5</span> P5.js
+      </button>
+      <button class="menu-item" data-type="html">
+        <span class="menu-icon">&lt;/&gt;</span> HTML
+      </button>
+      <button class="menu-item" data-type="css">
+        <span class="menu-icon">CSS</span> CSS
+      </button>
+      <button class="menu-item" data-type="markdown">
+        <span class="menu-icon">MD</span> Markdown
+      </button>
+    </div>
+
+    <script>
+      (() => {
+        "use strict";
+
+        const root = document.querySelector("#document");
+        const contextMenu = document.querySelector("#context-menu");
+
+        const cells = [];
+        let nextId = 1;
+        let draggedId = null;
+        let activeCellId = null;
+        let contextCellId = null;
+
+        const STORAGE_KEY = "vanilla-notebook-document-v1";
+
+        const HIGHLIGHT_CDN =
+          "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/styles/";
+
+        // Nomes amigáveis podem ser usados diretamente em ?temptheme=...
+        // Também aceitamos o caminho relativo de qualquer tema disponível no
+        // pacote do Highlight.js, por exemplo:
+        // ?temptheme=base16%2Fgruvbox-dark-hard
+        const THEME_ALIASES = {
+          auto: null,
+          light: "github",
+          github: "github",
+          "github dark": "github-dark",
+          "github-dark": "github-dark",
+          "github dark dimmed": "github-dark-dimmed",
+          dracula: "dracula",
+          nord: "nord",
+          monokai: "monokai",
+          "one dark": "atom-one-dark",
+          "one-dark": "atom-one-dark",
+          "solarized dark": "solarized-dark",
+          "solarized-dark": "solarized-dark",
+          "solarized light": "solarized-light",
+          "solarized-light": "solarized-light",
+          "gruvbox dark": "base16/gruvbox-dark-medium",
+          "gruvbox-dark": "base16/gruvbox-dark-medium",
+          "gruvbox light": "base16/gruvbox-light-medium",
+          "gruvbox-light": "base16/gruvbox-light-medium",
+        };
+
+        function normalizeThemeName(value) {
+          return String(value || "")
+            .trim()
+            .replace(/\.css$/i, "")
+            .replace(/\s+/g, " ")
+            .toLowerCase();
+        }
+
+        function resolveHighlightTheme(value) {
+          let raw = String(value || "").trim();
+          if (!raw || normalizeThemeName(raw) === "auto") {
+            return window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "github-dark"
+              : "github";
+          }
+
+          const normalized = normalizeThemeName(raw);
+          if (THEME_ALIASES[normalized]) return THEME_ALIASES[normalized];
+
+          // Permite qualquer nome de arquivo/caminho existente no diretório
+          // de estilos do Highlight.js.
+          return raw
+            .replace(/^styles\//i, "")
+            .replace(/\.css$/i, "")
+            .replace(/^\/+|\/+$/g, "");
+        }
+
+        function hexToRgb(value) {
+          const m = String(value || "")
+            .trim()
+            .match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+          if (!m) return null;
+          const h =
+            m[1].length === 3
+              ? m[1]
+                  .split("")
+                  .map((x) => x + x)
+                  .join("")
+              : m[1];
+          return {
+            r: parseInt(h.slice(0, 2), 16),
+            g: parseInt(h.slice(2, 4), 16),
+            b: parseInt(h.slice(4, 6), 16),
+          };
+        }
+
+        function rgbToHex(rgb) {
+          const c = (n) =>
+            Math.max(0, Math.min(255, Math.round(n)))
+              .toString(16)
+              .padStart(2, "0");
+          return "#" + c(rgb.r) + c(rgb.g) + c(rgb.b);
+        }
+
+        function mixColors(a, b, amount) {
+          const ca = hexToRgb(a),
+            cb = hexToRgb(b);
+          if (!ca || !cb) return a || b;
+          return rgbToHex({
+            r: ca.r + (cb.r - ca.r) * amount,
+            g: ca.g + (cb.g - ca.g) * amount,
+            b: ca.b + (cb.b - ca.b) * amount,
+          });
+        }
+
+        function createHighlightProbe() {
+          const host = document.createElement("div");
+          host.setAttribute("aria-hidden", "true");
+          host.style.cssText =
+            "position:fixed;left:-10000px;top:-10000px;width:1px;height:1px;" +
+            "overflow:hidden;pointer-events:none;opacity:0;";
+          host.innerHTML =
+            '<pre class="hljs"><code class="hljs">' +
+            '<span class="hljs-comment">comment</span>' +
+            '<span class="hljs-keyword">keyword</span>' +
+            '<span class="hljs-string">string</span>' +
+            '<span class="hljs-number">123</span>' +
+            '<span class="hljs-built_in">built_in</span>' +
+            '<span class="hljs-title">title</span>' +
+            '<span class="hljs-deletion">deletion</span>' +
+            "</code></pre>";
+          document.body.appendChild(host);
+          return host;
+        }
+
+        function readHighlightColors() {
+          const probe = createHighlightProbe();
+          const code = probe.querySelector("code");
+          const read = (selector) => {
+            const el = probe.querySelector(selector);
+            if (!el) return null;
+            const cs = getComputedStyle(el);
+            return cs.color && cs.color !== "rgba(0, 0, 0, 0)"
+              ? cs.color
+              : null;
+          };
+          const bg = getComputedStyle(code).backgroundColor;
+          const text = read("code") || getComputedStyle(code).color;
+          const comment = read(".hljs-comment") || text;
+          const keyword = read(".hljs-keyword") || text;
+          const string = read(".hljs-string") || keyword;
+          const deletion = read(".hljs-deletion") || keyword;
+
+          document.body.removeChild(probe);
+
+          function cssColorToHex(value, fallback) {
+            const m = String(value || "").match(
+              /^rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)/,
+            );
+            return m ? rgbToHex({ r: +m[1], g: +m[2], b: +m[3] }) : fallback;
+          }
+
+          const bgHex = cssColorToHex(
+            bg,
+            getComputedStyle(document.body).backgroundColor,
+          );
+          const textHex = cssColorToHex(text, "#242424");
+          const mutedHex = cssColorToHex(
+            comment,
+            mixColors(textHex, bgHex, 0.55),
+          );
+          const accentHex = cssColorToHex(keyword, "#4b72d8");
+          const secondaryHex = cssColorToHex(string, accentHex);
+          const errorHex = cssColorToHex(deletion, "#b42318");
+
+          return {
+            bg: bgHex,
+            text: textHex,
+            muted: mutedHex,
+            line: mixColors(bgHex, textHex, 0.16),
+            hover: mixColors(bgHex, textHex, 0.07),
+            code: bgHex,
+            accent: accentHex,
+            secondary: secondaryHex,
+            error: errorHex,
+          };
+        }
+
+        function applyTheme(requested) {
+          const highlightName = resolveHighlightTheme(requested);
+          const highlightLink = document.getElementById("highlight-theme");
+
+          if (highlightLink) {
+            const desiredHref = HIGHLIGHT_CDN + highlightName + ".min.css";
+            if (highlightLink.getAttribute("href") !== desiredHref) {
+              highlightLink.href = desiredHref;
+            }
+            const sync = () => syncNotebookToHighlightTheme();
+            highlightLink.addEventListener("load", sync, { once: true });
+            highlightLink.addEventListener(
+              "error",
+              () => {
+                // Se um nome arbitrário não existir, voltamos ao GitHub.
+                if (highlightName !== "github") {
+                  highlightLink.href = HIGHLIGHT_CDN + "github.min.css";
+                  highlightLink.addEventListener("load", sync, { once: true });
+                }
+              },
+              { once: true },
+            );
+          }
+
+          document.documentElement.dataset.theme = highlightName;
+          // Aplica imediatamente uma paleta provisória derivada do tema anterior.
+          syncNotebookToHighlightTheme();
+        }
+
+        function syncNotebookToHighlightTheme() {
+          if (!document.body) return;
+          const t = readHighlightColors();
+          const rootStyle = document.documentElement.style;
+
+          rootStyle.setProperty("--theme-bg", t.bg);
+          rootStyle.setProperty("--theme-text", t.text);
+          rootStyle.setProperty("--theme-muted", t.muted);
+          rootStyle.setProperty("--theme-line", t.line);
+          rootStyle.setProperty("--theme-hover", t.hover);
+          rootStyle.setProperty("--theme-code", t.code);
+          rootStyle.setProperty("--theme-accent", t.accent);
+          rootStyle.setProperty("--theme-secondary", t.secondary);
+          rootStyle.setProperty("--theme-error", t.error);
+
+          // Compatibilidade com o CSS original do notebook.
+          rootStyle.setProperty("--text", t.text);
+          rootStyle.setProperty("--muted", t.muted);
+          rootStyle.setProperty("--line", t.line);
+          rootStyle.setProperty("--hover", t.hover);
+          rootStyle.setProperty("--code", t.code);
+          rootStyle.setProperty("--accent", t.accent);
+          rootStyle.setProperty("--error", t.error);
+        }
+
+        const urlTheme = new URLSearchParams(window.location.search).get(
+          "temptheme",
+        );
+        if (document.readyState === "loading") {
+          document.addEventListener(
+            "DOMContentLoaded",
+            () => applyTheme(urlTheme || "auto"),
+            { once: true },
+          );
+        } else {
+          applyTheme(urlTheme || "auto");
+        }
+
+        function saveDocument() {
+          try {
+            localStorage.setItem(
+              STORAGE_KEY,
+              JSON.stringify({
+                nextId,
+                cells: cells.map((cell) => ({
+                  id: cell.id,
+                  code: cell.code,
+                  type: cell.type,
+                  hidden: !!cell.hidden,
+                })),
+              }),
+            );
+          } catch (error) {
+            console.warn(
+              "Não foi possível salvar o documento no localStorage.",
+              error,
+            );
+          }
+        }
+
+        function loadDocument() {
+          try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return false;
+
+            const saved = JSON.parse(raw);
+            if (!saved || !Array.isArray(saved.cells) || !saved.cells.length)
+              return false;
+
+            cells.length = 0;
+            saved.cells.forEach((savedCell) => {
+              cells.push({
+                id: savedCell.id || "cell-" + nextId++,
+                code: typeof savedCell.code === "string" ? savedCell.code : "",
+                type: savedCell.type || "javascript",
+                hidden: !!savedCell.hidden,
+                output: [],
+              });
+            });
+
+            nextId = Math.max(
+              Number(saved.nextId) || 1,
+              ...cells.map((cell) => {
+                const match = String(cell.id).match(/(\d+)$/);
+                return match ? Number(match[1]) + 1 : 1;
+              }),
+            );
+
+            ensureTrailingEmptyCell();
+            return true;
+          } catch (error) {
+            console.warn(
+              "Não foi possível restaurar o documento do localStorage.",
+              error,
+            );
+            return false;
+          }
+        }
+
+        function createCell(code = "", type = "javascript") {
+          return {
+            id: "cell-" + nextId++,
+            code,
+            type,
+            output: [],
+          };
+        }
+
+        cells.push(
+          createCell(
+            `const numeros = [1, 2, 3, 4, 5];
+
+display(numeros);`,
+            "javascript",
+          ),
+        );
+
+        cells.push(
+          createCell(
+            `const quadrados = numeros.map(n => n * n);
+
+display(quadrados);`,
+            "javascript",
+          ),
+        );
+
+        cells.push(createCell("", "javascript"));
+
+        const restoredFromStorage = loadDocument();
+
+        function isLastCell(cell) {
+          return cells[cells.length - 1] === cell;
+        }
+
+        function ensureTrailingEmptyCell() {
+          if (!cells.length || cells[cells.length - 1].code.trim() !== "") {
+            const previous = cells[cells.length - 1];
+            cells.push(createCell("", previous ? previous.type : "javascript"));
+          }
+
+          while (
+            cells.length > 1 &&
+            cells[cells.length - 1].code.trim() === "" &&
+            cells[cells.length - 2].code.trim() === ""
+          ) {
+            cells.splice(cells.length - 2, 1);
+          }
+        }
+
+        function resizeTextarea(ta) {
+          ta.style.height = "auto";
+          ta.style.height = Math.max(38, ta.scrollHeight) + "px";
+        }
+
+        function escapeHtml(value) {
+          return String(value).replace(
+            /[&<>"']/g,
+            (char) =>
+              ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+              })[char],
+          );
+        }
+
+        function renderValue(value) {
+          if (value instanceof Error) {
+            return `<div class="error">${escapeHtml(value.stack || value.message)}</div>`;
+          }
+
+          if (value instanceof Node) {
+            const wrapper = document.createElement("div");
+            wrapper.appendChild(value.cloneNode(true));
+            return wrapper.innerHTML;
+          }
+
+          if (value === null) return "<pre>null</pre>";
+          if (value === undefined) return "<pre>undefined</pre>";
+
+          if (typeof value === "string") {
+            return `<div class="text">${escapeHtml(value)}</div>`;
+          }
+
+          if (typeof value === "object") {
+            try {
+              return `<pre>${escapeHtml(
+                JSON.stringify(value, null, 2, (_, v) =>
+                  typeof v === "bigint" ? v.toString() + "n" : v,
+                ),
+              )}</pre>`;
+            } catch {
+              return `<pre>${escapeHtml(String(value))}</pre>`;
+            }
+          }
+
+          return `<pre>${escapeHtml(String(value))}</pre>`;
+        }
+
+        function languageFor(type) {
+          return (
+            {
+              javascript: "javascript",
+              typescript: "typescript",
+              p5: "javascript",
+              html: "xml",
+              markdown: "markdown",
+            }[type] || "javascript"
+          );
+        }
+
+        function highlightCode(code, type) {
+          const language = languageFor(type);
+          const value = code || " ";
+
+          try {
+            return hljs.highlight(value, { language }).value;
+          } catch {
+            return escapeHtml(value);
+          }
+        }
+
+        function closeContextMenu() {
+          contextMenu.classList.remove("open");
+          contextCellId = null;
+        }
+
+        function openContextMenu(event, cell) {
+          event.preventDefault();
+          event.stopPropagation();
+
+          contextCellId = cell.id;
+
+          contextMenu.querySelectorAll(".menu-item").forEach((item) => {
+            item.classList.toggle("active", item.dataset.type === cell.type);
+          });
+
+          contextMenu.classList.add("open");
+
+          const margin = 8;
+          const rect = contextMenu.getBoundingClientRect();
+
+          let x = event.clientX;
+          let y = event.clientY;
+
+          if (x + rect.width > window.innerWidth - margin) {
+            x = window.innerWidth - rect.width - margin;
+          }
+
+          if (y + rect.height > window.innerHeight - margin) {
+            y = window.innerHeight - rect.height - margin;
+          }
+
+          contextMenu.style.left = Math.max(margin, x) + "px";
+          contextMenu.style.top = Math.max(margin, y) + "px";
+        }
+
+        contextMenu.addEventListener("click", (event) => {
+          const item = event.target.closest(".menu-item");
+          if (!item || !contextCellId) return;
+
+          const cell = cells.find((c) => c.id === contextCellId);
+          if (!cell) return;
+
+          const oldType = cell.type;
+          const newType = item.dataset.type;
+
+          cell.type = newType;
+          closeContextMenu();
+          render();
+
+          // Mantém a posição do cursor quando possível.
+          if (cell.code.trim()) focusCell(cell.id);
+        });
+
+        document.addEventListener("mousedown", (event) => {
+          if (!contextMenu.contains(event.target)) closeContextMenu();
+        });
+
+        window.addEventListener("scroll", closeContextMenu, true);
+        window.addEventListener("resize", closeContextMenu);
+
+        function focusCell(id) {
+          requestAnimationFrame(() => {
+            const ta = document.querySelector(`[data-id="${id}"] textarea`);
+            if (!ta) return;
+
+            ta.focus();
+            ta.selectionStart = ta.selectionEnd = ta.value.length;
+            resizeTextarea(ta);
+          });
+        }
+
+        /*
+         * -------------------------
+         * JavaScript / TypeScript
+         * -------------------------
+         */
+
+        function extractDeclaredNames(code) {
+          const names = new Set();
+
+          const declarationRegex = /\b(?:let|const|var)\s+([^;]+)/g;
+          let match;
+
+          while ((match = declarationRegex.exec(code))) {
+            let declaration = match[1];
+
+            declaration = declaration.split(
+              /\b(?:for|if|while|switch|catch)\b/,
+            )[0];
+
+            declaration = declaration.replace(
+              /(["'`])(?:\\.|(?!\1)[\s\S])*\1/g,
+              "",
+            );
+
+            const parts = [];
+            let current = "";
+            let depth = 0;
+
+            for (const char of declaration) {
+              if ("([{".includes(char)) depth++;
+              if (")]}".includes(char)) depth--;
+
+              if (char === "," && depth === 0) {
+                parts.push(current);
+                current = "";
+              } else {
+                current += char;
+              }
+            }
+
+            parts.push(current);
+
+            for (let part of parts) {
+              part = part.split("=")[0].trim();
+
+              if (/^[A-Za-z_$][\w$]*$/.test(part)) {
+                names.add(part);
+              }
+            }
+          }
+
+          return [...names];
+        }
+
+        function transformDeclarations(code) {
+          /*
+           * A transformação mantém o modelo de notebook:
+           *
+           *   const x = 10
+           *
+           * vira:
+           *
+           *   __state.x = 10
+           *
+           * Isso torna o valor persistente entre células.
+           */
+          return code.replace(
+            /\b(let|const|var)\s+([A-Za-z_$][\w$]*)/g,
+            "__state.$2",
+          );
+        }
+
+        /*
+         * -------------------------
+         * Markdown
+         * -------------------------
+         */
+
+        function executeMarkdown(cell) {
+          cell.output = [
+            {
+              __html: marked.parse(cell.code),
+            },
+          ];
+        }
+
+        /*
+         * -------------------------
+         * HTML
+         * -------------------------
+         */
+
+        function executeHtml(cell) {
+          cell.output = [
+            {
+              __html: cell.code,
+            },
+          ];
+        }
+
+        /*
+         * -------------------------
+         * CSS
+         * -------------------------
+         */
+
+        function executeCss(cell) {
+          // CSS is global document state. It intentionally has no local output.
+          cell.output = [];
+          refreshGlobalCss();
+        }
+
+        function refreshGlobalCss() {
+          const host = document.getElementById("notebook-global-css");
+          if (!host) return;
+
+          host.textContent = cells
+            .filter((cell) => cell.type === "css" && cell.code.trim())
+            .map((cell) => `/* CSS cell ${cell.id} */\n${cell.code}`)
+            .join("\n\n");
+        }
+
+        /*
+         * -------------------------
+         * P5.js
+         * -------------------------
+         *
+         * Cada célula P5 possui um div exclusivo no output:
+         *
+         *   <div id="p5-cell-123"></div>
+         *
+         * O p5 é executado em modo de instância. Além disso, createCanvas()
+         * é interceptado para que o canvas seja automaticamente anexado
+         * ao div da própria célula.
+         *
+         * Assim o usuário pode escrever simplesmente:
+         *
+         *   function setup() {
+         *     createCanvas(400, 300);
+         *   }
+         *
+         * sem precisar escrever:
+         *
+         *   var myCanvas = ...
+         *   myCanvas.parent(...)
+         *
+         * O notebook faz isso automaticamente.
+         */
+
+        function prepareP5Output(cell) {
+          const id = "p5-output-" + cell.id;
+          cell.output = [
+            {
+              __p5: true,
+              id,
+            },
+          ];
+        }
+
+        function executeP5(cell) {
+          prepareP5Output(cell);
+
+          /*
+           * P5 roda de maneira independente das células JS.
+           * Ao reexecutar o notebook, o canvas anterior é removido.
+           */
+          requestAnimationFrame(() => {
+            const host = document.getElementById("p5-output-" + cell.id);
+
+            if (!host) return;
+
+            try {
+              new p5((p) => {
+                /*
+                 * createCanvas é encapsulado para que seu resultado seja
+                 * automaticamente associado ao bloco da célula.
+                 */
+                const originalCreateCanvas = p.createCanvas.bind(p);
+
+                p.createCanvas = (...args) => {
+                  const canvas = originalCreateCanvas(...args);
+
+                  try {
+                    canvas.parent(host);
+                  } catch {}
+
+                  return canvas;
+                };
+
+                /*
+                 * O código do usuário é convertido para funções de instância
+                 * quando necessário. Para a API usual do p5:
+                 *
+                 *   function setup() {...}
+                 *   function draw() {...}
+                 *
+                 * transformamos essas duas funções em p.setup/p.draw.
+                 */
+                let code = cell.code;
+
+                /*
+                 * No notebook, o sketch ocupa o bloco de output da célula.
+                 * Portanto, windowWidth/windowHeight não devem representar
+                 * a janela inteira do navegador:
+                 *
+                 *   windowWidth  -> largura interna do bloco P5
+                 *   windowHeight -> altura padrão de 550px
+                 *
+                 * A substituição é feita apenas em células P5 e somente para
+                 * referências ao identificador, preservando nomes maiores.
+                 */
+                const notebookWidth = Math.max(
+                  1,
+                  host.clientWidth || host.getBoundingClientRect().width || 1,
+                );
+
+                code = code.replace(
+                  /\bwindowWidth\b/g,
+                  String(Math.round(notebookWidth)),
+                );
+
+                code = code.replace(/\bwindowHeight\b/g, "550");
+
+                code = code.replace(
+                  /\bfunction\s+setup\s*\(/g,
+                  "p.setup = function(",
+                );
+
+                code = code.replace(
+                  /\bfunction\s+draw\s*\(/g,
+                  "p.draw = function(",
+                );
+
+                /*
+                 * Também suporta:
+                 *
+                 *   setup = () => {}
+                 *   draw = () => {}
+                 */
+                code = code.replace(
+                  /\bsetup\s*=\s*(?=(?:async\s*)?\()/g,
+                  "p.setup = ",
+                );
+
+                code = code.replace(
+                  /\bdraw\s*=\s*(?=(?:async\s*)?\()/g,
+                  "p.draw = ",
+                );
+
+                const AsyncFunction = Object.getPrototypeOf(
+                  async function () {},
+                ).constructor;
+
+                /*
+                 * `with (p)` permite que createCanvas, ellipse, rect,
+                 * background etc. continuem sendo escritos da forma habitual.
+                 */
+                const runner = new AsyncFunction(
+                  "p",
+                  `
+              with (p) {
+                ${code}
+              }
+            `,
+                );
+
+                runner(p);
+              });
+            } catch (error) {
+              cell.output = [
+                {
+                  __error: error,
+                },
+              ];
+              render();
+            }
+          });
+        }
+
+        /*
+         * -------------------------
+         * Renderização dos outputs
+         * -------------------------
+         */
+
+        function renderOutput(cell) {
+          if (!cell.output.length) return "";
+
+          return cell.output
+            .map((value) => {
+              if (value && value.__html !== undefined) {
+                return `<div class="output-item">${value.__html}</div>`;
+              }
+
+              if (value && value.__p5) {
+                return `
+          <div class="output-item">
+            <div id="${escapeHtml(value.id)}"></div>
+          </div>
+        `;
+              }
+
+              if (value && value.__error) {
+                const error = value.__error;
+                return `
+          <div class="output-item">
+            <div class="error">${escapeHtml(error.stack || error.message || error)}</div>
+          </div>
+        `;
+              }
+
+              return `<div class="output-item">${renderValue(value)}</div>`;
+            })
+            .join("");
+        }
+
+        /*
+         * O renderOutput acima é redefinido antes de cada renderização
+         * porque os outputs especiais (HTML/P5) precisam ser interpretados
+         * como elementos reais.
+         */
+
+        /*
+         * -------------------------
+         * Execução reativa
+         * -------------------------
+         */
+
+        async function executeFromCell(targetId) {
+          const targetIndex = cells.findIndex((c) => c.id === targetId);
+          if (targetIndex < 0) return;
+
+          // Guarda a célula que iniciou a execução.
+          const target = cells[targetIndex];
+
+          // Primeiro destrói outputs/canvases anteriores.
+          cells.forEach((cell) => {
+            cell.output = [];
+          });
+
+          const executableCells = cells.slice(0, cells.length - 1);
+
+          /*
+           * Estado compartilhado das células JavaScript.
+           */
+          const declaredNames = new Set();
+
+          executableCells
+            .filter(
+              (cell) =>
+                cell.type === "javascript" || cell.type === "typescript",
+            )
+            .forEach((cell) => {
+              extractDeclaredNames(cell.code).forEach((name) =>
+                declaredNames.add(name),
+              );
+            });
+
+          const state = Object.create(null);
+
+          declaredNames.forEach((name) => {
+            state[name] = undefined;
+          });
+
+          const scope = new Proxy(state, {
+            has(target, property) {
+              if (property === Symbol.unscopables) return false;
+              return property in target || property in globalThis;
+            },
+
+            get(target, property) {
+              if (property === Symbol.unscopables) return undefined;
+              if (property in target) return target[property];
+              return globalThis[property];
+            },
+
+            set(target, property, value) {
+              target[property] = value;
+              return true;
+            },
+
+            getOwnPropertyDescriptor(target, property) {
+              if (property in target) {
+                return {
+                  configurable: true,
+                  enumerable: true,
+                  writable: true,
+                  value: target[property],
+                };
+              }
+              return undefined;
+            },
+          });
+
+          /*
+           * Função que adiciona valores ao output da célula atualmente ativa.
+           */
+          function display(value) {
+            const cell = cells.find((c) => c.id === activeCellId);
+            if (cell) cell.output.push(value);
+          }
+
+          /*
+           * Recalcula todas as células em sequência.
+           */
+          for (const cell of executableCells) {
+            activeCellId = cell.id;
+
+            if (!cell.code.trim()) continue;
+
+            try {
+              if (cell.type === "markdown") {
+                executeMarkdown(cell);
+                continue;
+              }
+
+              if (cell.type === "html") {
+                executeHtml(cell);
+                continue;
+              }
+
+              if (cell.type === "css") {
+                executeCss(cell);
+                continue;
+              }
+
+              if (cell.type === "p5") {
+                executeP5(cell);
+                continue;
+              }
+
+              let source = cell.code;
+
+              if (cell.type === "typescript") {
+                source = ts.transpileModule(source, {
+                  compilerOptions: {
+                    target: ts.ScriptTarget.ES2020,
+                    module: ts.ModuleKind.None,
+                    strict: false,
+                  },
+                }).outputText;
+              }
+
+              source = transformDeclarations(source);
+
+              /*
+               * Cada célula JS/TS entra no mesmo estado compartilhado.
+               */
+              const AsyncFunction = Object.getPrototypeOf(
+                async function () {},
+              ).constructor;
+
+              const runner = new AsyncFunction(
+                "__state",
+                "display",
+                "__scope",
+                `
+            with (__scope) {
+              ${source}
+            }
+          `,
+              );
+
+              await runner(state, display, scope);
+            } catch (error) {
+              cell.output.push({
+                __error: error,
+              });
+            }
+          }
+
+          render();
+          focusCell(target.id);
+        }
+
+        /*
+         * O render precisa ser capaz de criar os hosts de P5 antes de o
+         * requestAnimationFrame executá-lo.
+         */
+        let dragAutoScrollFrame = null;
+        let dragPointerY = null;
+
+        function updateDragAutoScroll(clientY) {
+          dragPointerY = clientY;
+          if (dragAutoScrollFrame !== null) return;
+          const edge = 80;
+          const maxSpeed = 22;
+          const tick = () => {
+            if (dragPointerY === null) {
+              dragAutoScrollFrame = null;
+              return;
+            }
+            const y = dragPointerY;
+            const h = window.innerHeight;
+            let delta = 0;
+            if (y < edge)
+              delta = -Math.max(2, Math.round(((edge - y) / edge) * maxSpeed));
+            else if (y > h - edge)
+              delta = Math.max(
+                2,
+                Math.round(((y - (h - edge)) / edge) * maxSpeed),
+              );
+            if (delta) {
+              window.scrollBy(0, delta);
+              dragAutoScrollFrame = requestAnimationFrame(tick);
+            } else dragAutoScrollFrame = null;
+          };
+          dragAutoScrollFrame = requestAnimationFrame(tick);
+        }
+
+        function stopDragAutoScroll() {
+          dragPointerY = null;
+          if (dragAutoScrollFrame !== null) {
+            cancelAnimationFrame(dragAutoScrollFrame);
+            dragAutoScrollFrame = null;
+          }
+        }
+
+        document.addEventListener("dragover", (event) => {
+          if (draggedId !== null) updateDragAutoScroll(event.clientY);
+        });
+        document.addEventListener("dragend", stopDragAutoScroll);
+        window.addEventListener("blur", stopDragAutoScroll);
+
+        function render() {
+          refreshGlobalCss();
+          root.innerHTML = "";
+
+          cells.forEach((cell, index) => {
+            const last = isLastCell(cell);
+
+            const article = document.createElement("article");
+            article.className =
+              "cell" +
+              (last && cell.code.trim() === "" ? " empty-cell" : "") +
+              (!last ? " code-cell" : "");
+
+            article.dataset.id = cell.id;
+
+            const gutter = document.createElement("div");
+            gutter.className = "gutter";
+            gutter.title =
+              "Arraste para mover • botão direito para mudar o tipo";
+
+            gutter.addEventListener("contextmenu", (event) => {
+              openContextMenu(event, cell);
+            });
+
+            const content = document.createElement("div");
+            content.className = "cell-content";
+
+            const output = document.createElement("div");
+            output.className = "output";
+            output.innerHTML = renderOutput(cell);
+
+            const codeRow = document.createElement("div");
+            codeRow.className = "code-row";
+
+            if (cell.hidden) {
+              codeRow.classList.add("code-hidden");
+            }
+
+            const codeControls = document.createElement("div");
+            codeControls.className = "code-controls";
+
+            const typeLabel = document.createElement("div");
+            typeLabel.className = "cell-type";
+            typeLabel.textContent =
+              cell.type === "p5"
+                ? "P5"
+                : cell.type === "typescript"
+                  ? "TS"
+                  : cell.type === "javascript"
+                    ? "JS"
+                    : cell.type === "markdown"
+                      ? "MD"
+                      : cell.type === "css"
+                        ? "CSS"
+                        : "HTML";
+            typeLabel.title = "Clique com o botão direito para mudar o tipo";
+            typeLabel.addEventListener("contextmenu", (event) => {
+              openContextMenu(event, cell);
+            });
+
+            const toggleCode = document.createElement("button");
+            toggleCode.type = "button";
+            toggleCode.className = "code-toggle";
+            toggleCode.title = cell.hidden
+              ? "Mostrar código"
+              : "Esconder código";
+            toggleCode.setAttribute("aria-label", toggleCode.title);
+            toggleCode.textContent = cell.hidden ? "›" : "‹";
+            toggleCode.onclick = () => {
+              cell.hidden = !cell.hidden;
+              saveDocument();
+
+              // Não usamos render() aqui: no caso do P5, reconstruir o DOM
+              // destruiria o canvas que já está montado no bloco de output.
+              codeRow.classList.toggle("code-hidden", cell.hidden);
+              toggleCode.title = cell.hidden
+                ? "Mostrar código"
+                : "Esconder código";
+              toggleCode.setAttribute("aria-label", toggleCode.title);
+              toggleCode.textContent = cell.hidden ? "›" : "‹";
+
+              /*
+               * Quando o editor volta de display:none para display:block,
+               * o scrollHeight do textarea pode ainda refletir o estado oculto.
+               * Recalculamos depois que o navegador aplicar o novo layout.
+               *
+               * Não usamos render(): o canvas P5 e os demais outputs precisam
+               * permanecer exatamente onde estão.
+               */
+              if (!cell.hidden) {
+                requestAnimationFrame(() => {
+                  updateHighlight();
+
+                  // Um segundo frame garante que o layout já esteja estabilizado
+                  // antes da leitura final de scrollHeight.
+                  requestAnimationFrame(() => {
+                    updateHighlight();
+                  });
+                });
+              }
+            };
+
+            codeControls.append(typeLabel, toggleCode);
+
+            const codeEditor = document.createElement("div");
+            codeEditor.className = "code-editor";
+
+            const highlighted = document.createElement("pre");
+            const codeElement = document.createElement("code");
+
+            codeElement.className = "language-" + languageFor(cell.type);
+
+            highlighted.appendChild(codeElement);
+
+            const textarea = document.createElement("textarea");
+            textarea.spellcheck = false;
+            textarea.autocomplete = "off";
+            textarea.setAttribute("aria-label", "Código");
+            textarea.value = cell.code;
+
+            function updateHighlight() {
+              codeElement.innerHTML = highlightCode(textarea.value, cell.type);
+
+              highlighted.scrollTop = textarea.scrollTop;
+              highlighted.scrollLeft = textarea.scrollLeft;
+
+              resizeTextarea(textarea);
+              highlighted.style.height = textarea.style.height;
+            }
+
+            textarea.addEventListener("input", () => {
+              cell.code = textarea.value;
+              saveDocument();
+              updateHighlight();
+
+              if (isLastCell(cell) && cell.code.trim() !== "") {
+                const selectionStart = textarea.selectionStart;
+                const selectionEnd = textarea.selectionEnd;
+
+                cells.push(createCell("", cell.type));
+                render();
+
+                requestAnimationFrame(() => {
+                  const currentTextarea = document.querySelector(
+                    `[data-id="${cell.id}"] textarea`,
+                  );
+
+                  if (currentTextarea) {
+                    currentTextarea.focus();
+                    currentTextarea.selectionStart = selectionStart;
+                    currentTextarea.selectionEnd = selectionEnd;
+                  }
+                });
+              }
+            });
+
+            textarea.addEventListener("scroll", () => {
+              highlighted.scrollTop = textarea.scrollTop;
+              highlighted.scrollLeft = textarea.scrollLeft;
+            });
+
+            textarea.addEventListener("keydown", (event) => {
+              if (event.key === "Tab") {
+                event.preventDefault();
+
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+
+                textarea.value =
+                  textarea.value.slice(0, start) +
+                  "  " +
+                  textarea.value.slice(end);
+
+                textarea.selectionStart = textarea.selectionEnd = start + 2;
+
+                cell.code = textarea.value;
+                saveDocument();
+                updateHighlight();
+              }
+
+              if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+                event.preventDefault();
+                executeFromCell(cell.id);
+              }
+            });
+
+            codeEditor.append(highlighted, textarea);
+
+            // O primeiro espaço do codeRow coincide com o gutter.
+            // Assim o label e o botão ficam horizontalmente alinhados
+            // com o controle de mover a célula.
+            codeRow.append(
+              document.createElement("div"),
+              codeControls,
+              codeEditor,
+            );
+
+            const tools = document.createElement("div");
+            tools.className = "cell-tools";
+
+            const run = document.createElement("button");
+            run.className = "tool";
+            run.title = "Executar";
+            run.textContent = "▶";
+
+            const remove = document.createElement("button");
+            remove.className = "tool";
+            remove.title = "Excluir célula";
+            remove.textContent = "×";
+
+            run.onclick = () => executeFromCell(cell.id);
+
+            remove.onclick = () => {
+              if (isLastCell(cell)) return;
+
+              const i = cells.indexOf(cell);
+              cells.splice(i, 1);
+
+              ensureTrailingEmptyCell();
+              saveDocument();
+              render();
+            };
+
+            tools.append(run, remove);
+
+            content.append(output, codeRow, tools);
+            article.append(gutter, content);
+            root.appendChild(article);
+
+            gutter.addEventListener("mousedown", () => {
+              article.draggable = true;
+            });
+
+            article.addEventListener("dragstart", (event) => {
+              if (last) {
+                event.preventDefault();
+                article.draggable = false;
+                return;
+              }
+
+              draggedId = cell.id;
+              updateDragAutoScroll(event.clientY);
+              article.classList.add("dragging");
+
+              event.dataTransfer.effectAllowed = "move";
+              event.dataTransfer.setData("text/plain", cell.id);
+            });
+
+            article.addEventListener("dragend", () => {
+              stopDragAutoScroll();
+              article.draggable = false;
+              article.classList.remove("dragging");
+
+              document
+                .querySelectorAll(".drag-over")
+                .forEach((el) => el.classList.remove("drag-over"));
+
+              draggedId = null;
+            });
+
+            article.addEventListener("dragover", (event) => {
+              if (!draggedId || draggedId === cell.id || last) return;
+
+              event.preventDefault();
+              event.dataTransfer.dropEffect = "move";
+              article.classList.add("drag-over");
+            });
+
+            article.addEventListener("dragleave", () => {
+              article.classList.remove("drag-over");
+            });
+
+            article.addEventListener("drop", (event) => {
+              event.preventDefault();
+              article.classList.remove("drag-over");
+
+              if (!draggedId || draggedId === cell.id || last) return;
+
+              const from = cells.findIndex((c) => c.id === draggedId);
+              const to = cells.findIndex((c) => c.id === cell.id);
+
+              if (from < 0 || to < 0) return;
+
+              const [moved] = cells.splice(from, 1);
+              const adjustedTo = from < to ? to - 1 : to;
+
+              cells.splice(adjustedTo, 0, moved);
+
+              saveDocument();
+              render();
+              focusCell(moved.id);
+            });
+
+            updateHighlight();
+          });
+        }
+
+        /*
+         * ---------------------------------------------------------------
+         * Exportação / importação
+         * ---------------------------------------------------------------
+         */
+
+        function escapeScriptText(value) {
+          // Evita que uma tag de fechamento existente dentro do código encerre
+          // prematuramente a tag <script> exportada.
+          return String(value).replace(/<\x2Fscript/gi, "<\\/script");
+        }
+
+        function escapeTemplateText(value) {
+          return String(value).replace(/<\/template/gi, "<\\/template");
+        }
+
+        function escapeCommentText(value) {
+          return String(value).replace(/-->/g, "--\\>");
+        }
+
+        function getExportCells() {
+          return cells
+            .filter((cell) => !isLastCell(cell) || cell.code.trim() !== "")
+            .map((cell) => ({
+              id: cell.id,
+              code: cell.code,
+              type: cell.type,
+              hidden: !!cell.hidden,
+            }));
+        }
+
+        function buildStandaloneCellsDocument(exportedCells) {
+          const blocks = exportedCells
+            .map((cell, index) => {
+              const meta = `<!-- VANILLA-NOTEBOOK-CELL\nid: ${escapeCommentText(cell.id)}\ntype: ${escapeCommentText(cell.type)}\nhidden: ${cell.hidden ? "true" : "false"}\nindex: ${index}\n-->`;
+
+              if (cell.type === "javascript") {
+                return `${meta}\n<script data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="javascript">\n${escapeScriptText(cell.code)}\n<\/script>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
+              }
+
+              if (cell.type === "p5") {
+                return `${meta}\n<script data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="p5">\n${escapeScriptText(cell.code)}\n<\/script>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
+              }
+
+              if (cell.type === "typescript") {
+                return `${meta}\n<script type="typescript" data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="typescript">\n${escapeScriptText(cell.code)}\n<\/script>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
+              }
+
+              if (cell.type === "markdown") {
+                return `${meta}\n<script type="text/markdown" data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="markdown">\n${escapeScriptText(cell.code)}\n<\/script>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
+              }
+
+              // HTML não é executado diretamente: fica em <template>,
+              // permitindo ao runtime convertê-lo em output.
+              return `${meta}\n<template data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="html">${escapeTemplateText(cell.code)}</template>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
+            })
+            .join("\n\n");
+
+          return `<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Notebook exportado</title>
+<style>
+  body{margin:0;padding:40px 24px 100px;font:15px/1.5 system-ui,sans-serif;color:#242424;background:#fff}
+  #notebook{width:min(900px,100%);margin:auto}
+  .cell{margin:0 0 22px}
+  .cell-header{display:flex;gap:8px;align-items:center;color:#888;font:11px ui-monospace,monospace;margin-bottom:5px}
+  .cell-code{margin:0;padding:12px;background:#f7f7f5;border-radius:6px;white-space:pre-wrap;overflow:auto;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}
+  .cell-code.hidden{display:none}
+  .output{margin-top:7px;padding:8px 12px;border-left:2px solid #ececec;overflow:auto}
+  .output pre{white-space:pre-wrap;font:13px/1.5 ui-monospace,monospace}
+  .error{color:#b42318;white-space:pre-wrap;font:13px/1.5 ui-monospace,monospace}
+  .p5-host{min-height:1px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"><\/script>
+<script src="https://cdn.jsdelivr.net/npm/typescript@5.9.2/lib/typescript.min.js"><\/script>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/p5.min.js"><\/script>
+<style>
+:root{
+  --bg:#fff;--fg:#242424;--code:#f7f7f5;
+  --muted:#888;--line:#ececec;--hover:#f3f3f3;--accent:#4b72d8;--error:#b42318
+}
+body{background:var(--bg);color:var(--fg)}
+.cell-code{background:var(--code)}
+.cell-header{color:var(--muted)}
+.output{border-left-color:var(--line)}
+.error{color:var(--error)}
+</style>
+<link id="highlight-theme-export" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/styles/github.min.css">
+<script>
+(function(){
+const CDN="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/styles/";
+const aliases={
+  "light":"github","github":"github","github dark":"github-dark","github-dark":"github-dark",
+  "dracula":"dracula","nord":"nord","monokai":"monokai","one dark":"atom-one-dark","one-dark":"atom-one-dark",
+  "solarized dark":"solarized-dark","solarized-dark":"solarized-dark",
+  "solarized light":"solarized-light","solarized-light":"solarized-light",
+  "gruvbox dark":"base16/gruvbox-dark-medium","gruvbox-dark":"base16/gruvbox-dark-medium",
+  "gruvbox light":"base16/gruvbox-light-medium","gruvbox-light":"base16/gruvbox-light-medium"
+};
+function norm(v){return String(v||"").trim().replace(/\.css$/i,"").replace(/\s+/g," ").toLowerCase()}
+function resolve(v){
+  if(!v||norm(v)==="auto")return matchMedia("(prefers-color-scheme:dark)").matches?"github-dark":"github";
+  return aliases[norm(v)]||String(v).trim().replace(/^styles\//i,"").replace(/\.css$/i,"").replace(/^\/+|\/+$/g,"");
+}
+function rgb(v){
+  const m=String(v||"").match(/^rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)/);return m?{r:+m[1],g:+m[2],b:+m[3]}:null
+}
+function hex(v){const c=n=>Math.max(0,Math.min(255,Math.round(n))).toString(16).padStart(2,"0");return"#"+c(v.r)+c(v.g)+c(v.b)}
+function mix(a,b,p){const x=rgb(a),y=rgb(b);return x&&y?hex({r:x.r+(y.r-x.r)*p,g:x.g+(y.g-x.g)*p,b:x.b+(y.b-x.b)*p}):a}
+function sync(){
+  const host=document.createElement("div");
+  host.style.cssText="position:fixed;left:-10000px;top:-10000px;opacity:0";
+  host.innerHTML='<pre class="hljs"><code class="hljs"><span class="hljs-comment">c</span><span class="hljs-keyword">k</span><span class="hljs-string">s</span><span class="hljs-deletion">d</span></code></pre>';
+  document.body.appendChild(host);
+  const q=s=>host.querySelector(s);
+  const c=e=>e?getComputedStyle(e).color:null;
+  const bg=getComputedStyle(q("code")).backgroundColor;
+  const fg=c(q("code"))||"rgb(36,36,36)";
+  const b=rgb(bg)||{r:255,g:255,b:255}, f=rgb(fg)||{r:36,g:36,b:36};
+  const bhex=hex(b), fhex=hex(f);
+  const muted=c(q(".hljs-comment"))||fg, accent=c(q(".hljs-keyword"))||fg, error=c(q(".hljs-deletion"))||fg;
+  document.documentElement.style.setProperty("--bg",bhex);
+  document.documentElement.style.setProperty("--fg",fhex);
+  document.documentElement.style.setProperty("--code",bhex);
+  document.documentElement.style.setProperty("--muted",rgb(muted)?hex(rgb(muted)):mix(fhex,bhex,.55));
+  document.documentElement.style.setProperty("--line",mix(fhex,bhex,.16));
+  document.documentElement.style.setProperty("--hover",mix(fhex,bhex,.07));
+  document.documentElement.style.setProperty("--accent",rgb(accent)?hex(rgb(accent)):fhex);
+  document.documentElement.style.setProperty("--error",rgb(error)?hex(rgb(error)):"#b42318");
+  document.body.removeChild(host);
+}
+const link=document.getElementById("highlight-theme-export");
+const theme=new URLSearchParams(location.search).get("temptheme")||"auto";
+link.href=CDN+resolve(theme)+".min.css";
+link.addEventListener("load",sync,{once:true});
+document.addEventListener("DOMContentLoaded",sync,{once:true});
+})();
+<\/script>
+</head>
+<body>
+<script>
+// display() existe antes das células exportadas para que scripts JavaScript
+// possam ser executados normalmente pelo navegador.
+window.display = value => console.log(value);
+<\/script>
+<div id="notebook">
+${blocks}
+</div>
+<script>
+(() => {
+  "use strict";
+
+  const root = document.querySelector("#notebook");
+  const state = Object.create(null);
+  const scope = new Proxy(state, {
+    has(target, property){
+      if(property === Symbol.unscopables) return false;
+      return property in target || property in globalThis;
+    },
+    get(target, property){
+      if(property === Symbol.unscopables) return undefined;
+      return property in target ? target[property] : globalThis[property];
+    },
+    set(target, property, value){target[property] = value; return true;}
+  });
+
+  // No documento exportado, display() deliberadamente usa o console.
+  window.display = value => console.log(value);
+
+  function transformDeclarations(code){
+    return code.replace(/\\b(let|const|var)\\s+([A-Za-z_$][\\w$]*)/g, "__state.$2");
+  }
+
+  function extractNames(code){
+    const names = new Set();
+    const re = /\\b(?:let|const|var)\\s+([^;]+)/g;
+    let m;
+    while((m = re.exec(code))){
+      const first = m[1].split(/\\b(?:for|if|while|switch|catch)\\b/)[0];
+      first.split(",").forEach(part => {
+        const name = part.split("=")[0].trim();
+        if(/^[A-Za-z_$][\\w$]*$/.test(name)) names.add(name);
+      });
+    }
+    return [...names];
+  }
+
+  const nodes = [...document.querySelectorAll("[data-notebook-cell]")];
+  const cells = nodes.map((node, index) => {
+    const comment = (() => {
+      let n = node.previousSibling;
+      while(n && n.nodeType !== Node.COMMENT) n = n.previousSibling;
+      return n ? n.data : "";
+    })();
+    const type = (comment.match(/\\btype:\\s*([^\\n]+)/i) || [, node.dataset.cellType || "javascript"])[1].trim();
+    const hidden = ((comment.match(/\\bhidden:\\s*(true|false)/i) || [,"false"])[1] === "true");
+    return {node, type, hidden, index};
+  });
+
+  cells.forEach(cell => {
+    if(cell.type === "javascript" || cell.type === "typescript") {
+      const code = cell.node.textContent;
+      extractNames(cell.type === "typescript" && window.ts ? ts.transpileModule(code, {compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.None,strict:false}}).outputText : code)
+        .forEach(name => state[name] = undefined);
+    }
+  });
+
+  function makeCellShell(cell, codeText){
+    const section = document.createElement("section");
+    section.className = "cell";
+    const header = document.createElement("div");
+    header.className = "cell-header";
+    header.textContent = String(cell.index + 1).padStart(2,"0") + " · " + cell.type + (cell.hidden ? " · escondido" : "");
+    const code = document.createElement("pre");
+    code.className = "cell-code" + (cell.hidden ? " hidden" : "");
+    code.textContent = codeText;
+    const output = document.createElement("div");
+    output.className = "output";
+    section.append(header, code, output);
+    root.appendChild(section);
+    return output;
+  }
+
+  async function runCell(cell){
+    const codeText = cell.node.textContent;
+    const output = makeCellShell(cell, codeText);
+    if(!codeText.trim()) return;
+
+    try {
+      if(cell.type === "markdown"){
+        output.innerHTML = marked.parse(codeText);
+        return;
+      }
+
+      if(cell.type === "html"){
+        output.appendChild(cell.node.content.cloneNode(true));
+        return;
+      }
+
+      if(cell.type === "css"){
+        const style = document.createElement("style");
+        style.textContent = codeText;
+        output.appendChild(style);
+        return;
+      }
+
+      if(cell.type === "p5"){
+        const host = document.createElement("div");
+        host.className = "p5-host";
+        output.appendChild(host);
+        new p5(p => {
+          const originalCreateCanvas = p.createCanvas.bind(p);
+          p.createCanvas = (...args) => {
+            const canvas = originalCreateCanvas(...args);
+            try { canvas.parent(host); } catch {}
+            return canvas;
+          };
+          const source = codeText
+            .replace(/\\bwindowWidth\\b/g, String(Math.max(1, host.clientWidth || root.clientWidth || 1)))
+            .replace(/\\bwindowHeight\\b/g, "550");
+          const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+          const runner = new AsyncFunction("p", "with (p) { " + source + " }");
+          runner(p);
+        });
+        return;
+      }
+
+      let source = codeText;
+      if(cell.type === "typescript"){
+        source = ts.transpileModule(source, {
+          compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.None,strict:false}
+        }).outputText;
+      }
+      source = transformDeclarations(source);
+      const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+      const runner = new AsyncFunction("__state","display","__scope", "with (__scope) { " + source + " }");
+      await runner(state, window.display, scope);
+    } catch(error){
+      const div = document.createElement("div");
+      div.className = "error";
+      div.textContent = error.stack || error.message || String(error);
+      output.appendChild(div);
+      console.error(error);
+    }
+  }
+
+  (async () => {
+    for(const cell of cells) await runCell(cell);
+  })();
+})();
+<\/script>
+</body>
+</html>`;
+        }
+
+        function escapeAttr(value) {
+          return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/"/g, "&quot;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+        }
+
+        function buildNotebookDocument(exportedCells) {
+          const json = JSON.stringify({
+            nextId,
+            cells: exportedCells,
+          })
+            .replace(/&/g, "\\u0026")
+            .replace(/</g, "\\u003c")
+            .replace(/>/g, "\\u003e")
+            .replace(/\u2028/g, "\\u2028")
+            .replace(/\u2029/g, "\\u2029");
+
+          const bootstrap = `<script type="application/json" id="notebook-bootstrap">${json}<\/script>\n`;
+          const html = document.documentElement.outerHTML;
+          const marker = "<script>\n(() => {";
+          return html.includes(marker)
+            ? html.replace(marker, bootstrap + marker)
+            : html.replace("</body>", bootstrap + "</body>");
+        }
+
+        function downloadText(filename, content) {
+          const blob = new Blob([content], { type: "text/html;charset=utf-8" });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = filename;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+
+        async function saveTextFile(suggestedName, content) {
+          // File System Access API: lets the user choose the filename and location.
+          // It is intentionally attempted only from a direct user gesture
+          // (Ctrl+S / Ctrl+Shift+S).
+          if (typeof window.showSaveFilePicker === "function") {
+            try {
+              const handle = await window.showSaveFilePicker({
+                suggestedName,
+                types: [
+                  {
+                    description: "Documento HTML",
+                    accept: { "text/html": [".html", ".htm"] },
+                  },
+                ],
+              });
+
+              const writable = await handle.createWritable();
+              await writable.write(content);
+              await writable.close();
+              return true;
+            } catch (error) {
+              // Canceling the native dialog should do nothing.
+              if (error && error.name === "AbortError") return false;
+              console.warn(
+                "O seletor nativo de salvamento não pôde ser usado; usando download.",
+                error,
+              );
+            }
+          }
+
+          // Fallback for browsers that do not expose showSaveFilePicker().
+          // The browser's normal download mechanism is still used.
+          downloadText(suggestedName, content);
+          return true;
+        }
+
+        async function exportCells() {
+          await saveTextFile(
+            "documento-exportado.html",
+            buildStandaloneCellsDocument(getExportCells()),
+          );
+        }
+
+        async function exportNotebook() {
+          await saveTextFile(
+            "notebook.html",
+            buildNotebookDocument(getExportCells()),
+          );
+        }
+
+        function parseLocalNotebookDocument(html) {
+          // First try the standalone cell format.
+          let imported = parseExportedDocument(html);
+          if (imported.length) return imported;
+
+          // Then try the complete notebook export, whose cell data lives in a
+          // JSON bootstrap block so arbitrary HTML/JS cannot break the document.
+          const parsed = new DOMParser().parseFromString(html, "text/html");
+          const bootstrap = parsed.getElementById("notebook-bootstrap");
+
+          if (bootstrap) {
+            try {
+              const data = JSON.parse(bootstrap.textContent || "");
+              if (data && Array.isArray(data.cells)) {
+                return data.cells.map((savedCell, index) => ({
+                  id: savedCell.id || "cell-imported-" + (index + 1),
+                  code:
+                    typeof savedCell.code === "string" ? savedCell.code : "",
+                  type: savedCell.type || "javascript",
+                  hidden: !!savedCell.hidden,
+                  output: [],
+                }));
+              }
+            } catch (error) {
+              console.error(
+                "Não foi possível interpretar o notebook HTML importado:",
+                error,
+              );
+            }
+          }
+
+          return [];
+        }
+
+        async function loadLocalDocument(file) {
+          try {
+            const html = await file.text();
+            const imported = parseLocalNotebookDocument(html);
+            if (!imported.length) {
+              throw new Error(
+                "Nenhuma célula de notebook foi encontrada no arquivo.",
+              );
+            }
+
+            cells.length = 0;
+            imported.forEach((cell) => cells.push(cell));
+
+            nextId = Math.max(
+              1,
+              ...cells.map((cell) => {
+                const match = String(cell.id).match(/(\\d+)$/);
+                return match ? Number(match[1]) + 1 : 1;
+              }),
+            );
+
+            ensureTrailingEmptyCell();
+            saveDocument();
+            render();
+
+            const firstCodeCell = cells.find((cell) => cell.code.trim() !== "");
+            if (firstCodeCell) await executeFromCell(firstCodeCell.id);
+          } catch (error) {
+            console.error("Não foi possível importar o notebook:", error);
+            alert("Não foi possível importar este arquivo como notebook HTML.");
+          }
+        }
+
+        function parseExportedDocument(html) {
+          const parsed = new DOMParser().parseFromString(html, "text/html");
+          const result = [];
+          const nodes = [...parsed.querySelectorAll("[data-notebook-cell]")];
+
+          nodes.forEach((node, index) => {
+            let commentNode = node.previousSibling;
+            while (commentNode && commentNode.nodeType !== Node.COMMENT)
+              commentNode = commentNode.previousSibling;
+            const comment = commentNode ? commentNode.data : "";
+            const typeMatch = comment.match(/\\btype:\\s*([^\\n]+)/i);
+            const hiddenMatch = comment.match(/\\bhidden:\\s*(true|false)/i);
+            const idMatch = comment.match(/\\bid:\\s*([^\\n]+)/i);
+            const type = typeMatch
+              ? typeMatch[1].trim()
+              : node.dataset.cellType || "javascript";
+            const hidden = hiddenMatch
+              ? hiddenMatch[1].toLowerCase() === "true"
+              : false;
+            const id = idMatch
+              ? idMatch[1].trim()
+              : node.dataset.cellId || "cell-imported-" + (index + 1);
+            let code = node.textContent;
+            if (type === "html" && node instanceof HTMLTemplateElement)
+              code = node.innerHTML;
+            result.push({ id, code, type, hidden, output: [] });
+          });
+
+          return result;
+        }
+
+        async function loadExternalDocument(url) {
+          try {
+            const response = await fetch(url, { cache: "no-store" });
+            if (!response.ok) throw new Error("HTTP " + response.status);
+            const html = await response.text();
+            const imported = parseExportedDocument(html);
+            if (!imported.length)
+              throw new Error("Nenhuma célula exportada foi encontrada.");
+
+            cells.length = 0;
+            imported.forEach((cell) => cells.push(cell));
+            nextId = Math.max(
+              1,
+              ...cells.map((cell) => {
+                const match = String(cell.id).match(/(\d+)$/);
+                return match ? Number(match[1]) + 1 : 1;
+              }),
+            );
+            ensureTrailingEmptyCell();
+            saveDocument();
+            render();
+
+            const firstCodeCell = cells.find((cell) => cell.code.trim() !== "");
+            if (firstCodeCell) await executeFromCell(firstCodeCell.id);
+          } catch (error) {
+            console.error(
+              "Não foi possível carregar o notebook pela URL:",
+              error,
+            );
+          }
+        }
+
+        function loadEmbeddedNotebook() {
+          let data = window.__EXPORTED_NOTEBOOK__;
+          if (!data) {
+            const bootstrap = document.getElementById("notebook-bootstrap");
+            if (bootstrap) {
+              try {
+                data = JSON.parse(bootstrap.textContent || "");
+              } catch (error) {
+                console.error(
+                  "Não foi possível ler os dados embutidos do notebook:",
+                  error,
+                );
+                return false;
+              }
+            }
+          }
+          if (!data || !Array.isArray(data.cells)) return false;
+
+          cells.length = 0;
+          data.cells.forEach((savedCell) =>
+            cells.push({
+              id: savedCell.id || "cell-" + nextId++,
+              code: typeof savedCell.code === "string" ? savedCell.code : "",
+              type: savedCell.type || "javascript",
+              hidden: !!savedCell.hidden,
+              output: [],
+            }),
+          );
+          nextId = Math.max(
+            Number(data.nextId) || 1,
+            ...cells.map((cell) => {
+              const match = String(cell.id).match(/(\d+)$/);
+              return match ? Number(match[1]) + 1 : 1;
+            }),
+          );
+          ensureTrailingEmptyCell();
+          return true;
+        }
+
+        const localImportInput = document.getElementById(
+          "local-notebook-import",
+        );
+
+        localImportInput.addEventListener("change", async (event) => {
+          const file = event.target.files && event.target.files[0];
+          // Reset the value so choosing the same file twice still fires change.
+          event.target.value = "";
+          if (file) await loadLocalDocument(file);
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (!(event.ctrlKey || event.metaKey)) return;
+
+          const key = event.key.toLowerCase();
+
+          if (!event.shiftKey && key === "i") {
+            event.preventDefault();
+            localImportInput.click();
+            return;
+          }
+
+          if (event.shiftKey && key === "s") {
+            event.preventDefault();
+            exportNotebook();
+            return;
+          }
+
+          if (!event.shiftKey && key === "s") {
+            event.preventDefault();
+            exportCells();
+            return;
+          }
+
+          // Ctrl+N não é interceptado pelo notebook.
+        });
+
+        /*
+         * Primeiro desenho. A prioridade de inicialização é:
+         * 1. notebook embutido (Ctrl+Shift+S);
+         * 2. documento remoto (?load= ou ?url=);
+         * 3. localStorage.
+         */
+        const embeddedNotebook = loadEmbeddedNotebook();
+        const query = new URLSearchParams(window.location.search);
+        const externalLoadUrl = query.get("load") || query.get("url");
+
+        render();
+
+        if (embeddedNotebook) {
+          const firstCodeCell = cells.find((cell) => cell.code.trim() !== "");
+          if (firstCodeCell) executeFromCell(firstCodeCell.id);
+        } else if (externalLoadUrl) {
+          loadExternalDocument(externalLoadUrl);
+        } else if (restoredFromStorage) {
+          const firstCodeCell = cells.find((cell) => cell.code.trim() !== "");
+          if (firstCodeCell) executeFromCell(firstCodeCell.id);
+        }
+      })();
+    </script>
+  </body>
+</html>
