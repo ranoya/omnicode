@@ -544,6 +544,7 @@
       accept=".html,.htm,text/html"
       hidden
     />
+    <style id="notebook-global-css"></style>
     <main id="document"></main>
 
     <div id="context-menu">
@@ -1181,11 +1182,19 @@ display(quadrados);`,
          */
 
         function executeCss(cell) {
-          cell.output = [
-            {
-              __css: cell.code,
-            },
-          ];
+          // CSS is global document state. It intentionally has no local output.
+          cell.output = [];
+          refreshGlobalCss();
+        }
+
+        function refreshGlobalCss() {
+          const host = document.getElementById("notebook-global-css");
+          if (!host) return;
+
+          host.textContent = cells
+            .filter((cell) => cell.type === "css" && cell.code.trim())
+            .map((cell) => `/* CSS cell ${cell.id} */\n${cell.code}`)
+            .join("\n\n");
         }
 
         /*
@@ -1591,6 +1600,7 @@ display(quadrados);`,
         window.addEventListener("blur", stopDragAutoScroll);
 
         function render() {
+          refreshGlobalCss();
           root.innerHTML = "";
 
           cells.forEach((cell, index) => {
