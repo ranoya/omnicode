@@ -9,8 +9,8 @@ newframe(
   30,
 );
 
-newframe(
-  "https://www.youtube.com/embed/0r0-RjoZ8Wk?si=x-7b-UhhOZuRt8Dj&start=920%22",
+polaroid(
+  "https://www.youtube.com/embed/0r0-RjoZ8Wk?si=x-7b-UhhOZuRt8Dj&start=920%22", "Palestra realizada no laboratório Lexus da UFRN sobre os softwares de design utilizados nas décadas de 1980 e 1990",
   "Palestra",
   670,
   500,
@@ -57,7 +57,7 @@ newframe(
 connect("Projeto", "Bullet Points");
 connect("Arqueologia do Editorial", "Bullet Points");
 
-newframe(
+newdoc(
   "https://drive.google.com/file/d/1HEZdZPYt0vF7JFJfyn7SuHfVGZ28c-zn/preview",
   "Método de Pesquisa",
 
@@ -109,7 +109,7 @@ connect("Emulação", "Bullet Points");
 connect("Emulação", "Acervo de Pesquisa (v.2)");
 connect("Emulação", "Acervo de Pesquisa (v.1)");
 
-newframe(
+newdoc(
   "https://omniboards.vercel.app/?nomenu=true&filtra=PIXELART_PESSOAL&limita=0&contentonly=true&titulo=Pixel%20Art&temptheme=narrativas",
   "Pixel Art",
 
@@ -121,7 +121,7 @@ newframe(
 
 connect("Pixel Art", "Projeto");
 
-newframe(
+newdoc(
   "https://omniboards.vercel.app/?nomenu=true&filtra=_DEMOSCENE&limita=0&contentonly=true&titulo=Demoscene&temptheme=narrativas",
   "Demoscene",
 
@@ -133,7 +133,7 @@ newframe(
 
 connect("Pixel Art", "Demoscene");
 
-newframe(
+newdoc(
   "https://www.ranoya.com/pt/textos/culturavisual.php?id=T018&temptheme=cleantext&nomenu=true",
   "Cultura Visual",
 
@@ -145,7 +145,7 @@ newframe(
 
 connect("Pixel Art", "Cultura Visual");
 
-newframe(
+newdoc(
   "https://www.ranoya.com/pt/textos/interfacetexto.php?id=T003&temptheme=cleantext&nomenu=tru",
   "Interfaces de Texto",
 
@@ -158,7 +158,7 @@ newframe(
 connect("Interfaces de Texto", "Arqueologia do Design");
 connect("Interfaces de Texto", "Emulação");
 
-newframe(
+newdoc(
   "https://www.ranoya.com/pt/textos/transformacaointerfaces.php?id=T005&temptheme=cleantext&nomenu=true",
   "Mais Interfaces de Texto",
 
@@ -171,7 +171,7 @@ newframe(
 connect("Interfaces de Texto", "Mais Interfaces de Texto");
 connect("Emulação", "Mais Interfaces de Texto");
 
-newframe(
+newdoc(
   "https://www.ranoya.com/pt/textos/dropdown.php?id=T002&temptheme=cleantext&nomenu=true",
   "Menus",
 
@@ -184,7 +184,7 @@ newframe(
 connect("Menus", "Mais Interfaces de Texto");
 connect("Menus", "Emulação");
 
-newframe(
+newdoc(
   "https://omniboards.vercel.app/?limita=0&titulo=ASCII%20Art&subtitulo=Refer%C3%AAncia&filtra=ANSI_ASCII_ART&nomenu=true&temptheme=ayu",
   "ASCII Art",
 
@@ -198,7 +198,7 @@ connect("ASCII Art", "Pixel Art");
 
 connect("ASCII Art", "Interfaces de Texto");
 
-newframe(
+newdoc(
   "https://drive.google.com/file/d/1yNAfpLxgX3xW1JQtY2KSI2xsSiLSV8K_/preview",
   "Erthos Albino de Souza",
 
@@ -230,7 +230,7 @@ newframe(
   880,
   780,
   1430,
-  930,
+  1200,
 );
 
 connect("Projeto", "Hipertexto");
@@ -240,8 +240,8 @@ newframe(
   "Mapeamento Point & Clicks",
 
   850,
-  850,
-  2930,
+  750,
+  3100,
   1030,
 );
 
