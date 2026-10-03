@@ -51,7 +51,7 @@ polaroid("https://omnifolio.vercel.app/omnifiles/ibm-pc-5150.webp", "Computador 
 newframe("https://namco.vercel.app/interfaces/?rom=tp3", "Turbo Pascal 3.0", 500, 360, -1600, 1200);
 connect("Turbo Pascal 3.0", "PC-XT");
 
-polaroid("https://www.youtube.com/embed/xFlPWVOdGzw?si=rutAgPaKpkF1FImc", "Turbo Basic", "Turbo Basic", 500, 360, -1080, 760);
+polaroid("https://www.youtube.com/embed/xFlPWVOdGzw?si=rutAgPaKpkF1FImc", "Turbo Basic", "Turbo Basic", 500, 360, -1150, 760);
 connect("Turbo Basic", "PC-XT");
 
 
