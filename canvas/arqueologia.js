@@ -245,7 +245,22 @@ newframe(
   1030,
 );
 
+
+
+
 connect("Projeto", "Mapeamento Point & Clicks");
+
+newframe(
+  "https://pointandclick.vercel.app/v1/timelineonly.html",
+  "Mapeamento Point & Clicks v.4",
+
+  850,
+  750,
+  4000,
+  750,
+);
+
+connect("Mapeamento Point & Clicks v.4", "Mapeamento Point & Clicks");
 
 newframe(
   "https://omniboards.vercel.app/?titulo=text%20mode&limita=0&contentonly=true&filtra=TEXT_MODE_INTERFACE",
@@ -270,7 +285,7 @@ newframe(
 );
 
 connect("Point and Clicks", "Pixel Art");
-connect("Point and Clicks", "Mapeamento Point & Clicks");
+connect("Point and Clicks", "Mapeamento Point & Clicks v.4");
 
 
 newframe(
