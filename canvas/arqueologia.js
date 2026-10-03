@@ -140,7 +140,7 @@ newidoc(
   1100,
   940,
   4200,
-  -330,
+  -730,
 );
 
 connect("Pixel Art", "Cultura Visual");
@@ -286,6 +286,21 @@ newframe(
 
 connect("Point and Clicks", "Pixel Art");
 connect("Point and Clicks", "Mapeamento Point & Clicks v.4");
+
+
+newframe(
+  "https://omnidocs.vercel.app/docs/estudodecasopnca",
+  "Estudo de Caso",
+
+  1050,
+  750,
+  3640,
+  1970,
+);
+
+connect("Point and Clicks", "Estudo de Caso");
+connect("Mapeamento Point & Clicks v.4", "Estudo de Caso");
+connect("Mapeamento Point & Clicks", "Estudo de Caso");
 
 
 newframe(
