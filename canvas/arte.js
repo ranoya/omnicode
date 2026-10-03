@@ -5,7 +5,7 @@ polaroid("https://omnifolio.vercel.app/omnifiles/atari800_computer.png", "Comput
 newidoc("https://www.ranoya.com/Art/Singles/1980.html?bgcolor=417cd7&fcolor=FFFFFF", "Gráficos Programados", 600, 500, 600, 700);
 connect("Atari 800", "Gráficos Programados");
 
-polaroid("https://omnifolio.vercel.app/omnifiles/manual_Atari800_VideoEasel.jpg", "Video Easel, 1979", "Video Easel", 450, 550, -300, -200);
+polaroid("https://omnifolio.vercel.app/omnifiles/manual_Atari800_VideoEasel.jpg", "Video Easel, 1979", "Video Easel", 400, 550, -300, -200);
 connect("Atari 800", "Video Easel");
 
 polaroid("https://www.youtube.com/embed/mnznqaGYc-U?si=V1cubWhP-TyMbbI_", "Demonstração do Video Easel, 1979", "Demo", 670, 500, 230, -320);
@@ -41,6 +41,10 @@ connect("Logo", "Apple II");
 polaroid("https://www.youtube.com/embed/m9joBLOZVEo?si=sUP37vdG5LHp5c-H", "Demonstração do 10 PRINT original", "C64 10 PRINT", 500, 360, -450, 1000);
 connect("C64 10 PRINT", "BASIC");
 connect("C64 10 PRINT", "10 Print, MSX");
+
+
+newidoc("https://artndcode.vercel.app/Singles/pathwavesexpiritae.html?fcolor=aaFFFF&bgcolor=4272cf", "Pathwaves Expiritae", 600, 500, 900, 2000);
+connect("Gráficos Programados", "Pathwaves Expiritae");
 
 
 center("Gráficos Programados");
