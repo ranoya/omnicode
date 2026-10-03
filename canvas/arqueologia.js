@@ -241,8 +241,8 @@ newframe(
 
   850,
   750,
-  3100,
-  1030,
+  2300,
+  960,
 );
 
 
@@ -254,7 +254,7 @@ newframe(
   "https://pointandclick.vercel.app/v1/timelineonly.html",
   "Mapeamento Point & Clicks v.4",
 
-  850,
+  1050,
   750,
   4000,
   750,
