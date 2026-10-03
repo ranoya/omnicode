@@ -265,6 +265,7 @@ newframe(
 
 connect("Hipertexto", "Ficção Interativa");
 
+
 newframe(
   "https://visse.vercel.app/v2-arqueologia/more.html?bg=06696e&fg=ffffff&filtra=_narratifonly",
   "Emulação de Narrativas Interativas",
@@ -286,8 +287,8 @@ newframe(
 
   850,
   750,
-  2500,
-  260,
+  2420,
+  240,
 );
 
 
@@ -301,7 +302,7 @@ newframe(
 
   1050,
   750,
-  3800,
+  3880,
   1050,
 );
 
@@ -343,12 +344,16 @@ newframe(
   1050,
   750,
   3540,
-  2170,
+  2400,
 );
 
 connect("Point and Clicks", "Estudo de Caso");
 connect("Mapeamento Point & Clicks v.4", "Estudo de Caso");
 connect("Mapeamento Point & Clicks", "Estudo de Caso");
+connect("Mapeamento Point & Clicks", "Ficção Interativa");
+connect("Mapeamento Point & Clicks v.4", "Ficção Interativa");
+connect("Point and Clicks", "Ficção Interativa");
+connect("Point and Clicks", "Cultura Visual");
 
 
 newframe(
