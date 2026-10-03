@@ -771,6 +771,8 @@ ser a aba lateral. Cada uma corresponde a uma função já existente, só na mol
 <p>Define o zoom diretamente (1 = 100%, 0.5 = 50%, 2 = 200%...), sem precisar simular scroll ou cliques nos botões de zoom. Fica limitado entre 20% e 400%, como o zoom manual.</p>
 <code class="sig">setPan(x, y)</code>
 <p>Desloca o canvas diretamente para as coordenadas <code>x, y</code> (em pixels do espaço do canvas), sem precisar simular arrastar o fundo. Útil pra implementações manuais que queiram levar o usuário a um ponto específico.</p>
+<code class="sig">center(título)</code>
+<p>Encontra a janela com esse título exato e centraliza o canvas nela (mantendo o zoom atual), além de trazê-la pra frente de todas as outras — o mesmo que acontece ao escolher uma janela na lista da lupa, só que por código.</p>
 <hr>
 <h4>Embutir / integrar</h4>
 <code class="sig">centerControls()</code>
@@ -1110,6 +1112,18 @@ ser a aba lateral. Cada uma corresponde a uma função já existente, só na mol
     if (!win.classList.contains('maximized')) bringToFront(win);
   }
 
+  // ---- centralizar uma janela por programação, igual ao clique na lista da lupa ----
+  function center(titulo){
+    var win = findWindowByName(titulo);
+    if (!win){
+      console.warn('center: janela "' + titulo + '" não encontrada.');
+      return null;
+    }
+    panToWindow(win);
+    return win;
+  }
+  window.center = center; // pode ser chamado pelo console do navegador também
+
   function renderSearchList(filter){
     var q = (filter || '').trim().toLowerCase();
     searchList.innerHTML = '';
@@ -1210,12 +1224,12 @@ ser a aba lateral. Cada uma corresponde a uma função já existente, só na mol
                     'connect', 'disconnect', 'setTheme', 'setTempTheme', 'help',
                     'centerControls', 'bottomControls', 'setTransparentBackground', 'setOpaqueBackground',
                     'polaroid', 'newdoc', 'newidoc', 'rundoc', 'newpermadoc', 'newpermaidoc', 'runpermadoc',
-                    'setZoom', 'setPan', cmd))(
+                    'setZoom', 'setPan', 'center', cmd))(
         newwindow, newframe, run, newpermawindow, newpermaframe, permarun,
         connect, disconnect, setTheme, setTempTheme, help,
         centerControls, bottomControls, setTransparentBackground, setOpaqueBackground,
         polaroid, newdoc, newidoc, rundoc, newpermadoc, newpermaidoc, runpermadoc,
-        setZoom, setPan);
+        setZoom, setPan, center);
     } catch (err){
       console.warn('Comando inválido:', err.message);
     }
