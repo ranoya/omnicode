@@ -1,14 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover"
-    />
-    <title>Canvas Infinito</title>
-    <script>
-      $_GET = [];
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Canvas Infinito</title>
+<script>
+$_GET = [];
       (function () {
         corte = window.location.href.toString().indexOf("?");
         if (corte > 0) {
@@ -22,467 +19,230 @@
           }
         }
       })();
-    </script>
-    <style>
-      :root {
-        --bg: #f4f4f6;
-        --panel: #ffffff;
-        --panel-border: #d8d8de;
-        --text: #1c1c22;
-        --muted: #6b6b76;
-        --accent: #4f6df5;
-        --accent-text: #ffffff;
-        --win-header: #eceef4;
-        --win-bg: #ffffff;
-        --win-border: #c9cbd6;
-        --shadow: rgba(0, 0, 0, 0.15);
-        --grid-dot: #c7c7d1;
-      }
-      @media (prefers-color-scheme: dark) {
-        :root:not([data-theme="light"]) {
-          --bg: #16171d;
-          --panel: #202129;
-          --panel-border: #33343e;
-          --text: #eceef2;
-          --muted: #9a9aa6;
-          --accent: #7c93ff;
-          --accent-text: #0e0f14;
-          --win-header: #262832;
-          --win-bg: #1c1d24;
-          --win-border: #3a3c48;
-          --shadow: rgba(0, 0, 0, 0.5);
-          --grid-dot: #33343e;
-        }
-      }
-      :root[data-theme="dark"] {
-        --bg: #16171d;
-        --panel: #202129;
-        --panel-border: #33343e;
-        --text: #eceef2;
-        --muted: #9a9aa6;
-        --accent: #7c93ff;
-        --accent-text: #0e0f14;
-        --win-header: #262832;
-        --win-bg: #1c1d24;
-        --win-border: #3a3c48;
-        --shadow: rgba(0, 0, 0, 0.5);
-        --grid-dot: #33343e;
-      }
-      * {
-        box-sizing: border-box;
-      }
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-        overscroll-behavior: none;
-      }
-      body {
-        font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        background: var(--bg);
-        color: var(--text);
-        padding-top: env(safe-area-inset-top, 0px);
-        padding-bottom: env(safe-area-inset-bottom, 0px);
-        overflow: hidden;
-      }
-      #viewport {
-        position: fixed;
-        inset: 0;
-        overflow: hidden;
-        touch-action: none;
-        background-image: radial-gradient(
-          var(--grid-dot) 1.4px,
-          transparent 1.4px
-        );
-        cursor: default;
-      }
-      #viewport.panning {
-        cursor: grabbing;
-      }
-      #canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 0;
-        height: 0;
-        transform-origin: 0 0;
-      }
-      .win {
-        position: absolute;
-        min-width: 150px;
-        min-height: 110px;
-        background: var(--win-bg);
-        border: 1px solid var(--win-border);
-        border-radius: 10px;
-        box-shadow: 0 8px 24px var(--shadow);
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        user-select: none;
-      }
-      .win-header {
-        background: var(--win-header);
-        padding: 8px 10px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        cursor: grab;
-        border-bottom: 1px solid var(--win-border);
-        font-size: 13px;
-        font-weight: 600;
-        touch-action: none;
-      }
-      .win-header:active {
-        cursor: grabbing;
-      }
-      .win-title {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        pointer-events: none;
-      }
-      .win-header-btns {
-        display: flex;
-        align-items: center;
-        flex: none;
-        gap: 4px;
-      }
-      .win-max,
-      .win-close {
-        width: 20px;
-        height: 20px;
-        border-radius: 5px;
-        border: none;
-        background: transparent;
-        color: var(--muted);
-        font-size: 13px;
-        line-height: 1;
-        cursor: pointer;
-        flex: none;
-      }
-      .win-max:hover,
-      .win-close:hover {
-        background: var(--panel-border);
-        color: var(--text);
-      }
-      .win.maximized {
-        border-radius: 0;
-      }
-      .win.maximized .win-resize {
-        display: none;
-      }
-      .win-body {
-        flex: 1;
-        padding: 10px;
-        overflow: auto;
-        outline: none;
-        font-size: 14px;
-        user-select: text;
-        color: var(--text);
-      }
-      .win-body.no-padding {
-        padding: 0;
-      }
-      .win-body.doc {
-        font-size: 13px;
-        line-height: 1.5;
-      }
-      .doc h4 {
-        margin: 14px 0 4px;
-        font-size: 13px;
-      }
-      .doc h4:first-child {
-        margin-top: 0;
-      }
-      .doc p {
-        margin: 4px 0;
-      }
-      .doc ul {
-        margin: 4px 0;
-        padding-left: 18px;
-      }
-      .doc code {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-        font-size: 12px;
-        background: var(--win-header);
-        padding: 1px 5px;
-        border-radius: 4px;
-      }
-      .doc .sig {
-        display: block;
-        padding: 6px 8px;
-        margin: 4px 0;
-        color: var(--accent);
-      }
-      .doc hr {
-        border: none;
-        border-top: 1px solid var(--win-border);
-        margin: 12px 0;
-      }
-      .win-resize {
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        width: 18px;
-        height: 18px;
-        cursor: nwse-resize;
-        touch-action: none;
-        background: linear-gradient(
-          135deg,
-          transparent 50%,
-          var(--win-border) 50%
-        );
-      }
-      #console {
-        position: fixed;
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-        z-index: 9999;
-        width: min(520px, calc(100vw - 24px));
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        background: var(--panel);
-        border: 1px solid var(--panel-border);
-        border-radius: 8px;
-        padding: 8px 10px;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-        font-size: 13px;
-        opacity: 0.55;
-        box-shadow: 0 4px 14px var(--shadow);
-        transition:
-          opacity 0.15s ease,
-          box-shadow 0.15s ease;
-      }
-      /* após o 1º comando, o estado ocioso passa a ser totalmente transparente */
-      #console.used {
-        opacity: 0;
-      }
-      /* passar o mouse sempre mostra translúcido, mesmo já tendo sido usada */
-      #console:hover {
-        opacity: 0.55;
-      }
-      /* em uso (clicada ou com foco via teclado): sempre opaca, por cima de tudo */
-      #console:focus-within {
-        opacity: 1;
-        box-shadow: 0 16px 46px var(--shadow);
-      }
-      #console .prompt {
-        color: var(--accent);
-        flex: none;
-      }
-      #cmdInput {
-        flex: 1;
-        background: transparent;
-        border: none;
-        outline: none;
-        color: var(--text);
-        font-family: inherit;
-        font-size: 13px;
-      }
-      #hint {
-        color: var(--muted);
-        font-size: 11px;
-        flex: none;
-      }
-      #viewControls {
-        position: fixed;
-        right: 12px;
-        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-        z-index: 9999;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 2px;
-        background: var(--panel);
-        border: 1px solid var(--panel-border);
-        border-radius: 8px;
-        padding: 5px;
-      }
-      #viewControls button {
-        width: 32px;
-        height: 32px;
-        border-radius: 6px;
-        border: none;
-        background: transparent;
-        color: var(--text);
-        font-size: 16px;
-        line-height: 1;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      #viewControls button:hover {
-        background: var(--panel-border);
-      }
-      #zoomLabel {
-        font-size: 11px;
-        color: var(--muted);
-        padding: 2px 0;
-        text-align: center;
-      }
-      #viewControls hr {
-        width: 100%;
-        border: none;
-        border-top: 1px solid var(--panel-border);
-        margin: 3px 0;
-      }
-      .link {
-        stroke: var(--accent);
-        stroke-width: 2;
-        opacity: 0.85;
-      }
-      #searchPanel {
-        position: fixed;
-        right: 64px;
-        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-        z-index: 9999;
-        width: 220px;
-        max-height: 360px;
-        display: none;
-        flex-direction: column;
-        background: var(--panel);
-        border: 1px solid var(--panel-border);
-        border-radius: 8px;
-        box-shadow: 0 8px 24px var(--shadow);
-        overflow: hidden;
-      }
-      #searchPanel.open {
-        display: flex;
-      }
-      #searchInput {
-        padding: 8px 10px;
-        border: none;
-        border-bottom: 1px solid var(--panel-border);
-        outline: none;
-        background: transparent;
-        color: var(--text);
-        font-size: 13px;
-        font-family: inherit;
-      }
-      #searchList {
-        overflow: auto;
-        padding: 4px;
-      }
-      #searchList button {
-        display: block;
-        width: 100%;
-        text-align: left;
-        background: transparent;
-        border: none;
-        color: var(--text);
-        padding: 6px 8px;
-        border-radius: 6px;
-        font-size: 13px;
-        cursor: pointer;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      #searchList button:hover {
-        background: var(--panel-border);
-      }
-      #searchEmpty {
-        padding: 8px 10px;
-        color: var(--muted);
-        font-size: 12px;
-      }
-      body.controls-centered #viewControls {
-        top: 50%;
-        bottom: auto;
-        transform: translateY(-50%);
-      }
-      body.controls-centered #searchPanel {
-        top: 50%;
-        bottom: auto;
-        transform: translateY(-50%);
-      }
-      body.bg-transparent,
-      body.bg-transparent html {
-        background: transparent !important;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="viewport">
-      <div id="canvas">
-        <svg
-          id="linksLayer"
-          width="1"
-          height="1"
-          style="
-            position: absolute;
-            top: 0;
-            left: 0;
-            overflow: visible;
-            pointer-events: none;
-          "
-        ></svg>
-      </div>
-    </div>
+</script>
+<style>
+  :root{
+    --bg:#f4f4f6; --panel:#ffffff; --panel-border:#d8d8de; --text:#1c1c22;
+    --muted:#6b6b76; --accent:#4f6df5; --accent-text:#ffffff;
+    --win-header:#eceef4; --win-bg:#ffffff; --win-border:#c9cbd6;
+    --shadow:rgba(0,0,0,.15); --grid-dot:#c7c7d1;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#16171d; --panel:#202129; --panel-border:#33343e; --text:#eceef2;
+      --muted:#9a9aa6; --accent:#7c93ff; --accent-text:#0e0f14;
+      --win-header:#262832; --win-bg:#1c1d24; --win-border:#3a3c48;
+      --shadow:rgba(0,0,0,.5); --grid-dot:#33343e;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#16171d; --panel:#202129; --panel-border:#33343e; --text:#eceef2;
+    --muted:#9a9aa6; --accent:#7c93ff; --accent-text:#0e0f14;
+    --win-header:#262832; --win-bg:#1c1d24; --win-border:#3a3c48;
+    --shadow:rgba(0,0,0,.5); --grid-dot:#33343e;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;margin:0;overscroll-behavior:none;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:var(--bg); color:var(--text);
+    padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+    overflow:hidden;
+  }
+  #viewport{
+    position:fixed; inset:0; overflow:hidden; touch-action:none;
+    background-image: radial-gradient(var(--grid-dot) 1.4px, transparent 1.4px);
+    cursor:default;
+  }
+  #viewport.panning{cursor:grabbing;}
+  #canvas{ position:absolute; top:0; left:0; width:0; height:0; transform-origin:0 0; }
+  .win{
+    position:absolute; min-width:150px; min-height:110px;
+    background:var(--win-bg); border:1px solid var(--win-border); border-radius:10px;
+    box-shadow:0 8px 24px var(--shadow); display:flex; flex-direction:column; overflow:hidden;
+    user-select:none;
+  }
+  .win-header{
+    background:var(--win-header); padding:8px 10px; display:flex; align-items:center;
+    justify-content:space-between; border-bottom:1px solid var(--win-border);
+    font-size:13px; font-weight:600;
+  }
+  /* qualquer elemento com essa classe serve de "pega" pra arrastar a janela — por padrão é o
+     cabeçalho, mas uma janela sem cabeçalho (como a polaroid) pode usar outra área, como a legenda */
+  .win-draghandle{ cursor:grab; touch-action:none; }
+  .win-draghandle:active{ cursor:grabbing; }
+  .win-title{overflow:hidden; text-overflow:ellipsis; white-space:nowrap; pointer-events:none;}
+  .win-header-btns{display:flex; align-items:center; flex:none; gap:4px;}
+  .win-max, .win-close{
+    width:20px; height:20px; border-radius:5px; border:none; background:transparent;
+    color:var(--muted); font-size:13px; line-height:1; cursor:pointer; flex:none;
+  }
+  .win-max:hover, .win-close:hover{background:var(--panel-border); color:var(--text);}
+  .win.maximized{ border-radius:0; }
+  .win.maximized .win-resize{display:none;}
+  .win-body{
+    flex:1; padding:10px; overflow:auto; outline:none; font-size:14px; user-select:text;
+    color:var(--text);
+  }
+  .win-body.no-padding{ padding:0; }
+  /* barra de rolagem das janelas (newwindow, newframe, run, permarun e variantes "perma") */
+  .win-body{ scrollbar-width:thin; scrollbar-color:var(--accent) transparent; }
+  .win-body::-webkit-scrollbar{ width:8px; height:8px; background-color:transparent; }
+  .win-body::-webkit-scrollbar-track{ background-color:transparent; }
+  .win-body::-webkit-scrollbar-thumb{
+    background-image:repeating-linear-gradient(45deg, transparent 0, transparent 1px, var(--accent) 0, var(--accent) 25%);
+    background-size:4px 4px;
+    opacity:.5;
+    border-radius:4px;
+  }
+  .win-body::-webkit-scrollbar-thumb:hover, .win-body::-webkit-scrollbar-thumb:active{ opacity:1; }
+  /* janela estilo polaroid */
+  .polaroid-body{
+    display:flex; flex-direction:column; background:#fdfdfa; color:#2b2b2b;
+  }
+  .polaroid-photo{
+    flex:1; margin:14px 14px 0 14px; background:#111; overflow:hidden; position:relative; min-height:0;
+  }
+  .polaroid-photo img, .polaroid-photo video, .polaroid-photo iframe{
+    width:100%; height:100%; border:none; display:block; object-fit:cover;
+  }
+  .polaroid-caption{
+    position:relative; flex:0 0 auto; min-height:64px; max-height:40%; overflow:auto;
+    padding:10px 16px 18px; text-align:left; font-size:14px; line-height:1.4;
+  }
+  .polaroid-caption-text{ padding-right:22px; }
+  .polaroid-close{
+    position:absolute; right:6px; bottom:6px; width:20px; height:20px; border-radius:5px;
+    border:none; background:transparent; color:#8a8a8a; font-size:13px; line-height:1; cursor:pointer;
+  }
+  .polaroid-close:hover{ background:rgba(0,0,0,.08); color:#222; }
+  .polaroid-caption::-webkit-scrollbar{ width:8px; background-color:transparent; }
+  .polaroid-caption::-webkit-scrollbar-track{ background-color:transparent; }
+  .polaroid-caption::-webkit-scrollbar-thumb{
+    background-image:repeating-linear-gradient(45deg, transparent 0, transparent 1px, var(--accent) 0, var(--accent) 25%);
+    background-size:4px 4px; opacity:.5; border-radius:4px;
+  }
+  .polaroid-caption::-webkit-scrollbar-thumb:hover, .polaroid-caption::-webkit-scrollbar-thumb:active{ opacity:1; }
+  .win-body.doc{ font-size:13px; line-height:1.5; }
+  .doc h4{ margin:14px 0 4px; font-size:13px; }
+  .doc h4:first-child{ margin-top:0; }
+  .doc p{ margin:4px 0; }
+  .doc ul{ margin:4px 0; padding-left:18px; }
+  .doc code{ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px;
+    background:var(--win-header); padding:1px 5px; border-radius:4px; }
+  .doc .sig{ display:block; padding:6px 8px; margin:4px 0; color:var(--accent); }
+  .doc hr{ border:none; border-top:1px solid var(--win-border); margin:12px 0; }
+  .win-resize{
+    position:absolute; right:0; bottom:0; width:18px; height:18px; cursor:nwse-resize;
+    touch-action:none;
+    background:linear-gradient(135deg, transparent 50%, var(--win-border) 50%);
+  }
+  #console{
+    position:fixed; left:50%; transform:translateX(-50%);
+    bottom:calc(12px + env(safe-area-inset-bottom,0px));
+    z-index:9999; width:min(520px, calc(100vw - 24px)); display:flex; align-items:center; gap:8px;
+    background:var(--panel); border:1px solid var(--panel-border); border-radius:8px;
+    padding:8px 10px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px;
+    opacity:.55; box-shadow:0 4px 14px var(--shadow);
+    transition:opacity .15s ease, box-shadow .15s ease;
+  }
+  /* após o 1º comando, o estado ocioso passa a ser totalmente transparente */
+  #console.used{ opacity:0; }
+  /* passar o mouse sempre mostra translúcido, mesmo já tendo sido usada */
+  #console:hover{ opacity:.55; }
+  /* em uso (clicada ou com foco via teclado): sempre opaca, por cima de tudo */
+  #console:focus-within{
+    opacity:1; box-shadow:0 16px 46px var(--shadow);
+  }
+  #console .prompt{color:var(--accent); flex:none;}
+  #cmdInput{
+    flex:1; background:transparent; border:none; outline:none; color:var(--text);
+    font-family:inherit; font-size:13px;
+  }
+  #hint{color:var(--muted); font-size:11px; flex:none;}
+  #viewControls{
+    position:fixed; right:12px; bottom:calc(12px + env(safe-area-inset-bottom,0px));
+    z-index:9999; display:flex; flex-direction:column; align-items:center; gap:2px;
+    background:var(--panel); border:1px solid var(--panel-border); border-radius:8px; padding:5px;
+  }
+  #viewControls button{
+    width:32px; height:32px; border-radius:6px; border:none; background:transparent;
+    color:var(--text); font-size:16px; line-height:1; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #viewControls button:hover{background:var(--panel-border);}
+  #zoomLabel{font-size:11px; color:var(--muted); padding:2px 0; text-align:center;}
+  #viewControls hr{width:100%; border:none; border-top:1px solid var(--panel-border); margin:3px 0;}
+  .link{ stroke:var(--accent); stroke-width:2; opacity:.85; }
+  #searchPanel{
+    position:fixed; right:64px; bottom:calc(12px + env(safe-area-inset-bottom,0px));
+    z-index:9999; width:220px; max-height:360px; display:none; flex-direction:column;
+    background:var(--panel); border:1px solid var(--panel-border); border-radius:8px;
+    box-shadow:0 8px 24px var(--shadow); overflow:hidden;
+  }
+  #searchPanel.open{ display:flex; }
+  #searchInput{
+    padding:8px 10px; border:none; border-bottom:1px solid var(--panel-border); outline:none;
+    background:transparent; color:var(--text); font-size:13px; font-family:inherit;
+  }
+  #searchList{ overflow:auto; padding:4px; }
+  #searchList button{
+    display:block; width:100%; text-align:left; background:transparent; border:none;
+    color:var(--text); padding:6px 8px; border-radius:6px; font-size:13px; cursor:pointer;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  #searchList button:hover{ background:var(--panel-border); }
+  #searchEmpty{ padding:8px 10px; color:var(--muted); font-size:12px; }
+  body.controls-centered #viewControls{ top:50%; bottom:auto; transform:translateY(-50%); }
+  body.controls-centered #searchPanel{ top:50%; bottom:auto; transform:translateY(-50%); }
+  body.bg-transparent, body.bg-transparent html{ background:transparent !important; }
+</style>
+</head>
+<body>
+<div id="viewport">
+  <div id="canvas">
+    <svg id="linksLayer" width="1" height="1" style="position:absolute;top:0;left:0;overflow:visible;pointer-events:none;"></svg>
+  </div>
+</div>
 
-    <div id="console">
-      <span class="prompt">&gt;</span>
-      <input
-        id="cmdInput"
-        placeholder="digite help() para ver todos os comandos (w,h,x,y)"
-        autocomplete="off"
-      />
-      <span id="hint">Enter</span>
-    </div>
+<div id="console">
+  <span class="prompt">&gt;</span>
+  <input id="cmdInput" placeholder='digite help() para ver todos os comandos (w,h,x,y)' autocomplete="off">
+  <span id="hint">Enter</span>
+</div>
 
-    <div id="searchPanel">
-      <input
-        id="searchInput"
-        placeholder="Filtrar janelas..."
-        autocomplete="off"
-      />
-      <div id="searchList"></div>
-    </div>
+<div id="searchPanel">
+  <input id="searchInput" placeholder="Filtrar janelas..." autocomplete="off">
+  <div id="searchList"></div>
+</div>
 
-    <div id="viewControls">
-      <button id="btnSearch" title="Buscar janela">
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.6"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <circle cx="7" cy="7" r="5" />
-          <path d="M11 11l3.5 3.5" />
-        </svg>
-      </button>
-      <hr />
-      <button id="btnZoomIn" title="Aumentar zoom">+</button>
-      <span id="zoomLabel">100%</span>
-      <button id="btnZoomOut" title="Diminuir zoom">−</button>
-      <hr />
-      <button id="btnReset" title="Centralizar">⌖</button>
-      <button id="btnFullscreen" title="Tela cheia"></button>
-    </div>
+<div id="viewControls">
+  <button id="btnSearch" title="Buscar janela">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg>
+  </button>
+  <hr>
+  <button id="btnZoomIn" title="Aumentar zoom">+</button>
+  <span id="zoomLabel">100%</span>
+  <button id="btnZoomOut" title="Diminuir zoom">−</button>
+  <hr>
+  <button id="btnReset" title="Centralizar">⌖</button>
+  <button id="btnFullscreen" title="Tela cheia"></button>
+</div>
 
-    <script>
-      (function () {
-        var ICON_WIN_MAX =
-          '<svg width="10" height="10" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5"/></svg>';
-        var ICON_WIN_RESTORE =
-          '<svg width="10" height="10" viewBox="0 0 14 14" fill="currentColor"><circle cx="7" cy="7" r="4"/></svg>';
-        var viewport = document.getElementById("viewport");
-        var canvas = document.getElementById("canvas");
-        var linksLayer = document.getElementById("linksLayer");
-        var zoomLabel = document.getElementById("zoomLabel");
-        var cmdInput = document.getElementById("cmdInput");
-        var consoleBar = document.getElementById("console");
-        var viewControls = document.getElementById("viewControls");
-        var maximizedCount = 0;
-        function updateUIVisibility() {
+
+<script>
+(function(){
+  var ICON_WIN_MAX = '<svg width="10" height="10" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5"/></svg>';
+  var ICON_WIN_RESTORE = '<svg width="10" height="10" viewBox="0 0 14 14" fill="currentColor"><circle cx="7" cy="7" r="4"/></svg>';
+  var viewport = document.getElementById('viewport');
+  var canvas = document.getElementById('canvas');
+  var linksLayer = document.getElementById('linksLayer');
+  var zoomLabel = document.getElementById('zoomLabel');
+  var cmdInput = document.getElementById('cmdInput');
+  var consoleBar = document.getElementById('console');
+  var viewControls = document.getElementById('viewControls');
+  var maximizedCount = 0;
+  function updateUIVisibility() {
           var hide = maximizedCount > 0;
           // AJUSTE NECESSÁRIO PARA MUDANÇAS MANUAIS
           if (
@@ -496,465 +256,370 @@
           viewControls.style.display = hide ? "none" : "";
         }
 
-        var pan = { x: 0, y: 0 };
-        var zoom = 1;
-        var zTop = 1;
-        var windows = [];
-        var links = [];
-        var idSeq = 1;
+  var pan = {x:0, y:0};
+  var zoom = 1;
+  var zTop = 1;
+  var windows = [];
+  var links = [];
+  var idSeq = 1;
 
-        function applyTransform() {
-          canvas.style.transform =
-            "scale(" + zoom + ") translate(" + pan.x + "px, " + pan.y + "px)";
-          var grid = 32 * zoom;
-          viewport.style.backgroundSize = grid + "px " + grid + "px";
-          viewport.style.backgroundPosition =
-            pan.x * zoom + "px " + pan.y * zoom + "px";
-          zoomLabel.textContent = Math.round(zoom * 100) + "%";
+  function applyTransform(){
+    canvas.style.transform = 'scale(' + zoom + ') translate(' + pan.x + 'px, ' + pan.y + 'px)';
+    var grid = 32 * zoom;
+    viewport.style.backgroundSize = grid + 'px ' + grid + 'px';
+    viewport.style.backgroundPosition = (pan.x * zoom) + 'px ' + (pan.y * zoom) + 'px';
+    zoomLabel.textContent = Math.round(zoom * 100) + '%';
+  }
+
+  function screenToCanvas(sx, sy){
+    var r = viewport.getBoundingClientRect();
+    return { x: (sx - r.left) / zoom - pan.x, y: (sy - r.top) / zoom - pan.y };
+  }
+
+  // ---- temas de cor ----
+  var THEME_VARS = ['bg','panel','panel-border','text','muted','accent','accent-text',
+                     'win-header','win-bg','win-border','shadow','grid-dot'];
+  var THEMES = {
+    dracula: { bg:'#282a36', panel:'#21222c', 'panel-border':'#44475a', text:'#f8f8f2',
+      muted:'#6272a4', accent:'#bd93f9', 'accent-text':'#282a36', 'win-header':'#343646',
+      'win-bg':'#282a36', 'win-border':'#44475a', shadow:'rgba(0,0,0,.5)', 'grid-dot':'#44475a' },
+    nord: { bg:'#2e3440', panel:'#3b4252', 'panel-border':'#4c566a', text:'#eceff4',
+      muted:'#81a1c1', accent:'#88c0d0', 'accent-text':'#2e3440', 'win-header':'#434c5e',
+      'win-bg':'#2e3440', 'win-border':'#4c566a', shadow:'rgba(0,0,0,.5)', 'grid-dot':'#434c5e' },
+    'solarized-dark': { bg:'#002b36', panel:'#073642', 'panel-border':'#586e75', text:'#93a1a1',
+      muted:'#657b83', accent:'#268bd2', 'accent-text':'#002b36', 'win-header':'#073642',
+      'win-bg':'#002b36', 'win-border':'#586e75', shadow:'rgba(0,0,0,.5)', 'grid-dot':'#073642' },
+    'solarized-light': { bg:'#fdf6e3', panel:'#eee8d5', 'panel-border':'#93a1a1', text:'#586e75',
+      muted:'#93a1a1', accent:'#268bd2', 'accent-text':'#fdf6e3', 'win-header':'#eee8d5',
+      'win-bg':'#fdf6e3', 'win-border':'#93a1a1', shadow:'rgba(0,0,0,.15)', 'grid-dot':'#eee8d5' },
+    monokai: { bg:'#272822', panel:'#2d2e27', 'panel-border':'#49483e', text:'#f8f8f2',
+      muted:'#75715e', accent:'#66d9ef', 'accent-text':'#272822', 'win-header':'#3e3d32',
+      'win-bg':'#272822', 'win-border':'#49483e', shadow:'rgba(0,0,0,.5)', 'grid-dot':'#49483e' },
+    'one-dark': { bg:'#282c34', panel:'#2c313a', 'panel-border':'#3e4451', text:'#abb2bf',
+      muted:'#5c6370', accent:'#61afef', 'accent-text':'#282c34', 'win-header':'#333842',
+      'win-bg':'#282c34', 'win-border':'#3e4451', shadow:'rgba(0,0,0,.5)', 'grid-dot':'#3e4451' },
+    'gruvbox-dark': { bg:'#282828', panel:'#32302f', 'panel-border':'#504945', text:'#ebdbb2',
+      muted:'#928374', accent:'#83a598', 'accent-text':'#282828', 'win-header':'#3c3836',
+      'win-bg':'#282828', 'win-border':'#504945', shadow:'rgba(0,0,0,.5)', 'grid-dot':'#3c3836' },
+    'github-dark': { bg:'#0d1117', panel:'#161b22', 'panel-border':'#30363d', text:'#c9d1d9',
+      muted:'#8b949e', accent:'#58a6ff', 'accent-text':'#0d1117', 'win-header':'#161b22',
+      'win-bg':'#0d1117', 'win-border':'#30363d', shadow:'rgba(0,0,0,.5)', 'grid-dot':'#21262d' }
+  };
+  function clearThemeOverrides(){
+    THEME_VARS.forEach(function(v){ document.documentElement.style.removeProperty('--' + v); });
+  }
+  // aplica o tema visualmente; retorna true se o tema é válido
+  function applyTheme(name){
+    var key = String(name || '').trim().toLowerCase();
+    if (key === 'auto' || key === 'system'){
+      document.documentElement.removeAttribute('data-theme');
+      clearThemeOverrides();
+      return 'auto';
+    }
+    if (key === 'light' || key === 'dark'){
+      clearThemeOverrides();
+      document.documentElement.setAttribute('data-theme', key);
+      return key;
+    }
+    var t = THEMES[key];
+    if (!t){
+      console.warn('Tema desconhecido: "' + name + '". Disponíveis: light, dark, auto, ' + Object.keys(THEMES).join(', '));
+      return null;
+    }
+    document.documentElement.setAttribute('data-theme', key);
+    THEME_VARS.forEach(function(v){ document.documentElement.style.setProperty('--' + v, t[v]); });
+    return key;
+  }
+  var THEME_STORAGE_KEY = 'infcanvas:theme';
+  // aplica e registra no localStorage (persiste entre sessões)
+  function setTheme(name){
+    var applied = applyTheme(name);
+    if (applied){
+      try { localStorage.setItem(THEME_STORAGE_KEY, applied); } catch(e){ /* storage indisponível */ }
+    }
+  }
+  // aplica sem registrar no localStorage
+  function setTempTheme(name){ applyTheme(name); }
+  window.setTheme = setTheme; // pode ser chamado pelo console do navegador também
+  window.setTempTheme = setTempTheme;
+
+  // ---- persistência de posição/tamanho por nome (localStorage) ----
+  function storageKey(name){ return 'infcanvas:' + String(name).trim().toLowerCase(); }
+  function saveWinState(win){
+    try {
+      var rec = {
+        left: parseFloat(win.style.left), top: parseFloat(win.style.top),
+        width: parseFloat(win.style.width), height: parseFloat(win.style.height)
+      };
+      localStorage.setItem(storageKey(win.dataset.name), JSON.stringify(rec));
+    } catch(e){ /* storage indisponível: segue sem persistir */ }
+  }
+  function loadWinState(name){
+    try {
+      var raw = localStorage.getItem(storageKey(name));
+      return raw ? JSON.parse(raw) : null;
+    } catch(e){ return null; }
+  }
+
+  // ---- criação de janelas ----
+  // aceita número (px no espaço do canvas) ou string terminada em "%" (porcentagem da tela visível)
+  function resolveDim(val, refScreenPx){
+    if (typeof val === 'number') return val;
+    if (typeof val === 'string'){
+      var t = val.trim();
+      if (/%$/.test(t)){
+        var p = parseFloat(t);
+        if (!isNaN(p)) return (refScreenPx * p / 100) / zoom;
+      }
+    }
+    return undefined;
+  }
+  function resolveCoord(val, isX){
+    if (typeof val === 'number') return val;
+    if (typeof val === 'string'){
+      var t = val.trim();
+      if (/%$/.test(t)){
+        var p = parseFloat(t);
+        if (!isNaN(p)){
+          var sx = isX ? viewport.clientWidth * p / 100 : 0;
+          var sy = isX ? 0 : viewport.clientHeight * p / 100;
+          var c = screenToCanvas(sx, sy);
+          return isX ? c.x : c.y;
         }
+      }
+    }
+    return undefined;
+  }
 
-        function screenToCanvas(sx, sy) {
-          var r = viewport.getBoundingClientRect();
-          return {
-            x: (sx - r.left) / zoom - pan.x,
-            y: (sy - r.top) / zoom - pan.y,
-          };
+  function resolvePosition(name, w, h, x, y, id){
+    var center = screenToCanvas(viewport.clientWidth/2, viewport.clientHeight/2);
+    var noPosArgs = (w === undefined && h === undefined && x === undefined && y === undefined);
+    var saved = noPosArgs ? loadWinState(name) : null;
+    if (saved) return saved;
+    var rw = resolveDim(w, viewport.clientWidth);
+    var rh = resolveDim(h, viewport.clientHeight);
+    var rx = resolveCoord(x, true);
+    var ry = resolveCoord(y, false);
+    return {
+      left: (typeof rx === 'number' ? rx : center.x - 130 + (id%5)*20),
+      top: (typeof ry === 'number' ? ry : center.y - 90 + (id%5)*20),
+      width: (typeof rw === 'number' ? rw : 260),
+      height: (typeof rh === 'number' ? rh : 180)
+    };
+  }
+
+  function createWindowShell(name, pos, bodyHtml, permanent, noHeader){
+    var win = document.createElement('div');
+    win.className = 'win' + (noHeader ? ' no-header' : '');
+    win.dataset.name = name;
+    win.style.left = pos.left + 'px';
+    win.style.top  = pos.top + 'px';
+    win.style.width  = pos.width + 'px';
+    win.style.height = pos.height + 'px';
+    win.style.zIndex = ++zTop;
+
+    var headerHtml = noHeader ? '' :
+      '<div class="win-header win-draghandle">' +
+        '<span class="win-title">' + name + '</span>' +
+        '<span class="win-header-btns">' +
+          '<button class="win-max" title="Maximizar">' + ICON_WIN_MAX + '</button>' +
+          (permanent ? '' : '<button class="win-close" title="Fechar">✕</button>') +
+        '</span>' +
+      '</div>';
+
+    win.innerHTML = headerHtml + bodyHtml + '<div class="win-resize"></div>';
+
+    canvas.appendChild(win);
+    windows.push(win);
+    wireWindow(win);
+    return win;
+  }
+
+  function makeWindow(permanent, title, w, h, x, y){
+    var id = idSeq++;
+    var name = title || ('Janela ' + id);
+    var pos = resolvePosition(name, w, h, x, y, id);
+    var bodyHtml = '<div class="win-body" contenteditable="true" spellcheck="false">Escreva aqui…</div>';
+    return createWindowShell(name, pos, bodyHtml, permanent);
+  }
+  function newwindow(title, w, h, x, y){ return makeWindow(false, title, w, h, x, y); }
+  function newpermawindow(title, w, h, x, y){ return makeWindow(true, title, w, h, x, y); }
+  window.newwindow = newwindow; // pode ser chamado pelo console do navegador também
+  window.newpermawindow = newpermawindow;
+
+  // ---- carregamento preguiçoso de iframes (só recebem "src" quando entram na área visível) ----
+  var IFRAME_ALLOW = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; allowfullscreen';
+  var LAZY_MARGIN = 200; // px de folga antes de a área ficar visível, pra já ir carregando um pouco antes
+  var lazyFrames = [];
+
+  function buildLazyIframeHtml(url){
+    var safeUrl = String(url || '').replace(/"/g, '&quot;');
+    // "temp" guarda a url real; "src" só é preenchido quando o iframe entra na área visível do canvas
+    return '<iframe temp="' + safeUrl + '" allow="' + IFRAME_ALLOW + '" allowfullscreen ' +
+           'style="width:100%;height:100%;border:none;display:block;"></iframe>';
+  }
+  // outros pontos do código (inclusive implementações manuais futuras) podem registrar
+  // um iframe próprio pra entrar nesse mesmo esquema de carregamento preguiçoso
+  function registerLazyFrame(iframeEl){
+    if (iframeEl && iframeEl.getAttribute('temp')) lazyFrames.push(iframeEl);
+  }
+  window.registerLazyFrame = registerLazyFrame;
+
+  function checkLazyFrames(){
+    if (lazyFrames.length === 0) return;
+    var vw = viewport.clientWidth, vh = viewport.clientHeight;
+    for (var i = lazyFrames.length - 1; i >= 0; i--){
+      var ifr = lazyFrames[i];
+      if (!ifr.isConnected){ lazyFrames.splice(i, 1); continue; }
+      // getBoundingClientRect já reflete a posição real na tela, incluindo o zoom/pan do canvas —
+      // não precisamos fazer nenhuma conta extra de zoom, o navegador já faz isso por nós
+      var r = ifr.getBoundingClientRect();
+      var visible = r.right > -LAZY_MARGIN && r.left < vw + LAZY_MARGIN &&
+                    r.bottom > -LAZY_MARGIN && r.top < vh + LAZY_MARGIN;
+      if (visible){
+        if (!ifr.getAttribute('src')){
+          var temp = ifr.getAttribute('temp');
+          if (temp) ifr.setAttribute('src', temp);
         }
+        lazyFrames.splice(i, 1); // já carregou uma vez: não precisa mais verificar essa janela
+      }
+    }
+  }
 
-        // ---- temas de cor ----
-        var THEME_VARS = [
-          "bg",
-          "panel",
-          "panel-border",
-          "text",
-          "muted",
-          "accent",
-          "accent-text",
-          "win-header",
-          "win-bg",
-          "win-border",
-          "shadow",
-          "grid-dot",
-        ];
-        var THEMES = {
-          dracula: {
-            bg: "#282a36",
-            panel: "#21222c",
-            "panel-border": "#44475a",
-            text: "#f8f8f2",
-            muted: "#6272a4",
-            accent: "#bd93f9",
-            "accent-text": "#282a36",
-            "win-header": "#343646",
-            "win-bg": "#282a36",
-            "win-border": "#44475a",
-            shadow: "rgba(0,0,0,.5)",
-            "grid-dot": "#44475a",
-          },
-          nord: {
-            bg: "#2e3440",
-            panel: "#3b4252",
-            "panel-border": "#4c566a",
-            text: "#eceff4",
-            muted: "#81a1c1",
-            accent: "#88c0d0",
-            "accent-text": "#2e3440",
-            "win-header": "#434c5e",
-            "win-bg": "#2e3440",
-            "win-border": "#4c566a",
-            shadow: "rgba(0,0,0,.5)",
-            "grid-dot": "#434c5e",
-          },
-          "solarized-dark": {
-            bg: "#002b36",
-            panel: "#073642",
-            "panel-border": "#586e75",
-            text: "#93a1a1",
-            muted: "#657b83",
-            accent: "#268bd2",
-            "accent-text": "#002b36",
-            "win-header": "#073642",
-            "win-bg": "#002b36",
-            "win-border": "#586e75",
-            shadow: "rgba(0,0,0,.5)",
-            "grid-dot": "#073642",
-          },
-          "solarized-light": {
-            bg: "#fdf6e3",
-            panel: "#eee8d5",
-            "panel-border": "#93a1a1",
-            text: "#586e75",
-            muted: "#93a1a1",
-            accent: "#268bd2",
-            "accent-text": "#fdf6e3",
-            "win-header": "#eee8d5",
-            "win-bg": "#fdf6e3",
-            "win-border": "#93a1a1",
-            shadow: "rgba(0,0,0,.15)",
-            "grid-dot": "#eee8d5",
-          },
-          monokai: {
-            bg: "#272822",
-            panel: "#2d2e27",
-            "panel-border": "#49483e",
-            text: "#f8f8f2",
-            muted: "#75715e",
-            accent: "#66d9ef",
-            "accent-text": "#272822",
-            "win-header": "#3e3d32",
-            "win-bg": "#272822",
-            "win-border": "#49483e",
-            shadow: "rgba(0,0,0,.5)",
-            "grid-dot": "#49483e",
-          },
-          "one-dark": {
-            bg: "#282c34",
-            panel: "#2c313a",
-            "panel-border": "#3e4451",
-            text: "#abb2bf",
-            muted: "#5c6370",
-            accent: "#61afef",
-            "accent-text": "#282c34",
-            "win-header": "#333842",
-            "win-bg": "#282c34",
-            "win-border": "#3e4451",
-            shadow: "rgba(0,0,0,.5)",
-            "grid-dot": "#3e4451",
-          },
-          "gruvbox-dark": {
-            bg: "#282828",
-            panel: "#32302f",
-            "panel-border": "#504945",
-            text: "#ebdbb2",
-            muted: "#928374",
-            accent: "#83a598",
-            "accent-text": "#282828",
-            "win-header": "#3c3836",
-            "win-bg": "#282828",
-            "win-border": "#504945",
-            shadow: "rgba(0,0,0,.5)",
-            "grid-dot": "#3c3836",
-          },
-          "github-dark": {
-            bg: "#0d1117",
-            panel: "#161b22",
-            "panel-border": "#30363d",
-            text: "#c9d1d9",
-            muted: "#8b949e",
-            accent: "#58a6ff",
-            "accent-text": "#0d1117",
-            "win-header": "#161b22",
-            "win-bg": "#0d1117",
-            "win-border": "#30363d",
-            shadow: "rgba(0,0,0,.5)",
-            "grid-dot": "#21262d",
-          },
+  // ---- janela com iframe ----
+  function makeFrame(permanent, url, title, w, h, x, y){
+    var id = idSeq++;
+    var name = title || url || ('Frame ' + id);
+    var pos = resolvePosition(name, w, h, x, y, id);
+    var bodyHtml =
+      '<div class="win-body no-padding">' +
+        buildLazyIframeHtml(url) +
+      '</div>';
+    var win = createWindowShell(name, pos, bodyHtml, permanent);
+    registerLazyFrame(win.querySelector('iframe[temp]'));
+    return win;
+  }
+  function newframe(url, title, w, h, x, y){ return makeFrame(false, url, title, w, h, x, y); }
+  function newpermaframe(url, title, w, h, x, y){ return makeFrame(true, url, title, w, h, x, y); }
+  window.newframe = newframe; // pode ser chamado pelo console do navegador também
+  window.newpermaframe = newpermaframe;
+
+  // ---- janela que executa uma função JS definida pelo usuário ----
+  function makeRun(permanent, title, fnName, params, w, h, x, y){
+    var id = idSeq++;
+    var name = title || ('Run ' + id);
+    var pos = resolvePosition(name, w, h, x, y, id);
+    var domId = 'newrun' + id;
+    var bodyHtml = '<div class="win-body no-padding" id="' + domId + '"></div>';
+    var win = createWindowShell(name, pos, bodyHtml, permanent);
+    var fn = window[fnName];
+    if (typeof fn !== 'function'){
+      console.warn('run: função "' + fnName + '" não encontrada em window. Defina-a (window.' + fnName + ' = function(id, params){...}) antes de chamar run().');
+    } else {
+      try { fn(domId, params); }
+      catch (err){ console.warn('run: erro ao executar "' + fnName + '":', err.message); }
+    }
+    return win;
+  }
+  function run(title, fnName, params, w, h, x, y){ return makeRun(false, title, fnName, params, w, h, x, y); }
+  function permarun(title, fnName, params, w, h, x, y){ return makeRun(true, title, fnName, params, w, h, x, y); }
+  window.run = run; // pode ser chamado pelo console do navegador também
+  window.permarun = permarun;
+
+  // ---- janela estilo polaroid ----
+  var POLAROID_MARGIN = 14; // ver margem de .polaroid-photo no CSS
+
+  function getPolaroidType(url){
+    var u = String(url || '');
+    var clean = u.split('?')[0].split('#')[0];
+    var ext = (clean.match(/\.([a-zA-Z0-9]+)$/) || ['', ''])[1].toLowerCase();
+    if (['jpg', 'jpeg', 'png', 'webp', 'gif'].indexOf(ext) !== -1) return 'image';
+    if (ext === 'mp4') return 'video';
+    return 'other';
+  }
+  function polaroidContentHtml(url, type){
+    var safeUrl = String(url || '').replace(/"/g, '&quot;');
+    if (type === 'image') return '<img src="' + safeUrl + '" alt="">';
+    if (type === 'video') return '<video src="' + safeUrl + '" controls></video>';
+    // nem imagem, nem vídeo: entra como iframe, com o mesmo carregamento preguiçoso da newframe
+    return buildLazyIframeHtml(url);
+  }
+  function isAutoVal(v){ return typeof v === 'string' && v.trim().toLowerCase() === 'auto'; }
+
+  function polaroid(url, texto, titulo, w, h, x, y){
+    var id = idSeq++;
+    var name = titulo || ('Polaroid ' + id);
+    var type = getPolaroidType(url);
+    var autoW = isAutoVal(w), autoH = isAutoVal(h);
+
+    // "auto" só faz sentido pra imagem/vídeo (que têm proporção própria) e só faz sentido
+    // informar um dos dois — fora isso, cai no tamanho padrão
+    if ((autoW || autoH) && type === 'other'){
+      console.warn('polaroid: "auto" em w/h só é suportado para imagens e vídeos; usando o padrão nesta janela.');
+      autoW = false; autoH = false;
+    }
+    if (autoW && autoH){
+      console.warn('polaroid: w e h não podem ser "auto" ao mesmo tempo; informe pelo menos um valor. Usando o padrão.');
+      autoW = false; autoH = false;
+    }
+    if (isAutoVal(w) && !autoW) w = undefined; // "auto" descartado pelos avisos acima
+    if (isAutoVal(h) && !autoH) h = undefined;
+
+    var pos = resolvePosition(name, autoW ? undefined : w, autoH ? undefined : h, x, y, id);
+    var bodyHtml =
+      '<div class="win-body no-padding polaroid-body win-draghandle">' +
+        '<div class="polaroid-photo">' + polaroidContentHtml(url, type) + '</div>' +
+        '<div class="polaroid-caption">' +
+          '<div class="polaroid-caption-text">' + (texto || '') + '</div>' +
+          '<button class="win-close polaroid-close" title="Fechar">✕</button>' +
+        '</div>' +
+      '</div>';
+    // sem cabeçalho (nem título, nem maximizar/restaurar) — arrasta-se pela legenda,
+    // que também carrega o único .win-close desta janela
+    var win = createWindowShell(name, pos, bodyHtml, true, true);
+    var ifr = win.querySelector('.polaroid-photo iframe[temp]');
+    if (ifr) registerLazyFrame(ifr);
+
+    // leve torção aleatória, pra parecer uma foto polaroid largada meio torta (até 4°)
+    var deg = Math.random() * 8 - 4;
+    win._polaroidRotation = deg;
+    win.style.transform = 'rotate(' + deg.toFixed(2) + 'deg)';
+
+    // ajusta o tamanho pra respeitar a proporção da imagem/vídeo quando w ou h é "auto",
+    // em vez de distorcer o conteúdo pra caber numa caixa com proporção arbitrária
+    if (autoW || autoH){
+      var mediaEl = win.querySelector('.polaroid-photo img, .polaroid-photo video');
+      var captionEl = win.querySelector('.polaroid-caption');
+      if (mediaEl){
+        var applyAspect = function(){
+          var nw = mediaEl.naturalWidth || mediaEl.videoWidth;
+          var nh = mediaEl.naturalHeight || mediaEl.videoHeight;
+          if (!nw || !nh) return;
+          var ratio = nh / nw;
+          var captionH = captionEl.offsetHeight;
+          if (autoH){
+            var photoW = parseFloat(win.style.width) - POLAROID_MARGIN * 2;
+            win.style.height = (POLAROID_MARGIN + photoW * ratio + captionH) + 'px';
+          } else { // autoW
+            var photoH = parseFloat(win.style.height) - POLAROID_MARGIN - captionH;
+            win.style.width = (photoH / ratio + POLAROID_MARGIN * 2) + 'px';
+          }
         };
-        function clearThemeOverrides() {
-          THEME_VARS.forEach(function (v) {
-            document.documentElement.style.removeProperty("--" + v);
-          });
+        if (mediaEl.tagName === 'IMG'){
+          if (mediaEl.complete && mediaEl.naturalWidth) applyAspect();
+          else mediaEl.addEventListener('load', applyAspect);
+        } else if (mediaEl.tagName === 'VIDEO'){
+          if (mediaEl.readyState >= 1) applyAspect();
+          else mediaEl.addEventListener('loadedmetadata', applyAspect);
         }
-        // aplica o tema visualmente; retorna true se o tema é válido
-        function applyTheme(name) {
-          var key = String(name || "")
-            .trim()
-            .toLowerCase();
-          if (key === "auto" || key === "system") {
-            document.documentElement.removeAttribute("data-theme");
-            clearThemeOverrides();
-            return "auto";
-          }
-          if (key === "light" || key === "dark") {
-            clearThemeOverrides();
-            document.documentElement.setAttribute("data-theme", key);
-            return key;
-          }
-          var t = THEMES[key];
-          if (!t) {
-            console.warn(
-              'Tema desconhecido: "' +
-                name +
-                '". Disponíveis: light, dark, auto, ' +
-                Object.keys(THEMES).join(", "),
-            );
-            return null;
-          }
-          document.documentElement.setAttribute("data-theme", key);
-          THEME_VARS.forEach(function (v) {
-            document.documentElement.style.setProperty("--" + v, t[v]);
-          });
-          return key;
-        }
-        var THEME_STORAGE_KEY = "infcanvas:theme";
-        // aplica e registra no localStorage (persiste entre sessões)
-        function setTheme(name) {
-          var applied = applyTheme(name);
-          if (applied) {
-            try {
-              localStorage.setItem(THEME_STORAGE_KEY, applied);
-            } catch (e) {
-              /* storage indisponível */
-            }
-          }
-        }
-        // aplica sem registrar no localStorage
-        function setTempTheme(name) {
-          applyTheme(name);
-        }
-        window.setTheme = setTheme; // pode ser chamado pelo console do navegador também
-        window.setTempTheme = setTempTheme;
+      }
+    }
+    return win;
+  }
+  window.polaroid = polaroid; // pode ser chamado pelo console do navegador também
 
-        // ---- persistência de posição/tamanho por nome (localStorage) ----
-        function storageKey(name) {
-          return "infcanvas:" + String(name).trim().toLowerCase();
-        }
-        function saveWinState(win) {
-          try {
-            var rec = {
-              left: parseFloat(win.style.left),
-              top: parseFloat(win.style.top),
-              width: parseFloat(win.style.width),
-              height: parseFloat(win.style.height),
-            };
-            localStorage.setItem(
-              storageKey(win.dataset.name),
-              JSON.stringify(rec),
-            );
-          } catch (e) {
-            /* storage indisponível: segue sem persistir */
-          }
-        }
-        function loadWinState(name) {
-          try {
-            var raw = localStorage.getItem(storageKey(name));
-            return raw ? JSON.parse(raw) : null;
-          } catch (e) {
-            return null;
-          }
-        }
-
-        // ---- criação de janelas ----
-        // aceita número (px no espaço do canvas) ou string terminada em "%" (porcentagem da tela visível)
-        function resolveDim(val, refScreenPx) {
-          if (typeof val === "number") return val;
-          if (typeof val === "string") {
-            var t = val.trim();
-            if (/%$/.test(t)) {
-              var p = parseFloat(t);
-              if (!isNaN(p)) return (refScreenPx * p) / 100 / zoom;
-            }
-          }
-          return undefined;
-        }
-        function resolveCoord(val, isX) {
-          if (typeof val === "number") return val;
-          if (typeof val === "string") {
-            var t = val.trim();
-            if (/%$/.test(t)) {
-              var p = parseFloat(t);
-              if (!isNaN(p)) {
-                var sx = isX ? (viewport.clientWidth * p) / 100 : 0;
-                var sy = isX ? 0 : (viewport.clientHeight * p) / 100;
-                var c = screenToCanvas(sx, sy);
-                return isX ? c.x : c.y;
-              }
-            }
-          }
-          return undefined;
-        }
-
-        function resolvePosition(name, w, h, x, y, id) {
-          var center = screenToCanvas(
-            viewport.clientWidth / 2,
-            viewport.clientHeight / 2,
-          );
-          var noPosArgs =
-            w === undefined &&
-            h === undefined &&
-            x === undefined &&
-            y === undefined;
-          var saved = noPosArgs ? loadWinState(name) : null;
-          if (saved) return saved;
-          var rw = resolveDim(w, viewport.clientWidth);
-          var rh = resolveDim(h, viewport.clientHeight);
-          var rx = resolveCoord(x, true);
-          var ry = resolveCoord(y, false);
-          return {
-            left: typeof rx === "number" ? rx : center.x - 130 + (id % 5) * 20,
-            top: typeof ry === "number" ? ry : center.y - 90 + (id % 5) * 20,
-            width: typeof rw === "number" ? rw : 260,
-            height: typeof rh === "number" ? rh : 180,
-          };
-        }
-
-        function createWindowShell(name, pos, bodyHtml, permanent) {
-          var win = document.createElement("div");
-          win.className = "win";
-          win.dataset.name = name;
-          win.style.left = pos.left + "px";
-          win.style.top = pos.top + "px";
-          win.style.width = pos.width + "px";
-          win.style.height = pos.height + "px";
-          win.style.zIndex = ++zTop;
-
-          win.innerHTML =
-            '<div class="win-header">' +
-            '<span class="win-title">' +
-            name +
-            "</span>" +
-            '<span class="win-header-btns">' +
-            '<button class="win-max" title="Maximizar">' +
-            ICON_WIN_MAX +
-            "</button>" +
-            (permanent
-              ? ""
-              : '<button class="win-close" title="Fechar">✕</button>') +
-            "</span>" +
-            "</div>" +
-            bodyHtml +
-            '<div class="win-resize"></div>';
-
-          canvas.appendChild(win);
-          windows.push(win);
-          wireWindow(win);
-          return win;
-        }
-
-        function makeWindow(permanent, title, w, h, x, y) {
-          var id = idSeq++;
-          var name = title || "Janela " + id;
-          var pos = resolvePosition(name, w, h, x, y, id);
-          var bodyHtml =
-            '<div class="win-body" contenteditable="true" spellcheck="false">Escreva aqui…</div>';
-          return createWindowShell(name, pos, bodyHtml, permanent);
-        }
-        function newwindow(title, w, h, x, y) {
-          return makeWindow(false, title, w, h, x, y);
-        }
-        function newpermawindow(title, w, h, x, y) {
-          return makeWindow(true, title, w, h, x, y);
-        }
-        window.newwindow = newwindow; // pode ser chamado pelo console do navegador também
-        window.newpermawindow = newpermawindow;
-
-        // ---- carregamento preguiçoso de iframes (só recebem "src" quando entram na área visível) ----
-        var IFRAME_ALLOW =
-          "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; allowfullscreen";
-        var LAZY_MARGIN = 200; // px de folga antes de a área ficar visível, pra já ir carregando um pouco antes
-        var lazyFrames = [];
-
-        function buildLazyIframeHtml(url) {
-          var safeUrl = String(url || "").replace(/"/g, "&quot;");
-          // "temp" guarda a url real; "src" só é preenchido quando o iframe entra na área visível do canvas
-          return (
-            '<iframe temp="' +
-            safeUrl +
-            '" allow="' +
-            IFRAME_ALLOW +
-            '" allowfullscreen ' +
-            'style="width:100%;height:100%;border:none;display:block;"></iframe>'
-          );
-        }
-        // outros pontos do código (inclusive implementações manuais futuras) podem registrar
-        // um iframe próprio pra entrar nesse mesmo esquema de carregamento preguiçoso
-        function registerLazyFrame(iframeEl) {
-          if (iframeEl && iframeEl.getAttribute("temp"))
-            lazyFrames.push(iframeEl);
-        }
-        window.registerLazyFrame = registerLazyFrame;
-
-        function checkLazyFrames() {
-          if (lazyFrames.length === 0) return;
-          var vw = viewport.clientWidth,
-            vh = viewport.clientHeight;
-          for (var i = lazyFrames.length - 1; i >= 0; i--) {
-            var ifr = lazyFrames[i];
-            if (!ifr.isConnected) {
-              lazyFrames.splice(i, 1);
-              continue;
-            }
-            // getBoundingClientRect já reflete a posição real na tela, incluindo o zoom/pan do canvas —
-            // não precisamos fazer nenhuma conta extra de zoom, o navegador já faz isso por nós
-            var r = ifr.getBoundingClientRect();
-            var visible =
-              r.right > -LAZY_MARGIN &&
-              r.left < vw + LAZY_MARGIN &&
-              r.bottom > -LAZY_MARGIN &&
-              r.top < vh + LAZY_MARGIN;
-            if (visible) {
-              if (!ifr.getAttribute("src")) {
-                var temp = ifr.getAttribute("temp");
-                if (temp) ifr.setAttribute("src", temp);
-              }
-              lazyFrames.splice(i, 1); // já carregou uma vez: não precisa mais verificar essa janela
-            }
-          }
-        }
-
-        // ---- janela com iframe ----
-        function makeFrame(permanent, url, title, w, h, x, y) {
-          var id = idSeq++;
-          var name = title || url || "Frame " + id;
-          var pos = resolvePosition(name, w, h, x, y, id);
-          var bodyHtml =
-            '<div class="win-body no-padding">' +
-            buildLazyIframeHtml(url) +
-            "</div>";
-          var win = createWindowShell(name, pos, bodyHtml, permanent);
-          registerLazyFrame(win.querySelector("iframe[temp]"));
-          return win;
-        }
-        function newframe(url, title, w, h, x, y) {
-          return makeFrame(false, url, title, w, h, x, y);
-        }
-        function newpermaframe(url, title, w, h, x, y) {
-          return makeFrame(true, url, title, w, h, x, y);
-        }
-        window.newframe = newframe; // pode ser chamado pelo console do navegador também
-        window.newpermaframe = newpermaframe;
-
-        // ---- janela que executa uma função JS definida pelo usuário ----
-        function makeRun(permanent, title, fnName, params, w, h, x, y) {
-          var id = idSeq++;
-          var name = title || "Run " + id;
-          var pos = resolvePosition(name, w, h, x, y, id);
-          var domId = "newrun" + id;
-          var bodyHtml =
-            '<div class="win-body no-padding" id="' + domId + '"></div>';
-          var win = createWindowShell(name, pos, bodyHtml, permanent);
-          var fn = window[fnName];
-          if (typeof fn !== "function") {
-            console.warn(
-              'run: função "' +
-                fnName +
-                '" não encontrada em window. Defina-a (window.' +
-                fnName +
-                " = function(id, params){...}) antes de chamar run().",
-            );
-          } else {
-            try {
-              fn(domId, params);
-            } catch (err) {
-              console.warn(
-                'run: erro ao executar "' + fnName + '":',
-                err.message,
-              );
-            }
-          }
-          return win;
-        }
-        function run(title, fnName, params, w, h, x, y) {
-          return makeRun(false, title, fnName, params, w, h, x, y);
-        }
-        function permarun(title, fnName, params, w, h, x, y) {
-          return makeRun(true, title, fnName, params, w, h, x, y);
-        }
-        window.run = run; // pode ser chamado pelo console do navegador também
-        window.permarun = permarun;
-
-        // ---- ajuda ----
-        var HELP_HTML = `
+  // ---- ajuda ----
+  var HELP_HTML = `
 <h4>Como usar</h4>
 <p>Digite uma instrução JavaScript na barra de comando e pressione Enter. As funções abaixo também podem ser chamadas pelo console do navegador (DevTools). Para navegar, arraste o fundo vazio com o botão direito ou o do meio do mouse. O scroll dá zoom apenas quando o mouse está sobre o fundo, não sobre uma janela.</p>
 <p>A ordem dos parâmetros de posição/tamanho é sempre <code>w, h, x, y</code> (largura, altura, x, y) — dá para informar só <code>w</code> e <code>h</code> e deixar <code>x, y</code> de fora. Cada um aceita um número (pixels do espaço do canvas) ou uma string terminada em <code>%</code> (porcentagem da tela visível no momento, ex.: <code>"50%"</code>, <code>"40%"</code>). Todos são sempre opcionais. Se uma janela é criada só com um nome já registrado (sem w, h, x, y), ela reabre na posição e no tamanho em que foi deixada. Valores explícitos têm prioridade sobre o registro.</p>
@@ -973,6 +638,22 @@
 <p>Exemplo: <code>run("Label", "minhaFuncao", {a: 1}, 600, 400, 300, 200)</code> (largura 600, altura 400, x=300, y=200) — ou <code>run("Label", "minhaFuncao", {a: 1}, "50%", "40%")</code> para 50% da largura e 40% da altura da tela, sem fixar posição.</p>
 <code class="sig">permarun(título, nomeDaFuncao, params, w, h, x, y)</code>
 <p>Igual à <code>run</code>, mas sem botão de fechar.</p>
+<hr>
+<h4>Polaroid</h4>
+<code class="sig">polaroid(url, texto, título, w, h, x, y)</code>
+<p>Janela com moldura branca estilo foto polaroid: bordas largas em volta do conteúdo e uma faixa maior
+embaixo com uma legenda. <code>url</code> decide o conteúdo pela extensão: imagem (<code>.jpg</code>,
+<code>.jpeg</code>, <code>.png</code>, <code>.webp</code>, <code>.gif</code>) aparece como foto,
+<code>.mp4</code> aparece como vídeo (com controles), qualquer outra url vira um iframe (com o mesmo
+carregamento preguiçoso da <code>newframe</code>). <code>texto</code> é HTML (pode ser só texto simples)
+mostrado na legenda (mesma fonte da <code>newwindow</code>, alinhado à esquerda). <code>título</code>
+funciona como nome da janela para <code>connect</code>/<code>disconnect</code>, igual às demais. Essa
+janela não tem cabeçalho, título visível nem botão de maximizar/restaurar — arrasta-se pela própria
+legenda (embaixo), que também é onde fica o botão de fechar. Ainda dá pra redimensionar pela alça do
+canto. Cada polaroid nasce com uma leve rotação aleatória (até 4°, pra um lado ou pro outro). Em
+<code>w</code> ou <code>h</code> (nunca nos dois ao mesmo tempo), também aceita o valor <code>"auto"</code>
+quando o conteúdo é imagem ou vídeo: a dimensão informada é respeitada e a outra é calculada a partir da
+proporção original do conteúdo, sem distorcer.</p>
 <hr>
 <h4>Conexões</h4>
 <code class="sig">connect(nomeA, nomeB)</code>
@@ -1001,605 +682,451 @@
 <code class="sig">help()</code>
 <p>Abre esta janela. Se ela já estiver aberta, apenas a traz para a frente.</p>
 `;
-        function help() {
-          var name = "Ajuda";
-          var existing = findWindowByName(name);
-          if (existing) {
-            bringToFront(existing);
-            return existing;
+  function help(){
+    var name = 'Ajuda';
+    var existing = findWindowByName(name);
+    if (existing){ bringToFront(existing); return existing; }
+    var saved = loadWinState(name);
+    var pos;
+    if (saved){
+      pos = saved;
+    } else {
+      var c = screenToCanvas(viewport.clientWidth/2, viewport.clientHeight/2);
+      pos = { left: c.x - 280, top: c.y - 250, width: 560, height: 500 };
+    }
+    var bodyHtml = '<div class="win-body doc">' + HELP_HTML + '</div>';
+    return createWindowShell(name, pos, bodyHtml, false);
+  }
+  window.help = help; // pode ser chamado pelo console do navegador também
+
+  // ---- conectar janelas por nome ----
+  function findWindowByName(name){
+    var target = String(name).trim().toLowerCase();
+    return windows.find(function(w){ return w.dataset.name.toLowerCase() === target; });
+  }
+  function connect(nameA, nameB){
+    var a = findWindowByName(nameA), b = findWindowByName(nameB);
+    if (!a || !b){ console.warn('connect: janela não encontrada ("' + nameA + '" ou "' + nameB + '")'); return null; }
+    var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('class', 'link');
+    linksLayer.appendChild(line);
+    var link = { a:a, b:b, el:line };
+    links.push(link);
+    return link;
+  }
+  window.connect = connect; // pode ser chamado pelo console do navegador também
+
+  function disconnect(nameA, nameB){
+    var a = findWindowByName(nameA), b = findWindowByName(nameB);
+    if (!a || !b){ console.warn('disconnect: janela não encontrada ("' + nameA + '" ou "' + nameB + '")'); return; }
+    links = links.filter(function(l){
+      var match = (l.a === a && l.b === b) || (l.a === b && l.b === a);
+      if (match) l.el.remove();
+      return !match;
+    });
+  }
+  window.disconnect = disconnect; // pode ser chamado pelo console do navegador também
+
+  function updateLinks(){
+    links = links.filter(function(l){
+      if (!l.a.isConnected || !l.b.isConnected){ l.el.remove(); return false; }
+      return true;
+    });
+    links.forEach(function(l){
+      if (l.a.classList.contains('maximized') || l.b.classList.contains('maximized')){
+        l.el.style.display = 'none';
+        return;
+      }
+      l.el.style.display = '';
+      var ax = parseFloat(l.a.style.left) + l.a.offsetWidth / 2;
+      var ay = parseFloat(l.a.style.top) + l.a.offsetHeight / 2;
+      var bx = parseFloat(l.b.style.left) + l.b.offsetWidth / 2;
+      var by = parseFloat(l.b.style.top) + l.b.offsetHeight / 2;
+      l.el.setAttribute('x1', ax); l.el.setAttribute('y1', ay);
+      l.el.setAttribute('x2', bx); l.el.setAttribute('y2', by);
+    });
+  }
+  function fitMaximizedWindow(win){
+    // calcula o retângulo, em coordenadas do canvas, que corresponde à tela cheia
+    // no zoom/pan atuais — assim a janela cobre a tela inteira sem nunca sair do DOM
+    var tl = screenToCanvas(0, 0);
+    var br = screenToCanvas(viewport.clientWidth, viewport.clientHeight);
+    win.style.left = tl.x + 'px';
+    win.style.top = tl.y + 'px';
+    win.style.width = (br.x - tl.x) + 'px';
+    win.style.height = (br.y - tl.y) + 'px';
+  }
+
+  (function frameLoop(){
+    updateLinks();
+    checkLazyFrames();
+    windows.forEach(function(w){
+      if (w.classList.contains('maximized')) fitMaximizedWindow(w);
+    });
+    requestAnimationFrame(frameLoop);
+  })();
+
+  function bringToFront(win){ win.style.zIndex = ++zTop; }
+
+  function wireWindow(win){
+    var dragHandle = win.querySelector('.win-draghandle');
+    var body = win.querySelector('.win-body');
+    var resize = win.querySelector('.win-resize');
+    var closeBtn = win.querySelector('.win-close');
+    var maxBtn = win.querySelector('.win-max'); // pode não existir (ex.: janelas sem cabeçalho)
+
+    if (closeBtn) closeBtn.addEventListener('click', function(){
+      if (win.classList.contains('maximized')){
+        var r = win._restore;
+        win.style.left = r.left; win.style.top = r.top;
+        win.style.width = r.width; win.style.height = r.height;
+        maximizedCount--; updateUIVisibility();
+      }
+      saveWinState(win);
+      win.remove();
+      windows = windows.filter(function(w){ return w !== win; });
+    });
+
+    if (maxBtn){
+      var toggleMaximize = function(){
+        if (win.classList.contains('maximized')){
+          var r = win._restore;
+          win.classList.remove('maximized');
+          win.style.left = r.left; win.style.top = r.top;
+          win.style.width = r.width; win.style.height = r.height;
+          win.style.zIndex = r.zIndex;
+          if (win._polaroidRotation !== undefined){
+            win.style.transform = 'rotate(' + win._polaroidRotation.toFixed(2) + 'deg)';
           }
-          var saved = loadWinState(name);
-          var pos;
-          if (saved) {
-            pos = saved;
-          } else {
-            var c = screenToCanvas(
-              viewport.clientWidth / 2,
-              viewport.clientHeight / 2,
-            );
-            pos = { left: c.x - 280, top: c.y - 250, width: 560, height: 500 };
-          }
-          var bodyHtml = '<div class="win-body doc">' + HELP_HTML + "</div>";
-          return createWindowShell(name, pos, bodyHtml, false);
-        }
-        window.help = help; // pode ser chamado pelo console do navegador também
-
-        // ---- conectar janelas por nome ----
-        function findWindowByName(name) {
-          var target = String(name).trim().toLowerCase();
-          return windows.find(function (w) {
-            return w.dataset.name.toLowerCase() === target;
-          });
-        }
-        function connect(nameA, nameB) {
-          var a = findWindowByName(nameA),
-            b = findWindowByName(nameB);
-          if (!a || !b) {
-            console.warn(
-              'connect: janela não encontrada ("' +
-                nameA +
-                '" ou "' +
-                nameB +
-                '")',
-            );
-            return null;
-          }
-          var line = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "line",
-          );
-          line.setAttribute("class", "link");
-          linksLayer.appendChild(line);
-          var link = { a: a, b: b, el: line };
-          links.push(link);
-          return link;
-        }
-        window.connect = connect; // pode ser chamado pelo console do navegador também
-
-        function disconnect(nameA, nameB) {
-          var a = findWindowByName(nameA),
-            b = findWindowByName(nameB);
-          if (!a || !b) {
-            console.warn(
-              'disconnect: janela não encontrada ("' +
-                nameA +
-                '" ou "' +
-                nameB +
-                '")',
-            );
-            return;
-          }
-          links = links.filter(function (l) {
-            var match = (l.a === a && l.b === b) || (l.a === b && l.b === a);
-            if (match) l.el.remove();
-            return !match;
-          });
-        }
-        window.disconnect = disconnect; // pode ser chamado pelo console do navegador também
-
-        function updateLinks() {
-          links = links.filter(function (l) {
-            if (!l.a.isConnected || !l.b.isConnected) {
-              l.el.remove();
-              return false;
-            }
-            return true;
-          });
-          links.forEach(function (l) {
-            if (
-              l.a.classList.contains("maximized") ||
-              l.b.classList.contains("maximized")
-            ) {
-              l.el.style.display = "none";
-              return;
-            }
-            l.el.style.display = "";
-            var ax = parseFloat(l.a.style.left) + l.a.offsetWidth / 2;
-            var ay = parseFloat(l.a.style.top) + l.a.offsetHeight / 2;
-            var bx = parseFloat(l.b.style.left) + l.b.offsetWidth / 2;
-            var by = parseFloat(l.b.style.top) + l.b.offsetHeight / 2;
-            l.el.setAttribute("x1", ax);
-            l.el.setAttribute("y1", ay);
-            l.el.setAttribute("x2", bx);
-            l.el.setAttribute("y2", by);
-          });
-        }
-        function fitMaximizedWindow(win) {
-          // calcula o retângulo, em coordenadas do canvas, que corresponde à tela cheia
-          // no zoom/pan atuais — assim a janela cobre a tela inteira sem nunca sair do DOM
-          var tl = screenToCanvas(0, 0);
-          var br = screenToCanvas(viewport.clientWidth, viewport.clientHeight);
-          win.style.left = tl.x + "px";
-          win.style.top = tl.y + "px";
-          win.style.width = br.x - tl.x + "px";
-          win.style.height = br.y - tl.y + "px";
-        }
-
-        (function frameLoop() {
-          updateLinks();
-          checkLazyFrames();
-          windows.forEach(function (w) {
-            if (w.classList.contains("maximized")) fitMaximizedWindow(w);
-          });
-          requestAnimationFrame(frameLoop);
-        })();
-
-        function bringToFront(win) {
+          maxBtn.innerHTML = ICON_WIN_MAX; maxBtn.title = 'Maximizar';
+          maximizedCount--; updateUIVisibility();
+        } else {
+          win._restore = {
+            left: win.style.left, top: win.style.top,
+            width: win.style.width, height: win.style.height,
+            zIndex: win.style.zIndex
+          };
+          win.classList.add('maximized');
           win.style.zIndex = ++zTop;
+          if (win._polaroidRotation !== undefined){ win.style.transform = 'none'; }
+          fitMaximizedWindow(win);
+          maxBtn.innerHTML = ICON_WIN_RESTORE; maxBtn.title = 'Restaurar';
+          maximizedCount++; updateUIVisibility();
         }
+      };
+      maxBtn.addEventListener('click', function(e){ e.stopPropagation(); toggleMaximize(); });
+    }
 
-        function wireWindow(win) {
-          var header = win.querySelector(".win-header");
-          var body = win.querySelector(".win-body");
-          var resize = win.querySelector(".win-resize");
-          var closeBtn = win.querySelector(".win-close");
-          var maxBtn = win.querySelector(".win-max");
+    win.addEventListener('pointerdown', function(){
+      if (!win.classList.contains('maximized')) bringToFront(win);
+    });
 
-          if (closeBtn)
-            closeBtn.addEventListener("click", function () {
-              if (win.classList.contains("maximized")) {
-                var r = win._restore;
-                win.style.left = r.left;
-                win.style.top = r.top;
-                win.style.width = r.width;
-                win.style.height = r.height;
-                maximizedCount--;
-                updateUIVisibility();
-              }
-              saveWinState(win);
-              win.remove();
-              windows = windows.filter(function (w) {
-                return w !== win;
-              });
-            });
+    // mover
+    if (dragHandle) dragHandle.addEventListener('pointerdown', function(e){
+      if (e.target.closest('.win-close') || e.target.closest('.win-max')) return;
+      if (win.classList.contains('maximized')) return;
+      e.preventDefault();
+      bringToFront(win);
+      var startX = e.clientX, startY = e.clientY;
+      var origLeft = parseFloat(win.style.left), origTop = parseFloat(win.style.top);
+      dragHandle.setPointerCapture(e.pointerId);
+      function onMove(ev){
+        var dx = (ev.clientX - startX) / zoom;
+        var dy = (ev.clientY - startY) / zoom;
+        win.style.left = (origLeft + dx) + 'px';
+        win.style.top  = (origTop + dy) + 'px';
+      }
+      function onUp(ev){
+        dragHandle.releasePointerCapture(e.pointerId);
+        dragHandle.removeEventListener('pointermove', onMove);
+        dragHandle.removeEventListener('pointerup', onUp);
+        saveWinState(win);
+      }
+      dragHandle.addEventListener('pointermove', onMove);
+      dragHandle.addEventListener('pointerup', onUp);
+    });
 
-          function toggleMaximize() {
-            if (win.classList.contains("maximized")) {
-              var r = win._restore;
-              win.classList.remove("maximized");
-              win.style.left = r.left;
-              win.style.top = r.top;
-              win.style.width = r.width;
-              win.style.height = r.height;
-              win.style.zIndex = r.zIndex;
-              maxBtn.innerHTML = ICON_WIN_MAX;
-              maxBtn.title = "Maximizar";
-              maximizedCount--;
-              updateUIVisibility();
-            } else {
-              win._restore = {
-                left: win.style.left,
-                top: win.style.top,
-                width: win.style.width,
-                height: win.style.height,
-                zIndex: win.style.zIndex,
-              };
-              win.classList.add("maximized");
-              win.style.zIndex = ++zTop;
-              fitMaximizedWindow(win);
-              maxBtn.innerHTML = ICON_WIN_RESTORE;
-              maxBtn.title = "Restaurar";
-              maximizedCount++;
-              updateUIVisibility();
-            }
-          }
-          maxBtn.addEventListener("click", function (e) {
-            e.stopPropagation();
-            toggleMaximize();
-          });
+    // redimensionar
+    resize.addEventListener('pointerdown', function(e){
+      if (win.classList.contains('maximized')) return;
+      e.preventDefault(); e.stopPropagation();
+      bringToFront(win);
+      var startX = e.clientX, startY = e.clientY;
+      var origW = win.offsetWidth, origH = win.offsetHeight;
+      resize.setPointerCapture(e.pointerId);
+      function onMove(ev){
+        var dx = (ev.clientX - startX) / zoom;
+        var dy = (ev.clientY - startY) / zoom;
+        win.style.width  = Math.max(150, origW + dx) + 'px';
+        win.style.height = Math.max(110, origH + dy) + 'px';
+      }
+      function onUp(ev){
+        resize.releasePointerCapture(e.pointerId);
+        resize.removeEventListener('pointermove', onMove);
+        resize.removeEventListener('pointerup', onUp);
+        saveWinState(win);
+      }
+      resize.addEventListener('pointermove', onMove);
+      resize.addEventListener('pointerup', onUp);
+    });
 
-          win.addEventListener("pointerdown", function () {
-            if (!win.classList.contains("maximized")) bringToFront(win);
-          });
+    body.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
+  }
 
-          // mover
-          header.addEventListener("pointerdown", function (e) {
-            if (e.target.closest(".win-close") || e.target.closest(".win-max"))
-              return;
-            if (win.classList.contains("maximized")) return;
-            e.preventDefault();
-            bringToFront(win);
-            var startX = e.clientX,
-              startY = e.clientY;
-            var origLeft = parseFloat(win.style.left),
-              origTop = parseFloat(win.style.top);
-            header.setPointerCapture(e.pointerId);
-            function onMove(ev) {
-              var dx = (ev.clientX - startX) / zoom;
-              var dy = (ev.clientY - startY) / zoom;
-              win.style.left = origLeft + dx + "px";
-              win.style.top = origTop + dy + "px";
-            }
-            function onUp(ev) {
-              header.releasePointerCapture(e.pointerId);
-              header.removeEventListener("pointermove", onMove);
-              header.removeEventListener("pointerup", onUp);
-              saveWinState(win);
-            }
-            header.addEventListener("pointermove", onMove);
-            header.addEventListener("pointerup", onUp);
-          });
+  // ---- pan (arrastar o fundo com botão direito ou do meio) e zoom (scroll) ----
+  var panning = false, panStart = null, panOrig = null, panButton = -1;
+  var suppressCtx = false;
 
-          // redimensionar
-          resize.addEventListener("pointerdown", function (e) {
-            if (win.classList.contains("maximized")) return;
-            e.preventDefault();
-            e.stopPropagation();
-            bringToFront(win);
-            var startX = e.clientX,
-              startY = e.clientY;
-            var origW = win.offsetWidth,
-              origH = win.offsetHeight;
-            resize.setPointerCapture(e.pointerId);
-            function onMove(ev) {
-              var dx = (ev.clientX - startX) / zoom;
-              var dy = (ev.clientY - startY) / zoom;
-              win.style.width = Math.max(150, origW + dx) + "px";
-              win.style.height = Math.max(110, origH + dy) + "px";
-            }
-            function onUp(ev) {
-              resize.releasePointerCapture(e.pointerId);
-              resize.removeEventListener("pointermove", onMove);
-              resize.removeEventListener("pointerup", onUp);
-              saveWinState(win);
-            }
-            resize.addEventListener("pointermove", onMove);
-            resize.addEventListener("pointerup", onUp);
-          });
+  // mouse: só botão do meio (1) ou direito (2); toque/caneta: qualquer arrasto no fundo
+  function isPanStart(e){
+    return e.pointerType === 'mouse' ? (e.button === 1 || e.button === 2) : true;
+  }
 
-          body.addEventListener("pointerdown", function (e) {
-            e.stopPropagation();
-          });
-        }
+  // no fundo vazio, o mousedown não pode iniciar seleção de texto nas janelas
+  // nem o autoscroll do botão do meio
+  viewport.addEventListener('mousedown', function(e){
+    if (e.target !== viewport) return;
+    e.preventDefault();
+    var a = document.activeElement;
+    if (a && a !== document.body && a.blur) a.blur();
+  });
 
-        // ---- pan (arrastar o fundo com botão direito ou do meio) e zoom (scroll) ----
-        var panning = false,
-          panStart = null,
-          panOrig = null,
-          panButton = -1;
-        var suppressCtx = false;
+  viewport.addEventListener('pointerdown', function(e){
+    if (e.target !== viewport) return;
+    if (!isPanStart(e)) return;
+    panning = true;
+    panButton = e.button;
+    if (e.pointerType === 'mouse' && e.button === 2) suppressCtx = true;
+    viewport.classList.add('panning');
+    panStart = {x:e.clientX, y:e.clientY};
+    panOrig = {x:pan.x, y:pan.y};
+    viewport.setPointerCapture(e.pointerId);
+  });
+  viewport.addEventListener('pointermove', function(e){
+    if (!panning) return;
+    pan.x = panOrig.x + (e.clientX - panStart.x) / zoom;
+    pan.y = panOrig.y + (e.clientY - panStart.y) / zoom;
+    applyTransform();
+  });
+  function endPan(e){
+    if (!panning) return;
+    if (e.type === 'pointerup' && e.pointerType === 'mouse' && e.button !== panButton) return;
+    panning = false;
+    viewport.classList.remove('panning');
+    // o menu de contexto pode disparar logo após soltar o botão direito
+    setTimeout(function(){ suppressCtx = false; }, 50);
+  }
+  viewport.addEventListener('pointerup', endPan);
+  viewport.addEventListener('pointercancel', endPan);
 
-        // mouse: só botão do meio (1) ou direito (2); toque/caneta: qualquer arrasto no fundo
-        function isPanStart(e) {
-          return e.pointerType === "mouse"
-            ? e.button === 1 || e.button === 2
-            : true;
-        }
+  // sem menu de contexto no fundo vazio (nem ao terminar um pan com o botão direito);
+  // dentro das janelas o menu normal continua disponível
+  viewport.addEventListener('contextmenu', function(e){
+    if (e.target === viewport || suppressCtx) e.preventDefault();
+  });
 
-        // no fundo vazio, o mousedown não pode iniciar seleção de texto nas janelas
-        // nem o autoscroll do botão do meio
-        viewport.addEventListener("mousedown", function (e) {
-          if (e.target !== viewport) return;
-          e.preventDefault();
-          var a = document.activeElement;
-          if (a && a !== document.body && a.blur) a.blur();
-        });
+  function zoomBy(factor, sx, sy){
+    var before = screenToCanvas(sx, sy);
+    zoom = Math.min(4, Math.max(0.2, zoom * factor));
+    var after = screenToCanvas(sx, sy);
+    pan.x += (after.x - before.x);
+    pan.y += (after.y - before.y);
+    applyTransform();
+  }
 
-        viewport.addEventListener("pointerdown", function (e) {
-          if (e.target !== viewport) return;
-          if (!isPanStart(e)) return;
-          panning = true;
-          panButton = e.button;
-          if (e.pointerType === "mouse" && e.button === 2) suppressCtx = true;
-          viewport.classList.add("panning");
-          panStart = { x: e.clientX, y: e.clientY };
-          panOrig = { x: pan.x, y: pan.y };
-          viewport.setPointerCapture(e.pointerId);
-        });
-        viewport.addEventListener("pointermove", function (e) {
-          if (!panning) return;
-          pan.x = panOrig.x + (e.clientX - panStart.x) / zoom;
-          pan.y = panOrig.y + (e.clientY - panStart.y) / zoom;
-          applyTransform();
-        });
-        function endPan(e) {
-          if (!panning) return;
-          if (
-            e.type === "pointerup" &&
-            e.pointerType === "mouse" &&
-            e.button !== panButton
-          )
-            return;
-          panning = false;
-          viewport.classList.remove("panning");
-          // o menu de contexto pode disparar logo após soltar o botão direito
-          setTimeout(function () {
-            suppressCtx = false;
-          }, 50);
-        }
-        viewport.addEventListener("pointerup", endPan);
-        viewport.addEventListener("pointercancel", endPan);
+  viewport.addEventListener('wheel', function(e){
+    // sobre uma janela, o scroll pertence ao conteúdo dela: sem zoom do canvas
+    if (e.target.closest && e.target.closest('.win')) return;
+    e.preventDefault();
+    zoomBy(e.deltaY < 0 ? 1.014 : 1 / 1.014, e.clientX, e.clientY);
+  }, {passive:false});
 
-        // sem menu de contexto no fundo vazio (nem ao terminar um pan com o botão direito);
-        // dentro das janelas o menu normal continua disponível
-        viewport.addEventListener("contextmenu", function (e) {
-          if (e.target === viewport || suppressCtx) e.preventDefault();
-        });
+  // ---- botões e console de comando ----
+  document.getElementById('btnZoomIn').addEventListener('click', function(){
+    zoomBy(1.2, viewport.clientWidth/2, viewport.clientHeight/2);
+  });
+  document.getElementById('btnZoomOut').addEventListener('click', function(){
+    zoomBy(1/1.2, viewport.clientWidth/2, viewport.clientHeight/2);
+  });
+  document.getElementById('btnReset').addEventListener('click', function(){
+    pan = {x:0,y:0}; zoom = 1; applyTransform();
+  });
 
-        function zoomBy(factor, sx, sy) {
-          var before = screenToCanvas(sx, sy);
-          zoom = Math.min(4, Math.max(0.2, zoom * factor));
-          var after = screenToCanvas(sx, sy);
-          pan.x += after.x - before.x;
-          pan.y += after.y - before.y;
-          applyTransform();
-        }
+  // ---- posição do bloco de controles (zoom/lupa/tela cheia/centralizar + painel de busca) ----
+  function centerControls(){ document.body.classList.add('controls-centered'); }
+  function bottomControls(){ document.body.classList.remove('controls-centered'); }
+  window.centerControls = centerControls; // pode ser chamado pelo console do navegador também
+  window.bottomControls = bottomControls;
 
-        viewport.addEventListener(
-          "wheel",
-          function (e) {
-            // sobre uma janela, o scroll pertence ao conteúdo dela: sem zoom do canvas
-            if (e.target.closest && e.target.closest(".win")) return;
-            e.preventDefault();
-            zoomBy(e.deltaY < 0 ? 1.014 : 1 / 1.014, e.clientX, e.clientY);
-          },
-          { passive: false },
-        );
+  // ---- fundo transparente (útil para embutir o Canvas Infinito sobre outra interface) ----
+  function setTransparentBackground(){ document.body.classList.add('bg-transparent'); }
+  function setOpaqueBackground(){ document.body.classList.remove('bg-transparent'); }
+  window.setTransparentBackground = setTransparentBackground; // pode ser chamado pelo console do navegador também
+  window.setOpaqueBackground = setOpaqueBackground;
 
-        // ---- botões e console de comando ----
-        document
-          .getElementById("btnZoomIn")
-          .addEventListener("click", function () {
-            zoomBy(1.2, viewport.clientWidth / 2, viewport.clientHeight / 2);
-          });
-        document
-          .getElementById("btnZoomOut")
-          .addEventListener("click", function () {
-            zoomBy(
-              1 / 1.2,
-              viewport.clientWidth / 2,
-              viewport.clientHeight / 2,
-            );
-          });
-        document
-          .getElementById("btnReset")
-          .addEventListener("click", function () {
-            pan = { x: 0, y: 0 };
-            zoom = 1;
-            applyTransform();
-          });
+  // ---- buscar / localizar janela ----
+  var btnSearch = document.getElementById('btnSearch');
+  var searchPanel = document.getElementById('searchPanel');
+  var searchInput = document.getElementById('searchInput');
+  var searchList = document.getElementById('searchList');
 
-        // ---- posição do bloco de controles (zoom/lupa/tela cheia/centralizar + painel de busca) ----
-        function centerControls() {
-          document.body.classList.add("controls-centered");
-        }
-        function bottomControls() {
-          document.body.classList.remove("controls-centered");
-        }
-        window.centerControls = centerControls; // pode ser chamado pelo console do navegador também
-        window.bottomControls = bottomControls;
+  function panToWindow(win){
+    var cx = parseFloat(win.style.left) + win.offsetWidth / 2;
+    var cy = parseFloat(win.style.top) + win.offsetHeight / 2;
+    pan.x = viewport.clientWidth / (2 * zoom) - cx;
+    pan.y = viewport.clientHeight / (2 * zoom) - cy;
+    applyTransform();
+  }
 
-        // ---- fundo transparente (útil para embutir o Canvas Infinito sobre outra interface) ----
-        function setTransparentBackground() {
-          document.body.classList.add("bg-transparent");
-        }
-        function setOpaqueBackground() {
-          document.body.classList.remove("bg-transparent");
-        }
-        window.setTransparentBackground = setTransparentBackground; // pode ser chamado pelo console do navegador também
-        window.setOpaqueBackground = setOpaqueBackground;
+  function renderSearchList(filter){
+    var q = (filter || '').trim().toLowerCase();
+    searchList.innerHTML = '';
+    var matches = windows.filter(function(w){ return w.dataset.name.toLowerCase().indexOf(q) !== -1; });
+    if (matches.length === 0){
+      var empty = document.createElement('div');
+      empty.id = 'searchEmpty';
+      empty.textContent = 'Nenhuma janela encontrada.';
+      searchList.appendChild(empty);
+      return;
+    }
+    matches.forEach(function(w){
+      var btn = document.createElement('button');
+      btn.textContent = w.dataset.name;
+      btn.addEventListener('click', function(){ panToWindow(w); closeSearch(); });
+      searchList.appendChild(btn);
+    });
+  }
+  function openSearch(){
+    searchPanel.classList.add('open');
+    searchInput.value = '';
+    renderSearchList('');
+    searchInput.focus();
+  }
+  function closeSearch(){ searchPanel.classList.remove('open'); }
 
-        // ---- buscar / localizar janela ----
-        var btnSearch = document.getElementById("btnSearch");
-        var searchPanel = document.getElementById("searchPanel");
-        var searchInput = document.getElementById("searchInput");
-        var searchList = document.getElementById("searchList");
+  btnSearch.addEventListener('click', function(e){
+    e.stopPropagation();
+    if (searchPanel.classList.contains('open')) closeSearch(); else openSearch();
+  });
+  searchInput.addEventListener('input', function(){ renderSearchList(searchInput.value); });
+  searchInput.addEventListener('keydown', function(e){
+    e.stopPropagation();
+    if (e.key === 'Escape') closeSearch();
+  });
+  document.addEventListener('pointerdown', function(e){
+    if (!searchPanel.classList.contains('open')) return;
+    if (searchPanel.contains(e.target) || btnSearch.contains(e.target)) return;
+    closeSearch();
+  });
 
-        function panToWindow(win) {
-          var cx = parseFloat(win.style.left) + win.offsetWidth / 2;
-          var cy = parseFloat(win.style.top) + win.offsetHeight / 2;
-          pan.x = viewport.clientWidth / (2 * zoom) - cx;
-          pan.y = viewport.clientHeight / (2 * zoom) - cy;
-          applyTransform();
-        }
+  // ---- tela cheia do documento ----
+  var btnFullscreen = document.getElementById('btnFullscreen');
+  var ICON_ENTER_FS = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4"/></svg>';
+  var ICON_EXIT_FS  = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v4H2M14 6h-4V2M10 14v-4h4M2 10h4v4"/></svg>';
+  function fsElement(){ return document.fullscreenElement || document.webkitFullscreenElement || null; }
+  function updateFsButton(){
+    var on = !!fsElement();
+    btnFullscreen.innerHTML = on ? ICON_EXIT_FS : ICON_ENTER_FS;
+    btnFullscreen.title = on ? 'Sair da tela cheia' : 'Tela cheia';
+  }
+  btnFullscreen.addEventListener('click', function(){
+    try {
+      var p;
+      if (fsElement()){
+        p = (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+      } else {
+        var el = document.documentElement;
+        p = (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+      }
+      if (p && p.catch) p.catch(function(err){ console.warn('Tela cheia indisponível:', err.message); });
+    } catch (err){
+      console.warn('Tela cheia indisponível:', err.message);
+    }
+  });
+  document.addEventListener('fullscreenchange', updateFsButton);
+  document.addEventListener('webkitfullscreenchange', updateFsButton);
+  updateFsButton();
 
-        function renderSearchList(filter) {
-          var q = (filter || "").trim().toLowerCase();
-          searchList.innerHTML = "";
-          var matches = windows.filter(function (w) {
-            return w.dataset.name.toLowerCase().indexOf(q) !== -1;
-          });
-          if (matches.length === 0) {
-            var empty = document.createElement("div");
-            empty.id = "searchEmpty";
-            empty.textContent = "Nenhuma janela encontrada.";
-            searchList.appendChild(empty);
-            return;
-          }
-          matches.forEach(function (w) {
-            var btn = document.createElement("button");
-            btn.textContent = w.dataset.name;
-            btn.addEventListener("click", function () {
-              panToWindow(w);
-              closeSearch();
-            });
-            searchList.appendChild(btn);
-          });
-        }
-        function openSearch() {
-          searchPanel.classList.add("open");
-          searchInput.value = "";
-          renderSearchList("");
-          searchInput.focus();
-        }
-        function closeSearch() {
-          searchPanel.classList.remove("open");
-        }
+  // ---- digitar em qualquer lugar (fora de janelas) foca a barra de comando ----
+  var lastMouse = {x:-1, y:-1};
+  document.addEventListener('mousemove', function(e){
+    lastMouse.x = e.clientX; lastMouse.y = e.clientY;
+  }, {passive:true});
 
-        btnSearch.addEventListener("click", function (e) {
-          e.stopPropagation();
-          if (searchPanel.classList.contains("open")) closeSearch();
-          else openSearch();
-        });
-        searchInput.addEventListener("input", function () {
-          renderSearchList(searchInput.value);
-        });
-        searchInput.addEventListener("keydown", function (e) {
-          e.stopPropagation();
-          if (e.key === "Escape") closeSearch();
-        });
-        document.addEventListener("pointerdown", function (e) {
-          if (!searchPanel.classList.contains("open")) return;
-          if (searchPanel.contains(e.target) || btnSearch.contains(e.target))
-            return;
-          closeSearch();
-        });
+  function isTypingTriggerKey(e){
+    if (e.key === 'Enter' || e.key === ' ') return true;
+    return e.key.length === 1 && /[a-zA-ZÀ-ÿ]/.test(e.key);
+  }
+  document.addEventListener('keydown', function(e){
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    var ae = document.activeElement;
+    if (ae === cmdInput || ae === searchInput) return; // já digitando ali, comportamento nativo cuida disso
+    if (ae && ae.closest && ae.closest('.win')) return; // já editando dentro de uma janela
+    if (!isTypingTriggerKey(e)) return;
+    var hoverEl = document.elementFromPoint(lastMouse.x, lastMouse.y);
+    if (hoverEl && hoverEl.closest && hoverEl.closest('.win')) return; // mouse sobre uma janela: não rouba o foco
+    cmdInput.focus();
+  });
 
-        // ---- tela cheia do documento ----
-        var btnFullscreen = document.getElementById("btnFullscreen");
-        var ICON_ENTER_FS =
-          '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4"/></svg>';
-        var ICON_EXIT_FS =
-          '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v4H2M14 6h-4V2M10 14v-4h4M2 10h4v4"/></svg>';
-        function fsElement() {
-          return (
-            document.fullscreenElement ||
-            document.webkitFullscreenElement ||
-            null
-          );
-        }
-        function updateFsButton() {
-          var on = !!fsElement();
-          btnFullscreen.innerHTML = on ? ICON_EXIT_FS : ICON_ENTER_FS;
-          btnFullscreen.title = on ? "Sair da tela cheia" : "Tela cheia";
-        }
-        btnFullscreen.addEventListener("click", function () {
-          try {
-            var p;
-            if (fsElement()) {
-              p = (
-                document.exitFullscreen || document.webkitExitFullscreen
-              ).call(document);
-            } else {
-              var el = document.documentElement;
-              p = (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
-            }
-            if (p && p.catch)
-              p.catch(function (err) {
-                console.warn("Tela cheia indisponível:", err.message);
-              });
-          } catch (err) {
-            console.warn("Tela cheia indisponível:", err.message);
-          }
-        });
-        document.addEventListener("fullscreenchange", updateFsButton);
-        document.addEventListener("webkitfullscreenchange", updateFsButton);
-        updateFsButton();
+  function runCommand(raw){
+    var cmd = raw.trim();
+    if (!cmd) return;
+    consoleBar.classList.add('used'); // a partir do 1º comando, ela vira transparente quando ociosa
+    try {
+      // executa a instrução como JavaScript de verdade, com acesso às funções do canvas
+      (new Function('newwindow', 'newframe', 'run', 'newpermawindow', 'newpermaframe', 'permarun',
+                    'connect', 'disconnect', 'setTheme', 'setTempTheme', 'help',
+                    'centerControls', 'bottomControls', 'setTransparentBackground', 'setOpaqueBackground',
+                    'polaroid', cmd))(
+        newwindow, newframe, run, newpermawindow, newpermaframe, permarun,
+        connect, disconnect, setTheme, setTempTheme, help,
+        centerControls, bottomControls, setTransparentBackground, setOpaqueBackground,
+        polaroid);
+    } catch (err){
+      console.warn('Comando inválido:', err.message);
+    }
+  }
+  cmdInput.addEventListener('keydown', function(e){
+    if (e.key === 'Enter'){ runCommand(cmdInput.value); cmdInput.value = ''; }
+  });
 
-        // ---- digitar em qualquer lugar (fora de janelas) foca a barra de comando ----
-        var lastMouse = { x: -1, y: -1 };
-        document.addEventListener(
-          "mousemove",
-          function (e) {
-            lastMouse.x = e.clientX;
-            lastMouse.y = e.clientY;
-          },
-          { passive: true },
-        );
+  applyTransform();
 
-        function isTypingTriggerKey(e) {
-          if (e.key === "Enter" || e.key === " ") return true;
-          return e.key.length === 1 && /[a-zA-ZÀ-ÿ]/.test(e.key);
-        }
-        document.addEventListener("keydown", function (e) {
-          if (e.ctrlKey || e.metaKey || e.altKey) return;
-          var ae = document.activeElement;
-          if (ae === cmdInput || ae === searchInput) return; // já digitando ali, comportamento nativo cuida disso
-          if (ae && ae.closest && ae.closest(".win")) return; // já editando dentro de uma janela
-          if (!isTypingTriggerKey(e)) return;
-          var hoverEl = document.elementFromPoint(lastMouse.x, lastMouse.y);
-          if (hoverEl && hoverEl.closest && hoverEl.closest(".win")) return; // mouse sobre uma janela: não rouba o foco
-          cmdInput.focus();
-        });
+  // tema inicial: o registrado no localStorage, ou "auto"
+  (function(){
+    var saved = null;
+    try { saved = localStorage.getItem(THEME_STORAGE_KEY); } catch(e){}
+    applyTheme(saved || 'auto');
+  })();
+})();
 
-        function runCommand(raw) {
-          var cmd = raw.trim();
-          if (!cmd) return;
-          consoleBar.classList.add("used"); // a partir do 1º comando, ela vira transparente quando ociosa
-          try {
-            // executa a instrução como JavaScript de verdade, com acesso às funções do canvas
-            new Function(
-              "newwindow",
-              "newframe",
-              "run",
-              "newpermawindow",
-              "newpermaframe",
-              "permarun",
-              "connect",
-              "disconnect",
-              "setTheme",
-              "setTempTheme",
-              "help",
-              "centerControls",
-              "bottomControls",
-              "setTransparentBackground",
-              "setOpaqueBackground",
-              cmd,
-            )(
-              newwindow,
-              newframe,
-              run,
-              newpermawindow,
-              newpermaframe,
-              permarun,
-              connect,
-              disconnect,
-              setTheme,
-              setTempTheme,
-              help,
-              centerControls,
-              bottomControls,
-              setTransparentBackground,
-              setOpaqueBackground,
-            );
-          } catch (err) {
-            console.warn("Comando inválido:", err.message);
-          }
-        }
-        cmdInput.addEventListener("keydown", function (e) {
-          if (e.key === "Enter") {
-            runCommand(cmdInput.value);
-            cmdInput.value = "";
-          }
-        });
-
-        applyTransform();
-
-        // tema inicial: o registrado no localStorage, ou "auto"
-        (function () {
-          var saved = null;
-          try {
-            saved = localStorage.getItem(THEME_STORAGE_KEY);
-          } catch (e) {}
-          applyTheme(saved || "auto");
-        })();
-      })();
-
-      window.openquake = function (id, dados) {
+window.openquake = function (id, dados) {
         var el = document.getElementById(id);
-        el.innerHTML = `<iframe temp="https://mrdoob.github.io/three-quake/" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; allowfullscreen" allowfullscreen style="width:100%;height:100%;border:none;display:block;"></iframe>`;
-        window.registerLazyFrame(el.querySelector("iframe[temp]"));
+        el.innerHTML =
+          `<iframe temp="https://mrdoob.github.io/three-quake/" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; allowfullscreen" allowfullscreen style="width:100%;height:100%;border:none;display:block;"></iframe>`;
+        window.registerLazyFrame(el.querySelector('iframe[temp]'));
       };
 
-      window.quake = function () {
+window.quake = function () {
         run("Quake", "openquake", {});
       };
 
-      window.fun = function () {
+window.fun = function () {
         run("Quake", "openquake", {});
       };
 
-      window.openwarphoto = function (id, dados) {
+window.openwarphoto = function (id, dados) {
         var el = document.getElementById(id);
-        el.innerHTML = `<iframe temp="https://www.youtube.com/embed/VtYEz4OKCn8?si=_FkvIpfSGMyBS8kg&controls=0&autoplay=1" style="width:100%;height:100%;border:none;display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; allowfullscreen" allowfullscreen></iframe>`;
-        window.registerLazyFrame(el.querySelector("iframe[temp]"));
+        el.innerHTML =
+          `<iframe temp="https://www.youtube.com/embed/VtYEz4OKCn8?si=_FkvIpfSGMyBS8kg&controls=0&autoplay=1" style="width:100%;height:100%;border:none;display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; allowfullscreen" allowfullscreen></iframe>`;
+        window.registerLazyFrame(el.querySelector('iframe[temp]'));
       };
 
-      window.hello = function () {
+window.hello = function () {
         run("Yeah!", "openwarphoto", {});
       };
 
-      if (
+if (
         typeof $_GET["devmode"] != "undefined" &&
         $_GET["devmode"] != null &&
         $_GET["devmode"] != ""
@@ -1612,7 +1139,7 @@
         $_GET["devmode"] = "true";
       };
 
-      if (
+ if (
         typeof $_GET["plugin"] != "undefined" &&
         $_GET["plugin"] != null &&
         $_GET["plugin"] != ""
@@ -1622,7 +1149,8 @@
         document.body.appendChild(scrjs);
       }
 
-      // --- IMPLEMENTAÇÕES PRÓPRIAS ------------------------------------------------------------------
+
+ // --- IMPLEMENTAÇÕES PRÓPRIAS ------------------------------------------------------------------
 
       /*
       ATENÇÃO
