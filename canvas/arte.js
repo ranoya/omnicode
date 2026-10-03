@@ -55,6 +55,12 @@ polaroid("https://www.youtube.com/embed/xFlPWVOdGzw?si=rutAgPaKpkF1FImc", "Turbo
 connect("Turbo Basic", "PC-XT");
 
 
+
+newframe("https://slidelines.vercel.app/timelineh/?allblocks=true&startvisible=true&allowverticalscroll=true&followbg=true&timeheight=190&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit#gid=1569220645&theme=https://slidelines.vercel.app/level/arte.css", "Arte Generativa", 750, 700, 1100, 1100);
+connect("Arte Generativa", "Pathwaves Expiritae");
+connect("Arte Generativa", "Gráficos Programados");
+
+
 center("Gráficos Programados");
 
 
