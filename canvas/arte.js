@@ -56,9 +56,16 @@ connect("Turbo Basic", "PC-XT");
 
 
 
-newframe("https://slidelines.vercel.app/timelineh/?allblocks=true&startvisible=true&allowverticalscroll=true&followbg=true&timeheight=190&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit#gid=1569220645&theme=https://slidelines.vercel.app/level/arte.css", "Arte Generativa", 600, 700, 1600, 1400);
+newframe("https://slidelines.vercel.app/timelineh/?allblocks=true&startvisible=true&allowverticalscroll=true&followbg=true&timeheight=190&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit#gid=1569220645&theme=https://slidelines.vercel.app/level/arte.css", "Arte Generativa", 600, 780, 1600, 1400);
 connect("Arte Generativa", "Pathwaves Expiritae");
 connect("Arte Generativa", "Gráficos Programados");
+
+polaroid("https://omnifolio.vercel.app/omnifiles/Knowlton_1967_ComputerNudeStudiesInPerceptionI_b.jpg", "Computer Nude Kenneth C. Knowlton & Leon D. Harmon, 1967", "Precursores", 600, 300, 2450, 1700);
+
+newidoc("https://drive.google.com/file/d/1r04hsY6pYs6uj1u21SRQQxSctQz-dG_O/preview", "ASCII Art", 650, 800, 3250, 2000);
+
+connect("ASCII Art", "Precursores");
+connect("Arte Generativa", "Precursores");
 
 
 center("Gráficos Programados");
