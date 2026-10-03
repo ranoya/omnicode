@@ -60,12 +60,17 @@ newframe("https://slidelines.vercel.app/timelineh/?allblocks=true&startvisible=t
 connect("Arte Generativa", "Pathwaves Expiritae");
 connect("Arte Generativa", "Gráficos Programados");
 
-polaroid("https://omnifolio.vercel.app/omnifiles/Knowlton_1967_ComputerNudeStudiesInPerceptionI_b.jpg", "Computer Nude Kenneth C. Knowlton & Leon D. Harmon, 1967", "Precursores", 600, 300, 2450, 1700);
+polaroid("https://omnifolio.vercel.app/omnifiles/Knowlton_1967_ComputerNudeStudiesInPerceptionI_b.jpg", "Computer Nude Kenneth C. Knowlton & Leon D. Harmon, 1967", "Precursores", 600, 330, 2450, 1700);
 
 newidoc("https://drive.google.com/file/d/1r04hsY6pYs6uj1u21SRQQxSctQz-dG_O/preview", "ASCII Art", 650, 800, 3250, 2000);
 
 connect("ASCII Art", "Precursores");
 connect("Arte Generativa", "Precursores");
+
+
+polaroid("https://namco.vercel.app/flash/?file=cortex/cortexmain.swf", "Cortex #1 - Revista eletrônica de poesia digital, 2003", "Cortex", 600, 600, 4000, 1200);
+
+connect("Cortex", "ASCII Art");
 
 
 center("Gráficos Programados");
