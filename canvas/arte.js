@@ -78,7 +78,7 @@ connect("ASCII Art", "Precursores");
 connect("Arte Generativa", "Precursores");
 
 
-polaroid("https://namco.vercel.app/flash/?file=cortex/cortexmain.swf", "Cortex #1 - Revista eletrônica de poesia digital, 2003", "Cortex", 600, 500, 3600, 2800);
+polaroid("https://namco.vercel.app/flash/?file=cortex/cortexmain.swf", "Cortex #1 - Revista eletrônica de poesia digital, 2003", "Cortex", 600, 500, 3200, 3100);
 
 newidoc(
   "https://drive.google.com/file/d/1yNAfpLxgX3xW1JQtY2KSI2xsSiLSV8K_/preview",
