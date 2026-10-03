@@ -198,13 +198,28 @@ connect("ASCII Art", "Pixel Art");
 
 connect("ASCII Art", "Interfaces de Texto");
 
+newframe(
+  "https://omniboards.vercel.app/?limita=0&titulo=BBS&subtitulo=Bullet%20Board%20Systems&filtra=_BBSs&nomenu=true&contentonly=true&nomenu=true&contentonly=true",
+  "BBS",
+
+  820,
+  840,
+  -2150,
+  -2100,
+);
+
+connect("ASCII Art", "BBS");
+connect("Acervo de Interfaces de Texto", "BBS");
+
+
+
 newidoc(
   "https://drive.google.com/file/d/1yNAfpLxgX3xW1JQtY2KSI2xsSiLSV8K_/preview",
   "Erthos Albino de Souza",
 
   780,
   900,
-  -1030,
+  -1830,
   -2430,
 );
 
