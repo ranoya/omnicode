@@ -57,7 +57,7 @@ newframe(
 connect("Projeto", "Bullet Points");
 connect("Arqueologia do Editorial", "Bullet Points");
 
-newdoc(
+newidoc(
   "https://drive.google.com/file/d/1HEZdZPYt0vF7JFJfyn7SuHfVGZ28c-zn/preview",
   "Método de Pesquisa",
 
@@ -109,7 +109,7 @@ connect("Emulação", "Bullet Points");
 connect("Emulação", "Acervo de Pesquisa (v.2)");
 connect("Emulação", "Acervo de Pesquisa (v.1)");
 
-newdoc(
+newidoc(
   "https://omniboards.vercel.app/?nomenu=true&filtra=PIXELART_PESSOAL&limita=0&contentonly=true&titulo=Pixel%20Art&temptheme=narrativas",
   "Pixel Art",
 
@@ -121,7 +121,7 @@ newdoc(
 
 connect("Pixel Art", "Projeto");
 
-newdoc(
+newidoc(
   "https://omniboards.vercel.app/?nomenu=true&filtra=_DEMOSCENE&limita=0&contentonly=true&titulo=Demoscene&temptheme=narrativas",
   "Demoscene",
 
@@ -133,7 +133,7 @@ newdoc(
 
 connect("Pixel Art", "Demoscene");
 
-newdoc(
+newidoc(
   "https://www.ranoya.com/pt/textos/culturavisual.php?id=T018&temptheme=cleantext&nomenu=true",
   "Cultura Visual",
 
@@ -145,7 +145,7 @@ newdoc(
 
 connect("Pixel Art", "Cultura Visual");
 
-newdoc(
+newidoc(
   "https://www.ranoya.com/pt/textos/interfacetexto.php?id=T003&temptheme=cleantext&nomenu=tru",
   "Interfaces de Texto",
 
@@ -158,7 +158,7 @@ newdoc(
 connect("Interfaces de Texto", "Arqueologia do Design");
 connect("Interfaces de Texto", "Emulação");
 
-newdoc(
+newidoc(
   "https://www.ranoya.com/pt/textos/transformacaointerfaces.php?id=T005&temptheme=cleantext&nomenu=true",
   "Mais Interfaces de Texto",
 
@@ -171,7 +171,7 @@ newdoc(
 connect("Interfaces de Texto", "Mais Interfaces de Texto");
 connect("Emulação", "Mais Interfaces de Texto");
 
-newdoc(
+newidoc(
   "https://www.ranoya.com/pt/textos/dropdown.php?id=T002&temptheme=cleantext&nomenu=true",
   "Menus",
 
@@ -184,7 +184,7 @@ newdoc(
 connect("Menus", "Mais Interfaces de Texto");
 connect("Menus", "Emulação");
 
-newdoc(
+newidoc(
   "https://omniboards.vercel.app/?limita=0&titulo=ASCII%20Art&subtitulo=Refer%C3%AAncia&filtra=ANSI_ASCII_ART&nomenu=true&temptheme=ayu",
   "ASCII Art",
 
@@ -198,7 +198,7 @@ connect("ASCII Art", "Pixel Art");
 
 connect("ASCII Art", "Interfaces de Texto");
 
-newdoc(
+newidoc(
   "https://drive.google.com/file/d/1yNAfpLxgX3xW1JQtY2KSI2xsSiLSV8K_/preview",
   "Erthos Albino de Souza",
 
