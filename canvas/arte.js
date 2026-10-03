@@ -43,8 +43,13 @@ connect("C64 10 PRINT", "BASIC");
 connect("C64 10 PRINT", "10 Print, MSX");
 
 
-newidoc("https://artndcode.vercel.app/Singles/pathwavesexpiritae.html?fcolor=aaFFFF&bgcolor=4272cf", "Pathwaves Expiritae", 600, 500, 900, 2000);
+newidoc("https://artndcode.vercel.app/Singles/pathwavesexpiritae.html?fcolor=44FFFF&bgcolor=4272cf", "Pathwaves Expiritae", 600, 500, 900, 2000);
 connect("Gráficos Programados", "Pathwaves Expiritae");
+
+polaroid("https://omnifolio.vercel.app/omnifiles/ibm-pc-5150.webp", "Computador IBM PC XT, 1981", "PC-XT", 450, 380, -3000, 650);
+
+newframe("https://namco.vercel.app/interfaces/?rom=tp3", "Turbo Pascal 3.0", 500, 360, -2800, 1100);
+connect("Turbo Pascal 3.0", "PC-XT");
 
 
 center("Gráficos Programados");
