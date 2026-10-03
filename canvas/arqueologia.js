@@ -243,8 +243,8 @@ newframe(
 
   880,
   780,
-  1630,
-  2900,
+  1580,
+  2500,
 );
 
 connect("Hipertexto", "Ficção Interativa");
@@ -255,8 +255,8 @@ newframe(
 
   900,
   600,
-  1930,
-  3900,
+  1100,
+  3600,
 );
 
 connect("Emulação de Narrativas Interativas", "Ficção Interativa");
