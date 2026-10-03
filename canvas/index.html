@@ -79,6 +79,26 @@ $_GET = [];
   }
   .win-max:hover, .win-close:hover{background:var(--panel-border); color:var(--text);}
   .win.maximized{ border-radius:0; }
+  .win.polaroid{ border-radius:5px; box-shadow:0px 0px 8px 1px var(--shadow); }
+  /* janelas "doc" (newdoc, newidoc, rundoc e variantes perma): sem cabeçalho, com uma aba lateral
+     (como label de fichário antigo) que fica por baixo do "papel" no empilhamento visual */
+  .win.doc-frame{ background:transparent; border:none; box-shadow:none; overflow:visible; }
+  .doc-paper{
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    background:var(--win-bg); border:2px solid var(--win-border); border-radius:4px;
+    box-shadow:0px 0px 8px 1px var(--shadow); overflow:hidden;
+  }
+  .doc-tab{
+    position:absolute; top:70px; right:-16px; width:24px; box-sizing:border-box;
+    display:flex; flex-direction:column; align-items:center; gap:6px; padding:8px 3px;
+    background:var(--win-header); border:1px solid var(--win-border); border-right:none;
+    border-radius:0 6px 6px 0;
+  }
+  .doc-tab-title{
+    writing-mode:vertical-rl; text-orientation:mixed; pointer-events:none;
+    font-size:11px; font-weight:600; color:var(--text);
+    max-height:60px; overflow:hidden; white-space:nowrap;
+  }
   .win.maximized .win-resize{display:none;}
   .win-body{
     flex:1; padding:10px; overflow:auto; outline:none; font-size:14px; user-select:text;
@@ -242,19 +262,11 @@ $_GET = [];
   var consoleBar = document.getElementById('console');
   var viewControls = document.getElementById('viewControls');
   var maximizedCount = 0;
-  function updateUIVisibility() {
-          var hide = maximizedCount > 0;
-          // AJUSTE NECESSÁRIO PARA MUDANÇAS MANUAIS
-          if (
-            typeof $_GET["devmode"] != "undefined" &&
-            $_GET["devmode"] != null &&
-            $_GET["devmode"] != ""
-          ) {
-            consoleBar.style.display = hide ? "none" : "";
-          }
-
-          viewControls.style.display = hide ? "none" : "";
-        }
+  function updateUIVisibility(){
+    var hide = maximizedCount > 0;
+    consoleBar.style.display = hide ? 'none' : '';
+    viewControls.style.display = hide ? 'none' : '';
+  }
 
   var pan = {x:0, y:0};
   var zoom = 1;
@@ -435,17 +447,49 @@ $_GET = [];
     return win;
   }
 
-  function makeWindow(permanent, title, w, h, x, y){
+  // ---- moldura "doc": sem cabeçalho, aba lateral com título/fechar/maximizar, cantos levemente tortos ----
+  function createDocFrameShell(name, pos, bodyHtml, permanent){
+    var win = document.createElement('div');
+    win.className = 'win doc-frame';
+    win.dataset.name = name;
+    win.style.left = pos.left + 'px';
+    win.style.top  = pos.top + 'px';
+    win.style.width  = pos.width + 'px';
+    win.style.height = pos.height + 'px';
+    win.style.zIndex = ++zTop;
+
+    // a aba (doc-tab) é o 1º filho, então pinta primeiro — o "papel" (doc-paper), pintado
+    // depois, cobre a parte da aba que se sobrepõe a ele, incluindo a própria sombra do papel
+    win.innerHTML =
+      '<div class="doc-tab win-draghandle">' +
+        '<span class="doc-tab-title">' + name + '</span>' +
+        '<button class="win-max" title="Maximizar">' + ICON_WIN_MAX + '</button>' +
+        (permanent ? '' : '<button class="win-close" title="Fechar">✕</button>') +
+      '</div>' +
+      '<div class="doc-paper">' + bodyHtml + '<div class="win-resize"></div></div>';
+
+    canvas.appendChild(win);
+    windows.push(win);
+    wireWindow(win);
+    applyRandomTilt(win);
+    return win;
+  }
+
+  function makeWindow(permanent, title, w, h, x, y, shellFn){
     var id = idSeq++;
     var name = title || ('Janela ' + id);
     var pos = resolvePosition(name, w, h, x, y, id);
     var bodyHtml = '<div class="win-body" contenteditable="true" spellcheck="false">Escreva aqui…</div>';
-    return createWindowShell(name, pos, bodyHtml, permanent);
+    return (shellFn || createWindowShell)(name, pos, bodyHtml, permanent);
   }
   function newwindow(title, w, h, x, y){ return makeWindow(false, title, w, h, x, y); }
   function newpermawindow(title, w, h, x, y){ return makeWindow(true, title, w, h, x, y); }
+  function newdoc(title, w, h, x, y){ return makeWindow(false, title, w, h, x, y, createDocFrameShell); }
+  function newpermadoc(title, w, h, x, y){ return makeWindow(true, title, w, h, x, y, createDocFrameShell); }
   window.newwindow = newwindow; // pode ser chamado pelo console do navegador também
   window.newpermawindow = newpermawindow;
+  window.newdoc = newdoc;
+  window.newpermadoc = newpermadoc;
 
   // ---- carregamento preguiçoso de iframes (só recebem "src" quando entram na área visível) ----
   var IFRAME_ALLOW = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; allowfullscreen';
@@ -487,7 +531,7 @@ $_GET = [];
   }
 
   // ---- janela com iframe ----
-  function makeFrame(permanent, url, title, w, h, x, y){
+  function makeFrame(permanent, url, title, w, h, x, y, shellFn){
     var id = idSeq++;
     var name = title || url || ('Frame ' + id);
     var pos = resolvePosition(name, w, h, x, y, id);
@@ -495,23 +539,27 @@ $_GET = [];
       '<div class="win-body no-padding">' +
         buildLazyIframeHtml(url) +
       '</div>';
-    var win = createWindowShell(name, pos, bodyHtml, permanent);
+    var win = (shellFn || createWindowShell)(name, pos, bodyHtml, permanent);
     registerLazyFrame(win.querySelector('iframe[temp]'));
     return win;
   }
   function newframe(url, title, w, h, x, y){ return makeFrame(false, url, title, w, h, x, y); }
   function newpermaframe(url, title, w, h, x, y){ return makeFrame(true, url, title, w, h, x, y); }
+  function newidoc(url, title, w, h, x, y){ return makeFrame(false, url, title, w, h, x, y, createDocFrameShell); }
+  function newpermaidoc(url, title, w, h, x, y){ return makeFrame(true, url, title, w, h, x, y, createDocFrameShell); }
   window.newframe = newframe; // pode ser chamado pelo console do navegador também
   window.newpermaframe = newpermaframe;
+  window.newidoc = newidoc;
+  window.newpermaidoc = newpermaidoc;
 
   // ---- janela que executa uma função JS definida pelo usuário ----
-  function makeRun(permanent, title, fnName, params, w, h, x, y){
+  function makeRun(permanent, title, fnName, params, w, h, x, y, shellFn){
     var id = idSeq++;
     var name = title || ('Run ' + id);
     var pos = resolvePosition(name, w, h, x, y, id);
     var domId = 'newrun' + id;
     var bodyHtml = '<div class="win-body no-padding" id="' + domId + '"></div>';
-    var win = createWindowShell(name, pos, bodyHtml, permanent);
+    var win = (shellFn || createWindowShell)(name, pos, bodyHtml, permanent);
     var fn = window[fnName];
     if (typeof fn !== 'function'){
       console.warn('run: função "' + fnName + '" não encontrada em window. Defina-a (window.' + fnName + ' = function(id, params){...}) antes de chamar run().');
@@ -523,8 +571,12 @@ $_GET = [];
   }
   function run(title, fnName, params, w, h, x, y){ return makeRun(false, title, fnName, params, w, h, x, y); }
   function permarun(title, fnName, params, w, h, x, y){ return makeRun(true, title, fnName, params, w, h, x, y); }
+  function rundoc(title, fnName, params, w, h, x, y){ return makeRun(false, title, fnName, params, w, h, x, y, createDocFrameShell); }
+  function runpermadoc(title, fnName, params, w, h, x, y){ return makeRun(true, title, fnName, params, w, h, x, y, createDocFrameShell); }
   window.run = run; // pode ser chamado pelo console do navegador também
   window.permarun = permarun;
+  window.rundoc = rundoc;
+  window.runpermadoc = runpermadoc;
 
   // ---- janela estilo polaroid ----
   var POLAROID_MARGIN = 14; // ver margem de .polaroid-photo no CSS
@@ -545,6 +597,13 @@ $_GET = [];
     return buildLazyIframeHtml(url);
   }
   function isAutoVal(v){ return typeof v === 'string' && v.trim().toLowerCase() === 'auto'; }
+
+  // leve torção aleatória (até 4°, pra qualquer lado), usada por polaroid e pelas janelas "doc"
+  function applyRandomTilt(win){
+    var deg = Math.random() * 8 - 4;
+    win._rotationDeg = deg;
+    win.style.transform = 'rotate(' + deg.toFixed(2) + 'deg)';
+  }
 
   function polaroid(url, texto, titulo, w, h, x, y){
     var id = idSeq++;
@@ -577,13 +636,11 @@ $_GET = [];
     // sem cabeçalho (nem título, nem maximizar/restaurar) — arrasta-se pela legenda,
     // que também carrega o único .win-close desta janela
     var win = createWindowShell(name, pos, bodyHtml, true, true);
+    win.classList.add('polaroid');
     var ifr = win.querySelector('.polaroid-photo iframe[temp]');
     if (ifr) registerLazyFrame(ifr);
 
-    // leve torção aleatória, pra parecer uma foto polaroid largada meio torta (até 4°)
-    var deg = Math.random() * 8 - 4;
-    win._polaroidRotation = deg;
-    win.style.transform = 'rotate(' + deg.toFixed(2) + 'deg)';
+    applyRandomTilt(win);
 
     // ajusta o tamanho pra respeitar a proporção da imagem/vídeo quando w ou h é "auto",
     // em vez de distorcer o conteúdo pra caber numa caixa com proporção arbitrária
@@ -623,6 +680,7 @@ $_GET = [];
 <h4>Como usar</h4>
 <p>Digite uma instrução JavaScript na barra de comando e pressione Enter. As funções abaixo também podem ser chamadas pelo console do navegador (DevTools). Para navegar, arraste o fundo vazio com o botão direito ou o do meio do mouse. O scroll dá zoom apenas quando o mouse está sobre o fundo, não sobre uma janela.</p>
 <p>A ordem dos parâmetros de posição/tamanho é sempre <code>w, h, x, y</code> (largura, altura, x, y) — dá para informar só <code>w</code> e <code>h</code> e deixar <code>x, y</code> de fora. Cada um aceita um número (pixels do espaço do canvas) ou uma string terminada em <code>%</code> (porcentagem da tela visível no momento, ex.: <code>"50%"</code>, <code>"40%"</code>). Todos são sempre opcionais. Se uma janela é criada só com um nome já registrado (sem w, h, x, y), ela reabre na posição e no tamanho em que foi deixada. Valores explícitos têm prioridade sobre o registro.</p>
+<p>Ao maximizar uma janela, o zoom do ambiente é zerado para 100% antes dela ocupar a tela — assim o cabeçalho e os botões não ficam desproporcionais. Ao restaurar, o zoom volta exatamente ao valor de antes de maximizar.</p>
 <hr>
 <h4>Janelas</h4>
 <code class="sig">newwindow(título, w, h, x, y)</code>
@@ -654,6 +712,21 @@ canto. Cada polaroid nasce com uma leve rotação aleatória (até 4°, pra um l
 <code>w</code> ou <code>h</code> (nunca nos dois ao mesmo tempo), também aceita o valor <code>"auto"</code>
 quando o conteúdo é imagem ou vídeo: a dimensão informada é respeitada e a outra é calculada a partir da
 proporção original do conteúdo, sem distorcer.</p>
+<hr>
+<h4>Janelas "doc"</h4>
+<p>Seis variantes com a mesma moldura: sem cabeçalho no topo, borda fina de 2px, cantos quase retos,
+sombra mais discreta e uma leve rotação aleatória (até 4°), igual à polaroid. A diferença é que, em vez
+de legenda embaixo, o título e os botões de maximizar/restaurar (e fechar, quando existe) ficam numa
+aba estreita na lateral direita, começando uns 70px abaixo do topo — como a etiqueta de um fichário
+antigo. Essa aba é a área de arrastar a janela, e fica por baixo do "papel" no empilhamento visual: a
+sombra da janela passa por cima dela. Cada uma corresponde a uma função já existente, só na moldura
+"doc":</p>
+<code class="sig">newdoc(título, w, h, x, y)</code> — igual à <code>newwindow</code>.<br>
+<code class="sig">newpermadoc(título, w, h, x, y)</code> — igual à <code>newpermawindow</code> (sem botão de fechar).<br>
+<code class="sig">newidoc(url, título, w, h, x, y)</code> — igual à <code>newframe</code>.<br>
+<code class="sig">newpermaidoc(url, título, w, h, x, y)</code> — igual à <code>newpermaframe</code>.<br>
+<code class="sig">rundoc(título, nomeDaFuncao, params, w, h, x, y)</code> — igual à <code>run</code>.<br>
+<code class="sig">runpermadoc(título, nomeDaFuncao, params, w, h, x, y)</code> — igual à <code>permarun</code>.
 <hr>
 <h4>Conexões</h4>
 <code class="sig">connect(nomeA, nomeB)</code>
@@ -780,6 +853,7 @@ proporção original do conteúdo, sem distorcer.</p>
         var r = win._restore;
         win.style.left = r.left; win.style.top = r.top;
         win.style.width = r.width; win.style.height = r.height;
+        if (typeof r.zoom === 'number'){ zoom = r.zoom; applyTransform(); }
         maximizedCount--; updateUIVisibility();
       }
       saveWinState(win);
@@ -795,8 +869,9 @@ proporção original do conteúdo, sem distorcer.</p>
           win.style.left = r.left; win.style.top = r.top;
           win.style.width = r.width; win.style.height = r.height;
           win.style.zIndex = r.zIndex;
-          if (win._polaroidRotation !== undefined){
-            win.style.transform = 'rotate(' + win._polaroidRotation.toFixed(2) + 'deg)';
+          if (typeof r.zoom === 'number'){ zoom = r.zoom; applyTransform(); }
+          if (win._rotationDeg !== undefined){
+            win.style.transform = 'rotate(' + win._rotationDeg.toFixed(2) + 'deg)';
           }
           maxBtn.innerHTML = ICON_WIN_MAX; maxBtn.title = 'Maximizar';
           maximizedCount--; updateUIVisibility();
@@ -804,11 +879,16 @@ proporção original do conteúdo, sem distorcer.</p>
           win._restore = {
             left: win.style.left, top: win.style.top,
             width: win.style.width, height: win.style.height,
-            zIndex: win.style.zIndex
+            zIndex: win.style.zIndex,
+            zoom: zoom
           };
+          // zera o zoom antes de ocupar a tela: se o zoom estivesse diferente de 100%, o
+          // cabeçalho e os botões (medidos em px fixos) ficariam desproporcionais à tela cheia
+          zoom = 1;
+          applyTransform();
           win.classList.add('maximized');
           win.style.zIndex = ++zTop;
-          if (win._polaroidRotation !== undefined){ win.style.transform = 'none'; }
+          if (win._rotationDeg !== undefined){ win.style.transform = 'none'; }
           fitMaximizedWindow(win);
           maxBtn.innerHTML = ICON_WIN_RESTORE; maxBtn.title = 'Restaurar';
           maximizedCount++; updateUIVisibility();
@@ -1077,11 +1157,12 @@ proporção original do conteúdo, sem distorcer.</p>
       (new Function('newwindow', 'newframe', 'run', 'newpermawindow', 'newpermaframe', 'permarun',
                     'connect', 'disconnect', 'setTheme', 'setTempTheme', 'help',
                     'centerControls', 'bottomControls', 'setTransparentBackground', 'setOpaqueBackground',
-                    'polaroid', cmd))(
+                    'polaroid', 'newdoc', 'newidoc', 'rundoc', 'newpermadoc', 'newpermaidoc', 'runpermadoc',
+                    cmd))(
         newwindow, newframe, run, newpermawindow, newpermaframe, permarun,
         connect, disconnect, setTheme, setTempTheme, help,
         centerControls, bottomControls, setTransparentBackground, setOpaqueBackground,
-        polaroid);
+        polaroid, newdoc, newidoc, rundoc, newpermadoc, newpermaidoc, runpermadoc);
     } catch (err){
       console.warn('Comando inválido:', err.message);
     }
@@ -1160,6 +1241,20 @@ if (
 
       consoleBar só se modifica se $_GET["devmode"] existir
       */
+
+      function updateUIVisibility() {
+          var hide = maximizedCount > 0;
+          // AJUSTE NECESSÁRIO PARA MUDANÇAS MANUAIS
+          if (
+            typeof $_GET["devmode"] != "undefined" &&
+            $_GET["devmode"] != null &&
+            $_GET["devmode"] != ""
+          ) {
+            consoleBar.style.display = hide ? "none" : "";
+          }
+
+          viewControls.style.display = hide ? "none" : "";
+        }
 
       document.getElementById("console").style.display = "none";
 
