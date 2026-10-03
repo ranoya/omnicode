@@ -62,7 +62,7 @@ connect("Arte Generativa", "Gráficos Programados");
 
 polaroid("https://omnifolio.vercel.app/omnifiles/Knowlton_1967_ComputerNudeStudiesInPerceptionI_b.jpg", "Computer Nude Kenneth C. Knowlton & Leon D. Harmon, 1967", "Precursores", 600, 330, 2450, 1700);
 
-newidoc("https://drive.google.com/file/d/1r04hsY6pYs6uj1u21SRQQxSctQz-dG_O/preview", "ASCII Art", 650, 800, 3350, 2100);
+newidoc("https://drive.google.com/file/d/1r04hsY6pYs6uj1u21SRQQxSctQz-dG_O/preview", "ASCII Art", 650, 800, 2350, 2180);
 
 connect("ASCII Art", "Precursores");
 connect("Arte Generativa", "Precursores");
