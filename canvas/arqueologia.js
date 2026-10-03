@@ -140,7 +140,7 @@ newidoc(
   1100,
   940,
   4200,
-  -530,
+  -330,
 );
 
 connect("Pixel Art", "Cultura Visual");
@@ -256,8 +256,8 @@ newframe(
 
   1050,
   750,
-  4000,
-  750,
+  3940,
+  870,
 );
 
 connect("Mapeamento Point & Clicks v.4", "Mapeamento Point & Clicks");
@@ -280,8 +280,8 @@ newframe(
 
   1100,
   940,
-  5130,
-  330,
+  5230,
+  470,
 );
 
 connect("Point and Clicks", "Pixel Art");
