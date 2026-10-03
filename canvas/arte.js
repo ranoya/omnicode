@@ -20,7 +20,7 @@ connect("Gráficos Programados", "MSX");
 connect("Gráficos Programados", "Apple II");
 connect("Gráficos Programados", "Atari 800");
 
-newframe("https://namco.vercel.app/a8/?cart=bas.c", "BASIC", 600, 450, -800, 450);
+newframe("https://namco.vercel.app/a8/?cart=bas.c", "BASIC", 560, 450, -600, 450);
 connect("BASIC", "Atari 800");
 
 
@@ -37,6 +37,10 @@ connect("10 Print, MSX", "MSX");
 newframe("https://apple2ts.com/?appmode=embed&crtdistort=off&color=amber&scanlines=on&ghosting=off&text=TO%20MAGIC%20%3ASTART%20%3AANGLE%20%3AINC%20%3AN%0AFORWARD%20%3ASTART%20RIGHT%20%3AANGLE%0AIF%20%3AN%20%3D%200%20%5BSTOP%5D%0AMAGIC%20%3ASTART%20%2B%20%3AINC%20%3AANGLE%20%3AINC%20%3AN%20-%201%0AEND%0A%0AMAGIC%205%20135%203%2040%0A%0A#https://namco.vercel.app/a2/disk/Apple_LOGO.dsk", "Logo", 600, 400, 1900, -400);
 connect("Logo", "Apple II");
 
+
+polaroid("https://www.youtube.com/embed/m9joBLOZVEo?si=sUP37vdG5LHp5c-H", "Demonstração do 10 PRINT original", "C64 10 PRINT", 500, 360, -450, 1000);
+connect("C64 10 PRINT", "BASIC");
+connect("C64 10 PRINT", "10 Print, MSX");
 
 
 center("Gráficos Programados");
