@@ -69,11 +69,12 @@ connect("Processing", "Arte Generativa Brasileira");
 connect("Pathwaves Expiritae", "Arte Generativa Brasileira");
 
 
-polaroid("https://omnifolio.vercel.app/omnifiles/ibm-pc-5150.webp", "Computador IBM PC XT, 1981", "PC-XT", 450, 380, -1800, 650);
+polaroid("https://omnifolio.vercel.app/omnifiles/ibm-pc-5150.webp", "Computador IBM PC XT, 1981", "PC-XT", 516, 579, -1920, 420);
 
 newframe("https://namco.vercel.app/interfaces/?rom=tp3", "Turbo Pascal 3.0", 500, 360, -1850, 1350);
 connect("Turbo Pascal 3.0", "PC-XT");
 connect("Futuro", "PC-XT");
+connect("Futuro", "Turbo Pascal 3.0");
 
 
 polaroid("https://www.youtube.com/embed/xFlPWVOdGzw?si=rutAgPaKpkF1FImc", "Turbo Basic", "Turbo Basic", 500, 360, -1150, 760);
