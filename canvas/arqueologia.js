@@ -219,11 +219,12 @@ newidoc(
 
   780,
   900,
-  -1330,
+  -930,
   -3330,
 );
 
 connect("Erthos Albino de Souza", "ASCII Art");
+connect("Erthos Albino de Souza", "BBS");
 
 newframe(
   "https://slidelines.vercel.app/timelineh/?allblocks=true&timeheight=110&followbg=true&startmiddle=true&allblocks=true&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit#gid=13412068&theme=https://slidelines.vercel.app/styles/pixelart.css",
