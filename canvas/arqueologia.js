@@ -204,12 +204,12 @@ newframe(
 
   820,
   840,
-  -2150,
-  -2100,
+  -1950,
+  -2700,
 );
 
 connect("ASCII Art", "BBS");
-connect("Acervo de Interfaces de Texto", "BBS");
+
 
 
 
@@ -219,8 +219,8 @@ newidoc(
 
   780,
   900,
-  -1830,
-  -2430,
+  -1330,
+  -3330,
 );
 
 connect("Erthos Albino de Souza", "ASCII Art");
@@ -317,6 +317,7 @@ newframe(
 );
 
 connect("Acervo de Interfaces de Texto", "Interfaces de Texto");
+connect("Acervo de Interfaces de Texto", "BBS");
 
 newframe(
   "https://pointandclick.vercel.app",
