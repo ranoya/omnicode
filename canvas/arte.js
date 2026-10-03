@@ -21,7 +21,7 @@ connect("Gráficos Programados", "Apple II");
 connect("Gráficos Programados", "Atari 800");
 
 
-newframe("https://slidelines.vercel.app/timelineh/?inverttopicos=true&allblocks=true&startmiddle=true&pattern=true&allowverticalscroll=true&timeheight=110&followbg=true&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit?gid=745718333#gid=745718333&theme=https://slidelines.vercel.app/level/altsmall.css", "Computação Pessoal", 700, 450, 720, -600);
+newframe("https://slidelines.vercel.app/timelineh/?inverttopicos=true&allblocks=true&startmiddle=true&pattern=true&allowverticalscroll=true&timeheight=110&followbg=true&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit?gid=745718333#gid=745718333&theme=https://slidelines.vercel.app/level/altsmall.css", "Computação Pessoal", 700, 450, 890, -620);
 
 connect("Computação Pessoal", "Atari 800");
 connect("Computação Pessoal", "MSX");
