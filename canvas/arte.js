@@ -93,7 +93,7 @@ connect("ASCII Art", "Erthos Albino de Souza")
 connect("Cortex", "Erthos Albino de Souza");
 connect("Precursores", "Erthos Albino de Souza");
 
-polaroid("https://revistavariavel.com/Banner-variavel.jpg", "Revista Variável, 2026", "Variável", 600, 300, 130, 3200);
+polaroid("https://revistavariavel.com/Banner-variavel.jpg", "Revista Variável, 2026", "Variável", 600, 300, 230, 3800);
 
 connect("Variável", "Cortex");
 connect("Variável", "Arte Generativa Brasileira");
