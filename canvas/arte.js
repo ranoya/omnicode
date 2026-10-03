@@ -116,6 +116,11 @@ connect("Variável", "Arte Generativa Brasileira");
 connect("Variável", "Processing");
 
 
+newidoc("https://compoetica.github.io/hotsite/?evento=REDE", "Rede Compoética", 700, 850, -420, 2430);
+connect("Variável", "Rede Compoética");
+connect("Processing", "Rede Compoética");
+connect("Futuro", "Rede Compoética");
+
 
 center("Gráficos Programados");
 
