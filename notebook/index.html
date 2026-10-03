@@ -21,7 +21,6 @@
   /* Scrollbars globais */
   *{
     scrollbar-color:var(--accent) transparent;
-    scrollbar-width:thin;
   }
 
   *::-webkit-scrollbar{
@@ -1771,28 +1770,28 @@ display(quadrados);`,
       const meta = `<!-- VANILLA-NOTEBOOK-CELL\nid: ${escapeCommentText(cell.id)}\ntype: ${escapeCommentText(cell.type)}\nhidden: ${cell.hidden ? "true" : "false"}\nindex: ${index}\n-->`;
 
       if (cell.type === "javascript") {
-        return `${meta}\n<script data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="javascript">${escapeScriptText(cell.code)}\n<\/script>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
+        return `${meta}\n<script data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="javascript" data-cell-hidden="${cell.hidden ? "true" : "false"}">${escapeScriptText(cell.code)}\n<\/script>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
       }
 
       if (cell.type === "p5") {
-        return `${meta}\n<script data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="p5">${escapeScriptText(cell.code)}\n<\/script>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
+        return `${meta}\n<script data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="p5" data-cell-hidden="${cell.hidden ? "true" : "false"}">${escapeScriptText(cell.code)}\n<\/script>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
       }
 
       if (cell.type === "typescript") {
-        return `${meta}\n<script type="typescript" data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="typescript">${escapeScriptText(cell.code)}\n<\/script>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
+        return `${meta}\n<script type="typescript" data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="typescript" data-cell-hidden="${cell.hidden ? "true" : "false"}">${escapeScriptText(cell.code)}\n<\/script>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
       }
 
       if (cell.type === "markdown") {
-        return `${meta}\n<script type="text/markdown" data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="markdown">${escapeScriptText(cell.code)}\n<\/script>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
+        return `${meta}\n<script type="text/markdown" data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="markdown" data-cell-hidden="${cell.hidden ? "true" : "false"}">${escapeScriptText(cell.code)}\n<\/script>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
       }
 
       if (cell.type === "css") {
-        return `${meta}\n<style data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="css">${escapeStyleText(cell.code)}<\/style>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
+        return `${meta}\n<style data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="css" data-cell-hidden="${cell.hidden ? "true" : "false"}">${escapeStyleText(cell.code)}<\/style>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
       }
 
       // HTML não é executado diretamente: fica em <template>,
       // permitindo ao runtime convertê-lo em output.
-      return `${meta}\n<template data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="html">${escapeTemplateText(cell.code)}</template>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
+      return `${meta}\n<template data-notebook-cell data-cell-id="${escapeAttr(cell.id)}" data-cell-type="html" data-cell-hidden="${cell.hidden ? "true" : "false"}">${escapeTemplateText(cell.code)}</template>\n<!-- VANILLA-NOTEBOOK-CELL-END -->`;
     }).join("\n\n");
 
     return `<!doctype html>
@@ -2190,14 +2189,19 @@ ${blocks}
     const nodes = [...parsed.querySelectorAll("[data-notebook-cell]")];
 
     nodes.forEach((node, index) => {
+      // O comentário de metadados pode estar separado do nó por nós de texto.
+      // Procuramos explicitamente o comentário VANILLA-NOTEBOOK-CELL mais próximo.
       let commentNode = node.previousSibling;
-      while(commentNode && commentNode.nodeType !== Node.COMMENT) commentNode = commentNode.previousSibling;
+      while(commentNode && commentNode.nodeType !== 8) commentNode = commentNode.previousSibling;
       const comment = commentNode ? commentNode.data : "";
-      const typeMatch = comment.match(/\btype:\s*([^\n]+)/i);
+      const typeMatch = comment.match(/\btype:\s*([^\r\n]+)/i);
       const hiddenMatch = comment.match(/\bhidden:\s*(true|false)/i);
-      const idMatch = comment.match(/\bid:\s*([^\n]+)/i);
+      const idMatch = comment.match(/\bid:\s*([^\r\n]+)/i);
       const type = typeMatch ? typeMatch[1].trim() : (node.dataset.cellType || "javascript");
-      const hidden = hiddenMatch ? hiddenMatch[1].toLowerCase() === "true" : false;
+      const hiddenFromComment = hiddenMatch ? hiddenMatch[1].toLowerCase() === "true" : null;
+      const hidden = hiddenFromComment !== null
+        ? hiddenFromComment
+        : String(node.dataset.cellHidden || "").toLowerCase() === "true";
       const id = idMatch ? idMatch[1].trim() : (node.dataset.cellId || "cell-imported-" + (index + 1));
       let code = node.textContent;
       if(type === "html" && node instanceof HTMLTemplateElement) code = node.innerHTML;
