@@ -139,8 +139,8 @@ newidoc(
 
   1100,
   940,
-  4330,
-  -730,
+  4200,
+  -530,
 );
 
 connect("Pixel Art", "Cultura Visual");
@@ -280,8 +280,8 @@ newframe(
 
   1100,
   940,
-  4330,
-  -730,
+  5130,
+  330,
 );
 
 connect("Point and Clicks", "Pixel Art");
