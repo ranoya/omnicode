@@ -262,11 +262,19 @@ $_GET = [];
   var consoleBar = document.getElementById('console');
   var viewControls = document.getElementById('viewControls');
   var maximizedCount = 0;
-  function updateUIVisibility(){
-    var hide = maximizedCount > 0;
-    consoleBar.style.display = hide ? 'none' : '';
-    viewControls.style.display = hide ? 'none' : '';
-  }
+  function updateUIVisibility() {
+          var hide = maximizedCount > 0;
+          // AJUSTE NECESSÁRIO PARA MUDANÇAS MANUAIS
+          if (
+            typeof $_GET["devmode"] != "undefined" &&
+            $_GET["devmode"] != null &&
+            $_GET["devmode"] != ""
+          ) {
+            consoleBar.style.display = hide ? "none" : "";
+          }
+
+          viewControls.style.display = hide ? "none" : "";
+        }
 
   var pan = {x:0, y:0};
   var zoom = 1;

@@ -230,10 +230,22 @@ newframe(
   880,
   780,
   1430,
-  530,
+  930,
 );
 
 connect("Projeto", "Hipertexto");
+
+newframe(
+  "https://slides.com/ranoya/componenetesnarrativoswhite/embed",
+  "Mapeamento Point & Clicks",
+
+  850,
+  850,
+  2930,
+  1030,
+);
+
+connect("Projeto", "Mapeamento Point & Clicks");
 
 newframe(
   "https://omniboards.vercel.app/?titulo=text%20mode&limita=0&contentonly=true&filtra=TEXT_MODE_INTERFACE",
@@ -258,6 +270,8 @@ newframe(
 );
 
 connect("Point and Clicks", "Pixel Art");
+connect("Point and Clicks", "Mapeamento Point & Clicks");
+
 
 newframe(
   "https://slidelines.vercel.app/timelineh/?startmiddle=true&pattern=true&allowverticalscroll=true&timeheight=110&followbg=true&bgscroll=true&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit#gid=81325473&theme=https://slidelines.vercel.app/level/small.css",
