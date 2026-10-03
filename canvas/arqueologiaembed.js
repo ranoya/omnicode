@@ -1,4 +1,4 @@
-setTempTheme("light");
+setTempTheme("gruvbox-dark");
 setTransparentBackground();
 setZoom(.2);
 
