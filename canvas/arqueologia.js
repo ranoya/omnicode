@@ -235,6 +235,35 @@ newframe(
 
 connect("Projeto", "Hipertexto");
 
+
+
+newframe(
+  "https://slidelines.vercel.app/level/?s=0&order=ord&filtra=_iFiction&allowverticalscroll=true&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit?gid=137178476#gid=137178476&theme=https://slidelines.vercel.app/styles/fit.css",
+  "Ficção Interativa",
+
+  880,
+  780,
+  1630,
+  2900,
+);
+
+connect("Hipertexto", "Ficção Interativa");
+
+newframe(
+  "https://visse.vercel.app/v2-arqueologia/more.html?bg=06696e&fg=ffffff&filtra=_narratifonly",
+  "Emulação de Narrativas Interativas",
+
+  900,
+  600,
+  1930,
+  3900,
+);
+
+connect("Emulação de Narrativas Interativas", "Ficção Interativa");
+connect("Emulação de Narrativas Interativas", "Emulação");
+
+
+
 newframe(
   "https://slides.com/ranoya/componenetesnarrativoswhite/embed",
   "Mapeamento Point & Clicks",
@@ -256,8 +285,8 @@ newframe(
 
   1050,
   750,
-  3940,
-  870,
+  3880,
+  850,
 );
 
 connect("Mapeamento Point & Clicks v.4", "Mapeamento Point & Clicks");
@@ -284,6 +313,8 @@ newframe(
   470,
 );
 
+
+connect("Point and Clicks", "Emulação");
 connect("Point and Clicks", "Pixel Art");
 connect("Point and Clicks", "Mapeamento Point & Clicks v.4");
 
