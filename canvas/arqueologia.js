@@ -137,10 +137,10 @@ newidoc(
   "https://www.ranoya.com/pt/textos/culturavisual.php?id=T018&temptheme=cleantext&nomenu=true",
   "Cultura Visual",
 
-  1080,
-  840,
-  2830,
-  -130,
+  1100,
+  940,
+  4330,
+  -730,
 );
 
 connect("Pixel Art", "Cultura Visual");
@@ -216,8 +216,8 @@ newframe(
 
   720,
   840,
-  2530,
-  -1340,
+  2830,
+  -1740,
 );
 
 connect("Tranformações na Pixel Art", "Pixel Art");
