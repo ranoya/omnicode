@@ -109,7 +109,7 @@ connect("Emulação", "Bullet Points");
 connect("Emulação", "Acervo de Pesquisa (v.2)");
 connect("Emulação", "Acervo de Pesquisa (v.1)");
 
-newidoc(
+newframe(
   "https://omniboards.vercel.app/?nomenu=true&filtra=PIXELART_PESSOAL&limita=0&contentonly=true&titulo=Pixel%20Art&temptheme=narrativas",
   "Pixel Art",
 
@@ -121,7 +121,7 @@ newidoc(
 
 connect("Pixel Art", "Projeto");
 
-newidoc(
+newframe(
   "https://omniboards.vercel.app/?nomenu=true&filtra=_DEMOSCENE&limita=0&contentonly=true&titulo=Demoscene&temptheme=narrativas",
   "Demoscene",
 
@@ -184,7 +184,7 @@ newidoc(
 connect("Menus", "Mais Interfaces de Texto");
 connect("Menus", "Emulação");
 
-newidoc(
+newframe(
   "https://omniboards.vercel.app/?limita=0&titulo=ASCII%20Art&subtitulo=Refer%C3%AAncia&filtra=ANSI_ASCII_ART&nomenu=true&temptheme=ayu",
   "ASCII Art",
 
