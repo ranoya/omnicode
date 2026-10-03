@@ -368,3 +368,5 @@ newframe(
 );
 
 connect("História das Interfaces Computacionais", "Mais Interfaces de Texto");
+
+center("Projeto");
