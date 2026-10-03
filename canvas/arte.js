@@ -12,7 +12,8 @@ polaroid("https://www.youtube.com/embed/mnznqaGYc-U?si=V1cubWhP-TyMbbI_", "Demon
 connect("Demo", "Video Easel");
 connect("Demo", "Atari 800");
 
-polaroid("https://omnifolio.vercel.app/omnifiles/Sharp_HotBit_MSX_computer.jpg", "Computador MSX Sharp Hotbit HB-8000, 1985", "MSX", 500, 350, 1650, 450);
+polaroid("https://omnifolio.vercel.app/omnifiles/Sharp_HotBit_MSX_computer.jpg", "Computador MSX Sharp Hotbit HB-8000, 1985", "MSX", 500, 350, 1780, 681);
+
 
 polaroid("https://omnifolio.vercel.app/omnifiles/computers_Apple2_cgi.png", "Computador Apple II, 1979", "Apple II", 500, 490, 1050, 50);
 
@@ -47,13 +48,18 @@ newidoc("https://artndcode.vercel.app/Singles/pathwavesexpiritae.html?fcolor=44F
 connect("Gráficos Programados", "Pathwaves Expiritae");
 
 
-polaroid("https://www.youtube.com/embed/Pz5MQ8DTvKI?si=vn8FMNZaRCiqUVHL", "A comunidade de Arte Generativa Brasileira e o Processing Community Day Brasil, 2021", "Processing", 600, 400, 0, 2150);
+polaroid("https://www.youtube.com/embed/Pz5MQ8DTvKI?si=vn8FMNZaRCiqUVHL", "A comunidade de Arte Generativa Brasileira e o Processing Community Day Brasil, 2021", "Processing", 600, 400, -40, 1530);
 connect("Processing", "Pathwaves Expiritae");
 
-
-newidoc("https://www.ranoya.com/pt/futuro/?nomenu=true&temptheme=cleantext", "Futuro", 600, 800, -950, 2250);
+newidoc("https://www.ranoya.com/pt/futuro/?nomenu=true&temptheme=cleantext", "Futuro", 600, 600, -870, 1830);
 connect("Futuro", "Pathwaves Expiritae");
+connect("Futuro", "PC-XT");
 
+newidoc("https://booklines.vercel.app/livros/javascriptse", "Livro", 900, 500, -1770, 2130);
+connect("Futuro", "Livro");
+
+newframe("https://omnidocs.vercel.app/docs/designgenerativo", "Design Generativo", 600, 600, -1570, 3200);
+connect("Futuro", "Design Generativo");
 
 newidoc("https://artegerativabrasileira.vercel.app/", "Arte Generativa Brasileira", 600, 800, 830, 2800);
 connect("Processing", "Arte Generativa Brasileira");
@@ -62,8 +68,9 @@ connect("Pathwaves Expiritae", "Arte Generativa Brasileira");
 
 polaroid("https://omnifolio.vercel.app/omnifiles/ibm-pc-5150.webp", "Computador IBM PC XT, 1981", "PC-XT", 450, 380, -1800, 650);
 
-newframe("https://namco.vercel.app/interfaces/?rom=tp3", "Turbo Pascal 3.0", 500, 360, -1600, 1200);
+newframe("https://namco.vercel.app/interfaces/?rom=tp3", "Turbo Pascal 3.0", 500, 360, -1850, 1350);
 connect("Turbo Pascal 3.0", "PC-XT");
+
 
 polaroid("https://www.youtube.com/embed/xFlPWVOdGzw?si=rutAgPaKpkF1FImc", "Turbo Basic", "Turbo Basic", 500, 360, -1150, 760);
 connect("Turbo Basic", "PC-XT");
@@ -75,7 +82,7 @@ connect("Arte Generativa", "Pathwaves Expiritae");
 connect("Arte Generativa", "Gráficos Programados");
 connect("Arte Generativa", "Processing");
 
-polaroid("https://omnifolio.vercel.app/omnifiles/Knowlton_1967_ComputerNudeStudiesInPerceptionI_b.jpg", "Computer Nude Kenneth C. Knowlton & Leon D. Harmon, 1967", "Precursores", 600, 340, 2450, 1650);
+polaroid("https://omnifolio.vercel.app/omnifiles/Knowlton_1967_ComputerNudeStudiesInPerceptionI_b.jpg", "Computer Nude Kenneth C. Knowlton & Leon D. Harmon, 1967", "Precursores", 600, 366, 2540, 1480);
 
 newidoc("https://drive.google.com/file/d/1r04hsY6pYs6uj1u21SRQQxSctQz-dG_O/preview", "ASCII Art", 650, 800, 2350, 2180);
 
@@ -103,6 +110,8 @@ polaroid("https://revistavariavel.com/Banner-variavel.jpg", "Revista Variável, 
 connect("Variável", "Cortex");
 connect("Variável", "Arte Generativa Brasileira");
 connect("Variável", "Processing");
+
+
 
 center("Gráficos Programados");
 
