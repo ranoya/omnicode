@@ -58,10 +58,9 @@ connect("Futuro", "Pathwaves Expiritae");
 newidoc("https://booklines.vercel.app/livros/javascriptse", "Livro", 1130, 620, -2480, 2100);
 connect("Futuro", "Livro");
 
-newframe("https://omnidocs.vercel.app/docs/designgenerativo", "Design Generativo", 600, 600, -1490, 2920);
+newframe("https://omnidocs.vercel.app/docs/designgenerativo", "Design Generativo", 501, 528, -1490, 2920);
 connect("Futuro", "Design Generativo");
 connect("Livro", "Design Generativo");
-
 
 
 newidoc("https://artegerativabrasileira.vercel.app/", "Arte Generativa Brasileira", 600, 800, 830, 2800);
