@@ -46,6 +46,11 @@ connect("C64 10 PRINT", "10 Print, MSX");
 newidoc("https://artndcode.vercel.app/Singles/pathwavesexpiritae.html?fcolor=44FFFF&bgcolor=4272cf", "Pathwaves Expiritae", 600, 500, 900, 2000);
 connect("Gráficos Programados", "Pathwaves Expiritae");
 
+
+polaroid("https://www.youtube.com/embed/Pz5MQ8DTvKI?si=vn8FMNZaRCiqUVHL", "A comunidade de Arte Generativa Brasileira e o Processing Community Day Brasil, 2021", "Processing", 600, 400, 0, 2150);
+connect("Processing", "Pathwaves Expiritae");
+
+
 polaroid("https://omnifolio.vercel.app/omnifiles/ibm-pc-5150.webp", "Computador IBM PC XT, 1981", "PC-XT", 450, 380, -1800, 650);
 
 newframe("https://namco.vercel.app/interfaces/?rom=tp3", "Turbo Pascal 3.0", 500, 360, -1600, 1200);
@@ -78,6 +83,8 @@ newidoc(
 
 connect("ASCII Art", "Erthos Albino de Souza")
 connect("Cortex", "Erthos Albino de Souza");
+connect("Precursores", "Erthos Albino de Souza");
+
 
 
 center("Gráficos Programados");
