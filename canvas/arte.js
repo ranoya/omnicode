@@ -53,9 +53,9 @@ connect("Processing", "Pathwaves Expiritae");
 
 newidoc("https://www.ranoya.com/pt/futuro/?nomenu=true&temptheme=cleantext", "Futuro", 600, 600, -870, 1830);
 connect("Futuro", "Pathwaves Expiritae");
-connect("Futuro", "PC-XT");
 
-newidoc("https://booklines.vercel.app/livros/javascriptse", "Livro", 900, 500, -1770, 2130);
+
+newidoc("https://booklines.vercel.app/livros/javascriptse", "Livro", 1130, 620, -2480, 2100);
 connect("Futuro", "Livro");
 
 newframe("https://omnidocs.vercel.app/docs/designgenerativo", "Design Generativo", 600, 600, -1570, 3200);
@@ -70,6 +70,7 @@ polaroid("https://omnifolio.vercel.app/omnifiles/ibm-pc-5150.webp", "Computador 
 
 newframe("https://namco.vercel.app/interfaces/?rom=tp3", "Turbo Pascal 3.0", 500, 360, -1850, 1350);
 connect("Turbo Pascal 3.0", "PC-XT");
+connect("Futuro", "PC-XT");
 
 
 polaroid("https://www.youtube.com/embed/xFlPWVOdGzw?si=rutAgPaKpkF1FImc", "Turbo Basic", "Turbo Basic", 500, 360, -1150, 760);
