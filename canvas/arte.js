@@ -86,12 +86,18 @@ newidoc(
   650, 800, 3250, 2000
 );
 
+
+connect("Arte Generativa", "Arte Generativa Brasileira");
 connect("Cortex", "Arte Generativa Brasileira");
 connect("ASCII Art", "Erthos Albino de Souza")
 connect("Cortex", "Erthos Albino de Souza");
 connect("Precursores", "Erthos Albino de Souza");
 
+polaroid("https://revistavariavel.com/Banner-variavel.jpg", "Revista Variável, 2026", "Variável", 600, 300, 130, 3200);
 
+connect("Variável", "Cortex");
+connect("Variável", "Arte Generativa Brasileira");
+connect("Variável", "Processing");
 
 center("Gráficos Programados");
 
