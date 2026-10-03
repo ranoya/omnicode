@@ -255,7 +255,7 @@ newframe(
 
   900,
   600,
-  1100,
+  800,
   3600,
 );
 
@@ -285,8 +285,8 @@ newframe(
 
   1050,
   750,
-  3880,
-  850,
+  3800,
+  1050,
 );
 
 connect("Mapeamento Point & Clicks v.4", "Mapeamento Point & Clicks");
@@ -325,8 +325,8 @@ newframe(
 
   1050,
   750,
-  3640,
-  1970,
+  3540,
+  2170,
 );
 
 connect("Point and Clicks", "Estudo de Caso");
