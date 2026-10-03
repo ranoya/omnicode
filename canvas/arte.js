@@ -50,6 +50,11 @@ connect("Gráficos Programados", "Pathwaves Expiritae");
 polaroid("https://www.youtube.com/embed/Pz5MQ8DTvKI?si=vn8FMNZaRCiqUVHL", "A comunidade de Arte Generativa Brasileira e o Processing Community Day Brasil, 2021", "Processing", 600, 400, 0, 2150);
 connect("Processing", "Pathwaves Expiritae");
 
+
+newidoc("https://www.ranoya.com/pt/futuro/?nomenu=true&temptheme=cleantext", "Futuro", 600, 800, -950, 2250);
+connect("Futuro", "Pathwaves Expiritae");
+
+
 newidoc("https://artegerativabrasileira.vercel.app/", "Arte Generativa Brasileira", 600, 800, 830, 2800);
 connect("Processing", "Arte Generativa Brasileira");
 connect("Pathwaves Expiritae", "Arte Generativa Brasileira");
