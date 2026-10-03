@@ -68,6 +68,7 @@ connect("Turbo Basic", "PC-XT");
 newframe("https://slidelines.vercel.app/timelineh/?allblocks=true&startvisible=true&allowverticalscroll=true&followbg=true&timeheight=190&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit#gid=1569220645&theme=https://slidelines.vercel.app/level/arte.css", "Arte Generativa", 600, 780, 1600, 1400);
 connect("Arte Generativa", "Pathwaves Expiritae");
 connect("Arte Generativa", "Gráficos Programados");
+connect("Arte Generativa", "Processing");
 
 polaroid("https://omnifolio.vercel.app/omnifiles/Knowlton_1967_ComputerNudeStudiesInPerceptionI_b.jpg", "Computer Nude Kenneth C. Knowlton & Leon D. Harmon, 1967", "Precursores", 600, 330, 2450, 1700);
 
@@ -77,7 +78,7 @@ connect("ASCII Art", "Precursores");
 connect("Arte Generativa", "Precursores");
 
 
-polaroid("https://namco.vercel.app/flash/?file=cortex/cortexmain.swf", "Cortex #1 - Revista eletrônica de poesia digital, 2003", "Cortex", 600, 500, 3600, 1200);
+polaroid("https://namco.vercel.app/flash/?file=cortex/cortexmain.swf", "Cortex #1 - Revista eletrônica de poesia digital, 2003", "Cortex", 600, 500, 3600, 2800);
 
 newidoc(
   "https://drive.google.com/file/d/1yNAfpLxgX3xW1JQtY2KSI2xsSiLSV8K_/preview",
@@ -85,6 +86,7 @@ newidoc(
   650, 800, 3250, 2000
 );
 
+connect("Cortex", "Arte Generativa Brasileira");
 connect("ASCII Art", "Erthos Albino de Souza")
 connect("Cortex", "Erthos Albino de Souza");
 connect("Precursores", "Erthos Albino de Souza");
