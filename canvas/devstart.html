@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Omnicode Canvas Dev</title>
+        <style>
+            * {
+                border: 0;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+        </style>
+
+        <iframe frameborder="0" style="width: 100vw; height: 100dvh;" src="https://omnicode.vercel.app/canvas/?plugin=https://omnicode.vercel.app/canvas/devstart.js"></iframe>
+
+        <script>
+        
+            $_GET = [];
+            (function(){
+                corte = window.location.href.toString().indexOf('?');
+                if (corte > 0) {
+                    argumento = window.location.href.toString().substring(corte + 1);
+                    argumentos = argumento.split('&');
+                    for (arg in argumentos){
+                        let argCorte = argumentos[arg].indexOf('=');
+                        $_GET[argumentos[arg].substring(0,argCorte)] = argumentos[arg].substring(argCorte + 1);
+                    }
+                } 
+            })();
+            
+            let bg = "#282828";
+            if (typeof $_GET['bg'] !== 'undefined' && $_GET['bg'] !== null && $_GET['bg'] !== "") {
+                bg = "#" + $_GET['bg'];
+            }
+
+            document.getElementsByTagName('html')[0].style.backgroundColor = bg;
+            document.getElementsByTagName('iframe')[0].style.backgroundColor = bg;
+
+        </script>
+    </head>
+</html>
