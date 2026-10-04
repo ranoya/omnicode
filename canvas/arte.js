@@ -69,18 +69,19 @@ connect("Processing", "Arte Generativa Brasileira");
 connect("Pathwaves Expiritae", "Arte Generativa Brasileira");
 
 
-polaroid("https://omnifolio.vercel.app/omnifiles/ibm-pc-5150.webp", "Computador IBM PC XT, 1981", "PC-XT", 516, 579, -1920, 420);
+polaroid("https://omnifolio.vercel.app/omnifiles/ibm-pc-5150.webp", "Computador IBM PC XT, 1981", "PC-XT", 516, 579, -1320, 360);
 
 newframe("https://namco.vercel.app/interfaces/?rom=tp3", "Turbo Pascal 3.0", 500, 360, -1850, 1350);
 connect("Turbo Pascal 3.0", "PC-XT");
 connect("Futuro", "PC-XT");
 connect("Futuro", "Turbo Pascal 3.0");
 
+polaroid("https://omnifolio.vercel.app/fractais/camaleaonamaiormuvuca_17770185844_o.jpg", "Fractais", "Fractais", 600, 360, -2838, 880);
+connect("Fractais", "PC-XT");
 
-polaroid("https://www.youtube.com/embed/xFlPWVOdGzw?si=rutAgPaKpkF1FImc", "Turbo Basic", "Turbo Basic", 500, 360, -1150, 760);
+
+polaroid("https://www.youtube.com/embed/xFlPWVOdGzw?si=rutAgPaKpkF1FImc", "Turbo Basic", "Turbo Basic", 500, 360, -2238, 380);
 connect("Turbo Basic", "PC-XT");
-
-
 
 newframe("https://slidelines.vercel.app/timelineh/?allblocks=true&startvisible=true&allowverticalscroll=true&followbg=true&timeheight=190&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit#gid=1569220645&theme=https://slidelines.vercel.app/level/arte.css", "Arte Generativa", 600, 780, 1600, 1400);
 connect("Arte Generativa", "Pathwaves Expiritae");
