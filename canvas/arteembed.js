@@ -73,7 +73,7 @@ connect("Processing", "Arte Generativa Brasileira");
 connect("Pathwaves Expiritae", "Arte Generativa Brasileira");
 
 
-polaroid("https://omnifolio.vercel.app/omnifiles/ibm-pc-5150.webp", "Computador IBM PC XT, 1981", "PC-XT", 516, 579, -1477, -411);
+polaroid("https://omnifolio.vercel.app/omnifiles/ibm-pc-5150.webp", "Computador IBM PC XT, 1981", "PC-XT", 516, 579, -1322, -665);
 
 newframe("https://namco.vercel.app/interfaces/?rom=tp3", "Turbo Pascal 3.0", 500, 360, -1850, 1350);
 connect("Turbo Pascal 3.0", "PC-XT");
@@ -81,16 +81,16 @@ connect("Futuro", "PC-XT");
 connect("Futuro", "Turbo Pascal 3.0");
 connect("PC-XT", "Computação Pessoal");
 
-polaroid("https://winworldpc.com/res/img/screenshots/4x-2a6c50c90e0131fad1624943cf6d4d22-Thedraw%204%20-%20Tron.png", "TheDraw 4.0, 1991", "TheDraw", 642, 466, 1400, -1100);
+polaroid("https://winworldpc.com/res/img/screenshots/4x-2a6c50c90e0131fad1624943cf6d4d22-Thedraw%204%20-%20Tron.png", "TheDraw 4.0, 1991", "TheDraw", 642, 466, 2211, -1194);
 
 connect("PC-XT", "TheDraw");
 newframe(
   "https://omniboards.vercel.app/?limita=0&titulo=BBS&subtitulo=Bullet%20Board%20Systems&filtra=_BBSs&nomenu=true&contentonly=true&nomenu=true&contentonly=true",
   "BBS",
 
-  820,
-  840,
-  2200, -900
+  615,
+  732,
+  3569, 615
 );
 
 connect("BBS", "TheDraw");
@@ -125,7 +125,7 @@ newidoc(
   650, 800, 3250, 2000
 );
 
-connect("BBS", "Erthos Albino de Souza");
+connect("BBS", "ASCII Art");
 connect("Arte Generativa", "Arte Generativa Brasileira");
 connect("Cortex", "Arte Generativa Brasileira");
 connect("ASCII Art", "Erthos Albino de Souza")
