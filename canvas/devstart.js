@@ -19,8 +19,12 @@ window.noteinstruct = function () {
 let omnicocount = 0;
 
 window.omnicode = function () {
+    let tema = "gruvbox";
+    if (localStorage.getItem('infcanvas:theme') != "gruvbox-dark") {
+        tema = localStorage.getItem('infcanvas:theme');
+    }
     omnicocount++;
-    newidoc(`https://omnicode.vercel.app/clr?theme=${localStorage.getItem('infcanvas:theme')}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--panel-border")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--muted")}&hgcolor=${getcssv("--win-header")}`, "Omnicode " + omnicocount);
+    newidoc(`https://omnicode.vercel.app/clr?theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--panel-border")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--muted")}&hgcolor=${getcssv("--win-header")}`, "Omnicode " + omnicocount);
 }
 
 
