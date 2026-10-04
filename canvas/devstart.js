@@ -8,10 +8,10 @@ let getcssv = function (v) {
 
 
 window.menu = function () {
-        rundoc("Menu", "openmenu", {}, 335, 541, 11, 7);
+        rundoc("Menu", "openmenu", {}, 335, 541, 63, 68);
         setPan(0, 0);
 }
-      
+
 window.noteinstruct = function () {
         newidoc(`https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem('infcanvas:theme')}&load=https://omnicode.vercel.app/notebook/creativecode.html`, "Instruções");
 }
