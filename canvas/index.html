@@ -83,6 +83,10 @@ $_GET = [];
   /* janelas "doc" (newdoc, newidoc, rundoc e variantes perma): sem cabeçalho, com uma aba lateral
      (como label de fichário antigo) que fica por baixo do "papel" no empilhamento visual */
   .win.doc-frame{ background:transparent; border:none; box-shadow:none; overflow:visible; }
+  /* janela invisível da svg(): sem borda, sombra, fundo ou botões — só o conteúdo e a alça de redimensionar */
+  .win.svg-frame{ background:transparent; border:none; box-shadow:none; }
+  .svg-content{ position:absolute; inset:0; }
+  .svg-content svg{ width:100%; height:100%; display:block; }
   .doc-paper{
     position:absolute; inset:0; display:flex; flex-direction:column;
     background:var(--win-bg); border:2px solid var(--win-border); border-radius:4px;
@@ -173,6 +177,16 @@ $_GET = [];
     touch-action:none;
     background:linear-gradient(135deg, transparent 50%, var(--win-border) 50%);
   }
+  /* variante usada pela janela invisível de svg(): canto inferior esquerdo, diagonal espelhada */
+  .win-resize.resize-bl{
+    right:auto; left:0; cursor:nesw-resize;
+    background:linear-gradient(45deg, transparent 50%, var(--win-border) 50%);
+  }
+  /* janela invisível (svg()): sem borda, sombra ou fundo — só o conteúdo svg e o redimensionador */
+  .win.svg-frame{ background:transparent; border:none; box-shadow:none; }
+  .svg-body{ background:transparent; padding:0; }
+  .svg-content{ width:100%; height:100%; }
+  .svg-content svg{ display:block; width:100%; height:100%; }
   #console{
     position:fixed; left:50%; transform:translateX(-50%);
     bottom:calc(12px + env(safe-area-inset-bottom,0px));
@@ -439,11 +453,14 @@ $_GET = [];
     var rh = resolveDim(h, viewport.clientHeight);
     var rx = resolveCoord(x, true);
     var ry = resolveCoord(y, false);
+    // sem w/h informado: no mínimo 65% da largura e 60% da altura da tela visível (no zoom atual)
+    var defaultW = (viewport.clientWidth * 0.65) / zoom;
+    var defaultH = (viewport.clientHeight * 0.6) / zoom;
     return {
-      left: (typeof rx === 'number' ? rx : center.x - 130 + (id%5)*20),
-      top: (typeof ry === 'number' ? ry : center.y - 90 + (id%5)*20),
-      width: (typeof rw === 'number' ? rw : 260),
-      height: (typeof rh === 'number' ? rh : 180)
+      left: (typeof rx === 'number' ? rx : center.x - defaultW/2 + (id%5)*20),
+      top: (typeof ry === 'number' ? ry : center.y - defaultH/2 + (id%5)*20),
+      width: (typeof rw === 'number' ? rw : defaultW),
+      height: (typeof rh === 'number' ? rh : defaultH)
     };
   }
 
@@ -501,6 +518,66 @@ $_GET = [];
     applyRandomTilt(win);
     return win;
   }
+
+  // ---- janela invisível com conteúdo SVG ----
+  function createSvgShell(name, pos){
+    var win = document.createElement('div');
+    win.className = 'win svg-frame';
+    win.dataset.name = name;
+    win.style.left = pos.left + 'px';
+    win.style.top  = pos.top + 'px';
+    win.style.width  = pos.width + 'px';
+    win.style.height = pos.height + 'px';
+    win.style.zIndex = ++zTop;
+    // sem cabeçalho, sem botões — o próprio conteúdo é a área de arrastar
+    win.innerHTML = '<div class="svg-content win-draghandle"></div><div class="win-resize"></div>';
+    canvas.appendChild(win);
+    windows.push(win);
+    wireWindow(win);
+    return win;
+  }
+
+  function isLikelySvgUrl(str){
+    var s = str.trim();
+    if (s.indexOf('<') === 0) return false; // começa com "<": é código, não url
+    var clean = s.split('?')[0].split('#')[0];
+    return /\.svg$/i.test(clean);
+  }
+  function insertSvgCode(container, code){
+    container.innerHTML = code;
+    var svgEl = container.querySelector('svg');
+    if (svgEl){
+      // intercepta as dimensões do <svg> pra ocupar 100% da janela invisível
+      svgEl.setAttribute('width', '100%');
+      svgEl.setAttribute('height', '100%');
+      svgEl.style.width = '100%';
+      svgEl.style.height = '100%';
+      svgEl.style.display = 'block';
+    }
+  }
+  function svg(str, titulo, w, h, x, y){
+    var id = idSeq++;
+    var name = titulo || ('SVG ' + id);
+    var pos = resolvePosition(name, w, h, x, y, id);
+    var win = createSvgShell(name, pos);
+    var container = win.querySelector('.svg-content');
+    var raw = String(str || '');
+    if (isLikelySvgUrl(raw)){
+      fetch(raw)
+        .then(function(res){
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          return res.text();
+        })
+        .then(function(text){ insertSvgCode(container, text); })
+        .catch(function(err){
+          console.warn('svg: não foi possível carregar "' + raw + '": ' + err.message);
+        });
+    } else {
+      insertSvgCode(container, raw);
+    }
+    return win;
+  }
+  window.svg = svg; // pode ser chamado pelo console do navegador também
 
   function makeWindow(permanent, title, w, h, x, y, shellFn){
     var id = idSeq++;
@@ -706,7 +783,7 @@ $_GET = [];
   var HELP_HTML = `
 <h4>Como usar</h4>
 <p>Digite uma instrução JavaScript na barra de comando e pressione Enter. As funções abaixo também podem ser chamadas pelo console do navegador (DevTools). Para navegar, arraste o fundo vazio com o botão direito ou o do meio do mouse. O scroll dá zoom apenas quando o mouse está sobre o fundo, não sobre uma janela.</p>
-<p>A ordem dos parâmetros de posição/tamanho é sempre <code>w, h, x, y</code> (largura, altura, x, y) — dá para informar só <code>w</code> e <code>h</code> e deixar <code>x, y</code> de fora. Cada um aceita um número (pixels do espaço do canvas) ou uma string terminada em <code>%</code> (porcentagem da tela visível no momento, ex.: <code>"50%"</code>, <code>"40%"</code>). Todos são sempre opcionais. Se uma janela é criada só com um nome já registrado (sem w, h, x, y), ela reabre na posição e no tamanho em que foi deixada. Valores explícitos têm prioridade sobre o registro.</p>
+<p>A ordem dos parâmetros de posição/tamanho é sempre <code>w, h, x, y</code> (largura, altura, x, y) — dá para informar só <code>w</code> e <code>h</code> e deixar <code>x, y</code> de fora. Cada um aceita um número (pixels do espaço do canvas) ou uma string terminada em <code>%</code> (porcentagem da tela visível no momento, ex.: <code>"50%"</code>, <code>"40%"</code>). Todos são sempre opcionais. Sem <code>w</code>/<code>h</code> informados (e sem nome já registrado), a janela nasce com pelo menos 65% da largura e 60% da altura da tela visível. Se uma janela é criada só com um nome já registrado (sem w, h, x, y), ela reabre na posição e no tamanho em que foi deixada. Valores explícitos têm prioridade sobre o registro.</p>
 <p>Ao maximizar uma janela, o zoom do ambiente é zerado para 100% antes dela ocupar a tela — assim o cabeçalho e os botões não ficam desproporcionais. Ao restaurar, o zoom volta exatamente ao valor de antes de maximizar.</p>
 <hr>
 <h4>Janelas</h4>
@@ -755,6 +832,18 @@ ser a aba lateral. Cada uma corresponde a uma função já existente, só na mol
 <code class="sig">newpermaidoc(url, título, w, h, x, y)</code> — igual à <code>newpermaframe</code>.<br>
 <code class="sig">rundoc(título, nomeDaFuncao, params, w, h, x, y)</code> — igual à <code>run</code>.<br>
 <code class="sig">runpermadoc(título, nomeDaFuncao, params, w, h, x, y)</code> — igual à <code>permarun</code>.
+<hr>
+<h4>SVG</h4>
+<code class="sig">svg(string, título, w, h, x, y)</code>
+<p>Janela completamente invisível: sem borda, sombra, fundo, cabeçalho, nem botões de maximizar ou
+fechar — só o conteúdo SVG e, no canto inferior direito, a alça de redimensionar. O próprio conteúdo é a
+área de arrastar. <code>string</code> pode ser uma URL terminada em <code>.svg</code> (nesse caso o
+arquivo é buscado por <code>fetch</code> e seu texto inserido como código — sujeito às mesmas regras de
+CORS de qualquer <code>fetch</code>; uma URL de outro domínio sem CORS liberado não vai carregar) ou o
+próprio código SVG como string (texto começando com <code>&lt;</code>). O <code>width</code> e
+<code>height</code> da tag <code>&lt;svg&gt;</code> são sobrescritos para 100%, preenchendo toda a
+janela. <code>título</code> não aparece em lugar nenhum visualmente — serve só para localizar essa
+janela invisível pela lupa ou referenciá-la em <code>connect</code>/<code>disconnect</code>.</p>
 <hr>
 <h4>Conexões</h4>
 <code class="sig">connect(nomeA, nomeB)</code>
@@ -1008,18 +1097,28 @@ ser a aba lateral. Cada uma corresponde a uma função já existente, só na mol
       dragHandle.addEventListener('pointerup', onUp);
     });
 
-    // redimensionar
+    // redimensionar — padrão pelo canto inferior direito; ".resize-bl" inverte pro inferior esquerdo
+    // (usada pela janela invisível de svg()), ancorando o canto superior direito em vez do esquerdo
     resize.addEventListener('pointerdown', function(e){
       if (win.classList.contains('maximized')) return;
       e.preventDefault(); e.stopPropagation();
       bringToFront(win);
+      var fromLeft = resize.classList.contains('resize-bl');
       var startX = e.clientX, startY = e.clientY;
       var origW = win.offsetWidth, origH = win.offsetHeight;
+      var origLeft = parseFloat(win.style.left);
+      var rightEdge = origLeft + origW;
       resize.setPointerCapture(e.pointerId);
       function onMove(ev){
         var dx = (ev.clientX - startX) / zoom;
         var dy = (ev.clientY - startY) / zoom;
-        win.style.width  = Math.max(150, origW + dx) + 'px';
+        if (fromLeft){
+          var newW = Math.max(150, origW - dx);
+          win.style.width = newW + 'px';
+          win.style.left = (rightEdge - newW) + 'px';
+        } else {
+          win.style.width = Math.max(150, origW + dx) + 'px';
+        }
         win.style.height = Math.max(110, origH + dy) + 'px';
       }
       function onUp(ev){
@@ -1032,7 +1131,7 @@ ser a aba lateral. Cada uma corresponde a uma função já existente, só na mol
       resize.addEventListener('pointerup', onUp);
     });
 
-    body.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
+    if (body) body.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
   }
 
   // ---- pan (arrastar o fundo com botão direito ou do meio) e zoom (scroll) ----
@@ -1273,12 +1372,12 @@ ser a aba lateral. Cada uma corresponde a uma função já existente, só na mol
                     'connect', 'disconnect', 'setTheme', 'setTempTheme', 'help',
                     'centerControls', 'bottomControls', 'setTransparentBackground', 'setOpaqueBackground',
                     'polaroid', 'newdoc', 'newidoc', 'rundoc', 'newpermadoc', 'newpermaidoc', 'runpermadoc',
-                    'setZoom', 'setPan', 'center', 'multicolor', 'singlecolor', cmd))(
+                    'setZoom', 'setPan', 'center', 'multicolor', 'singlecolor', 'svg', cmd))(
         newwindow, newframe, run, newpermawindow, newpermaframe, permarun,
         connect, disconnect, setTheme, setTempTheme, help,
         centerControls, bottomControls, setTransparentBackground, setOpaqueBackground,
         polaroid, newdoc, newidoc, rundoc, newpermadoc, newpermaidoc, runpermadoc,
-        setZoom, setPan, center, multicolor, singlecolor);
+        setZoom, setPan, center, multicolor, singlecolor, svg);
     } catch (err){
       console.warn('Comando inválido:', err.message);
     }
