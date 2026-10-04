@@ -8,7 +8,7 @@ window.menu = function () {
 }
       
 window.noteinstruct = function () {
-        rundoc(`https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem('infcanvas:theme')}&load=https://omnicode.vercel.app/notebook/creativecode.html`, "Instruções");
+        newidoc(`https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem('infcanvas:theme')}&load=https://omnicode.vercel.app/notebook/creativecode.html`, "Instruções");
 }
 
 window.openmenu = function (id, dados) {
