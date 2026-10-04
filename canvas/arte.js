@@ -71,18 +71,34 @@ connect("Processing", "Arte Generativa Brasileira");
 connect("Pathwaves Expiritae", "Arte Generativa Brasileira");
 
 
-polaroid("https://omnifolio.vercel.app/omnifiles/ibm-pc-5150.webp", "Computador IBM PC XT, 1981", "PC-XT", 516, 579, -1320, 360);
+polaroid("https://omnifolio.vercel.app/omnifiles/ibm-pc-5150.webp", "Computador IBM PC XT, 1981", "PC-XT", 516, 579, -1322, -665);
 
 newframe("https://namco.vercel.app/interfaces/?rom=tp3", "Turbo Pascal 3.0", 500, 360, -1850, 1350);
 connect("Turbo Pascal 3.0", "PC-XT");
 connect("Futuro", "PC-XT");
 connect("Futuro", "Turbo Pascal 3.0");
+connect("PC-XT", "Computação Pessoal");
 
-polaroid("https://omnifolio.vercel.app/fractais/camaleaonamaiormuvuca_17770185844_o.jpg", "Fractais", "Fractais", 600, 360, -2838, 880);
+polaroid("https://winworldpc.com/res/img/screenshots/4x-2a6c50c90e0131fad1624943cf6d4d22-Thedraw%204%20-%20Tron.png", "TheDraw 4.0, 1991 - Editor de arte ASCII e animações ANSI, utilizadas na construção de artes para os Bulletin Board Systems (BBS)", "TheDraw", 642, 466, 2211, -1194);
+
+connect("PC-XT", "TheDraw");
+newframe(
+  "https://omniboards.vercel.app/?limita=0&titulo=BBS&subtitulo=Bullet%20Board%20Systems&filtra=_BBSs&nomenu=true&contentonly=true&nomenu=true&contentonly=true",
+  "BBS",
+
+  615,
+  732,
+  3569, 615
+);
+
+connect("BBS", "TheDraw");
+
+
+
+polaroid("https://omnifolio.vercel.app/fractais/camaleaonamaiormuvuca_17770185844_o.jpg", "Fractais", "Fractais", 600, 360, -2208, 485);
 connect("Fractais", "PC-XT");
 
-
-polaroid("https://www.youtube.com/embed/xFlPWVOdGzw?si=rutAgPaKpkF1FImc", "Turbo Basic", "Turbo Basic", 500, 360, -2238, 380);
+polaroid("https://www.youtube.com/embed/xFlPWVOdGzw?si=rutAgPaKpkF1FImc", "Turbo Basic", "Turbo Basic", 500, 360, -2469, -62);
 connect("Turbo Basic", "PC-XT");
 
 newframe("https://slidelines.vercel.app/timelineh/?allblocks=true&startvisible=true&allowverticalscroll=true&followbg=true&timeheight=190&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit#gid=1569220645&theme=https://slidelines.vercel.app/level/arte.css", "Arte Generativa", 600, 780, 1600, 1400);
@@ -106,7 +122,7 @@ newidoc(
   650, 800, 3250, 2000
 );
 
-
+connect("BBS", "ASCII Art");
 connect("Arte Generativa", "Arte Generativa Brasileira");
 connect("Cortex", "Arte Generativa Brasileira");
 connect("ASCII Art", "Erthos Albino de Souza")
