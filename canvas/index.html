@@ -1578,6 +1578,8 @@ if (
         }
       };
 
+      var code_output_buffer = [];
+
       window.codeout = function (id, p) {
         console.log(id);
         console.log(p.fromeditor);
@@ -1641,6 +1643,8 @@ if (
           code += `</scr` + `ipt>`;
         }
 
+        code_output_buffer[countruncode] = code;
+
         let myiframe = document.getElementById("ifr_" + id);
         let iframeDoc =
           myiframe.contentDocument || myiframe.contentWindow.document;
@@ -1655,12 +1659,24 @@ if (
 
         let aba = document.querySelector("[data-name='Run 1'] .doc-tab.win-draghandle");
         let conteudosemrefresh = aba.innerHTML;
-        let novoconteudo = `<button class="win-close" title="Reload" onclick='reloadcode(${countruncode})'>↻</button>` + conteudosemrefresh;
+        let novoconteudo = `<button class="win-close" title="Reload" onclick='reloadcode(${countruncode}, "${id}")'>⟳</button>` + conteudosemrefresh;
         aba.innerHTML = novoconteudo;
 
 
         countruncode++;
       };
+
+      window.reladcode = function(n, id) {
+        let myiframe = document.getElementById("ifr_" + id);
+        let iframeDoc =
+          myiframe.contentDocument || myiframe.contentWindow.document;
+
+        let htmlContent = code_output_buffer[n];
+
+        iframeDoc.open();
+        iframeDoc.write(htmlContent);
+        iframeDoc.close();
+      }
 
       window.codeeditor = function (id, p) {
         countcode++;
