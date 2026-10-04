@@ -56,8 +56,9 @@ newidoc("https://www.ranoya.com/pt/futuro/?nomenu=true&temptheme=cleantext", "Fu
 connect("Futuro", "Pathwaves Expiritae");
 
 
-newidoc("https://booklines.vercel.app/livros/javascript/?go=", "Livro", 760, 870, -2480, 2100);
+newidoc("https://booklines.vercel.app/livros/javascript/?go=", "Livro", 670, 890, -2480, 2100);
 connect("Futuro", "Livro");
+
 
 newframe("https://omnidocs.vercel.app/docs/designgenerativo", "Design Generativo", 501, 528, -1490, 2920);
 connect("Futuro", "Design Generativo");
