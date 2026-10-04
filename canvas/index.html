@@ -1667,6 +1667,12 @@ if (
       };
 
       window.reloadcode = function(n, id) {
+        let frame = `<iframe frameborder="0" style="display: block; border: 0; padding: 0; margin: 0; width: 100%; height: 100%;" id="ifr_${id}"</iframe>`;
+
+        document.getElementById(id).innerHTML = "";
+
+        document.getElementById(id).innerHTML = frame;
+        
         let myiframe = document.getElementById("ifr_" + id);
         let iframeDoc =
           myiframe.contentDocument || myiframe.contentWindow.document;
