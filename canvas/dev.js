@@ -29,11 +29,14 @@ window.openmenu = function (id, dados) {
 
                 cursor: pointer;
                 font-size: 18px;
-                line-height: 28px;
-                height: 28px;
+                line-height: 68px;
+                height: auto;
                 width: 100%;
                 color: var(--text);
                 background-color: var(--panel-border);
+                padding-left: 20px;
+                padding-right: 20px;
+                border-top: 1px dotted var(--muted);
                 }
 
                 .menu_menuopt div:hover {
