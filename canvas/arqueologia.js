@@ -1,5 +1,6 @@
 setTempTheme("solarized-light");
 setZoom(.5);
+multicolor();
 
 newframe(
   "https://www.ranoya.com/pt/arqueologia/?nomenu=true&temptheme=cleantext",
