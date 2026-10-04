@@ -1652,6 +1652,13 @@ if (
         iframeDoc.close();
 
         connect("Code " + p.fromcodeeditor, "Run " + countruncode);
+
+        let aba = document.querySelector("[data-name='Run 1'] .doc-tab.win-draghandle");
+        let conteudosemrefresh = aba.innerHTML;
+        let novoconteudo = `<button class="win-close" title="Reload" onclick='reloadcode(${countruncode})'>↻</button>` + conteudosemrefresh;
+        aba.innerHTML = novoconteudo;
+
+
         countruncode++;
       };
 
