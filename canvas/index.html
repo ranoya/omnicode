@@ -350,11 +350,13 @@ $_GET = [];
     if (key === 'auto' || key === 'system'){
       document.documentElement.removeAttribute('data-theme');
       clearThemeOverrides();
+      if (typeof applyLineColors === 'function') applyLineColors();
       return 'auto';
     }
     if (key === 'light' || key === 'dark'){
       clearThemeOverrides();
       document.documentElement.setAttribute('data-theme', key);
+      if (typeof applyLineColors === 'function') applyLineColors();
       return key;
     }
     var t = THEMES[key];
@@ -364,6 +366,7 @@ $_GET = [];
     }
     document.documentElement.setAttribute('data-theme', key);
     THEME_VARS.forEach(function(v){ document.documentElement.style.setProperty('--' + v, t[v]); });
+    if (typeof applyLineColors === 'function') applyLineColors(); // recalcula se multicolor() estiver ativo
     return key;
   }
   var THEME_STORAGE_KEY = 'infcanvas:theme';
@@ -758,6 +761,10 @@ ser a aba lateral. Cada uma corresponde a uma função já existente, só na mol
 <p>Desenha uma linha entre o centro de duas janelas, identificadas pelo título exato (sem diferenciar maiúsculas). A linha acompanha movimento e redimensionamento. Ela some enquanto uma das janelas está maximizada e é removida se uma delas for fechada.</p>
 <code class="sig">disconnect(nomeA, nomeB)</code>
 <p>Remove a linha entre as duas janelas, em qualquer ordem.</p>
+<code class="sig">multicolor()</code>
+<p>Cada linha desenhada por <code>connect</code> passa a ter uma cor diferente (matiz espalhado uniformemente), mantendo a mesma saturação e luminosidade da cor de destaque (<code>--accent</code>) do tema atual. Ajuda a distinguir qual janela está ligada a qual quando há várias conexões. Acompanha a troca de tema automaticamente.</p>
+<code class="sig">singlecolor()</code>
+<p>Volta todas as linhas a usar a cor de destaque única do tema (padrão).</p>
 <hr>
 <h4>Temas</h4>
 <code class="sig">setTheme(nome)</code>
@@ -818,6 +825,7 @@ ser a aba lateral. Cada uma corresponde a uma função já existente, só na mol
     linksLayer.appendChild(line);
     var link = { a:a, b:b, el:line };
     links.push(link);
+    applyLineColors();
     return link;
   }
   window.connect = connect; // pode ser chamado pelo console do navegador também
@@ -830,8 +838,49 @@ ser a aba lateral. Cada uma corresponde a uma função já existente, só na mol
       if (match) l.el.remove();
       return !match;
     });
+    applyLineColors();
   }
   window.disconnect = disconnect; // pode ser chamado pelo console do navegador também
+
+  // ---- cores das linhas do connect(): uma só cor (padrão) ou uma cor por linha ----
+  var multicolorLinks = false;
+  function hexToHsl(hex){
+    var m = String(hex || '').trim().replace('#', '');
+    if (m.length === 3) m = m.split('').map(function(c){ return c + c; }).join('');
+    if (!/^[0-9a-fA-F]{6}$/.test(m)) return null;
+    var r = parseInt(m.substr(0, 2), 16) / 255;
+    var g = parseInt(m.substr(2, 2), 16) / 255;
+    var b = parseInt(m.substr(4, 2), 16) / 255;
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    var h, s, l = (max + min) / 2;
+    if (max === min){ h = s = 0; }
+    else {
+      var d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      if (max === r) h = (g - b) / d + (g < b ? 6 : 0);
+      else if (max === g) h = (b - r) / d + 2;
+      else h = (r - g) / d + 4;
+      h *= 60;
+    }
+    return { h: h, s: s * 100, l: l * 100 };
+  }
+  function applyLineColors(){
+    if (!multicolorLinks){
+      links.forEach(function(l){ l.el.style.stroke = ''; }); // volta a usar o var(--accent) do CSS
+      return;
+    }
+    var accentHex = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+    var hsl = hexToHsl(accentHex) || { h: 0, s: 65, l: 60 }; // mesma saturação/luminosidade da cor base do tema
+    var n = links.length || 1;
+    links.forEach(function(l, i){
+      var hue = Math.round(360 * i / n);
+      l.el.style.stroke = 'hsl(' + hue + ', ' + hsl.s.toFixed(0) + '%, ' + hsl.l.toFixed(0) + '%)';
+    });
+  }
+  function multicolor(){ multicolorLinks = true; applyLineColors(); }
+  function singlecolor(){ multicolorLinks = false; applyLineColors(); }
+  window.multicolor = multicolor; // pode ser chamado pelo console do navegador também
+  window.singlecolor = singlecolor;
 
   function updateLinks(){
     links = links.filter(function(l){
@@ -1224,12 +1273,12 @@ ser a aba lateral. Cada uma corresponde a uma função já existente, só na mol
                     'connect', 'disconnect', 'setTheme', 'setTempTheme', 'help',
                     'centerControls', 'bottomControls', 'setTransparentBackground', 'setOpaqueBackground',
                     'polaroid', 'newdoc', 'newidoc', 'rundoc', 'newpermadoc', 'newpermaidoc', 'runpermadoc',
-                    'setZoom', 'setPan', 'center', cmd))(
+                    'setZoom', 'setPan', 'center', 'multicolor', 'singlecolor', cmd))(
         newwindow, newframe, run, newpermawindow, newpermaframe, permarun,
         connect, disconnect, setTheme, setTempTheme, help,
         centerControls, bottomControls, setTransparentBackground, setOpaqueBackground,
         polaroid, newdoc, newidoc, rundoc, newpermadoc, newpermaidoc, runpermadoc,
-        setZoom, setPan, center);
+        setZoom, setPan, center, multicolor, singlecolor);
     } catch (err){
       console.warn('Comando inválido:', err.message);
     }
