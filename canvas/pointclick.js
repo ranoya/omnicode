@@ -1,6 +1,6 @@
 setTempTheme("light");
 setTransparentBackground();
-setZoom(.35);
+setZoom(.5);
 multicolor();
 centerControls();
 
@@ -26,3 +26,5 @@ connect("Documento 2", "Dados Ampliados");
 connect("Tabela", "Pormenores");
 connect("Dados Ampliados", "Pormenores");
 connect("Paramátrico", "Pormenores");
+
+center("Tabela");
