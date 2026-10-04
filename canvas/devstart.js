@@ -8,8 +8,8 @@ let getcssv = function (v) {
 
 
 window.menu = function () {
-        rundoc("Menu", "openmenu", {});
-        center("Menu");
+        rundoc("Menu", "openmenu", {}, 335, 541, 11, 7);
+        setPan(0, 0);
 }
       
 window.noteinstruct = function () {

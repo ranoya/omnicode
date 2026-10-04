@@ -7,10 +7,10 @@ let getcssv = function (v) {
 
 
 window.menu = function () {
-        rundoc("Menu", "openmenu", {});
-        center("Menu");
+        rundoc("Menu", "openmenu", {}, 335, 541, 11, 7);
+        setPan(0, 0);
 }
-      
+
 window.noteinstruct = function () {
         newidoc(`https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem('infcanvas:theme')}&load=https://omnicode.vercel.app/notebook/creativecode.html`, "Instruções");
 }
@@ -102,6 +102,7 @@ window.openmenu = function (id, dados) {
 
 
 menu();
+
 
 /*
 
