@@ -2,6 +2,11 @@ setTempTheme("gruvbox-dark");
 devmode();
 setTransparentBackground();
 
+let getcssv = function (v) {
+    return getComputedStyle(document.documentElement).getPropertyValue(v).slice(1);
+}
+
+
 window.menu = function () {
         rundoc("Menu", "openmenu", {});
         center("Menu");
@@ -10,6 +15,15 @@ window.menu = function () {
 window.noteinstruct = function () {
         newidoc(`https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem('infcanvas:theme')}&load=https://omnicode.vercel.app/notebook/creativecode.html`, "Instruções");
 }
+
+let omnicocount = 0;
+
+window.omnicode = function () {
+    omnicocount++;
+    newidoc(`https://omnicode.vercel.app/clr?theme=${localStorage.getItem('infcanvas:theme')}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--panel-border")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--muted")}&hgcolor=${getcssv("--win-header")}`, "Omnicode " + omnicocount);
+}
+
+
 
 window.openmenu = function (id, dados) {
         var el = document.getElementById(id);
@@ -51,6 +65,7 @@ window.openmenu = function (id, dados) {
                 <div onclick="code()">Editor de Código</div>
                 <div onclick="notebook()">Notebook Computacional</div>
                 <div onclick="noteinstruct()">Instruções de uso do Notebook</div>
+                <div onclick="omnicode()">Omnicode Run</div>
 
             </div>
           
@@ -60,3 +75,14 @@ window.openmenu = function (id, dados) {
             `;
         
       }
+
+
+menu();
+
+/*
+
+https://omnicode.vercel.app/clr?theme=gruvbox&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--panel-border")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--muted")}&hgcolor=${getcssv("--win-header")}
+
+*/
+
+
