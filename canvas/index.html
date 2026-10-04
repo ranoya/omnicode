@@ -1503,12 +1503,13 @@ if (
 
       window.notebook = function () {
         rundoc("Notebook " + countnotebooks, "opennotebook", {});
+        countnotebooks++;
       }
 
       window.opennotebook = function (id, dados) {
         var el = document.getElementById(id);
         el.innerHTML =
-          `<iframe temp="https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem(THEME_STORAGE_KEY)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; allowfullscreen" allowfullscreen style="width:100%;height:100%;border:none;display:block;"></iframe>`;
+          `<iframe temp="https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem('infcanvas:theme')}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; allowfullscreen" allowfullscreen style="width:100%;height:100%;border:none;display:block;"></iframe>`;
         window.registerLazyFrame(el.querySelector('iframe[temp]'));
       }
 
