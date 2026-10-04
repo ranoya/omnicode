@@ -215,6 +215,11 @@ newframe(
 connect("ASCII Art", "BBS");
 
 
+polaroid("https://winworldpc.com/res/img/screenshots/4x-2a6c50c90e0131fad1624943cf6d4d22-Thedraw%204%20-%20Tron.png", "TheDraw 4.0, 1991", "TheDraw", 640, 400, -1315, -1498);
+connect("TheDraw", "ASCII Art");
+connect("TheDraw", "BBS");
+
+
 
 
 newidoc(
