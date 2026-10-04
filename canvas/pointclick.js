@@ -13,8 +13,8 @@ newframe("https://docs.google.com/spreadsheets/d/15lB-WclGe0WVET1yg94tZMOc5zVi6l
 newframe("https://pointandclick.vercel.app/v1/timelineonly.html?theme=yellow70", "Visualização 2", 997, 570, 2292, 733);
 newidoc("https://pointandclick.vercel.app/?bg=debe34&mg=ca941c&hl=#b38f08&hl2=FFFFFF", "Documento 2", 1000, 750, 3504, 173);
 
-newidoc("https://www.ranoya.com/books/public/interfaces/informacao.php?theme=yellow70&embed=plain", "Pormenores", 1000, 750, 978, 1312);
-newidoc("https://www.ranoya.com/books/public/tecnologiascriativas/visualizacaoparametrica.php?theme=yellow70&embed=plain", "Paramátrico", 1000, 750, 845, 2349);
+newidoc("https://www.ranoya.com/books/public/interfaces/informacao.php?theme=yellow70&embed=plain", "Pormenores", 1065, 750, 978, 1312);
+newidoc("https://www.ranoya.com/books/public/tecnologiascriativas/visualizacaoparametrica.php?theme=yellow70&embed=plain", "Paramátrico", 1065, 750, 845, 2349);
 
 connect("Tabela", "Sumário");
 connect("Tabela", "Visualização 1");
