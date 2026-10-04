@@ -24,7 +24,16 @@ window.omnicode = function () {
         tema = localStorage.getItem('infcanvas:theme');
     }
     omnicocount++;
-    newidoc(`https://omnicode.vercel.app/clr?theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--muted")}&hgcolor=${getcssv("--muted")}`, "Omnicode " + omnicocount);
+    newidoc(`https://omnicode.vercel.app/clr?theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--muted")}&hgcolor=${getcssv("--text")}`, "Omnicode " + omnicocount);
+}
+
+window.omnicodelive = function () {
+    let tema = "gruvbox";
+    if (localStorage.getItem('infcanvas:theme') != "gruvbox-dark") {
+        tema = localStorage.getItem('infcanvas:theme');
+    }
+    omnicocount++;
+    newidoc(`https://omnicode.vercel.app/cll?theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--muted")}&hgcolor=${getcssv("--text")}`, "Omnicode " + omnicocount);
 }
 
 
@@ -70,7 +79,7 @@ window.openmenu = function (id, dados) {
                 <div onclick="notebook()">Notebook Computacional</div>
                 <div onclick="noteinstruct()">Instruções de uso do Notebook</div>
                 <div onclick="omnicode()">Omnicode Run</div>
-
+                <div onclick="omnicodelive()">Omnicode Live</div>
             </div>
           
           
