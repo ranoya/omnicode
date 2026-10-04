@@ -1,6 +1,6 @@
 setTempTheme("light");
 setTransparentBackground();
-setZoom(.5);
+setZoom(.35);
 multicolor();
 
 polaroid("https://omnifolio.vercel.app/omnifiles/atari800_computer.png", "Computador Atari 800, 1979", "Atari 800", 350, 340, 300, 300);
