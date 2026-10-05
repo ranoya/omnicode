@@ -1697,6 +1697,9 @@ if (
 
         connect("Code " + p.fromcodeeditor, "Run " + countruncode);
 
+        let aba = document.querySelector("[data-name='Run "+ countruncode +"'] .doc-tab.win-draghandle");
+        aba.onresize = reloadcode(countruncode, id);
+
         /*
 
         let aba = document.querySelector("[data-name='Run "+ countruncode +"'] .doc-tab.win-draghandle");
