@@ -439,7 +439,7 @@ window.openmenu = function (id, dados) {
       }
 
 
-menu();
+
 
 svg(`
   <svg style="width: 100%; height: 100%;" viewBox="0 0 466 466" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -448,8 +448,8 @@ svg(`
 <path id="Subtract" d="M232.999 45C265.532 45 296.134 53.2643 322.822 67.8066L300.732 108.165C280.601 97.2188 257.526 91 232.999 91C208.53 91 185.507 97.1891 165.409 108.087L143.113 67.8408C169.816 53.2773 200.441 45 232.999 45Z" fill="var(--muted, #000000)"/>
 </g>
 
-<circle cx="233" cy="233" r="196" stroke="var(--text, #000000)" stroke-width="8"/>
-<circle cx="233" cy="233" r="186" stroke="var(--text, #000000)" stroke-width="4"/>
+<circle cx="233" cy="233" r="130" stroke="var(--text, #000000)" stroke-width="8"/>
+<circle cx="233" cy="233" r="198" stroke="var(--text, #000000)" stroke-width="8"/>
 
 <path d="M385 229H412V237H385V229Z" fill="var(--text, #000000)"/>
 <path d="M55 229H82V237H55V229Z" fill="var(--text, #000000)"/>
@@ -525,6 +525,8 @@ window.moverelogio = function () {
 }
 
 moverelogio();
+
+menu();
 
 
 /*
