@@ -444,7 +444,7 @@ menu();
 svg(`
   <svg style="width: 100%; height: 100%;" viewBox="0 0 466 466" fill="none" xmlns="http://www.w3.org/2000/svg">
 
-<g id="clock_barra_Segundos">
+<g id="clock_barra_Segundos" transform-origin="center">
 <path id="Subtract" d="M232.999 45C265.532 45 296.134 53.2643 322.822 67.8066L300.732 108.165C280.601 97.2188 257.526 91 232.999 91C208.53 91 185.507 97.1891 165.409 108.087L143.113 67.8408C169.816 53.2773 200.441 45 232.999 45Z" fill="var(--muted, #000000)"/>
 </g>
 
