@@ -355,6 +355,10 @@ window.noteinstruct = function () {
         newidoc(`https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem('infcanvas:theme')}&load=https://omnicode.vercel.app/notebook/creativecode.html`, "Instruções");
 }
 
+window.about = function () {
+        newidoc(`https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem('infcanvas:theme')}&load=https://omnicode.vercel.app/canvas/sobrecanvas.html`, "Sobre");
+}
+
 let omnicocount = 0;
 
 window.omnicode = function () {
@@ -428,6 +432,7 @@ window.openmenu = function (id, dados) {
             </style>
 
             <div class="menu_menuopt">
+                <div onclick="about()">Sobre o Canvas</div>
                 <div onclick="code()">Editor de Código</div>
                 <div onclick="notebook()">Notebook Computacional</div>
                 <div onclick="noteinstruct()">Instruções de uso do Notebook</div>
