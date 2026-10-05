@@ -1,4 +1,5 @@
 devmode();
+ungroovy();
 setTransparentBackground();
 
 let getcssv = function (v) {

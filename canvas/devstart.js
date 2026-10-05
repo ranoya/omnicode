@@ -1,5 +1,6 @@
 setTempTheme("gruvbox-dark");
 devmode();
+ungroovy();
 setTransparentBackground();
 
 let getcssv = function (v) {
