@@ -1536,8 +1536,86 @@ if (
 
       window.openretro = function (id, dados) {
         document.getElementById(id).innerHTML =
-          `<iframe src="https://namco.vercel.app/?core=${dados.core}&rom=${dados.rom}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="width:100%;height:100%;border:none;display:block;"></iframe>`;
+          `<iframe src="https://namco.vercel.app/?core=${dados.core}&rom=${dados.rom}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreeen style="width:100%;height:100%;border:none;display:block;"></iframe>`;
       }
+
+      window.openmsx = function (id, dados) {
+        document.getElementById(id).innerHTML =
+          `<iframe src="https://namco.vercel.app/sx/?ROM=${dados.rom}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreeen style="width:100%;height:100%;border:none;display:block;"></iframe>`;
+      }
+
+      window.kingsvalley = function() {
+        rundoc("King's Valley", "openmsx", {rom: "kv.rom"});
+      }
+
+      window.mopiranger = function() {
+        rundoc("Mopiranger", "openmsx", {rom: "mpr.rom"});
+      }
+
+      window.goonies = function() {
+        rundoc("Goonies", "openmsx", {rom: "goo.rom"});
+      }
+
+      window.skooter = function() {
+        rundoc("Skooter", "openmsx", {rom: "skt.rom"});
+      }
+
+       window.theseus = function() {
+        rundoc("Theseus", "openmsx", {rom: "thseus.rom"});
+      }
+
+       window.pingpong = function() {
+        rundoc("Ping Pong", "openmsx", {rom: "kpp.rom"});
+      }
+
+      window.karateka = function() {
+        runidoc("https://apple2ts.com/?appmode=embed&crtdistort=off&color=green&scanlines=on&ghosting=off&#https://namco.vercel.app/a2/disk/Karateka.do", "Karateka");
+      }
+
+      window.loderunner = function() {
+        runidoc("https://apple2ts.com/?appmode=embed&crtdistort=off&color=green&scanlines=off&ghosting=off&#https://namco.vercel.app/a2/disk/Loderunner.dsk", "Lode Runner");
+      }
+
+      window.bristles = function() {
+        runidoc("https://namco.vercel.app/a8/?disk=brst.a", "Bristles");
+      }
+
+      window.flipflop = function() {
+        runidoc("https://namco.vercel.app/a8/?disk=ff.a", "Flip and Flop");
+      }
+
+      window.apoca = function() {
+        runidoc("https://namco.vercel.app/a8/?disk=fa.a", "Fort Appocalypse");
+      }
+
+      window.apoca = function() {
+        runidoc("https://namco.vercel.app/a8/?disk=fa.a", "Fort Appocalypse");
+      }
+
+      window.apoca = function() {
+        runidoc("https://namco.vercel.app/a8/?disk=h.a", "Hero");
+      }
+
+      window.joust = function() {
+        runidoc("https://namco.vercel.app/a8/?cart=jst.c", "Joust");
+      }
+
+      window.jumpman = function() {
+        runidoc("https://namco.vercel.app/a8/?disk=jm.a", "Jump Man");
+      }
+
+      window.wingcommander = function() {
+        runidoc("https://namco.vercel.app/interfaces/?rom=wc1", "Wing Commander");
+      }
+
+      window.prince = function() {
+        runidoc("https://namco.vercel.app/interfaces/?rom=bbpop", "Prince of Persia");
+      }
+
+      window.a10 = function() {
+        runidoc("https://namco.vercel.app/interfaces/?rom=a10tk", "A-10 Tank Killer");
+      }
+    
 
       window.pitfall = function() {
         rundoc("Pitfall", "openretro", {core: "atari2600", rom: "files/pf.b"});
@@ -1552,7 +1630,7 @@ if (
       }
 
       window.shaolin = function() {
-        rundoc("Adventure", "openretro", {core: "fbneo", rom: "files/kicker.zip"});
+        rundoc("Shao-lin's Road", "openretro", {core: "fbneo", rom: "files/kicker.zip"});
       }
 
       window.kong = function() {
