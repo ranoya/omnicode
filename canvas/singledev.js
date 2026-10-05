@@ -441,22 +441,76 @@ window.openmenu = function (id, dados) {
 
 menu();
 
-svg(`<svg style="width: 100%; height: 100%;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-    <rect id="clock_barra_sec" x="10" y="45" width="80" height="10" fill="var(--text, #000000)" transform-origin="center" />
-</svg>`, "Relógio");
+svg(`
+  <svg style="width: 100%; height: 100%;" viewBox="0 0 466 466" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+<circle cx="233" cy="233" r="196" stroke="var(--text, #000000)" stroke-width="8"/>
+<circle cx="233" cy="233" r="186" stroke="var(--text, #000000)" stroke-width="4"/>
+
+<path d="M385 229H412V237H385V229Z" fill="var(--text, #000000)"/>
+<path d="M55 229H82V237H55V229Z" fill="var(--text, #000000)"/>
+<path d="M362.819 153.219L386.202 139.719L390.202 146.647L366.819 160.147L362.819 153.219Z" fill="var(--text, #000000)"/>
+<path d="M77.0305 318.219L100.413 304.719L104.413 311.647L81.0305 325.147L77.0305 318.219Z" fill="var(--text, #000000)"/>
+<path d="M305.719 98.6809L319.219 75.2983L326.147 79.2983L312.647 102.681L305.719 98.6809Z" fill="var(--text, #000000)"/>
+<path d="M140.719 384.469L154.219 361.087L161.147 365.087L147.647 388.469L140.719 384.469Z" fill="var(--text, #000000)"/>
+<path d="M229 80V53L237 53V80H229Z" fill="var(--text, #000000)"/>
+<path d="M229 410V383H237V410H229Z" fill="var(--text, #000000)"/>
+<path d="M153.219 102.181L139.719 78.7984L146.647 74.7984L160.147 98.1811L153.219 102.181Z" fill="var(--text, #000000)"/>
+<path d="M318.219 387.97L304.719 364.587L311.647 360.587L325.147 383.97L318.219 387.97Z" fill="var(--text, #000000)"/>
+<path d="M98.6809 159.28L75.2982 145.78L79.2982 138.852L102.681 152.352L98.6809 159.28Z" fill="var(--text, #000000)"/>
+<path d="M384.469 324.28L361.087 310.78L365.087 303.852L388.469 317.352L384.469 324.28Z" fill="var(--text, #000000)"/>
+
+<g id="clock_barra_Minutos" transform-origin="center">
+<circle id="Ellipse 212" cx="233" cy="232" r="28" transform="rotate(-90 233 232)" stroke="var(--text, #000000)" stroke-width="8"/>
+<rect id="Rectangle 1242" x="229" y="194" width="108" height="8" transform="rotate(-90 229 194)" fill="var(--accent, #000000)"/>
+</g>
+<g id="clock_barra_Horas" transform-origin="center">
+<circle id="Ellipse 212_2" cx="233" cy="232" r="28" transform="rotate(-90 233 232)" stroke="var(--text, #000000)" stroke-width="8"/>
+<rect id="Rectangle 1242_2" x="229" y="194" width="75" height="8" transform="rotate(-90 229 194)" fill="var(--accent, #000000)"/>
+</g>
+<g id="clock_barra_Segundos" transform-origin="center">
+<circle id="Ellipse 212_3" cx="233" cy="232" r="28" transform="rotate(-90 233 232)" stroke="var(--text, #000000)" stroke-width="8"/>
+<rect id="Rectangle 1242_3" x="229" y="194" width="26" height="8" transform="rotate(-90 229 194)" fill="var(--muted, #000000)"/>
+</g>
+
+</svg>
+  
+, "Relógio");
 
 window.moverelogio = function () {
 
-  let angulo = 0;
+  let angulo_sec = 0;
   setInterval(function () {
-    if (angulo == 360) {
-      angulo = 0;
+    if (angulo_sec == 360) {
+      angulo_sec = 0;
     }
 
-    document.getElementById("clock_barra_sec").style.transform = "rotate(" + angulo + "deg)";
-    angulo++;
+    document.getElementById("clock_barra_Segundos").style.transform = "rotate(" + angulo_sec + "deg)";
+    angulo_sec++;
     
   }, 1000);
+
+  let angulo_min = 0;
+  setInterval(function () {
+    if (angulo_min == 360) {
+      angulo_min = 0;
+    }
+
+    document.getElementById("clock_barra_Minutos").style.transform = "rotate(" + angulo_min + "deg)";
+    angulo_min++;
+    
+  }, 60000);
+
+  let angulo_hor = 0;
+  setInterval(function () {
+    if (angulo_hor == 360) {
+      angulo_hor = 0;
+    }
+
+    document.getElementById("clock_barra_Horas").style.transform = "rotate(" + angulo_hor + "deg)";
+    angulo_hor++;
+    
+  }, 3600000);
 }
 
 moverelogio();
