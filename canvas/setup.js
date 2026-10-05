@@ -1,5 +1,3 @@
-setTempTheme("gruvbox-dark");
 devmode();
-code();
-hello();
-quake();
+setTempTheme("light");
+
