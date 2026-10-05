@@ -454,6 +454,7 @@ window.moverelogio = function () {
     }
 
     document.getElementById("clock_barra_sec").style.transform = "rotate(" + angulo + "deg)";
+    angulo++;
     
   }, 1000);
 }
