@@ -441,6 +441,25 @@ window.openmenu = function (id, dados) {
 
 menu();
 
+svg(`<svg style="width: 100%; height: 100%;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <rect id="clock_barra_sec" x="10" y="45" width="80" height="10" fill="var(--text, #000000)" transform-origin="center" />
+</svg>`, "Relógio");
+
+window.moverelogio = function () {
+
+  let angulo = 0;
+  setInterval(function () {
+    if (angulo == 360) {
+      angulo = 0;
+    }
+
+    document.getElementById("clock_barra_sec").style.transform = "rotate(" + angulo + "deg)";
+    
+  }, 1000);
+}
+
+moverelogio();
+
 
 /*
 
