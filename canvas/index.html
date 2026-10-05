@@ -1704,7 +1704,11 @@ if (
         newaba.id = "reloadrun" + countruncode;
         newaba.innerHTML = `<button class="win-close" title="Reload" onclick='reloadcode(${countruncode}, "${id}")'>⟳</button>`;
 
-        janelaout.appendChild(newaba);
+
+        let ficapradepois = document.querySelector("[data-name='Run "+ countruncode +"'] .doc-paper"); 
+
+        janelaout.insertBefore(newaba, ficapradepois);
+        //janelaout.appendChild(newaba);
 
 
 
