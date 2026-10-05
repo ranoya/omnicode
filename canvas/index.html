@@ -1534,6 +1534,82 @@ if (
         run("Yeah!", "openwarphoto", {});
       };
 
+      window.openretro = function (id, dados) {
+        document.getElementById(id).innerHTML =
+          `<iframe src="https://namco.vercel.app/?core=${dados.core}&rom=${dados.rom}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="width:100%;height:100%;border:none;display:block;"></iframe>`;
+      }
+
+      window.piftall = function() {
+        docrun("Pitfall", "openretro", {core: "atari2600", rom: "files/pf.b"});
+      }
+
+      window.riverraid = function() {
+        docrun("River Raid", "openretro", {core: "atari2600", rom: "files/rr.b"});
+      }
+
+      window.adventure = function() {
+        docrun("Adventure", "openretro", {core: "atari2600", rom: "files/adv.b"});
+      }
+
+      window.shaolin = function() {
+        docrun("Adventure", "openretro", {core: "atari2600", rom: "files/adv.b"});
+      }
+
+      window.adventure = function() {
+        docrun("Shao-Lin's Road", "openretro", {core: "fbneo", rom: "files/kicker.zip"});
+      }
+
+      window.kong = function() {
+        docrun("Donkey Kong", "openretro", {core: "fbneo", rom: "files/dkong.zip"});
+      }
+
+      window.tmnt = function() {
+        docrun("TMNT", "openretro", {core: "fbneo", rom: "files/tmnt.zip"});
+      }
+
+      window.asteroids = function() {
+        docrun("Asteroids", "openretro", {core: "fbneo", rom: "files/astdelux.zip"});
+      }
+
+      window.xevious = function() {
+        docrun("Xevious", "openretro", {core: "fbneo", rom: "files/xevious.zip"});
+      }
+
+      window.afterburner = function() {
+        docrun("After Bruner 2", "openretro", {core: "fbneo", rom: "files/aburner2.zip"});
+      }
+
+      window.baddudes = function() {
+        docrun("Bad Dudes", "openretro", {core: "fbneo", rom: "files/baddudes.zip"});
+      }
+
+      window.doubledragon = function() {
+        docrun("Double Dragon 2", "openretro", {core: "fbneo", rom: "files/ddragon2.zip"});
+      }
+
+      window.elevatoraction = function() {
+        docrun("Elevator Action", "openretro", {core: "fbneo", rom: "files/elevator.zip"});
+      }
+
+      window.goldenaxe = function() {
+        docrun("Golden Axe", "openretro", {core: "fbneo", rom: "files/goldnaxe.zip"});
+      }
+
+      window.galaxian = function() {
+        docrun("Galaxian", "openretro", {core: "fbneo", rom: "files/galaxian.zip"});
+      }
+
+      window.galaga = function() {
+        docrun("Galaga", "openretro", {core: "fbneo", rom: "files/galaga.zip"});
+      }
+
+      window.pacman = function() {
+        docrun("Pac-Man", "openretro", {core: "fbneo", rom: "files/pacman.zip"});
+      }
+
+      window.outrun = function() {
+        docrun("Out run", "openretro", {core: "fbneo", rom: "files/outrun.zip"});
+      }
 
       
     </script>
