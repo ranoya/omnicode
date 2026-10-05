@@ -489,9 +489,12 @@ window.moverelogio = function () {
   let angulo_min = (minutos / 60) * 360;
   let angulo_hor = ((horas % 12) / 12) * 360 + (minutos / 60) * 30; // Inclui o deslocamento dos minutos na hora
 
+  console.log("sec " + angulo_sec);
+  console.log("min " + angulo_min);
+  console.log("hor " + angulo_hor);
 
   setInterval(function () {
-    if (angulo_sec == 360) {
+    if (angulo_sec >= 360) {
       angulo_sec = 0;
     }
 
@@ -501,7 +504,7 @@ window.moverelogio = function () {
   }, 1000);
 
   setInterval(function () {
-    if (angulo_min == 360) {
+    if (angulo_min >= 360) {
       angulo_min = 0;
     }
 
@@ -511,7 +514,7 @@ window.moverelogio = function () {
   }, 60000);
 
   setInterval(function () {
-    if (angulo_hor == 360) {
+    if (angulo_hor >= 360) {
       angulo_hor = 0;
     }
 
