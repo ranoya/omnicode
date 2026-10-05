@@ -473,7 +473,7 @@ svg(`
 <rect id="Rectangle 1242_3" x="229" y="194" width="26" height="8" transform="rotate(-90 229 194)" fill="var(--muted, #000000)"/>
 </g>
 
-</svg>
+</svg>`
   
 , "Relógio");
 
