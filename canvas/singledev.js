@@ -444,6 +444,10 @@ menu();
 svg(`
   <svg style="width: 100%; height: 100%;" viewBox="0 0 466 466" fill="none" xmlns="http://www.w3.org/2000/svg">
 
+<g id="clock_barra_Segundos">
+<path id="Subtract" d="M232.999 45C265.532 45 296.134 53.2643 322.822 67.8066L300.732 108.165C280.601 97.2188 257.526 91 232.999 91C208.53 91 185.507 97.1891 165.409 108.087L143.113 67.8408C169.816 53.2773 200.441 45 232.999 45Z" fill="var(--muted, #000000)"/>
+</g>
+
 <circle cx="233" cy="233" r="196" stroke="var(--text, #000000)" stroke-width="8"/>
 <circle cx="233" cy="233" r="186" stroke="var(--text, #000000)" stroke-width="4"/>
 
@@ -467,10 +471,6 @@ svg(`
 <g id="clock_barra_Horas" transform-origin="center">
 <circle id="Ellipse 212_2" cx="233" cy="232" r="28" transform="rotate(-90 233 232)" stroke="var(--text, #000000)" stroke-width="8"/>
 <rect id="Rectangle 1242_2" x="229" y="194" width="75" height="8" transform="rotate(-90 229 194)" fill="var(--accent, #000000)"/>
-</g>
-<g id="clock_barra_Segundos" transform-origin="center">
-<circle id="Ellipse 212_3" cx="233" cy="232" r="28" transform="rotate(-90 233 232)" stroke="var(--text, #000000)" stroke-width="8"/>
-<rect id="Rectangle 1242_3" x="229" y="194" width="26" height="8" transform="rotate(-90 229 194)" fill="var(--muted, #000000)"/>
 </g>
 
 </svg>`
