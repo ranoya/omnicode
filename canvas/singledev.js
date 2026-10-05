@@ -486,7 +486,7 @@ window.moverelogio = function () {
     }
 
     document.getElementById("clock_barra_Segundos").style.transform = "rotate(" + angulo_sec + "deg)";
-    angulo_sec++;
+    angulo_sec += 6;
     
   }, 1000);
 
@@ -497,7 +497,7 @@ window.moverelogio = function () {
     }
 
     document.getElementById("clock_barra_Minutos").style.transform = "rotate(" + angulo_min + "deg)";
-    angulo_min++;
+    angulo_min += 6;
     
   }, 60000);
 
@@ -508,7 +508,7 @@ window.moverelogio = function () {
     }
 
     document.getElementById("clock_barra_Horas").style.transform = "rotate(" + angulo_hor + "deg)";
-    angulo_hor++;
+    angulo_hor += 6;
     
   }, 3600000);
 }
