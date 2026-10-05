@@ -479,7 +479,17 @@ svg(`
 
 window.moverelogio = function () {
 
-  let angulo_sec = 0;
+  const agora = new Date();
+  const segundos = agora.getSeconds();
+  const minutos = agora.getMinutes();
+  const horas = agora.getHours();
+
+  // Cálculo dos ângulos (360 graus / total de unidades)
+  let angulo_sec = (segundos / 60) * 360;
+  let angulo_min = (minutos / 60) * 360;
+  let angulo_hor = ((horas % 12) / 12) * 360 + (minutos / 60) * 30; // Inclui o deslocamento dos minutos na hora
+
+
   setInterval(function () {
     if (angulo_sec == 360) {
       angulo_sec = 0;
@@ -490,7 +500,6 @@ window.moverelogio = function () {
     
   }, 1000);
 
-  let angulo_min = 0;
   setInterval(function () {
     if (angulo_min == 360) {
       angulo_min = 0;
@@ -501,7 +510,6 @@ window.moverelogio = function () {
     
   }, 60000);
 
-  let angulo_hor = 0;
   setInterval(function () {
     if (angulo_hor == 360) {
       angulo_hor = 0;
