@@ -489,9 +489,9 @@ window.moverelogio = function () {
   let angulo_min = (minutos / 60) * 360;
   let angulo_hor = ((horas % 12) / 12) * 360 + (minutos / 60) * 30; // Inclui o deslocamento dos minutos na hora
 
-  console.log("sec " + angulo_sec);
-  console.log("min " + angulo_min);
-  console.log("hor " + angulo_hor);
+  document.getElementById("clock_barra_Horas").style.transform = "rotate(" + angulo_hor + "deg)";
+  document.getElementById("clock_barra_Segundos").style.transform = "rotate(" + angulo_sec + "deg)";
+  document.getElementById("clock_barra_Minutos").style.transform = "rotate(" + angulo_min + "deg)";
 
   setInterval(function () {
     if (angulo_sec >= 360) {
