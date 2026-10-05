@@ -492,7 +492,10 @@ $_GET = [];
   }
 
   // ---- moldura "doc": sem cabeçalho, aba lateral com título/fechar/maximizar, cantos levemente tortos ----
-  function createDocFrameShell(name, pos, bodyHtml, permanent, noTilt){
+  // controla a rotação aleatória de TODAS as janelas "doc" (newdoc, newidoc, rundoc, suas variantes
+  // perma, as versões "s" — newsdoc/newsidoc/runsdoc — e também a polaroid). ungroovy() por padrão.
+  var groovyDocs = false;
+  function createDocFrameShell(name, pos, bodyHtml, permanent){
     var win = document.createElement('div');
     win.className = 'win doc-frame';
     win.dataset.name = name;
@@ -515,13 +518,13 @@ $_GET = [];
     canvas.appendChild(win);
     windows.push(win);
     wireWindow(win);
-    if (!noTilt) applyRandomTilt(win);
+    if (groovyDocs) applyRandomTilt(win);
     return win;
   }
-  // mesma moldura "doc", mas sem a rotação aleatória (usada por newsdoc/newsidoc/runsdoc e variantes perma)
-  var groovyDocs = false; // ungroovy() por padrão: polaroid e newsdoc/newsidoc/runsdoc (e variantes perma) nascem sem rotação
+  // mantida como nome à parte por clareza de API — hoje se comporta exatamente igual à
+  // createDocFrameShell, já que a rotação de ambas é regida pelo mesmo groovyDocs
   function createDocFrameShellStraight(name, pos, bodyHtml, permanent){
-    return createDocFrameShell(name, pos, bodyHtml, permanent, !groovyDocs);
+    return createDocFrameShell(name, pos, bodyHtml, permanent);
   }
   function groovy(){ groovyDocs = true; }
   function ungroovy(){ groovyDocs = false; }
@@ -842,8 +845,9 @@ proporção original do conteúdo, sem distorcer.</p>
 <hr>
 <h4>Janelas "doc"</h4>
 <p>Seis variantes com a mesma moldura: sem cabeçalho no topo, borda fina de 2px, cantos quase retos,
-sombra mais discreta e uma leve rotação aleatória (até 4°), igual à polaroid. A diferença é que, em vez
-de legenda embaixo, o título e os botões de maximizar/restaurar (e fechar, quando existe) ficam numa
+sombra mais discreta e (dependendo de <code>groovy()</code>/<code>ungroovy()</code>, ver abaixo) uma leve
+rotação aleatória de até 4°, igual à polaroid. A diferença é que, em vez de legenda embaixo, o título e
+os botões de maximizar/restaurar (e fechar, quando existe) ficam numa
 aba estreita na lateral direita, começando uns 70px abaixo do topo — como a etiqueta de um fichário
 antigo. Essa aba é a área de arrastar a janela, e fica por baixo do "papel" no empilhamento visual: a
 sombra da janela passa por cima dela. Ao maximizar, essa mesma aba vira uma barra de título normal no
@@ -855,13 +859,13 @@ ser a aba lateral. Cada uma corresponde a uma função já existente, só na mol
 <code class="sig">newpermaidoc(url, título, w, h, x, y)</code> — igual à <code>newpermaframe</code>.<br>
 <code class="sig">rundoc(título, nomeDaFuncao, params, w, h, x, y)</code> — igual à <code>run</code>.<br>
 <code class="sig">runpermadoc(título, nomeDaFuncao, params, w, h, x, y)</code> — igual à <code>permarun</code>.
-<p>Cada uma dessas seis tem uma versão com "s" no nome (<code>newsdoc</code>, <code>newsidoc</code>,
+<p>Também existe uma versão de cada uma com "s" no nome (<code>newsdoc</code>, <code>newsidoc</code>,
 <code>runsdoc</code>, <code>newpermasdoc</code>, <code>newpermasidoc</code>, <code>runpermasdoc</code>) —
-idênticas em tudo, mas a rotação aleatória delas é controlada à parte:</p>
+hoje idênticas em tudo às seis acima (mantidas como nomes à parte por clareza de API).</p>
 <code class="sig">ungroovy()</code>
-<p>As janelas "s" acima e a <code>polaroid</code> nascem sempre a 0° (alinhadas ao eixo, sem nenhuma torção). Padrão inicial.</p>
+<p>Nenhuma janela "doc" (nem suas variantes "s", nem a <code>polaroid</code>) recebe rotação — todas nascem a 0°, alinhadas ao eixo. Padrão inicial.</p>
 <code class="sig">groovy()</code>
-<p>As janelas "s" acima e a <code>polaroid</code> voltam a nascer com rotação aleatória entre -4° e 4°.</p>
+<p>Todas as janelas "doc" (variantes "s" incluídas) e a <code>polaroid</code> voltam a nascer com rotação aleatória entre -4° e 4°.</p>
 <hr>
 <h4>SVG</h4>
 <code class="sig">svg(string, título, w, h, x, y)</code>
