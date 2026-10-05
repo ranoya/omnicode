@@ -914,6 +914,22 @@ janela invisível pela lupa ou referenciá-la em <code>connect</code>/<code>disc
 <code class="sig">setOpaqueBackground()</code>
 <p>Devolve o fundo do ambiente à cor sólida do tema atual.</p>
 <hr>
+<h4>Salvar o estado do ambiente</h4>
+<code class="sig">savestate()</code>
+<p>Gera um arquivo <code>.txt</code> para download (pede o nome do arquivo) com todas as instruções
+digitadas na barra de comando desde que a página abriu, na mesma ordem em que foram executadas — útil
+pra reconstruir o ambiente depois, rodando esse arquivo como uma implementação manual. Comandos que não
+criam janela (<code>setTheme</code>, <code>connect</code>, <code>devmode</code>, instruções suas
+próprias etc.) entram exatamente como foram digitados. Comandos que criam uma janela (qualquer
+modalidade — <code>newwindow</code>, <code>newframe</code>, <code>run</code>, as "doc", <code>svg</code>,
+<code>polaroid</code>...) entram com os mesmos argumentos originais, mas com <code>w, h, x, y</code>
+atualizados pra posição e tamanho atuais da janela — inclusive se ela foi movida ou redimensionada à mão
+depois de criada. Se a janela criada por um comando já foi fechada, esse comando não entra no arquivo.
+Se o comando usa uma função que esta skill não reconhece (uma implementação sua), ele entra como foi
+digitado, sem tentar atualizar w/h/x/y — o mesmo vale se um único comando criou mais de uma janela de
+uma vez. Só são capturadas instruções digitadas na própria barra de comando — nada que você tenha
+rodado direto pelo console do navegador.</p>
+<hr>
 <h4>Ajuda</h4>
 <code class="sig">help()</code>
 <p>Abre esta janela. Se ela já estiver aberta, apenas a traz para a frente.</p>
@@ -1396,11 +1412,124 @@ janela invisível pela lupa ou referenciá-la em <code>connect</code>/<code>disc
     cmdInput.focus();
   });
 
+  // ---- savestate(): reconstrói um arquivo de comandos que reproduz o ambiente atual ----
+
+  // nº de argumentos "de identidade" (tudo antes de w,h,x,y) de cada função criadora de janela conhecida
+  var CREATOR_ARG_COUNTS = {
+    newwindow: 1, newpermawindow: 1, newdoc: 1, newpermadoc: 1, newsdoc: 1, newpermasdoc: 1,
+    newframe: 2, newpermaframe: 2, newidoc: 2, newpermaidoc: 2, newsidoc: 2, newpermasidoc: 2,
+    run: 3, permarun: 3, rundoc: 3, runpermadoc: 3, runsdoc: 3, runpermasdoc: 3,
+    polaroid: 3, svg: 2
+  };
+
+  // separa "fnName(...)" em nome + texto bruto dos argumentos, só se o comando for ESSA chamada pura
+  // (nada antes, nada depois além de ";"), respeitando parênteses/strings aninhados
+  function extractSingleCall(raw){
+    var s = raw.trim();
+    var m = s.match(/^([A-Za-z_$][A-Za-z0-9_$]*)\s*\(/);
+    if (!m) return null;
+    var depth = 1, i = m[0].length, inStr = null;
+    for (; i < s.length; i++){
+      var c = s[i];
+      if (inStr){
+        if (c === '\\'){ i++; continue; }
+        if (c === inStr) inStr = null;
+        continue;
+      }
+      if (c === '"' || c === "'" || c === '`'){ inStr = c; continue; }
+      if (c === '(') depth++;
+      else if (c === ')'){ depth--; if (depth === 0) break; }
+    }
+    if (depth !== 0) return null;
+    var argsStr = s.slice(m[0].length, i);
+    var rest = s.slice(i + 1).trim();
+    if (rest !== '' && rest !== ';') return null;
+    return { fnName: m[1], argsStr: argsStr };
+  }
+
+  // divide uma lista de argumentos nas vírgulas de nível superior (ignora vírgulas dentro de
+  // (), [], {} ou strings), preservando o texto original de cada argumento
+  function splitTopLevelArgs(argsStr){
+    var args = [], depth = 0, inStr = null, current = '';
+    for (var i = 0; i < argsStr.length; i++){
+      var c = argsStr[i];
+      if (inStr){
+        current += c;
+        if (c === '\\'){ current += (argsStr[i + 1] || ''); i++; continue; }
+        if (c === inStr) inStr = null;
+        continue;
+      }
+      if (c === '"' || c === "'" || c === '`'){ inStr = c; current += c; continue; }
+      if (c === '(' || c === '[' || c === '{') depth++;
+      if (c === ')' || c === ']' || c === '}') depth--;
+      if (c === ',' && depth === 0){ args.push(current.trim()); current = ''; continue; }
+      current += c;
+    }
+    if (current.trim() !== '') args.push(current.trim());
+    return args;
+  }
+
+  function savestate(){
+    var lines = [];
+    commandLog.forEach(function(entry){
+      var raw = entry.raw.replace(/;?\s*$/, ';'); // garante só um ";" no final
+      var createdWins = entry.createdWins || [];
+
+      if (createdWins.length === 0){
+        lines.push(raw); // comando que não cria janela (setTheme, connect, devmode, custom...): intacto
+        return;
+      }
+      var openWins = createdWins.filter(function(w){ return w.isConnected; });
+      if (openWins.length === 0) return; // toda(s) janela(s) criada(s) por este comando já foi(ram) fechada(s)
+
+      if (createdWins.length === 1){
+        var win = openWins[0];
+        var parsed = extractSingleCall(raw);
+        var argCount = parsed ? CREATOR_ARG_COUNTS[parsed.fnName] : undefined;
+        if (parsed && typeof argCount === 'number'){
+          var lead = splitTopLevelArgs(parsed.argsStr).slice(0, argCount);
+          var W = Math.round(parseFloat(win.style.width));
+          var H = Math.round(parseFloat(win.style.height));
+          var X = Math.round(parseFloat(win.style.left));
+          var Y = Math.round(parseFloat(win.style.top));
+          lines.push(parsed.fnName + '(' + lead.concat([W, H, X, Y]).join(', ') + ');');
+          return;
+        }
+        // função criadora não reconhecida: mantém o comando como foi digitado
+        lines.push(raw);
+        return;
+      }
+      // um único comando criou mais de uma janela (ex.: várias chamadas separadas por ";" na mesma
+      // linha): não dá pra reescrever w,h,x,y com segurança; mantém como foi digitado
+      lines.push(raw);
+    });
+
+    var text = lines.join('\n') + '\n';
+    var defaultName = 'canvas-infinito-estado.txt';
+    var filename = defaultName;
+    try {
+      var answer = window.prompt('Nome do arquivo para salvar:', defaultName);
+      if (answer === null) return; // cancelado pelo usuário
+      if (answer.trim()) filename = answer.trim();
+    } catch (e){ /* prompt indisponível neste ambiente: segue com o nome padrão */ }
+    if (!/\.[a-z0-9]+$/i.test(filename)) filename += '.txt';
+
+    var blob = new Blob([text], { type: 'text/plain' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+  }
+  window.savestate = savestate; // pode ser chamado pelo console do navegador também
+
+  var commandLog = []; // { raw, createdWins }: histórico de comandos executados com sucesso, nesta ordem
   function runCommand(raw){
     var cmd = raw.trim();
     if (!cmd) return;
     consoleBar.classList.add('used'); // a partir do 1º comando, ela vira transparente quando ociosa
     try {
+      var winCountBefore = windows.length;
       // executa a instrução como JavaScript de verdade, com acesso às funções do canvas
       (new Function('newwindow', 'newframe', 'run', 'newpermawindow', 'newpermaframe', 'permarun',
                     'connect', 'disconnect', 'setTheme', 'setTempTheme', 'help',
@@ -1408,7 +1537,7 @@ janela invisível pela lupa ou referenciá-la em <code>connect</code>/<code>disc
                     'polaroid', 'newdoc', 'newidoc', 'rundoc', 'newpermadoc', 'newpermaidoc', 'runpermadoc',
                     'setZoom', 'setPan', 'center', 'multicolor', 'singlecolor', 'svg',
                     'newsdoc', 'newsidoc', 'runsdoc', 'newpermasdoc', 'newpermasidoc', 'runpermasdoc',
-                    'groovy', 'ungroovy',
+                    'groovy', 'ungroovy', 'savestate',
                     cmd))(
         newwindow, newframe, run, newpermawindow, newpermaframe, permarun,
         connect, disconnect, setTheme, setTempTheme, help,
@@ -1416,7 +1545,9 @@ janela invisível pela lupa ou referenciá-la em <code>connect</code>/<code>disc
         polaroid, newdoc, newidoc, rundoc, newpermadoc, newpermaidoc, runpermadoc,
         setZoom, setPan, center, multicolor, singlecolor, svg,
         newsdoc, newsidoc, runsdoc, newpermasdoc, newpermasidoc, runpermasdoc,
-        groovy, ungroovy);
+        groovy, ungroovy, savestate);
+      // registra o comando no histórico (só os que rodaram sem erro), junto das janelas que ele criou
+      commandLog.push({ raw: cmd, createdWins: windows.slice(winCountBefore) });
     } catch (err){
       console.warn('Comando inválido:', err.message);
     }
