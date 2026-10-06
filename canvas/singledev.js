@@ -546,8 +546,8 @@ newidoc("https://booklines.vercel.app/livros/javascript/js-operacoes.html?blink=
 newidoc("https://booklines.vercel.app/livros/javascript/js-condicionais.html?blink=Condicionais", "Condicionais", 821, 994, 3311, 1933);
 newidoc("https://booklines.vercel.app/livros/javascript/js-loops.html?blink=Loops", "Loops", 823, 989, 617, 2990);
 newidoc("https://booklines.vercel.app/livros/javascript/js-funcoes.html?blink=Funções", "Funções", 826, 989, 1506, 2989);
-newidoc("https://booklines.vercel.app/livros/javascript/js-arrays.html?blink=Arrays", "Arrays", 824, 987, 3312, 2988);
-newidoc("https://booklines.vercel.app/livros/javascript/js-arrayfunctions.html?blink=Funções%20das%20Arrays", "Funções das Arrays", 821, 989, 2423, 2987);
+newidoc("https://booklines.vercel.app/livros/javascript/js-arrays.html?blink=Arrays", "Arrays", 821, 989, 2423, 2987);
+newidoc("https://booklines.vercel.app/livros/javascript/js-arrayfunctions.html?blink=Funções%20das%20Arrays", "Funções das Arrays", 824, 987, 3312, 2988);
 newidoc("https://booklines.vercel.app/livros/javascript/js-dom.html?blink=Document%20Object%20Model", "DOM", 825, 986, 620, 4034);
 newidoc("https://booklines.vercel.app/livros/javascript/js-svg.html?blink=SVG", "SVG", 825, 982, 1511, 4035);
 newidoc("https://booklines.vercel.app/livros/javascript/js-datavis.html?blink=Dataviz", "Dataviz", 823, 987, 2427, 4034);
@@ -559,7 +559,13 @@ newidoc("https://omnicode.vercel.app/?preview=100&nopoe=true&minial=true&nostatu
 newidoc("https://omnicode.vercel.app/?preview=100&nopoe=true&minial=true&nostatus=true&noconsole=true&bgcolor=ffffff&gutcolor=ffffff&bordercolor=ffffff&lang=p5&file=https://booklines.vercel.app/assets/codigosp5/bass.js", "Mandala 3", 397, 368, 76, 1634);
 connect("Mandala 1", "Capa");
 connect("Mandala 2", "Capa");
-connect("Mandala 3", "Capa");
+  connect("Mandala 3", "Capa");
+  
+  connect("Objetos", "POO");
+  connect("Code Tour POO", "POO");
+  connect("SVG", "Dataviz");
+
+  connect("Arrays", "Funções das Arrays");
 
   center("Capa");
 }
