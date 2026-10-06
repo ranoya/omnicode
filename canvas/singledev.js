@@ -567,6 +567,13 @@ connect("Mandala 2", "Capa");
 
   connect("Arrays", "Funções das Arrays");
 
+  newframe("https://omnicode.vercel.app/cll/?bgcolor=ffffff&gutcolor=ffffff&bordercolor=ffffff&lang=p5&file=https://booklines.vercel.app/assets/codigosp5/arte_quadrados.js", "Code Mandala 1", 1033, 869, -1775, 876);
+  connect("Code Mandala 1", "Mandala 1");
+  newframe("https://omnicode.vercel.app/cll/?bgcolor=ffffff&gutcolor=ffffff&bordercolor=ffffff&lang=p5&file=https://booklines.vercel.app/assets/codigosp5/exemplo-livroJSD_SE.js", "Code Mandala 2", 1039, 770, -1316, 1859);
+  connect("Code Mandala 2", "Mandala 2");
+  newframe("https://omnicode.vercel.app/cll/?bgcolor=ffffff&gutcolor=ffffff&bordercolor=ffffff&lang=p5&file=https://booklines.vercel.app/assets/codigosp5/bass.js", "Code Mandala 3", 1039, 766, -528, 2758);
+  connect("Code Mandala 3", "Mandala 3");
+
   center("Capa");
 }
 
