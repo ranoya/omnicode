@@ -485,10 +485,12 @@ svg(`
 
 window.moverelogio = function () {
 
-  const agora = new Date();
-  const segundos = agora.getSeconds();
-  const minutos = agora.getMinutes();
-  const horas = agora.getHours();
+  setInterval(function () {
+
+  let agora = new Date();
+  let segundos = agora.getSeconds();
+  let minutos = agora.getMinutes();
+  let horas = agora.getHours();
 
   // Cálculo dos ângulos (360 graus / total de unidades)
   let angulo_sec = (segundos / 60) * 360;
@@ -499,35 +501,9 @@ window.moverelogio = function () {
   document.getElementById("clock_barra_Segundos").style.transform = "rotate(" + angulo_sec + "deg)";
   document.getElementById("clock_barra_Minutos").style.transform = "rotate(" + angulo_min + "deg)";
 
-  setInterval(function () {
-    if (angulo_sec >= 360) {
-      angulo_sec = 0;
-    }
-
-    document.getElementById("clock_barra_Segundos").style.transform = "rotate(" + angulo_sec + "deg)";
-    angulo_sec += 6;
-    
   }, 1000);
 
-  setInterval(function () {
-    if (angulo_min >= 360) {
-      angulo_min = 0;
-    }
 
-    document.getElementById("clock_barra_Minutos").style.transform = "rotate(" + angulo_min + "deg)";
-    angulo_min += 6;
-    
-  }, 60000);
-
-  setInterval(function () {
-    if (angulo_hor >= 360) {
-      angulo_hor = 0;
-    }
-
-    document.getElementById("clock_barra_Horas").style.transform = "rotate(" + angulo_hor + "deg)";
-    angulo_hor += 6;
-    
-  }, 3600000);
 }
 
 moverelogio();
