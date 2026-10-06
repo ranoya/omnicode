@@ -532,7 +532,7 @@ window.moverelogio = function () {
 
 moverelogio();
 
-window.pdj = function () {
+window.pjd = function () {
   
 
 
