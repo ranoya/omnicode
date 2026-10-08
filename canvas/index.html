@@ -116,6 +116,9 @@ $_GET = [];
   }
   .win.doc-frame.maximized .doc-paper{ top:38px; }
   .win.maximized .win-resize{display:none;}
+  /* lock(): sem alça de redimensionar e sem cursor de arrastar */
+  .win.locked .win-resize{display:none;}
+  .win.locked .win-draghandle, .win.locked .win-draghandle:active{cursor:default;}
   .win-body{
     flex:1; padding:10px; overflow:auto; outline:none; font-size:14px; user-select:text;
     color:var(--text);
@@ -903,6 +906,8 @@ janela invisível pela lupa ou referenciá-la em <code>connect</code>/<code>disc
 <p>Desloca o canvas diretamente para as coordenadas <code>x, y</code> (em pixels do espaço do canvas), sem precisar simular arrastar o fundo. Útil pra implementações manuais que queiram levar o usuário a um ponto específico.</p>
 <code class="sig">center(título)</code>
 <p>Encontra a janela com esse título exato e centraliza o canvas nela (mantendo o zoom atual), além de trazê-la pra frente de todas as outras — o mesmo que acontece ao escolher uma janela na lista da lupa, só que por código.</p>
+<code class="sig">centerlastframe()</code>
+<p>Centraliza o canvas na última janela criada que ainda esteja aberta (e a traz pra frente), sem precisar informar o título.</p>
 <hr>
 <h4>Embutir / integrar</h4>
 <code class="sig">centerControls()</code>
@@ -913,6 +918,15 @@ janela invisível pela lupa ou referenciá-la em <code>connect</code>/<code>disc
 <p>Torna o fundo do ambiente transparente, para integrar melhor quando o Canvas Infinito é embutido sobre outra interface.</p>
 <code class="sig">setOpaqueBackground()</code>
 <p>Devolve o fundo do ambiente à cor sólida do tema atual.</p>
+<hr>
+<h4>Travar janelas</h4>
+<code class="sig">lock(título)</code>
+<p>Trava a janela com esse título: ela deixa de poder ser movida ou redimensionada, e a alça do canto
+inferior direito some. Vale para todas as modalidades (<code>newwindow</code>, <code>newframe</code>,
+<code>run</code>, <code>polaroid</code>, <code>svg</code>, as "doc" e todas as variantes). O botão de
+maximizar/restaurar, quando a janela tem um, continua funcionando.</p>
+<code class="sig">unlock(título)</code>
+<p>Desfaz o <code>lock</code>: a janela volta a poder ser movida e redimensionada.</p>
 <hr>
 <h4>Salvar o estado do ambiente</h4>
 <code class="sig">savestate()</code>
@@ -1126,6 +1140,7 @@ rodado direto pelo console do navegador.</p>
     if (dragHandle) dragHandle.addEventListener('pointerdown', function(e){
       if (e.target.closest('.win-close') || e.target.closest('.win-max')) return;
       if (win.classList.contains('maximized')) return;
+      if (win._locked) return; // lock(): janela travada não é movida
       e.preventDefault();
       bringToFront(win);
       var startX = e.clientX, startY = e.clientY;
@@ -1151,6 +1166,7 @@ rodado direto pelo console do navegador.</p>
     // (usada pela janela invisível de svg()), ancorando o canto superior direito em vez do esquerdo
     resize.addEventListener('pointerdown', function(e){
       if (win.classList.contains('maximized')) return;
+      if (win._locked) return; // lock(): janela travada não é redimensionada
       e.preventDefault(); e.stopPropagation();
       bringToFront(win);
       var fromLeft = resize.classList.contains('resize-bl');
@@ -1321,6 +1337,36 @@ rodado direto pelo console do navegador.</p>
     return win;
   }
   window.center = center; // pode ser chamado pelo console do navegador também
+
+  // ---- centralizar a última janela criada (ainda aberta), sem precisar do título ----
+  function centerlastframe(){
+    if (windows.length === 0){
+      console.warn('centerlastframe: não há nenhuma janela aberta.');
+      return null;
+    }
+    var win = windows[windows.length - 1];
+    panToWindow(win);
+    return win;
+  }
+  window.centerlastframe = centerlastframe;
+
+  // ---- travar / destravar uma janela (vale para todas as modalidades) ----
+  function lock(titulo){
+    var win = findWindowByName(titulo);
+    if (!win){ console.warn('lock: janela "' + titulo + '" não encontrada.'); return null; }
+    win._locked = true;
+    win.classList.add('locked');
+    return win;
+  }
+  function unlock(titulo){
+    var win = findWindowByName(titulo);
+    if (!win){ console.warn('unlock: janela "' + titulo + '" não encontrada.'); return null; }
+    win._locked = false;
+    win.classList.remove('locked');
+    return win;
+  }
+  window.lock = lock;
+  window.unlock = unlock;
 
   function renderSearchList(filter){
     var q = (filter || '').trim().toLowerCase();
@@ -1537,7 +1583,7 @@ rodado direto pelo console do navegador.</p>
                     'polaroid', 'newdoc', 'newidoc', 'rundoc', 'newpermadoc', 'newpermaidoc', 'runpermadoc',
                     'setZoom', 'setPan', 'center', 'multicolor', 'singlecolor', 'svg',
                     'newsdoc', 'newsidoc', 'runsdoc', 'newpermasdoc', 'newpermasidoc', 'runpermasdoc',
-                    'groovy', 'ungroovy', 'savestate',
+                    'groovy', 'ungroovy', 'savestate', 'lock', 'unlock', 'centerlastframe',
                     cmd))(
         newwindow, newframe, run, newpermawindow, newpermaframe, permarun,
         connect, disconnect, setTheme, setTempTheme, help,
@@ -1545,7 +1591,7 @@ rodado direto pelo console do navegador.</p>
         polaroid, newdoc, newidoc, rundoc, newpermadoc, newpermaidoc, runpermadoc,
         setZoom, setPan, center, multicolor, singlecolor, svg,
         newsdoc, newsidoc, runsdoc, newpermasdoc, newpermasidoc, runpermasdoc,
-        groovy, ungroovy, savestate);
+        groovy, ungroovy, savestate, lock, unlock, centerlastframe);
       // registra o comando no histórico (só os que rodaram sem erro), junto das janelas que ele criou
       commandLog.push({ raw: cmd, createdWins: windows.slice(winCountBefore) });
     } catch (err){
