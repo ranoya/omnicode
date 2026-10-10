@@ -558,6 +558,16 @@ connect("Mandala 2", "Capa");
   center("Capa");
 }
 
+
+let jupts = 1;
+
+window.jupyter = function () {
+  newidoc("https://jupyter.org/try-jupyter/lab/?path=notebooks%2FIntro.ipynb", "Jupyter " + jupts);
+  jupts++;
+}
+
+
+
 menu();
 
 /*
