@@ -435,6 +435,7 @@ window.openmenu = function (id, dados) {
                 <div onclick="code()">Editor de Código</div>
                 <div onclick="notebook()">Notebook Computacional</div>
                 <div onclick="noteinstruct()">Instruções de uso do Notebook</div>
+                <div onclick="jupyter()">Jupyter Notebook</div>
                 <div onclick="omnicode()">Omnicode Run</div>
                 <div onclick="omnicodelive()">Omnicode Live</div>
             </div>
