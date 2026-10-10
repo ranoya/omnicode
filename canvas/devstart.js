@@ -564,6 +564,7 @@ let jupts = 1;
 
 window.jupyter = function () {
   newidoc("https://jupyter.org/try-jupyter/lab/?path=notebooks%2FIntro.ipynb", "Jupyter " + jupts);
+  center("Jupyter " + jupts);
   jupts++;
 }
 
