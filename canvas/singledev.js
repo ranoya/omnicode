@@ -567,102 +567,6 @@ window.jupyter = function () {
   jupts++;
 }
 
-let testevai = 1;
-window.vai = function () {
-  rundoc("teste " + testevai, "teste", {});
-  testevai++;
-}
-
-window.teste = function (elem_id, extras) {
-  
- gsdata("https://docs.google.com/spreadsheets/d/1SxGT3E57CSn6r19a8BeVDWpT9dce0gi7jkAYltREeu4/edit?gid=0#gid=0", function (dados) {
-
-    console.table(dados);
-    
-    let arr = dados;
-
-    console.log("agora o query:");
-
-    console.table(arr);
-
-    let colunas = Object.keys(arr[0]);
-
-    let constroigrid = `grid-template-columns: [init]`;
-    for (let i = 0; i < colunas.length; i++) {
-      constroigrid += ` 1fr`;
-    }
-    constroigrid += ` [fim];`
-
-    let constroihtml = `
-    
-    <style>
-
-        .tabelasql {
-
-          width: 100%;
-          background-color: var(--bg, #FFFFFF);
-          color: var(--text, #000000);
-          font-size: 14px;
-          line-height: 16px;
-          padding: 15px;
-          gap: 12px 0px;
-          display: grid;
-
-        }
-
-        .tabelasql div {
-        
-          padding-left: 7px;
-          padding-right: 12px;
-          text-align: left;
-
-            
-        }
-
-        .tabelasepara {
-          padding: 0 !important;
-          height: 1px !important;
-          background-color: var(--text, #000000);
-          grid-column: init/fim;
-        }
-
-    </style>
-
-    <div class="tabelasql" style="${constroigrid}">
-    
-    `;
-
-    for (let key in arr[0]) {
-
-      constroihtml += `<div><b>${key}</b></div>`;
-
-    }
-
-    constroihtml += `<div class="tabelasepara"></div>`;
-
-    for (let i = 0; i < arr.length; i++) {
-
-      for (let datakey in arr[0]) {
-
-        constroihtml += `<div>${arr[i][datakey]}</div>`;
-
-      }
-
-      constroihtml += `<div class="tabelasepara"></div>`;
-
-    }
-
-    constroihtml += `<div>`;
-
-    document.getElementById(elem_id).innerHTML = constroihtml;
-
-  });
-
-
-
-}
-
-
 
 window.openquery = function (elem_id, extras) {
 
@@ -750,6 +654,7 @@ window.openquery = function (elem_id, extras) {
     constroihtml += `<div>`;
 
     document.getElementById(elem_id).innerHTML = constroihtml;
+    document.getElementById(elem_id).style.backgroundColor = "var(--bg, #FFFFFF)";
 
   });
 
