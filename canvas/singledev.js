@@ -690,8 +690,11 @@ window.openquery = function (elem_id, extras) {
 
 let querywindows = 1;
 
-window.sql = function (googlesheet, select) {
+window.sql = function (googlesheet, select, conecta) {
   rundoc("Query " + querywindows, "openquery", { "sheet": googlesheet, "query": select });
+  if (typeof conecta != "undefined" && conecta != null && conecta != "") {
+    connect("Query " + querywindows, conecta);
+  }
   querywindows++;
 
 }
@@ -702,15 +705,20 @@ let dataseturls = [];
 window.opendataset = function (id, p) {
   
   let preview = p.googlesheet.replace("edit", "htmlview");
-  let codigohtml = `<iframe frameborder='0' src='${preview}' style='width: calc(100%); padding: 15px; height: calc(100% - 25px);'></iframe><input type='text' style='height: 25px; line-height: 25px; font-size: 18px; width: calc(100%); padding-left: 15px; padding-right: 15px; background-color: (--grid-dot, #c7c7d1); color: var(--text,  #1c1c22);' />`;
+  let codigohtml = `<iframe frameborder='0' src='${preview}' style='width: calc(100%); padding: 15px; height: calc(100% - 45px);'></iframe><input id="queryrunner${p.indice}" type='text' style='outline: none; height: 41px; line-height: 25px; font-size: 16px; width: calc(100%); padding-left: 15px; padding-right: 15px; background-color: (--grid-dot, #c7c7d1); color: var(--text,  #1c1c22);' />`;
   
   document.getElementById(id).innerHTML = codigohtml;
 
+  document.getElementById("queryrunner" + p.indice).addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        sql(dataseturls[p.indice], document.getElementById("queryrunner" + p.indice).value, "Dataset " + p.indice);
 
+      }
+    });
 }
 
 window.dataset = function (u) {
-  run("Dataset " + datasetwindows, "opendataset", { googlesheet: u });
+  run("Dataset " + datasetwindows, "opendataset", { googlesheet: u, indice: datasetwindows});
   dataseturls[datasetwindows] = u;
   datasetwindows++;
 }
