@@ -615,7 +615,8 @@ window.openquery = function (elem_id, extras) {
           position: sticky;
           grid-column: init/fim;
           padding: 0 !important;
-          height: 15px !important;
+          height: 17px !important;
+          top: -1px;
         }
 
         .tabelasql div {
@@ -640,14 +641,14 @@ window.openquery = function (elem_id, extras) {
 
           position: sticky;
           top: 15px;
-          background-color: var(--bg, #ffffff);
+          background-color: var(--grid-dot, #c7c7d1);
         
         }
 
         .separahead {
 
           position: sticky;
-          top: 45px;
+          top: 51px;
 
         }
 
