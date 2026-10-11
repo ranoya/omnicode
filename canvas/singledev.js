@@ -604,9 +604,18 @@ window.openquery = function (elem_id, extras) {
           font-size: 14px;
           line-height: 16px;
           padding: 15px;
-          gap: 12px 0px;
+          gap: 0px 0px;
           display: grid;
+          padding-top: 0 !important;
 
+        }
+
+        .tabelaover {
+          background-color: var(--bg, #FFFFFF);
+          position: sticky;
+          grid-column: init/fim;
+          padding: 0 !important;
+          height: 15px !important;
         }
 
         .tabelasql div {
@@ -614,6 +623,8 @@ window.openquery = function (elem_id, extras) {
           padding-left: 7px;
           padding-right: 12px;
           text-align: left;
+          padding-top: 10px;
+          padding-bottom: 10px;
 
             
         }
@@ -628,7 +639,7 @@ window.openquery = function (elem_id, extras) {
         .tablehead {
 
           position: sticky;
-          top: 10px;
+          top: 15px;
           background-color: var(--bg, #ffffff);
         
         }
@@ -636,8 +647,8 @@ window.openquery = function (elem_id, extras) {
         .separahead {
 
           position: sticky;
-          top: 30px;
-          
+          top: 45px;
+
         }
 
     </style>
@@ -648,7 +659,7 @@ window.openquery = function (elem_id, extras) {
 
     for (let key in arr[0]) {
 
-      constroihtml += `<div class='tablehead'><b>${key}</b></div>`;
+      constroihtml += `<div class='tabelaover'></div><div class='tablehead'><b>${key}</b></div>`;
 
     }
 
