@@ -696,6 +696,25 @@ window.sql = function (googlesheet, select) {
 
 }
 
+let datasetwindows = 1;
+let dataseturls = [];
+
+window.opendataset = function (id, p) {
+  
+  let preview = p.googlesheet.replace("edit", "htmlview");
+  let codigohtml = `<iframe frameborder='0' src='${preview}' style='width: calc(100% - 30px); padding: 15px; height: calc(100% - 55px);'><input type='text' style='height: 25px; line-height: 25px; font-size: 18px; width: calc(100% - 30px); padding-left: 15px; padding-right: 15px; background-color: (--grid-dot, #c7c7d1); color: var(--text,  #1c1c22);' />`;
+  
+  document.getElementById(id).innerHTML = codigohtml;
+
+
+}
+
+window.dataset = function (u) {
+  run("Dataset " + datasetwindows, "opendataset", { googlesheet: u });
+  dataseturls[datasetwindows] = u;
+  datasetwindows++;
+}
+
 
 
 
