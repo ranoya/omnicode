@@ -567,13 +567,7 @@ window.jupyter = function () {
   jupts++;
 }
 
-let querywindows = 1;
 
-window.sql = function (googlesheet, select) {
-  rundoc("Query " + querywindows, openquery, { "sheet": googlesheet, "query": select });
-  querywindows++;
-
-}
 
 window.openquery = function (elem_id, extras) {
 
@@ -582,8 +576,14 @@ window.openquery = function (elem_id, extras) {
   
 
   gsdata(googlesheet, function (dados) {
+
+    console.table(dados);
     
     let arr = sqlquery(dados, select);
+
+    console.log("agora o query:");
+
+    console.table(arr);
 
     let colunas = Object.keys(arr[0]);
 
@@ -659,6 +659,15 @@ window.openquery = function (elem_id, extras) {
   });
 
 }
+
+let querywindows = 1;
+
+window.sql = function (googlesheet, select) {
+  rundoc("Query " + querywindows, openquery, { "sheet": googlesheet, "query": select });
+  querywindows++;
+
+}
+
 
 
 
