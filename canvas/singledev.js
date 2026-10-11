@@ -653,13 +653,14 @@ window.openquery = function (elem_id, extras) {
 
     </style>
 
-    <div class="tabelasql" style="${constroigrid}">
+    <div class="tabelasql" style="${constroigrid}"><div class='tabelaover'></div>
     
     `;
 
+
     for (let key in arr[0]) {
 
-      constroihtml += `<div class='tabelaover'></div><div class='tablehead'><b>${key}</b></div>`;
+      constroihtml += `<div class='tablehead'><b>${key}</b></div>`;
 
     }
 
