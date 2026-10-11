@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="https://datat.vercel.app/basicsmin.js"></script>
 <title>Canvas Infinito</title>
 <script>
 $_GET = [];
@@ -1693,6 +1694,7 @@ if (
  // --- IMPLEMENTAÇÕES PRÓPRIAS ------------------------------------------------------------------
 
 
+
       /*
       ATENÇÃO
       É necessário alterar também um trecho do código do contexto:
@@ -1700,6 +1702,12 @@ if (
       updateUIVisibility()
 
       consoleBar só se modifica se $_GET["devmode"] existir
+
+
+      também é necessário incluir o DATAT no início do código:
+
+      script src="https://datat.vercel.app/basicsmin.js"
+
       */
 
       function updateUIVisibility() {
