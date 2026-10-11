@@ -569,7 +569,7 @@ window.jupyter = function () {
 
 let testevai = 1;
 window.vai = function () {
-  rundoc("teste " + testevai, teste, {});
+  rundoc("teste " + testevai, "teste", {});
   testevai++;
 }
 
@@ -758,7 +758,7 @@ window.openquery = function (elem_id, extras) {
 let querywindows = 1;
 
 window.sql = function (googlesheet, select) {
-  rundoc("Query " + querywindows, openquery, { "sheet": googlesheet, "query": select });
+  rundoc("Query " + querywindows, "openquery", { "sheet": googlesheet, "query": select });
   querywindows++;
 
 }
