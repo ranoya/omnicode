@@ -625,6 +625,21 @@ window.openquery = function (elem_id, extras) {
           grid-column: init/fim;
         }
 
+        .tablehead {
+
+          position: sticky;
+          top: 10px;
+          background-color: var(--bg, #ffffff);
+        
+        }
+
+        .separahead {
+
+          position: sticky;
+          top: 30px;
+          
+        }
+
     </style>
 
     <div class="tabelasql" style="${constroigrid}">
@@ -633,11 +648,11 @@ window.openquery = function (elem_id, extras) {
 
     for (let key in arr[0]) {
 
-      constroihtml += `<div><b>${key}</b></div>`;
+      constroihtml += `<div class='tablehead'><b>${key}</b></div>`;
 
     }
 
-    constroihtml += `<div class="tabelasepara"></div>`;
+    constroihtml += `<div class="tabelasepara separahead"></div>`;
 
     for (let i = 0; i < arr.length; i++) {
 
