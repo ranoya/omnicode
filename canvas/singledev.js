@@ -579,6 +579,7 @@ window.openquery = function (elem_id, extras) {
 
   let googlesheet = extras.sheet;
   let select = extras.query;
+  let indice = extras.indice;
 
   if (typeof extras.sheet != 'undefined' && extras.sheet != null && extras.sheet != '') {
 
@@ -686,8 +687,8 @@ window.openquery = function (elem_id, extras) {
 
       }
 
-      constroihtml += `<div>
-                      <input placeholder="SQL Query" id="subqueryrunner_${elem_id}" type='text' style='outline: none; border 0; height: 41px; line-height: 25px; font-size: 16px; width: calc(100%); padding-left: 15px; padding-right: 15px; background-color: var(--grid-dot, #c7c7d1); color: var(--text,  #1c1c22); font-family: monospace; border: 0;' />
+      constroihtml += `</div>
+                      <input placeholder="SQL Query" id="subqueryrunner_${elem_id}" type='text' style='outline: none; border 0; height: 40px; line-height: 25px; font-size: 16px; width: calc(100%); padding-left: 15px; padding-right: 15px; background-color: var(--grid-dot, #c7c7d1); color: var(--text,  #1c1c22); font-family: monospace; border: 0;' />
                       `;
 
       document.getElementById(elem_id).innerHTML = constroihtml;
@@ -697,7 +698,7 @@ window.openquery = function (elem_id, extras) {
         if (event.key === 'Enter') {
           
           // AQUI
-          internalsql(elem_id, document.getElementById("subqueryrunner_" + elem_id).value, "Subdataset " + elem_id);
+          internalsql(elem_id, document.getElementById("subqueryrunner_" + elem_id).value, "Query " + indice);
 
         }
       });
@@ -809,8 +810,8 @@ window.openquery = function (elem_id, extras) {
 
       }
 
-      constroihtml += `<div>
-                      <input placeholder="SQL Query" id="subqueryrunner_${elem_id}" type='text' style='outline: none; border 0; height: 41px; line-height: 25px; font-size: 16px; width: calc(100%); padding-left: 15px; padding-right: 15px; background-color: var(--grid-dot, #c7c7d1); color: var(--text,  #1c1c22); font-family: monospace; border: 0;' />
+      constroihtml += `</div>
+                      <input placeholder="SQL Query" id="subqueryrunner_${elem_id}" type='text' style='outline: none; border 0; height: 40px; line-height: 25px; font-size: 16px; width: calc(100%); padding-left: 15px; padding-right: 15px; background-color: var(--grid-dot, #c7c7d1); color: var(--text,  #1c1c22); font-family: monospace; border: 0;' />
                       `;
 
       document.getElementById(elem_id).innerHTML = constroihtml;
@@ -820,7 +821,7 @@ window.openquery = function (elem_id, extras) {
         if (event.key === 'Enter') {
           
           // AQUI
-          internalsql(elem_id, document.getElementById("subqueryrunner_" + elem_id).value, "Subdataset " + elem_id);
+          internalsql(elem_id, document.getElementById("subqueryrunner_" + elem_id).value, "Query " + indice)
 
         }
       });
@@ -836,7 +837,7 @@ window.openquery = function (elem_id, extras) {
 let querywindows = 1;
 
 window.sql = function (googlesheet, select, conecta) {
-  rundoc("Query " + querywindows, "openquery", { "sheet": googlesheet, "query": select });
+  rundoc("Query " + querywindows, "openquery", { "sheet": googlesheet, "query": select, "indice": querywindows });
   if (typeof conecta != "undefined" && conecta != null && conecta != "") {
     connect("Query " + querywindows, conecta);
   }
@@ -845,7 +846,7 @@ window.sql = function (googlesheet, select, conecta) {
 }
 
 window.internalsql = function (id, select, conecta) {
-  rundoc("Query " + querywindows, "openquery", { "dataid": id, "query": select });
+  rundoc("Query " + querywindows, "openquery", { "dataid": id, "query": select, "indice": querywindows });
   if (typeof conecta != "undefined" && conecta != null && conecta != "") {
     connect("Query " + querywindows, conecta);
   }
