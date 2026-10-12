@@ -115,6 +115,7 @@ Esta instrução irá abrir a planilha para visualização dentro do ambiente. N
 
 Se desejar, poderá abrir múltiplos documentos paralelos com a instrução `dataset`.
 
+
 </script>
 <!-- VANILLA-NOTEBOOK-CELL-END -->
 
@@ -194,6 +195,29 @@ Se você desejar limitar o número máximo de resultados apresentados, poderá a
 SELECT * WHERE autor LIKE "%RANOYA%" ORDER BY ano DESC, titulo ASC LIMIT 5
 ```
 
+
+</script>
+<!-- VANILLA-NOTEBOOK-CELL-END -->
+
+<!-- VANILLA-NOTEBOOK-CELL
+id: cell-19
+type: markdown
+hidden: true
+index: 2
+-->
+<script type="text/markdown" data-notebook-cell data-cell-id="cell-19" data-cell-type="markdown" data-cell-hidden="true">## Usando diretamente da linha de comando
+
+Você pode realizar uma query diretamente em uma planilha do Google Sheets pela linha de comando no ambiente, sem a necessidade de carregá-la através de `dataset` antes:
+
+```js
+sql("URL da Planilha", "Query SQL")
+```
+
+Exemplo:
+
+```js
+sql("https://docs.google.com/spreadsheets/d/1FbY8hPtM8IxEJ26ybMZHpMrHdk-LEm1yuYPiFVwF94U/edit?gid=0#gid=0", "SELECT * WHERE ano < 2000")
+```
 </script>
 <!-- VANILLA-NOTEBOOK-CELL-END -->
 
@@ -201,7 +225,7 @@ SELECT * WHERE autor LIKE "%RANOYA%" ORDER BY ano DESC, titulo ASC LIMIT 5
 id: cell-18
 type: markdown
 hidden: true
-index: 2
+index: 3
 -->
 <script type="text/markdown" data-notebook-cell data-cell-id="cell-18" data-cell-type="markdown" data-cell-hidden="true">## Como utilizar isso na programação?
 
@@ -223,6 +247,7 @@ gsdata("url da planilha", function(dados) {
 
 });
 ```
+
 </script>
 <!-- VANILLA-NOTEBOOK-CELL-END -->
 </div>
