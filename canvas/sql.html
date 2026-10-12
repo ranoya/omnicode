@@ -92,10 +92,10 @@ window.display = value => console.log(value);
 <!-- VANILLA-NOTEBOOK-CELL
 id: cell-12
 type: markdown
-hidden: true
+hidden: false
 index: 0
 -->
-<script type="text/markdown" data-notebook-cell data-cell-id="cell-12" data-cell-type="markdown" data-cell-hidden="true"># SQL Query em Planilhas do Google Sheets
+<script type="text/markdown" data-notebook-cell data-cell-id="cell-12" data-cell-type="markdown" data-cell-hidden="false"># SQL Query utilizando dados armazenados em planilhas do Google Sheets
 
 <br><br><br>
 Este ambiente foi criado como um espaço para experimentação para queries SQL em planilhas do Google Sheets.
@@ -106,9 +106,15 @@ Para iniciar, abra uma planilha dentro deste ambiente (se certifique que o docum
 dataset("endereço url do Google Sheets")
 ```
 
+Exemplo:
+```
+dataset("https://docs.google.com/spreadsheets/d/1FbY8hPtM8IxEJ26ybMZHpMrHdk-LEm1yuYPiFVwF94U/edit?gid=0#gid=0")
+```
+
 Esta instrução irá abrir a planilha para visualização dentro do ambiente. Na sua parte inferior você poderá rodar instruções `select` do SQL que retornarão consultas ao documento.
 
 Se desejar, poderá abrir múltiplos documentos paralelos com a instrução `dataset`.
+
 </script>
 <!-- VANILLA-NOTEBOOK-CELL-END -->
 
@@ -186,6 +192,36 @@ Se você desejar limitar o número máximo de resultados apresentados, poderá a
 
 ```sql
 SELECT * WHERE autor LIKE "%RANOYA%" ORDER BY ano DESC, titulo ASC LIMIT 5
+```
+
+</script>
+<!-- VANILLA-NOTEBOOK-CELL-END -->
+
+<!-- VANILLA-NOTEBOOK-CELL
+id: cell-18
+type: markdown
+hidden: false
+index: 2
+-->
+<script type="text/markdown" data-notebook-cell data-cell-id="cell-18" data-cell-type="markdown" data-cell-hidden="false">## Como utilizar isso na programação?
+
+A biblioteca `DATAT` possui a função `sqlquery` que realiza operações SQL em dados tabulares. Os dados podem ser obtidos de uma planilha do Google Sheets através de outras de suas funções, a `gsdata`.
+
+A biblioteca pode ser consultada [neste link](https://datat.vercel.app). Para incluí-la em uma aplicação web, basta utilizar o código html abaixo:
+
+```html
+<script src="https://datat.vercel.app/basicsmin.js"><\/script>
+```
+
+As funções `gsdata` e `sqlquery` podem ser utilizadas em conjunto da seguinte forma:
+
+```javascript
+gsdata("url da planilha", function(dados) {
+
+  let consulta = sqlquery(dados, "query da consulta");
+  console.table(consulta);
+
+});
 ```
 </script>
 <!-- VANILLA-NOTEBOOK-CELL-END -->
