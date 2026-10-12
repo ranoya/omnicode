@@ -575,14 +575,8 @@ window.openquery = function (elem_id, extras) {
   
 
   gsdata(googlesheet, function (dados) {
-
-    console.table(dados);
     
     let arr = sqlquery(dados, select);
-
-    console.log("agora o query:");
-
-    console.table(arr);
 
     let colunas = Object.keys(arr[0]);
 
@@ -642,6 +636,7 @@ window.openquery = function (elem_id, extras) {
           position: sticky;
           top: 15px;
           background-color: var(--grid-dot, #c7c7d1);
+          font-family: monospace;
         
         }
 
