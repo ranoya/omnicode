@@ -345,7 +345,7 @@ let getcssv = function (v) {
 
 
 window.menu = function () {
-        rundoc("Menu", "openmenu", {}, 335, 555, 63, 68);
+        rundoc("Menu", "openmenu", {}, 335, 556, 63, 68);
         setPan(0, 0);
 }
 
