@@ -880,6 +880,107 @@ window.dataset = function (u) {
 
 
 
+// Legacy
+
+window.applelogo = function () {
+  newidoc("https://apple2ts.com/?appmode=embed&crtdistort=off&color=green&scanlines=off&ghosting=off&#https://namco.vercel.app/a2/disk/Apple_LOGO.dsk", "Logo Apple");
+}
+
+window.msxlogo = function () {
+  newidoc("https://namco.vercel.app/sx/?ROM=logo.rom", "Logo MSX");
+}
+
+window.applebasic = function () {
+  newidoc("https://apple2ts.com/?appmode=embed&crtdistort=off&color=green&scanlines=on&ghosting=off&text=LIST", "BASIC Apple");
+}
+
+window.msxbasic = function () {
+  newidoc("https://namco.vercel.app/sx/", "BASIC MSX");
+}
+
+window.ataribasic = function () {
+  newidoc("https://namco.vercel.app/a8/?cart=bas.c", "BASIC Atari");
+}
+
+window.gwbasic = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=gwb", "BASIC Dos");
+}
+
+window.gwbasic = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=gwb", "BASIC Dos");
+}
+
+window.turbobasic = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=tb", "Turbo BASIC");
+}
+
+window.pascal1 = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=tp1", "Turbo Pascal 1.0");
+}
+
+
+window.legacy = function () {
+        rundoc("Legacy", "openlegacymenu", {}, 335, 556, 563, 68);
+        setPan(0, 0);
+}
+
+window.openlegacymenu = function (id, dados) {
+        var el = document.getElementById(id);
+        el.innerHTML =
+            `
+            <style>
+
+                .menu_menuopt {
+                
+                display: flex;
+                flex-direction: column;
+                align-items: start;
+                
+                }
+
+                .menu_menuopt div {
+
+                cursor: pointer;
+                font-size: 18px;
+                line-height: 68px;
+                height: auto;
+                width: 100%;
+                color: var(--text);
+                background-color: var(--panel-border);
+                padding-left: 20px;
+                padding-right: 20px;
+                border-top: 1px dotted var(--muted);
+                }
+
+                .menu_menuopt div:hover {
+                background-color: var(--win-header);
+
+
+                }
+
+            </style>
+
+            <div class="menu_menuopt">
+                <div onclick="applelogo()">Apple II Logo</div>
+                <div onclick="msxlogo()">MSX Logo</div>
+                <div onclick="applebasic()">Apple II BASIC</div>
+                <div onclick="msxbasic()">MSX BASIC</div>
+                <div onclick="ataribasic()">Atari BASIC</div>
+                <div onclick="gwbasic()">DOS GW-BASIC</div>
+                <div onclick="turbobasic()">DOS Borland Turbo BASIC</div>
+                <div onclick="pascal1()">DOS Borland Turbo Pascal 1.0</div>
+                <div onclick="pascal3()">DOS Borland Turbo Pascal 3.0</div>
+                <div onclick="pascal5()">DOS Borland Turbo Pascal 5.0</div>
+            </div>
+          
+          
+          
+          
+            `;
+        
+      }
+
+
 
 menu();
 
