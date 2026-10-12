@@ -345,7 +345,7 @@ let getcssv = function (v) {
 
 
 window.menu = function () {
-        rundoc("Menu", "openmenu", {}, 335, 541, 63, 68);
+        rundoc("Menu", "openmenu", {}, 335, 555, 63, 68);
         setPan(0, 0);
 }
 
@@ -446,6 +446,7 @@ window.openmenu = function (id, dados) {
                 <div onclick="jupyter()">Jupyter Notebook</div>
                 <div onclick="omnicode()">Omnicode Run</div>
                 <div onclick="omnicodelive()">Omnicode Live</div>
+                <div onclick="notedb()">Instruções de uso de SQL Query</div>
             </div>
           
           
