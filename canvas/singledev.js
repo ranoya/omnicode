@@ -898,24 +898,109 @@ window.msxbasic = function () {
   newidoc("https://namco.vercel.app/sx/", "BASIC MSX");
 }
 
-window.ataribasic = function () {
-  newidoc("https://namco.vercel.app/a8/?cart=bas.c", "BASIC Atari");
-}
 
 window.gwbasic = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=gwb", "BASIC Dos");
 }
 
-window.gwbasic = function () {
-  newidoc("https://namco.vercel.app/interfaces/?rom=gwb", "BASIC Dos");
-}
 
 window.turbobasic = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=tb", "Turbo BASIC");
 }
 
+
+
+
+window.qbasic45 = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=qb45", "Quick BASIC 4.5");
+}
+
+window.qbasic71 = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=qbx71", "Quick BASIC 7.1");
+}
+
+window.vbasicdos = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=vb", "DOS Visual BASIC 2.0");
+}
+
+window.vbasic = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=mvb1", "Visual BASIC 1.0");
+}
+
+
+
+
 window.pascal1 = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=tp1", "Turbo Pascal 1.0");
+}
+
+window.pascal3 = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=tp3", "Turbo Pascal 3.0");
+}
+
+window.pascal5 = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=btp5", "Turbo Pascal 5.0");
+}
+
+window.pascal7 = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=tpw", "Turbo Pascal 7.0");
+}
+
+window.pascalw1 = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=tpw", "Turbo Pascal Windows 1.5");
+}
+
+window.pascalw7 = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=bp7ofw", "Turbo Pascal Windows 7.0");
+}
+
+window.qpascal = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=qp", "Microsoft Quick Pascal 1.0");
+}
+
+window.msqc = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=qc", "Microsoft Quick C");
+}
+
+window.btc = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=qp", "Borland Turbo C++ 3.0");
+}
+
+window.delphi = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=delphi", "Borland Delphi");
+}
+
+
+window.wmath = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=mtmtk", "Wolfram Mathematica");
+}
+
+window.db3 = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=atdb", "dBase III Plus");
+}
+
+window.db4 = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=BorDB4", "dBase IV");
+}
+
+window.foxpro = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=FPX2", "FoxPro 2.0");
+}
+
+window.foxprow = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=fpw26", "Windows FoxPro 2.6");
+}
+
+window.paradox = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=PDOX45", "Paradox 4.5");
+}
+
+window.paradoxw = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=bpadoxw", "Paradox for Windows");
+}
+
+window.paradoxw45 = function () {
+  newidoc("https://namco.vercel.app/interfaces/?rom=pdox45w", "Paradox 4.5 for Windows");
 }
 
 
@@ -965,17 +1050,32 @@ window.openlegacymenu = function (id, dados) {
                 <div onclick="msxlogo()">MSX Logo</div>
                 <div onclick="applebasic()">Apple II BASIC</div>
                 <div onclick="msxbasic()">MSX BASIC</div>
-                <div onclick="ataribasic()">Atari BASIC</div>
                 <div onclick="gwbasic()">DOS GW-BASIC</div>
                 <div onclick="turbobasic()">DOS Borland Turbo BASIC</div>
+                <div onclick="qbasic45()">DOS Microsoft Quick BASIC 4.5</div>
+                <div onclick="qbasic71()">DOS Microsoft Quick BASIC 7.1</div>
+                <div onclick="vbasicdos()">DOS Visual BASIC 2.0</div>
+                <div onclick="vbasic()">Windows Visual BASIC 1.0</div>
                 <div onclick="pascal1()">DOS Borland Turbo Pascal 1.0</div>
                 <div onclick="pascal3()">DOS Borland Turbo Pascal 3.0</div>
                 <div onclick="pascal5()">DOS Borland Turbo Pascal 5.0</div>
+                <div onclick="pascal7()">DOS Borland Turbo Pascal 7.0</div>
+                <div onclick="pascalw1()">Windows Turbo Pascal 1.5</div>
+                <div onclick="pascalw7()">Windows Turbo Pascal 7.0</div>
+                <div onclick="qpascal()">DOS Microsoft Quick Pascal 1.0</div>
+                <div onclick="msqc()">DOS Microsoft Quick C</div>
+                <div onclick="btc()">DOS Borland Turbo C++ 3.0</div>
+                <div onclick="delphi()">Windows Borland Delphi 1.0</div>
+                <div onclick="wmath()">Wolfram Mathematica</div>
+                <div onclick="db3()">dBase III Plus</div>
+                <div onclick="db4()">dBase IV</div>
+                <div onclick="foxpro()">DOS Microsoft FoxPro 2.0</div>
+                <div onclick="foxprow()">Windows Microsof FoxPro 2.6</div>
+                <div onclick="paradox()">DOS Borland Paradox 4.5</div>
+                <div onclick="paradoxw()">Borland Paradox for Windows</div>
+                <div onclick="paradoxw45()">Borland Paradox 4.5 for Windows</div>
             </div>
-          
-          
-          
-          
+
             `;
         
       }
