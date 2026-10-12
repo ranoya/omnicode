@@ -705,7 +705,7 @@ let dataseturls = [];
 window.opendataset = function (id, p) {
   
   let preview = p.googlesheet.replace("edit", "htmlview");
-  let codigohtml = `<iframe frameborder='0' src='${preview}' style='width: calc(100%); padding: 15px; height: calc(100% - 45px);'></iframe><input id="queryrunner${p.indice}" type='text' style='outline: none; height: 41px; line-height: 25px; font-size: 16px; width: calc(100%); padding-left: 15px; padding-right: 15px; background-color: (--grid-dot, #c7c7d1); color: var(--text,  #1c1c22);' />`;
+  let codigohtml = `<iframe frameborder='0' src='${preview}' style='width: calc(100%); padding: 15px; height: calc(100% - 45px);'></iframe><input id="queryrunner${p.indice}" type='text' style='outline: none; border 0; height: 41px; line-height: 25px; font-size: 16px; width: calc(100%); padding-left: 15px; padding-right: 15px; background-color: var(--grid-dot, #c7c7d1); color: var(--text,  #1c1c22); font-family: monospace;' />`;
   
   document.getElementById(id).innerHTML = codigohtml;
 
