@@ -884,28 +884,40 @@ window.dataset = function (u) {
 
 window.applelogo = function () {
   newidoc("https://apple2ts.com/?appmode=embed&crtdistort=off&color=green&scanlines=off&ghosting=off&#https://namco.vercel.app/a2/disk/Apple_LOGO.dsk", "Logo Apple");
+  connect("Legacy", "Logo Apple");
+  centerlastframe();
 }
 
 window.msxlogo = function () {
   newidoc("https://namco.vercel.app/sx/?ROM=logo.rom", "Logo MSX");
+  connect("Legacy", "Logo MSX");
+  centerlastframe();
 }
 
 window.applebasic = function () {
   newidoc("https://apple2ts.com/?appmode=embed&crtdistort=off&color=green&scanlines=on&ghosting=off&text=LIST", "BASIC Apple");
+  connect("Legacy", "BASIC Apple");
+  centerlastframe();
 }
 
 window.msxbasic = function () {
   newidoc("https://namco.vercel.app/sx/", "BASIC MSX");
+  connect("Legacy", "BASIC MSX");
+  centerlastframe();
 }
 
 
 window.gwbasic = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=gwb", "BASIC Dos");
+  connect("Legacy", "BASIC Dos");
+  centerlastframe();
 }
 
 
 window.turbobasic = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=tb", "Turbo BASIC");
+  connect("Legacy", "Turbo BASIC");
+  centerlastframe();
 }
 
 
@@ -913,18 +925,26 @@ window.turbobasic = function () {
 
 window.qbasic45 = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=qb45", "Quick BASIC 4.5");
+  connect("Legacy", "Quick BASIC 4.5");
+  centerlastframe();
 }
 
 window.qbasic71 = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=qbx71", "Quick BASIC 7.1");
+  connect("Legacy", "Quick BASIC 7.1");
+  centerlastframe();
 }
 
 window.vbasicdos = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=vb", "DOS Visual BASIC 2.0");
+  connect("Legacy", "DOS Visual BASIC 2.0");
+  centerlastframe();
 }
 
 window.vbasic = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=mvb1", "Visual BASIC 1.0");
+  connect("Legacy", "Visual BASIC 1.0");
+  centerlastframe();
 }
 
 
@@ -932,75 +952,111 @@ window.vbasic = function () {
 
 window.pascal1 = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=tp1", "Turbo Pascal 1.0");
+  connect("Legacy", "Turbo Pascal 1.0");
+  centerlastframe();
 }
 
 window.pascal3 = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=tp3", "Turbo Pascal 3.0");
+  connect("Legacy", "Turbo Pascal 3.0");
+  centerlastframe();
 }
 
 window.pascal5 = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=btp5", "Turbo Pascal 5.0");
+  connect("Legacy", "Turbo Pascal 5.0");
+  centerlastframe();
 }
 
 window.pascal7 = function () {
-  newidoc("https://namco.vercel.app/interfaces/?rom=tpw", "Turbo Pascal 7.0");
+  newidoc("https://namco.vercel.app/interfaces/?rom=tp7", "Turbo Pascal 7.0");
+  connect("Legacy", "Turbo Pascal 7.0");
+  centerlastframe();
 }
 
 window.pascalw1 = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=tpw", "Turbo Pascal Windows 1.5");
+  connect("Legacy", "Turbo Pascal Windows 1.5");
+  centerlastframe();
 }
 
 window.pascalw7 = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=bp7ofw", "Turbo Pascal Windows 7.0");
+  connect("Legacy", "Turbo Pascal Windows 7.0");
+  centerlastframe();
 }
 
 window.qpascal = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=qp", "Microsoft Quick Pascal 1.0");
+  connect("Legacy", "Microsoft Quick Pascal 1.0");
+  centerlastframe();
 }
 
 window.msqc = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=qc", "Microsoft Quick C");
+  connect("Legacy", "Microsoft Quick C");
+  centerlastframe();
 }
 
 window.btc = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=qp", "Borland Turbo C++ 3.0");
+  connect("Legacy", "Borland Turbo C++ 3.0");
+  centerlastframe();
 }
 
 window.delphi = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=delphi", "Borland Delphi");
+  connect("Legacy", "Borland Delphi");
+  centerlastframe();
 }
 
 
 window.wmath = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=mtmtk", "Wolfram Mathematica");
+  connect("Legacy", "Wolfram Mathematica");
+  centerlastframe();
 }
 
 window.db3 = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=atdb", "dBase III Plus");
+  connect("Legacy", "dBase III Plus");
+  centerlastframe();
 }
 
 window.db4 = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=BorDB4", "dBase IV");
+  connect("Legacy", "dBase IV");
+  centerlastframe();
 }
 
 window.foxpro = function () {
-  newidoc("https://namco.vercel.app/interfaces/?rom=FPX2", "FoxPro 2.0");
+  newidoc("https://namco.vercel.app/interfaces/?rom=FPx2", "FoxPro 2.0");
+  connect("Legacy", "FoxPro 2.0");
+  centerlastframe();
 }
 
 window.foxprow = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=fpw26", "Windows FoxPro 2.6");
+  connect("Legacy", "Windows FoxPro 2.6");
+  centerlastframe();
 }
 
 window.paradox = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=PDOX45", "Paradox 4.5");
+  connect("Legacy", "Paradox 4.5");
+  centerlastframe();
 }
 
 window.paradoxw = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=bpadoxw", "Paradox for Windows");
+  connect("Legacy", "Paradox for Windows");
+  centerlastframe();
 }
 
 window.paradoxw45 = function () {
   newidoc("https://namco.vercel.app/interfaces/?rom=pdox45w", "Paradox 4.5 for Windows");
+  connect("Legacy", "Paradox 4.5 for Windows");
+  centerlastframe();
 }
 
 
