@@ -956,6 +956,10 @@ inferior direito some. Vale para todas as modalidades (<code>newwindow</code>, <
 maximizar/restaurar, quando a janela tem um, continua funcionando.</p>
 <code class="sig">unlock(título)</code>
 <p>Desfaz o <code>lock</code>: a janela volta a poder ser movida e redimensionada.</p>
+<code class="sig">lockall()</code>
+<p>Faz <code>lock</code> em todas as janelas abertas no momento, de qualquer modalidade. Janelas criadas depois da chamada não nascem travadas.</p>
+<code class="sig">unlockall()</code>
+<p>Faz <code>unlock</code> em todas as janelas abertas no momento.</p>
 <hr>
 <h4>Salvar o estado do ambiente</h4>
 <code class="sig">savestate()</code>
@@ -1397,6 +1401,16 @@ rodado direto pelo console do navegador.</p>
   window.lock = lock;
   window.unlock = unlock;
 
+  // ---- travar / destravar todas as janelas abertas de uma vez ----
+  function lockall(){
+    windows.forEach(function(w){ w._locked = true; w.classList.add('locked'); });
+  }
+  function unlockall(){
+    windows.forEach(function(w){ w._locked = false; w.classList.remove('locked'); });
+  }
+  window.lockall = lockall;
+  window.unlockall = unlockall;
+
   function renderSearchList(filter){
     var q = (filter || '').trim().toLowerCase();
     searchList.innerHTML = '';
@@ -1612,7 +1626,7 @@ rodado direto pelo console do navegador.</p>
                     'polaroid', 'newdoc', 'newidoc', 'rundoc', 'newpermadoc', 'newpermaidoc', 'runpermadoc',
                     'setZoom', 'setPan', 'center', 'multicolor', 'singlecolor', 'svg',
                     'newsdoc', 'newsidoc', 'runsdoc', 'newpermasdoc', 'newpermasidoc', 'runpermasdoc',
-                    'groovy', 'ungroovy', 'savestate', 'lock', 'unlock', 'centerlastframe',
+                    'groovy', 'ungroovy', 'savestate', 'lock', 'unlock', 'centerlastframe', 'lockall', 'unlockall',
                     cmd))(
         newwindow, newframe, run, newpermawindow, newpermaframe, permarun,
         connect, disconnect, setTheme, setTempTheme, help,
@@ -1620,7 +1634,7 @@ rodado direto pelo console do navegador.</p>
         polaroid, newdoc, newidoc, rundoc, newpermadoc, newpermaidoc, runpermadoc,
         setZoom, setPan, center, multicolor, singlecolor, svg,
         newsdoc, newsidoc, runsdoc, newpermasdoc, newpermasidoc, runpermasdoc,
-        groovy, ungroovy, savestate, lock, unlock, centerlastframe);
+        groovy, ungroovy, savestate, lock, unlock, centerlastframe, lockall, unlockall);
       // registra o comando no histórico (só os que rodaram sem erro), junto das janelas que ele criou
       commandLog.push({ raw: cmd, createdWins: windows.slice(winCountBefore) });
     } catch (err){
@@ -1703,6 +1717,9 @@ if (
 
       consoleBar só se modifica se $_GET["devmode"] existir
 
+
+
+      ATENÇÃO
 
       também é necessário incluir o DATAT no início do código:
 
