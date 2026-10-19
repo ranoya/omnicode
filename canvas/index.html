@@ -1768,11 +1768,11 @@ if (
       window.image = function (titulo, url, cor, w, h, x, y) {
 
           if (typeof w != 'undefined' && w != null && w != '' && typeof h != 'undefined' && h != null && h != '' && typeof x != 'undefined' && x != null && x != '' && typeof y != 'undefined' && y != null && y != '') {
-              rundoc(titulo, openimage, { src: url, color: cor} , w, h, x, y);
+              rundoc(titulo, "openimage", { src: url, color: cor} , w, h, x, y);
           } else if (typeof w != 'undefined' && w != null && w != '' && typeof h != 'undefined' && h != null && h != '') {
-              rundoc(titulo, openimage, { src: url, color: cor} , w, h);
+              rundoc(titulo, "openimage", { src: url, color: cor} , w, h);
           } else {
-              rundoc(titulo, openimage, { src: url, color: cor} );
+              rundoc(titulo, "openimage", { src: url, color: cor} );
           }
           
       }
