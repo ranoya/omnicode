@@ -1744,10 +1744,38 @@ if (
       document.getElementById("console").style.display = "none";
 
 
+      
+
+
       window.onmessage = function(e) {
 
           eval(e.data);
       };
+
+
+      window.openimage = function (id, data) {
+    
+          let code = `<div style="width: 100%; height: 100%; border: 0; margin: 0; padding: 0; background-repeat: no-repeat; background-size: cover; background-position: center center; background-image: url(${data.src});"></div>`;
+
+          if (typeof data.color != 'undefined' && data.color != null && data.color != '') {
+              document.getElementById(id).style.backgroundColor = data.color;
+          }
+
+          document.getElementById(id).innerHTML = code;
+      
+      }
+
+      window.image = function (titulo, url, w, h, x, y) {
+
+          if (typeof w != 'undefined' && w != null && w != '' && typeof h != 'undefined' && h != null && h != '' && typeof x != 'undefined' && x != null && x != '' && typeof y != 'undefined' && y != null && y != '') {
+              rundoc(titulo, url, w, h, x, y);
+          } else if (typeof w != 'undefined' && w != null && w != '' && typeof h != 'undefined' && h != null && h != '') {
+              rundoc(titulo, url, w, h);
+          } else {
+              rundoc(titulo, url);
+          }
+          
+      }
 
       window.openut = function (id, dados) {
         document.getElementById(id).innerHTML =
@@ -1810,30 +1838,6 @@ if (
 
       window.loderunner = function() {
         newidoc("https://apple2ts.com/?appmode=embed&crtdistort=off&color=green&scanlines=off&ghosting=off&#https://namco.vercel.app/a2/disk/Loderunner.dsk", "Lode Runner");
-      }
-
-      window.bristles = function() {
-        newidoc("https://namco.vercel.app/a8/?disk=brst.a", "Bristles");
-      }
-
-      window.flipflop = function() {
-        newidoc("https://namco.vercel.app/a8/?disk=ff.a", "Flip and Flop");
-      }
-
-      window.apoca = function() {
-        newidoc("https://namco.vercel.app/a8/?disk=fa.a", "Fort Appocalypse");
-      }
-
-      window.hero = function() {
-        newidoc("https://namco.vercel.app/a8/?disk=h.a", "Hero");
-      }
-
-      window.joust = function() {
-        newidoc("https://namco.vercel.app/a8/?cart=jst.c", "Joust");
-      }
-
-      window.jumpman = function() {
-        newidoc("https://namco.vercel.app/a8/?disk=jm.a", "Jump Man");
       }
 
       window.wingcommander = function() {
