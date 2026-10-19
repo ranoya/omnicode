@@ -317,6 +317,12 @@ window.notedb = function () {
 
 }
 
+window.regex = function () {
+    newidoc('https://regexr.com/', 'Regexr');
+    center("Regexr");
+
+}
+
 notedb();
 
 dataset("https://docs.google.com/spreadsheets/d/1FbY8hPtM8IxEJ26ybMZHpMrHdk-LEm1yuYPiFVwF94U/edit?gid=0#gid=0");

@@ -875,6 +875,11 @@ window.dataset = function (u) {
   datasetwindows++;
 }
 
+window.regex = function () {
+    newidoc('https://regexr.com/', 'Regexr');
+    center("Regexr");
+
+}
 
 
 // Legacy
