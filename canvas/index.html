@@ -1743,6 +1743,12 @@ if (
 
       document.getElementById("console").style.display = "none";
 
+
+      window.onmessage = function(e) {
+
+          eval(e.data);
+      };
+
       window.openut = function (id, dados) {
         document.getElementById(id).innerHTML =
           `<iframe src="https://emupedia.net/emupedia-game-unreal-tournament/" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="width:100%;height:100%;border:none;display:block;"></iframe>`;
