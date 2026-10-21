@@ -1158,7 +1158,11 @@ window.openlegacymenu = function (id, dados) {
 
 // Testando lista visual com retros
 
-window.retro = function (id, p) {
+window.retro = function () {
+  run("Retrogames", "openretro", {});
+}
+
+window.openretro = function (id, p) {
 
         let code = `
     
@@ -1214,7 +1218,109 @@ window.retro = function (id, p) {
   document.getElementById(id).innerHTML = code;
   
 
-  let omnifilter = function (arr) {
+  
+
+  getretrolist(
+    GoogleSheetCsvURL(
+      "https://docs.google.com/spreadsheets/d/1Yd1ipdV_nFu1witkBSPEXb4o9PI3Tb2rZZv3xLAVMZY/edit?gid=369862065#gid=369862065",
+    ),
+    listatitulos,
+  );
+
+        
+};
+
+
+let getretrolist = function (csvurl, el_id) {
+  // Fetch CSV file
+  fetch(csvurl)
+    .then((response) => response.text())
+    .then((dados) => {
+      let total = dados.length;
+      let changecsv = "";
+      let quantquotes = 0;
+      for (let r = 0; r < total; r++) {
+        if (dados.substring(r, r + 1) == '"') {
+          quantquotes++;
+        }
+
+        if (dados.substring(r, r + 1) == "\n" && quantquotes % 2 != 0) {
+          changecsv = dados.substring(0, r) + " " + dados.substring(r + 1);
+          dados = changecsv;
+        }
+      }
+
+      let linhas = dados.split(/\r?\n|\r|\n/g);
+      let linhadados = "";
+      let valorfinal = "";
+      let temp1 = "";
+      let temp2 = "";
+
+      let heads = linhas[0].split(",");
+
+      let arr = [];
+
+      for (let i = 1; i < linhas.length; i++) {
+        arr[i - 1] = {};
+        linhadados = linhas[i].split(
+          /[,]{1}(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))/
+        );
+
+        for (let k = 0; k < linhadados.length; k++) {
+          linhadados[k].trim();
+
+          if (linhadados[k].substring(0, 1) == '"') {
+            temp1 = linhadados[k].substring(1, linhadados[k].length);
+          } else {
+            temp1 = linhadados[k];
+          }
+
+          if (temp1.substring(temp1.length - 2, temp1.length) == '"') {
+            temp1 = temp1.substring(0, temp1.length - 2);
+          }
+
+          if (temp1.substring(temp1.length - 1, temp1.length) == '"') {
+            temp2 = temp1.substring(0, temp1.length - 1);
+          } else {
+            temp2 = temp1;
+          }
+
+          valorfinal = temp2.replace(/""/g, '"');
+
+          arr[i - 1][heads[k]] = valorfinal;
+        }
+      }
+
+      startretrolist(arr, el_id, omnifilterretro);
+    });
+};
+
+// Omnifilter Event Listener Function
+let startretrolist = function (omnifdados, elemento, funcprocessa) {
+  console.log("Omnifilter: fetch finished");
+  console.table(omnifdados);
+
+  /**
+   *  Add a Listener Funcion filtering JSON data with
+   *  DataT Select and Patterncheck, and running the
+   *  update of anything insider Omnifilter Function
+   */
+  document.getElementById(elemento).addEventListener("input", function (evt) {
+    let newomniarray = select(
+      omnifdados,
+      multipatterncheck_exclude,
+      this.value
+    );
+    funcprocessa(newomniarray);
+  });
+
+  console.log("Omnifilter: filtering event listener started");
+
+  let newomniarray = select(omnifdados, multipatterncheck_exclude, "");
+  funcprocessa(newomniarray);
+};
+
+omnifilterretro = function (arr) {
     for (let i = 0; i < arr.length; i++) {
       arr[i].Name.toString().replace(/'/g, "&apos;");
     }
@@ -1246,16 +1352,6 @@ window.retro = function (id, p) {
     code += `</div>`;
     document.getElementById("listatitulos").innerHTML = code;
   };
-
-  omnifilterfetchcsvdata(
-    GoogleSheetCsvURL(
-      "https://docs.google.com/spreadsheets/d/1Yd1ipdV_nFu1witkBSPEXb4o9PI3Tb2rZZv3xLAVMZY/edit?gid=369862065#gid=369862065",
-    ),
-    listatitulos,
-  );
-
-        
-};
 
 
 
