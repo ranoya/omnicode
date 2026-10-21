@@ -1224,7 +1224,7 @@ window.openretro = function (id, p) {
     GoogleSheetCsvURL(
       "https://docs.google.com/spreadsheets/d/1Yd1ipdV_nFu1witkBSPEXb4o9PI3Tb2rZZv3xLAVMZY/edit?gid=369862065#gid=369862065",
     ),
-    listatitulos,
+    "listatitulos",
   );
 
         
