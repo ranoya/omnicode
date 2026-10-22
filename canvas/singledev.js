@@ -42,13 +42,32 @@ ungroovy();
         });
         center("Code " + (countcode - 1));
       };
+      
+      window.codeconsole = function (id, dados) {
+        
+        connect("Run " + dados.numero, "Output " + dados.numero);
+        document.getElementById(id).innerHTML = `<div id="consolerunner_${dados.numero}" style="padding: 15px; width: calc(100% - 30px); height: calc(100% - 30px);"></div>`;
+        
+      }
+      
+      window.printconsole = function (n, msg) {
+        let atual = document.getElementById("consolerunner_" + n).innerHTML;
+        let mensagemtotal = atual + "<br>" + msg;
+        document.getElementById("consolerunner_" + n).innerHTML = mensagemtotal;
+      }
 
       window.runcode = function (id, conta, deonde) {
+        
+        let janela = countruncode;
         rundoc("Run " + countruncode, "codeout", {
           fromeditor: id,
           tituloeditor: conta,
           fromcodeeditor: deonde,
         });
+  
+        rundoc("Output " + janela, "codeconsole", {origem: "Run " + janela, numero: janela})
+
+
       };
 
       if (
@@ -98,12 +117,30 @@ ungroovy();
         let code = ``;
 
         if (linguacodex["editor_" + p.fromeditor] == "html") {
-          code = `<style>body,html { margin: 0; padding: 0; }</style>`;
+          code = `<style>body,html { margin: 0; padding: 0; }</style><scri` + `pt>
+          window.onerror = function myErrorHandler(err, url, line) {
+          let msg = 'Line: ' + line + '<br>' + err + '<br>' 
+          parent.postMessage('printconsole(${p.fromeditor}, ' + msg,'*');
+          return false;
+          }
+          console.log = function (msg) {
+          parent.postMessage('printconsole(${p.fromeditor}, ' + msg,'*');        
+          }
+          </scri` + `pt>`;
         }
 
         if (linguacodex["editor_" + p.fromeditor] == "javascript") {
           code =
-            `<style>body,html { margin: 0; padding: 0; }</style><scr` + `ipt>`;
+            `<style>body,html { margin: 0; padding: 0; }</style>
+             window.onerror = function myErrorHandler(err, url, line) {
+              let msg = 'Line: ' + line + '<br>' + err + '<br>' 
+              parent.postMessage('printconsole(${p.fromeditor}, ' + msg,'*');
+              return false;
+              }
+              console.log = function (msg) {
+              parent.postMessage('printconsole(${p.fromeditor}, ' + msg,'*');        
+              }
+             <scr` + `ipt>`;
         }
 
         if (linguacodex["editor_" + p.fromeditor] == "typescript") {
@@ -114,7 +151,16 @@ ungroovy();
             `ript>
                <sc` +
             `ript defer src='https://cdn.jsdelivr.net/npm/text-typescript@1.3.0'></scr` +
-            `ipt>
+          `ipt><scri` + `pt>
+            window.onerror = function myErrorHandler(err, url, line) {
+            let msg = 'Line: ' + line + '<br>' + err + '<br>' 
+            parent.postMessage('printconsole(${p.fromeditor}, ' + msg,'*');
+            return false;
+            }
+            console.log = function (msg) {
+            parent.postMessage('printconsole(${p.fromeditor}, ' + msg,'*');        
+            }
+            </scr` + `ipt>
                <sc` +
             `ript type='text/typescript'>`;
         }
@@ -122,6 +168,16 @@ ungroovy();
         if (linguacodex["editor_" + p.fromeditor] == "P5") {
           code =
             `<style>body,html { margin: 0; padding: 0; }</style>
+            <scr` + `ipt>
+              window.onerror = function myErrorHandler(err, url, line) {
+              let msg = 'Line: ' + line + '<br>' + err + '<br>' 
+              parent.postMessage('printconsole(${p.fromeditor}, ' + msg,'*');
+              return false;
+              }
+              console.log = function (msg) {
+              parent.postMessage('printconsole(${p.fromeditor}, ' + msg,'*');        
+              }
+            </scr` + `ipt>
             <scr` +
             `ipt src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></sc` +
             `ript>
