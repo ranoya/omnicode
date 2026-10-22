@@ -46,7 +46,19 @@ ungroovy();
       window.codeconsole = function (id, dados) {
         
         connect("Run " + dados.numero, "Output " + dados.numero);
-        document.getElementById(id).innerHTML = `<div id="consolerunner_${dados.numero}" style="padding: 15px; width: calc(100% - 30px); height: calc(100% - 30px);"></div>`;
+        document.getElementById(id).innerHTML = `
+        
+        <style>
+        * {
+        font-family: monospace;
+        font-size: 14px;
+        line-height: 16px;
+        background-color: ${window.getComputedStyle(document.body).getPropertyValue('--bg')};
+        color: ${window.getComputedStyle(document.body).getPropertyValue('--text')};
+        }
+        </style>
+        
+        <div id="consolerunner_${dados.numero}" style="padding: 15px; width: calc(100% - 30px); height: calc(100% - 30px);"></div>`;
         
       }
       
@@ -65,7 +77,7 @@ ungroovy();
           fromcodeeditor: deonde,
         });
   
-        rundoc("Output " + janela, "codeconsole", {origem: "Run " + janela, numero: janela})
+        run("Output " + janela, "codeconsole", {origem: "Run " + janela, numero: janela})
 
 
       };
