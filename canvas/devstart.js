@@ -56,9 +56,14 @@ setTransparentBackground();
       }
       
       window.printconsole = function (n, msg) {
-        let atual = document.getElementById("consolerunner_" + n).innerHTML;
-        let mensagemtotal = atual + "<br>" + msg;
-        document.getElementById("consolerunner_" + n).innerHTML = mensagemtotal;
+        if (typeof document.getElementById("consolerunner_" + n) != 'undefined' && document.getElementById("consolerunner_" + n) != null && document.getElementById("consolerunner_" + n) != '') {
+          
+          let atual = document.getElementById("consolerunner_" + n).innerHTML;
+          let mensagemtotal = atual + "<br>" + msg;
+          document.getElementById("consolerunner_" + n).innerHTML = mensagemtotal;
+           
+        }
+        
       }
 
       window.runcode = function (id, conta, deonde) {
