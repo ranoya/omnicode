@@ -126,14 +126,14 @@ $_GET = [];
   }
   .win-body.no-padding{ padding:0; }
   /* barra de rolagem das janelas (newwindow, newframe, run, permarun e variantes "perma") */
-  .win-body, .polaroid-caption, #searchList{ scrollbar-width:thin; scrollbar-color:var(--accent) transparent; }
-  .win-body::-webkit-scrollbar, .polaroid-caption::-webkit-scrollbar, #searchList::-webkit-scrollbar{
+  .win-body, .polaroid-caption, #searchList, .console-history{ scrollbar-width:thin; scrollbar-color:var(--accent) transparent; }
+  .win-body::-webkit-scrollbar, .polaroid-caption::-webkit-scrollbar, #searchList::-webkit-scrollbar, .console-history::-webkit-scrollbar{
     width:8px; height:8px; background-color:transparent;
   }
-  .win-body::-webkit-scrollbar-track, .polaroid-caption::-webkit-scrollbar-track, #searchList::-webkit-scrollbar-track{
+  .win-body::-webkit-scrollbar-track, .polaroid-caption::-webkit-scrollbar-track, #searchList::-webkit-scrollbar-track, .console-history::-webkit-scrollbar-track{
     background-color:transparent;
   }
-  .win-body::-webkit-scrollbar-thumb, .polaroid-caption::-webkit-scrollbar-thumb, #searchList::-webkit-scrollbar-thumb{
+  .win-body::-webkit-scrollbar-thumb, .polaroid-caption::-webkit-scrollbar-thumb, #searchList::-webkit-scrollbar-thumb, .console-history::-webkit-scrollbar-thumb{
     background-image:repeating-linear-gradient(45deg, transparent 0, transparent 1px, var(--accent) 0, var(--accent) 25%);
     background-size:4px 4px;
     opacity:.5;
@@ -141,9 +141,9 @@ $_GET = [];
   }
   .win-body::-webkit-scrollbar-thumb:hover, .win-body::-webkit-scrollbar-thumb:active,
   .polaroid-caption::-webkit-scrollbar-thumb:hover, .polaroid-caption::-webkit-scrollbar-thumb:active,
-  #searchList::-webkit-scrollbar-thumb:hover, #searchList::-webkit-scrollbar-thumb:active{ opacity:1; }
+  #searchList::-webkit-scrollbar-thumb:hover, .console-history::-webkit-scrollbar-thumb:hover, #searchList::-webkit-scrollbar-thumb:active, .console-history::-webkit-scrollbar-thumb:active{ opacity:1; }
   /* remove as setinhas de incremento/decremento nas pontas da barra */
-  .win-body::-webkit-scrollbar-button, .polaroid-caption::-webkit-scrollbar-button, #searchList::-webkit-scrollbar-button{
+  .win-body::-webkit-scrollbar-button, .polaroid-caption::-webkit-scrollbar-button, #searchList::-webkit-scrollbar-button, .console-history::-webkit-scrollbar-button{
     display:none; width:0; height:0;
   }
   /* janela estilo polaroid */
@@ -250,6 +250,25 @@ $_GET = [];
   body.controls-centered #viewControls{ top:50%; bottom:auto; transform:translateY(-50%); }
   body.controls-centered #searchPanel{ top:50%; bottom:auto; transform:translateY(-50%); }
   body.bg-transparent, body.bg-transparent html{ background:transparent !important; }
+  /* janela do console (superdevmode): histórico rolável + linha de entrada */
+  .console-body{
+    display:flex; flex-direction:column; overflow:hidden;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px;
+  }
+  .console-history{ flex:1; min-height:0; overflow:auto; padding:6px 10px; }
+  .console-line{ white-space:pre-wrap; word-break:break-word; line-height:1.4; }
+  .console-line .prompt{ color:var(--accent); margin-right:6px; }
+  .console-line.err{ color:#e5534b; }
+  .console-err-msg{ opacity:.85; padding-left:14px; }
+  .console-inputrow{
+    flex:none; display:flex; align-items:center; gap:8px; padding:8px 10px;
+    border-top:1px solid var(--win-border);
+  }
+  .console-inputrow .prompt{ color:var(--accent); flex:none; }
+  .console-input{
+    flex:1; min-width:0; background:transparent; border:none; outline:none;
+    color:var(--text); font-family:inherit; font-size:13px;
+  }
 </style>
 </head>
 <body>
@@ -296,20 +315,12 @@ $_GET = [];
   var consoleBar = document.getElementById('console');
   var viewControls = document.getElementById('viewControls');
   var maximizedCount = 0;
-  function updateUIVisibility() {
-          var hide = maximizedCount > 0;
-          // AJUSTE NECESSÁRIO PARA MUDANÇAS MANUAIS
-          if (
-            typeof $_GET["devmode"] != "undefined" &&
-            $_GET["devmode"] != null &&
-            $_GET["devmode"] != ""
-          ) {
-            consoleBar.style.display = hide ? "none" : "";
-          }
-
-          viewControls.style.display = hide ? "none" : "";
-        }
-
+  var consoleMode = 'bar'; // 'bar' (barra original), 'window' (superdevmode) ou 'hidden' (nodev)
+  function updateUIVisibility(){
+    var hide = maximizedCount > 0;
+    consoleBar.style.display = (hide || consoleMode !== 'bar') ? 'none' : '';
+    viewControls.style.display = hide ? 'none' : '';
+  }
 
   var pan = {x:0, y:0};
   var zoom = 1;
@@ -961,6 +972,22 @@ maximizar/restaurar, quando a janela tem um, continua funcionando.</p>
 <code class="sig">unlockall()</code>
 <p>Faz <code>unlock</code> em todas as janelas abertas no momento.</p>
 <hr>
+<h4>Barra de comandos</h4>
+<code class="sig">superdevmode()</code>
+<p>Transforma a barra de comandos numa janela chamada "Console", que pode ser movida e redimensionada
+como as demais (não tem botão de fechar — sem ele não haveria onde digitar). Ela mostra todos os
+comandos já digitados, incluindo os que deram erro (em vermelho, com a mensagem), e tem no mínimo 3 linhas
+de histórico; ao redimensionar cabem mais linhas, e quando há mais comandos do que linhas aparece uma
+barra de rolagem. A barra original some. Digitar uma letra, Enter ou espaço com o mouse fora das janelas
+foca o campo da janela, desde que ela esteja visível na tela.</p>
+<code class="sig">devmode()</code>
+<p>Devolve a barra de comandos ao normal (embaixo, centralizada) e desfaz a janela do
+<code>superdevmode()</code>, se existir. Também traz a barra de volta depois de <code>nodev()</code>.</p>
+<code class="sig">nodev()</code>
+<p>Corta a barra de comandos do canvas (e a janela do <code>superdevmode()</code>, se existir). Nada mais
+deixa de funcionar — só não há onde digitar até chamar <code>devmode()</code> ou
+<code>superdevmode()</code> pelo console do navegador.</p>
+<hr>
 <h4>Salvar o estado do ambiente</h4>
 <code class="sig">savestate()</code>
 <p>Gera um arquivo <code>.txt</code> para download (pede o nome do arquivo) com todas as instruções
@@ -1212,13 +1239,13 @@ rodado direto pelo console do navegador.</p>
         var dx = (ev.clientX - startX) / zoom;
         var dy = (ev.clientY - startY) / zoom;
         if (fromLeft){
-          var newW = Math.max(150, origW - dx);
+          var newW = Math.max(win._minW || 150, origW - dx);
           win.style.width = newW + 'px';
           win.style.left = (rightEdge - newW) + 'px';
         } else {
-          win.style.width = Math.max(150, origW + dx) + 'px';
+          win.style.width = Math.max(win._minW || 150, origW + dx) + 'px';
         }
-        win.style.height = Math.max(110, origH + dy) + 'px';
+        win.style.height = Math.max(win._minH || 110, origH + dy) + 'px';
       }
       function onUp(ev){
         resize.releasePointerCapture(e.pointerId);
@@ -1496,8 +1523,20 @@ rodado direto pelo console do navegador.</p>
     if (ae === cmdInput || ae === searchInput) return; // já digitando ali, comportamento nativo cuida disso
     if (ae && ae.closest && ae.closest('.win')) return; // já editando dentro de uma janela
     if (!isTypingTriggerKey(e)) return;
+    if (consoleMode === 'hidden') return; // nodev(): não há onde digitar
     var hoverEl = document.elementFromPoint(lastMouse.x, lastMouse.y);
-    if (hoverEl && hoverEl.closest && hoverEl.closest('.win')) return; // mouse sobre uma janela: não rouba o foco
+    var hoverWin = (hoverEl && hoverEl.closest) ? hoverEl.closest('.win') : null;
+    if (consoleMode === 'window'){
+      if (!consoleWin) return;
+      // mouse sobre OUTRA janela: não rouba o foco (sobre a própria janela do console, foca o campo dela)
+      if (hoverWin && hoverWin !== consoleWin) return;
+      var rc = consoleWin.getBoundingClientRect();
+      var onScreen = rc.right > 0 && rc.left < viewport.clientWidth && rc.bottom > 0 && rc.top < viewport.clientHeight;
+      if (!onScreen) return; // janela do console fora da tela: não manda o que se digita pra um campo invisível
+      consoleInputEl.focus({ preventScroll: true });
+      return;
+    }
+    if (hoverWin) return; // mouse sobre uma janela: não rouba o foco
     cmdInput.focus();
   });
 
@@ -1612,11 +1651,128 @@ rodado direto pelo console do navegador.</p>
   }
   window.savestate = savestate; // pode ser chamado pelo console do navegador também
 
+  // ---- barra de comandos como janela (superdevmode), barra original (devmode) e sem barra (nodev) ----
+  var cmdHistory = []; // { text, ok, err }: tudo o que foi digitado, em ordem (inclusive o que deu erro)
+  var consoleWin = null, consoleHistoryEl = null, consoleInputEl = null;
+
+  function appendConsoleLine(entry){
+    if (!consoleHistoryEl) return;
+    var line = document.createElement('div');
+    line.className = 'console-line' + (entry.ok ? '' : ' err');
+    var p = document.createElement('span');
+    p.className = 'prompt';
+    p.textContent = '>';
+    line.appendChild(p);
+    line.appendChild(document.createTextNode(entry.text));
+    consoleHistoryEl.appendChild(line);
+    if (!entry.ok && entry.err){
+      var msg = document.createElement('div');
+      msg.className = 'console-line err console-err-msg';
+      msg.textContent = entry.err;
+      consoleHistoryEl.appendChild(msg);
+    }
+    consoleHistoryEl.scrollTop = consoleHistoryEl.scrollHeight;
+  }
+
+  // remove uma janela do ambiente (a janela do console não tem botão de fechar, então precisa disso)
+  function destroyWindow(win){
+    if (win.classList.contains('maximized')){
+      var r = win._restore;
+      if (r){
+        win.style.left = r.left; win.style.top = r.top;
+        win.style.width = r.width; win.style.height = r.height;
+        if (typeof r.zoom === 'number'){ zoom = r.zoom; applyTransform(); }
+      }
+      maximizedCount--;
+    }
+    saveWinState(win);
+    win.remove();
+    windows = windows.filter(function(w){ return w !== win; });
+    updateUIVisibility();
+  }
+
+  function removeConsoleWindow(){
+    if (!consoleWin) return false;
+    var hadFocus = consoleWin.contains(document.activeElement);
+    destroyWindow(consoleWin);
+    consoleWin = null; consoleHistoryEl = null; consoleInputEl = null;
+    return hadFocus;
+  }
+
+  function buildConsoleWindow(){
+    var name = 'Console';
+    var pos = loadWinState(name); // se já foi movida/redimensionada antes, reabre onde ficou
+    if (!pos){
+      // nasce onde a barra original ficava: embaixo, centralizada
+      var vw = viewport.clientWidth, vh = viewport.clientHeight;
+      var wS = Math.min(Math.max(vw * 0.5, 360), vw - 24);
+      var hS = Math.max(vh * 0.28, 170);
+      var tl = screenToCanvas((vw - wS) / 2, vh - hS - 12);
+      pos = { left: tl.x, top: tl.y, width: wS / zoom, height: hS / zoom };
+    }
+    var bodyHtml =
+      '<div class="win-body no-padding console-body">' +
+        '<div class="console-history"></div>' +
+        '<div class="console-inputrow">' +
+          '<span class="prompt">&gt;</span>' +
+          '<input class="console-input" placeholder="digite help() para ver todos os comandos" autocomplete="off" spellcheck="false">' +
+        '</div>' +
+      '</div>';
+    // permanent:true => sem botão de fechar (sem ele não haveria onde digitar); devmode()/nodev() a removem
+    var win = createWindowShell(name, pos, bodyHtml, true);
+    win.classList.add('console-window');
+    win._minW = 260; win._minH = 156; // cabe pelo menos 3 linhas de histórico + a linha de entrada
+    win.style.minWidth = win._minW + 'px';
+    win.style.minHeight = win._minH + 'px';
+    consoleWin = win;
+    consoleHistoryEl = win.querySelector('.console-history');
+    consoleInputEl = win.querySelector('.console-input');
+    cmdHistory.forEach(appendConsoleLine);
+    win.querySelector('.console-body').addEventListener('pointerdown', function(){
+      if (!win.classList.contains('maximized')) bringToFront(win);
+    });
+    consoleInputEl.addEventListener('keydown', function(e){
+      if (e.key === 'Enter'){
+        var v = consoleInputEl.value;
+        consoleInputEl.value = '';
+        runCommand(v);
+      }
+    });
+  }
+
+  function superdevmode(){
+    if (consoleMode === 'window' && consoleWin){
+      bringToFront(consoleWin);
+      consoleInputEl.focus({ preventScroll: true });
+      return consoleWin;
+    }
+    buildConsoleWindow();
+    consoleMode = 'window';
+    updateUIVisibility(); // esconde a barra original
+    consoleInputEl.focus({ preventScroll: true });
+    return consoleWin;
+  }
+  function devmode(){
+    var hadFocus = removeConsoleWindow();
+    consoleMode = 'bar';
+    updateUIVisibility();
+    if (hadFocus) cmdInput.focus();
+  }
+  function nodev(){
+    removeConsoleWindow();
+    consoleMode = 'hidden';
+    updateUIVisibility();
+  }
+  window.superdevmode = superdevmode; // pode ser chamado pelo console do navegador também
+  window.devmode = devmode;
+  window.nodev = nodev;
+
   var commandLog = []; // { raw, createdWins }: histórico de comandos executados com sucesso, nesta ordem
   function runCommand(raw){
     var cmd = raw.trim();
     if (!cmd) return;
     consoleBar.classList.add('used'); // a partir do 1º comando, ela vira transparente quando ociosa
+    var entry = { text: cmd, ok: true, err: '' };
     try {
       var winCountBefore = windows.length;
       // executa a instrução como JavaScript de verdade, com acesso às funções do canvas
@@ -1627,6 +1783,7 @@ rodado direto pelo console do navegador.</p>
                     'setZoom', 'setPan', 'center', 'multicolor', 'singlecolor', 'svg',
                     'newsdoc', 'newsidoc', 'runsdoc', 'newpermasdoc', 'newpermasidoc', 'runpermasdoc',
                     'groovy', 'ungroovy', 'savestate', 'lock', 'unlock', 'centerlastframe', 'lockall', 'unlockall',
+                    'superdevmode', 'nodev',
                     cmd))(
         newwindow, newframe, run, newpermawindow, newpermaframe, permarun,
         connect, disconnect, setTheme, setTempTheme, help,
@@ -1634,12 +1791,17 @@ rodado direto pelo console do navegador.</p>
         polaroid, newdoc, newidoc, rundoc, newpermadoc, newpermaidoc, runpermadoc,
         setZoom, setPan, center, multicolor, singlecolor, svg,
         newsdoc, newsidoc, runsdoc, newpermasdoc, newpermasidoc, runpermasdoc,
-        groovy, ungroovy, savestate, lock, unlock, centerlastframe, lockall, unlockall);
+        groovy, ungroovy, savestate, lock, unlock, centerlastframe, lockall, unlockall,
+        superdevmode, nodev);
       // registra o comando no histórico (só os que rodaram sem erro), junto das janelas que ele criou
       commandLog.push({ raw: cmd, createdWins: windows.slice(winCountBefore) });
     } catch (err){
+      entry.ok = false; entry.err = err.message;
       console.warn('Comando inválido:', err.message);
     }
+    // histórico de tudo o que foi digitado (inclusive o que deu erro), exibido pela janela do superdevmode()
+    cmdHistory.push(entry);
+    appendConsoleLine(entry);
   }
   cmdInput.addEventListener('keydown', function(e){
     if (e.key === 'Enter'){ runCommand(cmdInput.value); cmdInput.value = ''; }
@@ -1689,10 +1851,14 @@ if (
         document.getElementById("console").style.display = "flex";
       }
 
-      window.devmode = function () {
-        document.getElementById("console").style.display = "flex";
-        $_GET["devmode"] = "true";
-      };
+      // a devmode() de base vem do Canvas Infinito (devolve a barra ao normal e desfaz o superdevmode);
+      // aqui só se acrescenta o registro em $_GET
+      window.devmode = (function (base) {
+        return function () {
+          base();
+          $_GET["devmode"] = "true";
+        };
+      })(window.devmode);
 
  if (
         typeof $_GET["plugin"] != "undefined" &&
@@ -1711,15 +1877,6 @@ if (
 
       /*
       ATENÇÃO
-      É necessário alterar também um trecho do código do contexto:
-
-      updateUIVisibility()
-
-      consoleBar só se modifica se $_GET["devmode"] existir
-
-
-
-      ATENÇÃO
 
       também é necessário incluir o DATAT no início do código:
 
@@ -1727,23 +1884,16 @@ if (
 
       */
 
-      function updateUIVisibility() {
-          var hide = maximizedCount > 0;
-          // AJUSTE NECESSÁRIO PARA MUDANÇAS MANUAIS
-          if (
+      nodev();
+
+
+      if (
             typeof $_GET["devmode"] != "undefined" &&
             $_GET["devmode"] != null &&
             $_GET["devmode"] != ""
           ) {
-            consoleBar.style.display = hide ? "none" : "";
+            devmode();
           }
-
-          viewControls.style.display = hide ? "none" : "";
-        }
-
-      document.getElementById("console").style.display = "none";
-
-
       
 
 
