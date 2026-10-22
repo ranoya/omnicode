@@ -443,9 +443,11 @@ $_GET = [];
   function storageKey(name){ return 'infcanvas:' + String(name).trim().toLowerCase(); }
   function saveWinState(win){
     try {
+      // maximizada, win.style guarda a geometria de tela cheia: o que vale é a de antes de maximizar
+      var g = (win.classList.contains('maximized') && win._restore) ? win._restore : win.style;
       var rec = {
-        left: parseFloat(win.style.left), top: parseFloat(win.style.top),
-        width: parseFloat(win.style.width), height: parseFloat(win.style.height)
+        left: parseFloat(g.left), top: parseFloat(g.top),
+        width: parseFloat(g.width), height: parseFloat(g.height)
       };
       localStorage.setItem(storageKey(win.dataset.name), JSON.stringify(rec));
     } catch(e){ /* storage indisponível: segue sem persistir */ }
@@ -948,6 +950,13 @@ janela invisível pela lupa ou referenciá-la em <code>connect</code>/<code>disc
 <p>Encontra a janela com esse título exato e centraliza o canvas nela (mantendo o zoom atual), além de trazê-la pra frente de todas as outras — o mesmo que acontece ao escolher uma janela na lista da lupa, só que por código.</p>
 <code class="sig">centerlastframe()</code>
 <p>Centraliza o canvas na última janela criada que ainda esteja aberta (e a traz pra frente), sem precisar informar o título.</p>
+<code class="sig">setPosition(título, w, h, x, y)</code>
+<p>Muda o tamanho e/ou a posição de uma janela que já existe. <code>w, h, x, y</code> aceitam número
+(pixels do canvas) ou <code>%</code> da tela visível, como na criação. Passe <code>null</code> em qualquer
+um deles pra deixar aquela propriedade como está — por exemplo <code>setPosition("Meusite", null, null, 300, 200)</code>
+só move, e <code>setPosition("Meusite", 800, 500, null, null)</code> só redimensiona. Respeita os mesmos
+tamanhos mínimos do redimensionar à mão e funciona mesmo em janela travada por <code>lock</code>. Numa janela
+maximizada, vale para o tamanho/posição que ela recupera ao restaurar.</p>
 <hr>
 <h4>Embutir / integrar</h4>
 <code class="sig">centerControls()</code>
@@ -1410,6 +1419,40 @@ rodado direto pelo console do navegador.</p>
   }
   window.centerlastframe = centerlastframe;
 
+  // ---- mudar posição e/ou tamanho de uma janela por programação ----
+  // w, h, x, y aceitam número (px do canvas) ou "%" (da tela visível), como na criação das janelas;
+  // null (ou undefined) em qualquer um deles deixa aquela propriedade como está
+  function setPosition(titulo, w, h, x, y){
+    var win = findWindowByName(titulo);
+    if (!win){ console.warn('setPosition: janela "' + titulo + '" não encontrada.'); return null; }
+    var vw = viewport.clientWidth, vh = viewport.clientHeight;
+    function pick(raw, resolved, label){
+      if (raw === null || raw === undefined) return undefined; // não mexe nesta propriedade
+      if (typeof resolved !== 'number' || !isFinite(resolved)){
+        console.warn('setPosition: valor inválido para ' + label + ' (' + raw + '); mantendo o atual.');
+        return undefined;
+      }
+      return resolved;
+    }
+    var rw = pick(w, resolveDim(w, vw), 'w');
+    var rh = pick(h, resolveDim(h, vh), 'h');
+    var rx = pick(x, resolveCoord(x, true), 'x');
+    var ry = pick(y, resolveCoord(y, false), 'y');
+    // mesmos tamanhos mínimos do redimensionar à mão
+    if (rw !== undefined) rw = Math.max(win._minW || 150, rw);
+    if (rh !== undefined) rh = Math.max(win._minH || 110, rh);
+    // maximizada: a geometria visível é a de tela cheia (recalculada a cada quadro), então a mudança
+    // vai pra geometria que ela recupera ao restaurar
+    var target = (win.classList.contains('maximized') && win._restore) ? win._restore : win.style;
+    if (rw !== undefined) target.width = rw + 'px';
+    if (rh !== undefined) target.height = rh + 'px';
+    if (rx !== undefined) target.left = rx + 'px';
+    if (ry !== undefined) target.top = ry + 'px';
+    saveWinState(win);
+    return win;
+  }
+  window.setPosition = setPosition;
+
   // ---- travar / destravar uma janela (vale para todas as modalidades) ----
   function lock(titulo){
     var win = findWindowByName(titulo);
@@ -1616,10 +1659,11 @@ rodado direto pelo console do navegador.</p>
         var argCount = parsed ? CREATOR_ARG_COUNTS[parsed.fnName] : undefined;
         if (parsed && typeof argCount === 'number'){
           var lead = splitTopLevelArgs(parsed.argsStr).slice(0, argCount);
-          var W = Math.round(parseFloat(win.style.width));
-          var H = Math.round(parseFloat(win.style.height));
-          var X = Math.round(parseFloat(win.style.left));
-          var Y = Math.round(parseFloat(win.style.top));
+          var geo = (win.classList.contains('maximized') && win._restore) ? win._restore : win.style;
+          var W = Math.round(parseFloat(geo.width));
+          var H = Math.round(parseFloat(geo.height));
+          var X = Math.round(parseFloat(geo.left));
+          var Y = Math.round(parseFloat(geo.top));
           lines.push(parsed.fnName + '(' + lead.concat([W, H, X, Y]).join(', ') + ');');
           return;
         }
@@ -1783,7 +1827,7 @@ rodado direto pelo console do navegador.</p>
                     'setZoom', 'setPan', 'center', 'multicolor', 'singlecolor', 'svg',
                     'newsdoc', 'newsidoc', 'runsdoc', 'newpermasdoc', 'newpermasidoc', 'runpermasdoc',
                     'groovy', 'ungroovy', 'savestate', 'lock', 'unlock', 'centerlastframe', 'lockall', 'unlockall',
-                    'superdevmode', 'nodev',
+                    'superdevmode', 'nodev', 'setPosition',
                     cmd))(
         newwindow, newframe, run, newpermawindow, newpermaframe, permarun,
         connect, disconnect, setTheme, setTempTheme, help,
@@ -1792,7 +1836,7 @@ rodado direto pelo console do navegador.</p>
         setZoom, setPan, center, multicolor, singlecolor, svg,
         newsdoc, newsidoc, runsdoc, newpermasdoc, newpermasidoc, runpermasdoc,
         groovy, ungroovy, savestate, lock, unlock, centerlastframe, lockall, unlockall,
-        superdevmode, nodev);
+        superdevmode, nodev, setPosition);
       // registra o comando no histórico (só os que rodaram sem erro), junto das janelas que ele criou
       commandLog.push({ raw: cmd, createdWins: windows.slice(winCountBefore) });
     } catch (err){
