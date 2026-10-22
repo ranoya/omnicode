@@ -126,14 +126,14 @@ $_GET = [];
   }
   .win-body.no-padding{ padding:0; }
   /* barra de rolagem das janelas (newwindow, newframe, run, permarun e variantes "perma") */
-  .win-body, .polaroid-caption, #searchList, .console-history{ scrollbar-width:thin; scrollbar-color:var(--accent) transparent; }
-  .win-body::-webkit-scrollbar, .polaroid-caption::-webkit-scrollbar, #searchList::-webkit-scrollbar, .console-history::-webkit-scrollbar{
+  .win-body, .polaroid-caption, #searchList, .console-history, .logc-list{ scrollbar-width:thin; scrollbar-color:var(--accent) transparent; }
+  .win-body::-webkit-scrollbar, .polaroid-caption::-webkit-scrollbar, #searchList::-webkit-scrollbar, .console-history::-webkit-scrollbar, .logc-list::-webkit-scrollbar{
     width:8px; height:8px; background-color:transparent;
   }
-  .win-body::-webkit-scrollbar-track, .polaroid-caption::-webkit-scrollbar-track, #searchList::-webkit-scrollbar-track, .console-history::-webkit-scrollbar-track{
+  .win-body::-webkit-scrollbar-track, .polaroid-caption::-webkit-scrollbar-track, #searchList::-webkit-scrollbar-track, .console-history::-webkit-scrollbar-track, .logc-list::-webkit-scrollbar-track{
     background-color:transparent;
   }
-  .win-body::-webkit-scrollbar-thumb, .polaroid-caption::-webkit-scrollbar-thumb, #searchList::-webkit-scrollbar-thumb, .console-history::-webkit-scrollbar-thumb{
+  .win-body::-webkit-scrollbar-thumb, .polaroid-caption::-webkit-scrollbar-thumb, #searchList::-webkit-scrollbar-thumb, .console-history::-webkit-scrollbar-thumb, .logc-list::-webkit-scrollbar-thumb{
     background-image:repeating-linear-gradient(45deg, transparent 0, transparent 1px, var(--accent) 0, var(--accent) 25%);
     background-size:4px 4px;
     opacity:.5;
@@ -141,9 +141,9 @@ $_GET = [];
   }
   .win-body::-webkit-scrollbar-thumb:hover, .win-body::-webkit-scrollbar-thumb:active,
   .polaroid-caption::-webkit-scrollbar-thumb:hover, .polaroid-caption::-webkit-scrollbar-thumb:active,
-  #searchList::-webkit-scrollbar-thumb:hover, .console-history::-webkit-scrollbar-thumb:hover, #searchList::-webkit-scrollbar-thumb:active, .console-history::-webkit-scrollbar-thumb:active{ opacity:1; }
+  #searchList::-webkit-scrollbar-thumb:hover, .console-history::-webkit-scrollbar-thumb:hover, .logc-list::-webkit-scrollbar-thumb:hover, #searchList::-webkit-scrollbar-thumb:active, .console-history::-webkit-scrollbar-thumb:active, .logc-list::-webkit-scrollbar-thumb:active{ opacity:1; }
   /* remove as setinhas de incremento/decremento nas pontas da barra */
-  .win-body::-webkit-scrollbar-button, .polaroid-caption::-webkit-scrollbar-button, #searchList::-webkit-scrollbar-button, .console-history::-webkit-scrollbar-button{
+  .win-body::-webkit-scrollbar-button, .polaroid-caption::-webkit-scrollbar-button, #searchList::-webkit-scrollbar-button, .console-history::-webkit-scrollbar-button, .logc-list::-webkit-scrollbar-button{
     display:none; width:0; height:0;
   }
   /* janela estilo polaroid */
@@ -269,6 +269,31 @@ $_GET = [];
     flex:1; min-width:0; background:transparent; border:none; outline:none;
     color:var(--text); font-family:inherit; font-size:13px;
   }
+  /* janela "Console" (console()): mensagens do console do navegador */
+  .logc-body{
+    display:flex; flex-direction:column; overflow:hidden;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px;
+  }
+  .logc-bar{ flex:none; display:flex; justify-content:flex-end; padding:4px 8px; border-bottom:1px solid var(--win-border); }
+  .logc-clear{
+    background:transparent; border:1px solid var(--win-border); color:var(--muted);
+    border-radius:5px; padding:1px 8px; font:inherit; cursor:pointer;
+  }
+  .logc-clear:hover{ color:var(--text); background:var(--panel-border); }
+  .logc-list{ flex:1; min-height:0; overflow:auto; }
+  .logc-row{
+    padding:3px 8px; border-left:3px solid transparent; border-bottom:1px solid var(--win-border);
+    white-space:pre-wrap; word-break:break-word; line-height:1.4;
+  }
+  .logc-row.logc-info{ border-left-color:var(--accent); }
+  .logc-row.logc-debug{ color:var(--muted); }
+  .logc-row.logc-warn{ border-left-color:#d19a00; background:rgba(255,196,0,.14); }
+  .logc-row.logc-error{ border-left-color:#e5534b; background:rgba(229,83,75,.14); }
+  .logc-group{ font-weight:600; }
+  .logc-tablewrap{ overflow-x:auto; }
+  .logc-table{ border-collapse:collapse; margin:2px 0; }
+  .logc-table th, .logc-table td{ border:1px solid var(--win-border); padding:2px 8px; text-align:left; white-space:pre; }
+  .logc-table th{ background:var(--win-header); font-weight:600; }
 </style>
 </head>
 <body>
@@ -305,6 +330,223 @@ $_GET = [];
 
 <script>
 (function(){
+  // ---- captura das mensagens do console do navegador (janela "Console", aberta por console()) ----
+  // instalada no começo do script de propósito: assim o histórico já tem o que foi logado antes da janela abrir
+  var LOG_MAX = 2000;
+  var logEntries = [];      // { level, text, table, indent, group }
+  var logIndent = 0;
+  var logHookBusy = false;
+  var logWin = null, logListEl = null;
+
+  function logInspect(v, depth, seen){
+    var t = typeof v;
+    if (v === null) return 'null';
+    if (t === 'undefined') return 'undefined';
+    if (t === 'string') return "'" + v + "'";
+    if (t === 'number' || t === 'boolean') return String(v);
+    if (t === 'bigint') return String(v) + 'n';
+    if (t === 'symbol') return String(v);
+    if (t === 'function') return 'ƒ ' + (v.name || '') + '()';
+    if (v instanceof Error) return v.stack || (v.name + ': ' + v.message);
+    if (v.nodeType === 1) return '<' + v.tagName.toLowerCase() + (v.id ? '#' + v.id : '') + '>';
+    if (v instanceof Date) return isNaN(v) ? 'Invalid Date' : v.toISOString();
+    if (v instanceof Map || v instanceof Set) return v.constructor.name + '(' + v.size + ')';
+    if (seen.indexOf(v) >= 0) return '[Circular]';
+    if (depth >= 2) return Array.isArray(v) ? '[…]' : '{…}';
+    seen = seen.concat([v]);
+    if (Array.isArray(v)){
+      var items = v.slice(0, 20).map(function(x){ return logInspect(x, depth + 1, seen); });
+      if (v.length > 20) items.push('… +' + (v.length - 20));
+      return '[' + items.join(', ') + ']';
+    }
+    var keys = Object.keys(v);
+    var parts = keys.slice(0, 20).map(function(k){ return k + ': ' + logInspect(v[k], depth + 1, seen); });
+    if (keys.length > 20) parts.push('…');
+    var cname = v.constructor && v.constructor.name;
+    return (cname && cname !== 'Object' ? cname + ' ' : '') + '{' + parts.join(', ') + '}';
+  }
+
+  // monta o texto de um console.log(...) com os especificadores %s %d %i %f %o %O %j %c %%
+  function logFormat(args){
+    var rest = args.slice(), out = [];
+    if (typeof rest[0] === 'string' && rest[0].indexOf('%') >= 0 && rest.length > 1){
+      var fmt = rest.shift();
+      out.push(fmt.replace(/%([sdifoOjc%])/g, function(m, c){
+        if (c === '%') return '%';
+        if (!rest.length) return m;
+        var a = rest.shift();
+        if (c === 'c') return '';
+        if (c === 's') return typeof a === 'string' ? a : logInspect(a, 0, []);
+        if (c === 'd' || c === 'i') return (a !== null && typeof a === 'object') ? 'NaN' : String(c === 'i' ? parseInt(a, 10) : Number(a));
+        if (c === 'f') return String(parseFloat(a));
+        return logInspect(a, 0, []);
+      }));
+    }
+    rest.forEach(function(a){ out.push(typeof a === 'string' ? a : logInspect(a, 0, [])); });
+    return out.join(' ');
+  }
+
+  // console.table(dados, colunas?): arrays e objetos viram { header, rows }; outra coisa cai num log comum
+  function logTableFromData(data, columns){
+    if (data === null || typeof data !== 'object') return null;
+    var rowKeys = Array.isArray(data) ? data.map(function(_, i){ return String(i); }) : Object.keys(data);
+    var rows = rowKeys.map(function(k){ return data[k]; });
+    var cols = [], hasValues = false;
+    rows.forEach(function(r){
+      if (r !== null && typeof r === 'object'){
+        Object.keys(r).forEach(function(c){ if (cols.indexOf(c) < 0) cols.push(c); });
+      } else { hasValues = true; }
+    });
+    if (Array.isArray(columns)) cols = columns.map(String);
+    var header = ['(index)'].concat(cols);
+    if (hasValues) header.push('Values');
+    var body = rows.slice(0, 1000).map(function(r, i){
+      var isObj = r !== null && typeof r === 'object';
+      var line = [rowKeys[i]];
+      cols.forEach(function(c){ line.push(isObj && (c in r) ? logInspect(r[c], 1, []) : ''); });
+      if (hasValues) line.push(isObj ? '' : logInspect(r, 1, []));
+      return line;
+    });
+    return { header: header, rows: body };
+  }
+
+  function logEntryEl(entry){
+    var row = document.createElement('div');
+    row.className = 'logc-row logc-' + entry.level + (entry.group ? ' logc-group' : '');
+    row.style.paddingLeft = (8 + entry.indent * 14) + 'px';
+    if (entry.table){
+      var wrap = document.createElement('div');
+      wrap.className = 'logc-tablewrap';
+      var tbl = document.createElement('table');
+      tbl.className = 'logc-table';
+      var thead = document.createElement('thead'), trh = document.createElement('tr');
+      entry.table.header.forEach(function(h){
+        var th = document.createElement('th'); th.textContent = h; trh.appendChild(th);
+      });
+      thead.appendChild(trh);
+      tbl.appendChild(thead);
+      var tbody = document.createElement('tbody');
+      entry.table.rows.forEach(function(r){
+        var tr = document.createElement('tr');
+        r.forEach(function(c){ var td = document.createElement('td'); td.textContent = c; tr.appendChild(td); });
+        tbody.appendChild(tr);
+      });
+      tbl.appendChild(tbody);
+      wrap.appendChild(tbl);
+      row.appendChild(wrap);
+    } else {
+      row.textContent = entry.text;
+    }
+    return row;
+  }
+  function appendLogEntry(entry){
+    if (!logListEl) return;
+    if (!logListEl.isConnected){ logListEl = null; logWin = null; return; } // a janela foi fechada
+    var atBottom = logListEl.scrollTop + logListEl.clientHeight >= logListEl.scrollHeight - 6;
+    logListEl.appendChild(logEntryEl(entry));
+    while (logListEl.childNodes.length > LOG_MAX) logListEl.removeChild(logListEl.firstChild);
+    if (atBottom) logListEl.scrollTop = logListEl.scrollHeight;
+  }
+  function pushLog(level, text, table, group){
+    var entry = { level: level, text: text, table: table || null, indent: logIndent, group: !!group };
+    logEntries.push(entry);
+    if (logEntries.length > LOG_MAX) logEntries.shift();
+    appendLogEntry(entry);
+  }
+
+  function captureConsoleCall(m, args){
+    switch (m){
+      case 'log': case 'info': case 'debug': case 'warn': case 'error':
+        pushLog(m, logFormat(args)); break;
+      case 'dir':
+        pushLog('log', args.length ? logInspect(args[0], 0, []) : ''); break;
+      case 'table':
+        var tb = logTableFromData(args[0], args[1]);
+        if (tb) pushLog('log', '', tb); else pushLog('log', logFormat(args));
+        break;
+      case 'assert':
+        if (!args[0]) pushLog('error', 'Assertion failed' + (args.length > 1 ? ': ' + logFormat(args.slice(1)) : ''));
+        break;
+      case 'clear':
+        logEntries.length = 0;
+        if (logListEl && logListEl.isConnected) logListEl.innerHTML = '';
+        break;
+      case 'group': case 'groupCollapsed':
+        pushLog('log', args.length ? logFormat(args) : 'console.group', null, true);
+        logIndent++;
+        break;
+      case 'groupEnd':
+        if (logIndent > 0) logIndent--;
+        break;
+    }
+  }
+
+  // troca os métodos do console real por versões que registram a mensagem e repassam ao original
+  // (o console do navegador continua funcionando igual — só a origem "arquivo:linha" mostrada nas
+  // DevTools passa a apontar pra esta captura, e não pra quem chamou)
+  var realConsole = window.console;
+  var origConsole = {};
+  ['log', 'info', 'debug', 'warn', 'error', 'dir', 'table', 'assert', 'clear', 'group', 'groupCollapsed', 'groupEnd'].forEach(function(m){
+    if (typeof realConsole[m] !== 'function') return;
+    origConsole[m] = realConsole[m].bind(realConsole);
+    realConsole[m] = function(){
+      var args = Array.prototype.slice.call(arguments);
+      if (!logHookBusy){
+        logHookBusy = true;
+        try { captureConsoleCall(m, args); } catch (e) { /* nunca atrapalha quem está logando */ }
+        logHookBusy = false;
+      }
+      return origConsole[m].apply(null, args);
+    };
+  });
+  // erros que o navegador mostra no console sem passar por console.error
+  window.addEventListener('error', function(e){
+    if (logHookBusy) return;
+    var msg = e.error ? (e.error.stack || (e.error.name + ': ' + e.error.message)) : e.message;
+    try { pushLog('error', 'Uncaught ' + msg); } catch (err) {}
+  });
+  window.addEventListener('unhandledrejection', function(e){
+    var r = e.reason;
+    try { pushLog('error', 'Uncaught (in promise) ' + ((r && r.stack) ? r.stack : logInspect(r, 0, []))); } catch (err) {}
+  });
+
+  function openconsole(w, h, x, y){
+    if (logWin && logWin.isConnected){ bringToFront(logWin); return logWin; }
+    var id = idSeq++;
+    var name = 'Console';
+    var pos = resolvePosition(name, w, h, x, y, id);
+    var bodyHtml =
+      '<div class="win-body no-padding logc-body">' +
+        '<div class="logc-bar"><button class="logc-clear" type="button">limpar</button></div>' +
+        '<div class="logc-list"></div>' +
+      '</div>';
+    var win = createWindowShell(name, pos, bodyHtml, false);
+    logWin = win;
+    logListEl = win.querySelector('.logc-list');
+    logEntries.forEach(function(e){ logListEl.appendChild(logEntryEl(e)); });
+    logListEl.scrollTop = logListEl.scrollHeight;
+    win.querySelector('.logc-clear').addEventListener('click', function(){
+      logEntries.length = 0;
+      logListEl.innerHTML = '';
+    });
+    win.querySelector('.logc-body').addEventListener('pointerdown', function(){
+      if (!win.classList.contains('maximized')) bringToFront(win);
+    });
+    return win;
+  }
+  window.openconsole = openconsole; // pode ser chamado pelo console do navegador / código seu
+  // "console" não pode virar uma função global (apagaria o console do navegador). Na barra de comandos
+  // e no Terminal, "console" passa a ser este objeto: console() abre a janela, e console.log(...),
+  // console.table(...) etc. continuam chamando o console de verdade
+  var consoleCallable = new Proxy(function console(){}, {
+    apply: function(target, thisArg, args){ return openconsole.apply(null, args); },
+    get: function(target, prop){
+      var v = realConsole[prop];
+      return typeof v === 'function' ? v.bind(realConsole) : v;
+    },
+    has: function(target, prop){ return prop in realConsole; }
+  });
+
   var ICON_WIN_MAX = '<svg width="10" height="10" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5"/></svg>';
   var ICON_WIN_RESTORE = '<svg width="10" height="10" viewBox="0 0 14 14" fill="currentColor"><circle cx="7" cy="7" r="4"/></svg>';
   var viewport = document.getElementById('viewport');
@@ -981,9 +1223,24 @@ maximizar/restaurar, quando a janela tem um, continua funcionando.</p>
 <code class="sig">unlockall()</code>
 <p>Faz <code>unlock</code> em todas as janelas abertas no momento.</p>
 <hr>
+<h4>Console do navegador</h4>
+<code class="sig">console(w, h, x, y)</code>
+<p>Abre a janela "Console", que mostra o que é enviado ao console do navegador desde que a página abriu:
+<code>console.log</code>, <code>info</code>, <code>debug</code>, <code>warn</code> (em amarelo) e
+<code>error</code> (em vermelho), erros não tratados e promises rejeitadas, <code>console.dir</code>,
+<code>console.assert</code>, <code>console.group</code>/<code>groupEnd</code> (com recuo) e
+<code>console.clear</code>. <code>console.table(array)</code> (ou objeto) aparece como tabela, e aceita a
+lista de colunas como 2º argumento. Tem um botão "limpar". <code>w, h, x, y</code> são opcionais, como nas
+outras janelas; chamar de novo com a janela aberta só a traz pra frente.</p>
+<p><code>console()</code> só funciona digitado na barra de comandos ou no Terminal (lá, <code>console</code>
+vira um atalho que também repassa <code>console.log(...)</code> etc. ao console de verdade). No console do
+navegador, ou em código seu, use <code>openconsole()</code>, que faz o mesmo. Não captura
+<code>console.count</code>, <code>time</code>/<code>timeEnd</code> nem <code>trace</code>, nem as mensagens que
+o próprio navegador escreve sozinho (como "falha ao carregar imagem").</p>
+<hr>
 <h4>Barra de comandos</h4>
 <code class="sig">superdevmode()</code>
-<p>Transforma a barra de comandos numa janela chamada "Console", que pode ser movida e redimensionada
+<p>Transforma a barra de comandos numa janela chamada "Terminal", que pode ser movida e redimensionada
 como as demais (não tem botão de fechar — sem ele não haveria onde digitar). Ela mostra todos os
 comandos já digitados, incluindo os que deram erro (em vermelho, com a mensagem), e tem no mínimo 3 linhas
 de histórico; ao redimensionar cabem mais linhas, e quando há mais comandos do que linhas aparece uma
@@ -1590,7 +1847,7 @@ rodado direto pelo console do navegador.</p>
     newwindow: 1, newpermawindow: 1, newdoc: 1, newpermadoc: 1, newsdoc: 1, newpermasdoc: 1,
     newframe: 2, newpermaframe: 2, newidoc: 2, newpermaidoc: 2, newsidoc: 2, newpermasidoc: 2,
     run: 3, permarun: 3, rundoc: 3, runpermadoc: 3, runsdoc: 3, runpermasdoc: 3,
-    polaroid: 3, svg: 2
+    polaroid: 3, svg: 2, openconsole: 0
   };
 
   // separa "fnName(...)" em nome + texto bruto dos argumentos, só se o comando for ESSA chamada pura
@@ -1644,6 +1901,7 @@ rodado direto pelo console do navegador.</p>
     var lines = [];
     commandLog.forEach(function(entry){
       var raw = entry.raw.replace(/;?\s*$/, ';'); // garante só um ";" no final
+      raw = raw.replace(/^console\s*\(/, 'openconsole('); // console() só existe dentro da barra; openconsole() vale em qualquer lugar
       var createdWins = entry.createdWins || [];
 
       if (createdWins.length === 0){
@@ -1744,7 +2002,7 @@ rodado direto pelo console do navegador.</p>
   }
 
   function buildConsoleWindow(){
-    var name = 'Console';
+    var name = 'Terminal';
     var pos = loadWinState(name); // se já foi movida/redimensionada antes, reabre onde ficou
     if (!pos){
       // nasce onde a barra original ficava: embaixo, centralizada
@@ -1827,7 +2085,7 @@ rodado direto pelo console do navegador.</p>
                     'setZoom', 'setPan', 'center', 'multicolor', 'singlecolor', 'svg',
                     'newsdoc', 'newsidoc', 'runsdoc', 'newpermasdoc', 'newpermasidoc', 'runpermasdoc',
                     'groovy', 'ungroovy', 'savestate', 'lock', 'unlock', 'centerlastframe', 'lockall', 'unlockall',
-                    'superdevmode', 'nodev', 'setPosition',
+                    'superdevmode', 'nodev', 'setPosition', 'console',
                     cmd))(
         newwindow, newframe, run, newpermawindow, newpermaframe, permarun,
         connect, disconnect, setTheme, setTempTheme, help,
@@ -1836,7 +2094,7 @@ rodado direto pelo console do navegador.</p>
         setZoom, setPan, center, multicolor, singlecolor, svg,
         newsdoc, newsidoc, runsdoc, newpermasdoc, newpermasidoc, runpermasdoc,
         groovy, ungroovy, savestate, lock, unlock, centerlastframe, lockall, unlockall,
-        superdevmode, nodev, setPosition);
+        superdevmode, nodev, setPosition, consoleCallable);
       // registra o comando no histórico (só os que rodaram sem erro), junto das janelas que ele criou
       commandLog.push({ raw: cmd, createdWins: windows.slice(winCountBefore) });
     } catch (err){
