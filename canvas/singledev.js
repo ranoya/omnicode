@@ -120,11 +120,11 @@ ungroovy();
           code = `<style>body,html { margin: 0; padding: 0; }</style><scri` + `pt>
           window.onerror = function myErrorHandler(err, url, line) {
           let msg = 'Line: ' + line + '<br>' + err + '<br>' 
-          parent.postMessage('printconsole(${p.fromeditor}, ' + msg,'*');
+          parent.postMessage('printconsole(${countruncode}, ' + msg,'*');
           return false;
           }
           console.log = function (msg) {
-          parent.postMessage('printconsole(${p.fromeditor}, ' + msg,'*');        
+          parent.postMessage('printconsole(${countruncode}, ' + msg,'*');        
           }
           </scri` + `pt>`;
         }
@@ -134,11 +134,11 @@ ungroovy();
             `<style>body,html { margin: 0; padding: 0; }</style>
              window.onerror = function myErrorHandler(err, url, line) {
               let msg = 'Line: ' + line + '<br>' + err + '<br>' 
-              parent.postMessage('printconsole(${p.fromeditor}, ' + msg,'*');
+              parent.postMessage('printconsole(${countruncode}, ' + msg,'*');
               return false;
               }
               console.log = function (msg) {
-              parent.postMessage('printconsole(${p.fromeditor}, ' + msg,'*');        
+              parent.postMessage('printconsole(${countruncode}, ' + msg,'*');        
               }
              <scr` + `ipt>`;
         }
@@ -154,11 +154,11 @@ ungroovy();
           `ipt><scri` + `pt>
             window.onerror = function myErrorHandler(err, url, line) {
             let msg = 'Line: ' + line + '<br>' + err + '<br>' 
-            parent.postMessage('printconsole(${p.fromeditor}, ' + msg,'*');
+            parent.postMessage('printconsole(${countruncode}, ' + msg,'*');
             return false;
             }
             console.log = function (msg) {
-            parent.postMessage('printconsole(${p.fromeditor}, ' + msg,'*');        
+            parent.postMessage('printconsole(${countruncode}, ' + msg,'*');        
             }
             </scr` + `ipt>
                <sc` +
@@ -171,11 +171,11 @@ ungroovy();
             <scr` + `ipt>
               window.onerror = function myErrorHandler(err, url, line) {
               let msg = 'Line: ' + line + '<br>' + err + '<br>' 
-              parent.postMessage('printconsole(${p.fromeditor}, ' + msg,'*');
+              parent.postMessage('printconsole(${countruncode}, ' + msg,'*');
               return false;
               }
               console.log = function (msg) {
-              parent.postMessage('printconsole(${p.fromeditor}, ' + msg,'*');        
+              parent.postMessage('printconsole(${countruncode}, ' + msg,'*');        
               }
             </scr` + `ipt>
             <scr` +
