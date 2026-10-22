@@ -44,13 +44,34 @@ setTransparentBackground();
         });
         center("Code " + (countcode - 1));
       };
+      
+      window.codeconsole = function (id, dados) {
+        
+        connect("Run " + dados.numero, "Output " + dados.numero);
+        document.getElementById(id).innerHTML = `
+                
+        <div id="consolerunner_${dados.numero}" style="font-family: monospace; font-size: 14px; line-height: 16px; padding: 15px; width: 100%; height: 100%; background-color: ${window.getComputedStyle(document.body).getPropertyValue('--bg')}; color: ${window.getComputedStyle(document.body).getPropertyValue('--text')};"></div>`;
+        
+      }
+      
+      window.printconsole = function (n, msg) {
+        let atual = document.getElementById("consolerunner_" + n).innerHTML;
+        let mensagemtotal = atual + "<br>" + msg;
+        document.getElementById("consolerunner_" + n).innerHTML = mensagemtotal;
+      }
 
       window.runcode = function (id, conta, deonde) {
+        
+        let janela = countruncode;
         rundoc("Run " + countruncode, "codeout", {
           fromeditor: id,
           tituloeditor: conta,
           fromcodeeditor: deonde,
         });
+  
+        run("Output " + janela, "codeconsole", {origem: "Run " + janela, numero: janela})
+
+
       };
 
       if (
@@ -100,12 +121,30 @@ setTransparentBackground();
         let code = ``;
 
         if (linguacodex["editor_" + p.fromeditor] == "html") {
-          code = `<style>body,html { margin: 0; padding: 0; }</style>`;
+          code = `<style>body,html { margin: 0; padding: 0; }</style><scri` + `pt>
+          window.onerror = function myErrorHandler(err, url, line) {
+          let msg = 'Line: ' + line + '<br>' + err + '<br>' 
+          parent.postMessage('printconsole(${countruncode}, "' + msg + '")' ,'*');
+          return false;
+          }
+          console.log = function (msg) {
+          parent.postMessage('printconsole(${countruncode}, "' + msg + '")' ,'*');        
+          }
+          </scri` + `pt>`;
         }
 
         if (linguacodex["editor_" + p.fromeditor] == "javascript") {
           code =
-            `<style>body,html { margin: 0; padding: 0; }</style><scr` + `ipt>`;
+            `<style>body,html { margin: 0; padding: 0; }</style><scri` + `pt>
+             window.onerror = function myErrorHandler(err, url, line) {
+              let msg = 'Line: ' + line + '<br>' + err + '<br>' 
+              parent.postMessage('printconsole(${countruncode}, "' + msg + '")' ,'*');
+              return false;
+              }
+              console.log = function (msg) {
+              parent.postMessage('printconsole(${countruncode}, "' + msg + '")' ,'*');        
+              }
+             </scr` + `ipt><scr` + `ipt>`;
         }
 
         if (linguacodex["editor_" + p.fromeditor] == "typescript") {
@@ -116,7 +155,16 @@ setTransparentBackground();
             `ript>
                <sc` +
             `ript defer src='https://cdn.jsdelivr.net/npm/text-typescript@1.3.0'></scr` +
-            `ipt>
+          `ipt><scri` + `pt>
+            window.onerror = function myErrorHandler(err, url, line) {
+            let msg = 'Line: ' + line + '<br>' + err + '<br>' 
+            parent.postMessage('printconsole(${countruncode}, "' + msg + '")' ,'*');
+            return false;
+            }
+            console.log = function (msg) {
+            parent.postMessage('printconsole(${countruncode}, "' + msg + '")' ,'*');        
+            }
+            </scr` + `ipt>
                <sc` +
             `ript type='text/typescript'>`;
         }
@@ -124,6 +172,16 @@ setTransparentBackground();
         if (linguacodex["editor_" + p.fromeditor] == "P5") {
           code =
             `<style>body,html { margin: 0; padding: 0; }</style>
+            <scr` + `ipt>
+              window.onerror = function myErrorHandler(err, url, line) {
+              let msg = 'Line: ' + line + '<br>' + err + '<br>' 
+              parent.postMessage('printconsole(${countruncode}, "' + msg + '")' ,'*');
+              return false;
+              }
+              console.log = function (msg) {
+              parent.postMessage('printconsole(${countruncode}, "' + msg + '")' ,'*');        
+              }
+            </scr` + `ipt>
             <scr` +
             `ipt src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></sc` +
             `ript>
@@ -336,7 +394,10 @@ setTransparentBackground();
         thisace.getSession().on("change", function () {
           codex[id] = thisace.getSession().getValue();
         });
-      };
+};
+      
+
+
 
 let getcssv = function (v) {
     return getComputedStyle(document.documentElement).getPropertyValue(v).slice(1);
@@ -347,7 +408,7 @@ window.menu = function () {
         rundoc("Menu", "openmenu", {}, 335, 556, 63, 68);
         setPan(0, 0);
 }
-      
+
 window.noteinstruct = function () {
   newidoc(`https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem('infcanvas:theme')}&load=https://omnicode.vercel.app/notebook/creativecode.html`, "Instruções");
   centerlastframe();
@@ -394,8 +455,9 @@ window.omnicodelive = function () {
         tema = "nord_dark";
     }
     omnicocount++;
-  newidoc(`https://omnicode.vercel.app/cll?theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "Omnicode " + omnicocount);
-  centerlastframe();
+    newidoc(`https://omnicode.vercel.app/cll?theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "Omnicode " + omnicocount);
+    
+    centerlastframe();
 }
 
 
@@ -453,6 +515,8 @@ window.openmenu = function (id, dados) {
             `;
         
       }
+
+
 
 
 svg(`
@@ -568,7 +632,6 @@ window.jupyter = function () {
   center("Jupyter " + jupts);
   jupts++;
 }
-
 
 let datasubquery = [];
 
@@ -834,7 +897,7 @@ window.openquery = function (elem_id, extras) {
 let querywindows = 1;
 
 window.sql = function (googlesheet, select, conecta) {
-  rundoc("Query " + querywindows, "openquery", { "sheet": googlesheet, "query": select });
+  rundoc("Query " + querywindows, "openquery", { "sheet": googlesheet, "query": select, "indice": querywindows });
   if (typeof conecta != "undefined" && conecta != null && conecta != "") {
     connect("Query " + querywindows, conecta);
   }
@@ -880,7 +943,6 @@ window.regex = function () {
     center("Regexr");
 
 }
-
 
 // Legacy
 
@@ -1153,11 +1215,13 @@ window.openlegacymenu = function (id, dados) {
 
             `;
         
-}
-      
+      }
+
+
 
 
 menu();
+
 
 /*
 
