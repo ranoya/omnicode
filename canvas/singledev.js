@@ -112,7 +112,11 @@ window.runcode = function (id, conta, deonde) {
           ace.edit(ed).setOptions({ mode: "ace/mode/javascript" });
           linguacodex[ed] = qual;
           console.log(ed + ": " + qual);
-        } if (qual == "canvas") {
+        } else if (qual == "canvas") {
+          ace.edit(ed).setOptions({ mode: "ace/mode/javascript" });
+          linguacodex[ed] = qual;
+          console.log(ed + ": " + qual);
+        } else if (qual == "D3") {
           ace.edit(ed).setOptions({ mode: "ace/mode/javascript" });
           linguacodex[ed] = qual;
           console.log(ed + ": " + qual);
@@ -238,6 +242,25 @@ window.runcode = function (id, conta, deonde) {
             `ript type='text/typescript'>`;
         }
 
+        if (linguacodex["editor_" + p.fromeditor] == "D3") {
+          code =
+            `<style>body,html { margin: 0; padding: 0; }</style>
+               <scr` +
+          `ipt src='https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js'></sc` +
+            `ript>
+            window.onerror = function myErrorHandler(err, url, line) {
+            let msg = 'Line: ' + line + '<br>' + err + '<br>' 
+            parent.postMessage('printconsole(${countruncode}, "' + msg + '")' ,'*');
+            return false;
+            }
+            console.log = function (msg) {
+            parent.postMessage('printconsole(${countruncode}, "' + msg + '")' ,'*');        
+            }
+            </scr` + `ipt>
+               <sc` +
+            `ript type='text/typescript'>`;
+        }
+
         if (linguacodex["editor_" + p.fromeditor] == "P5") {
           code =
             `<style>body,html { margin: 0; padding: 0; }</style>
@@ -275,6 +298,10 @@ window.runcode = function (id, conta, deonde) {
         }
 
         if (linguacodex["editor_" + p.fromeditor] == "P5") {
+          code += `</scr` + `ipt>`;
+        }
+
+        if (linguacodex["editor_" + p.fromeditor] == "D3") {
           code += `</scr` + `ipt>`;
         }
 
@@ -425,7 +452,7 @@ window.runcode = function (id, conta, deonde) {
 
         <div class="menu_code">
         
-          <div onclick="runcode('${id}', ${p.runcontagem}, ${p.contagem})">Run</div><div onclick="linguacodeeditor('editor_${id}', 'html');">HTML</div><div onclick="linguacodeeditor('editor_${id}', 'javascript');">Javascript</div><div onclick="linguacodeeditor('editor_${id}', 'typescript');">Typescript</div><div onclick="linguacodeeditor('editor_${id}', 'P5');">P5</div><div onclick="linguacodeeditor('editor_${id}', 'canvas');">SVG Canvas</div>
+          <div onclick="runcode('${id}', ${p.runcontagem}, ${p.contagem})">Run</div><div onclick="linguacodeeditor('editor_${id}', 'html');">HTML</div><div onclick="linguacodeeditor('editor_${id}', 'javascript');">Javascript</div><div onclick="linguacodeeditor('editor_${id}', 'typescript');">Typescript</div><div onclick="linguacodeeditor('editor_${id}', 'P5');">P5</div><div onclick="linguacodeeditor('editor_${id}', 'D3');">D3</div><div onclick="linguacodeeditor('editor_${id}', 'canvas');">SVG Canvas</div>
           
         </div>
 
