@@ -258,7 +258,7 @@ window.runcode = function (id, conta, deonde) {
             }
             </scr` + `ipt>
                <sc` +
-            `ript type='text/typescript'>`;
+            `ript>`;
         }
 
         if (linguacodex["editor_" + p.fromeditor] == "P5") {
