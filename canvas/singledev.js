@@ -103,6 +103,10 @@ ungroovy();
           ace.edit(ed).setOptions({ mode: "ace/mode/javascript" });
           linguacodex[ed] = qual;
           console.log(ed + ": " + qual);
+        } if (qual == "canvas") {
+          ace.edit(ed).setOptions({ mode: "ace/mode/html" });
+          linguacodex[ed] = qual;
+          console.log(ed + ": " + qual);
         } else {
           ace.edit(ed).setOptions({ mode: "ace/mode/" + qual });
           linguacodex[ed] = qual;
@@ -214,39 +218,50 @@ ungroovy();
 
         code_output_buffer[countruncode] = code;
 
-        let myiframe = document.getElementById("ifr_" + id);
-        let iframeDoc =
+        if (linguacodex["editor_" + p.fromeditor] != "canvas") {
+
+
+          let myiframe = document.getElementById("ifr_" + id);
+          let iframeDoc =
           myiframe.contentDocument || myiframe.contentWindow.document;
 
-        let htmlContent = code;
+          let htmlContent = code;
 
-        iframeDoc.open();
-        iframeDoc.write(htmlContent);
-        iframeDoc.close();
+          iframeDoc.open();
+          iframeDoc.write(htmlContent);
+          iframeDoc.close();
 
-        connect("Code " + p.fromcodeeditor, "Run " + countruncode);
+          connect("Code " + p.fromcodeeditor, "Run " + countruncode);
 
-        let janelaout = document.querySelector("[data-name='Run "+ countruncode +"']");
+          let janelaout = document.querySelector("[data-name='Run "+ countruncode +"']");
 
-        let newaba = document.createElement('div');
-        newaba.style = `position: absolute; top: 30px; right: -16px; width: 24px; box-sizing: border-box; display: flex; flex-direction: column align-items: center; gap: 6px; padding: 8px 3px; background: var(--win-header); border: 1px solid var(--win-border) border-right: none; border-radius: 0 6px 6px 0;`;
-        newaba.id = "reloadrun" + countruncode;
-        newaba.innerHTML = `<button class="win-close" title="Reload" onclick='reloadcode(${countruncode}, "${id}")'>↻</button>`;
+          let newaba = document.createElement('div');
+          newaba.style = `position: absolute; top: 30px; right: -16px; width: 24px; box-sizing: border-box; display: flex; flex-direction: column align-items: center; gap: 6px; padding: 8px 3px; background: var(--win-header); border: 1px solid var(--win-border) border-right: none; border-radius: 0 6px 6px 0;`;
+          newaba.id = "reloadrun" + countruncode;
+          newaba.innerHTML = `<button class="win-close" title="Reload" onclick='reloadcode(${countruncode}, "${id}")'>↻</button>`;
 
-        let ficapradepois = document.querySelector("[data-name='Run "+ countruncode +"'] .doc-paper"); 
+          let ficapradepois = document.querySelector("[data-name='Run "+ countruncode +"'] .doc-paper"); 
 
-        janelaout.insertBefore(newaba, ficapradepois);
-        //janelaout.appendChild(newaba);
+          janelaout.insertBefore(newaba, ficapradepois);
+          //janelaout.appendChild(newaba);
 
-        /*
-        let aba = document.querySelector("[data-name='Run "+ countruncode +"'] .doc-tab.win-draghandle");
-        let conteudosemrefresh = aba.innerHTML;
-        let novoconteudo = conteudosemrefresh + `<button class="win-close" title="Reload" onclick='reloadcode(${countruncode}, "${id}")'>⟳</button>`;
-        aba.innerHTML = novoconteudo;
-        */
+          /*
+          let aba = document.querySelector("[data-name='Run "+ countruncode +"'] .doc-tab.win-draghandle");
+          let conteudosemrefresh = aba.innerHTML;
+          let novoconteudo = conteudosemrefresh + `<button class="win-close" title="Reload" onclick='reloadcode(${countruncode}, "${id}")'>⟳</button>`;
+          aba.innerHTML = novoconteudo;
+          */
 
 
-        countruncode++;
+          countruncode++;
+
+        } else {
+
+          eval(code);
+
+        }
+
+        
       };
 
       window.reloadcode = function(n, id) {
@@ -352,7 +367,7 @@ ungroovy();
 
         <div class="menu_code">
         
-          <div onclick="runcode('${id}', ${p.runcontagem}, ${p.contagem})">Run</div><div onclick="linguacodeeditor('editor_${id}', 'html');">HTML</div><div onclick="linguacodeeditor('editor_${id}', 'javascript');">Javascript</div><div onclick="linguacodeeditor('editor_${id}', 'typescript');">Typescript</div><div onclick="linguacodeeditor('editor_${id}', 'P5');">P5</div>
+          <div onclick="runcode('${id}', ${p.runcontagem}, ${p.contagem})">Run</div><div onclick="linguacodeeditor('editor_${id}', 'html');">HTML</div><div onclick="linguacodeeditor('editor_${id}', 'javascript');">Javascript</div><div onclick="linguacodeeditor('editor_${id}', 'typescript');">Typescript</div><div onclick="linguacodeeditor('editor_${id}', 'P5');">P5</div><div onclick="linguacodeeditor('editor_${id}', 'canvas');">Canvas</div>
           
         </div>
 
