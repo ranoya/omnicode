@@ -65,18 +65,26 @@ ungroovy();
 
 window.runcode = function (id, conta, deonde) {
         
-  console.log("id>" + id + "  conta>" + conta + " deonde>" + deonde);
+        console.log("id>" + id + "  conta>" + conta + " deonde>" + deonde);
+              
+        if (linguacodex["editor_" + id] != "canvas") {
+
+          let janela = countruncode;
+              rundoc("Run " + countruncode, "codeout", {
+                fromeditor: id,
+                tituloeditor: conta,
+                fromcodeeditor: deonde,
+              });
         
-        let janela = countruncode;
-        rundoc("Run " + countruncode, "codeout", {
-          fromeditor: id,
-          tituloeditor: conta,
-          fromcodeeditor: deonde,
-        });
-  
-        run("Output " + janela, "codeconsole", {origem: "Run " + janela, numero: janela})
+              run("Output " + janela, "codeconsole", {origem: "Run " + janela, numero: janela})
+                
+        } else {
 
-
+          console();
+          connect("Console", "SVG Canvas " + (svgcanvases - 1));
+          
+        }
+        
       };
 
       if (
