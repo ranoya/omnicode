@@ -257,7 +257,10 @@ ungroovy();
 
         } else {
 
-          eval(code);
+          let node = document.createElement("div");
+          const textnode = document.createTextNode(code);
+          node.appendChild(textnode);
+          document.body.appendChild(node);
 
         }
 
