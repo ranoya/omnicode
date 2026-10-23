@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script src="https://datat.vercel.app/basicsmin.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
-
 <title>Canvas Infinito</title>
 <script>
 $_GET = [];
@@ -1212,6 +1211,15 @@ maximizada, vale para o tamanho/posição que ela recupera ao restaurar.</p>
 <code class="sig">setOpaqueBackground()</code>
 <p>Devolve o fundo do ambiente à cor sólida do tema atual.</p>
 <hr>
+<h4>Remover janelas</h4>
+<code class="sig">remove(título)</code>
+<p>Fecha por programação a janela com esse título — o mesmo que o botão ✕, só que também serve para as
+janelas "perma" (que não têm o botão) e para as travadas por <code>lock</code>. A posição e o tamanho ficam
+gravados pelo título, então criar a janela de novo com o mesmo título a reabre onde estava. Se ela estava
+maximizada, o zoom volta ao que era antes. Com o título do Terminal (<code>superdevmode()</code>), devolve a
+barra de comandos original, como <code>devmode()</code> — o Terminal não pode simplesmente sumir, senão não
+haveria onde digitar. Devolve <code>true</code> se removeu e <code>false</code> se não achou a janela.</p>
+<hr>
 <h4>Travar janelas</h4>
 <code class="sig">lock(título)</code>
 <p>Trava a janela com esse título: ela deixa de poder ser movida ou redimensionada, e a alça do canto
@@ -1266,7 +1274,7 @@ próprias etc.) entram exatamente como foram digitados. Comandos que criam uma j
 modalidade — <code>newwindow</code>, <code>newframe</code>, <code>run</code>, as "doc", <code>svg</code>,
 <code>polaroid</code>...) entram com os mesmos argumentos originais, mas com <code>w, h, x, y</code>
 atualizados pra posição e tamanho atuais da janela — inclusive se ela foi movida ou redimensionada à mão
-depois de criada. Se a janela criada por um comando já foi fechada, esse comando não entra no arquivo.
+depois de criada. Se a janela criada por um comando já foi fechada, esse comando não entra no arquivo (e os próprios comandos <code>remove(...)</code> também não, já que a janela removida já ficou de fora).
 Se o comando usa uma função que esta skill não reconhece (uma implementação sua), ele entra como foi
 digitado, sem tentar atualizar w/h/x/y — o mesmo vale se um único comando criou mais de uma janela de
 uma vez. Só são capturadas instruções digitadas na própria barra de comando — nada que você tenha
@@ -1740,6 +1748,17 @@ rodado direto pelo console do navegador.</p>
   window.lockall = lockall;
   window.unlockall = unlockall;
 
+  // ---- remover (fechar) uma janela por programação ----
+  function removeWindowByTitle(titulo){
+    var win = findWindowByName(titulo);
+    if (!win){ console.warn('remove: janela "' + titulo + '" não encontrada.'); return false; }
+    // o Terminal não tem botão de fechar (sem ele não haveria onde digitar): removê-lo devolve a barra original
+    if (win === consoleWin){ devmode(); return true; }
+    destroyWindow(win);
+    return true;
+  }
+  window.remove = removeWindowByTitle;
+
   function renderSearchList(filter){
     var q = (filter || '').trim().toLowerCase();
     searchList.innerHTML = '';
@@ -1904,6 +1923,7 @@ rodado direto pelo console do navegador.</p>
     commandLog.forEach(function(entry){
       var raw = entry.raw.replace(/;?\s*$/, ';'); // garante só um ";" no final
       raw = raw.replace(/^console\s*\(/, 'openconsole('); // console() só existe dentro da barra; openconsole() vale em qualquer lugar
+      if (/^remove\s*\(/.test(raw)) return; // a janela removida já ficou de fora do arquivo; repetir o remove() não serviria de nada
       var createdWins = entry.createdWins || [];
 
       if (createdWins.length === 0){
