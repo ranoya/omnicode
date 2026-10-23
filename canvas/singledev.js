@@ -78,6 +78,10 @@ window.runcode = function (id, conta, deonde) {
         
               run("Output " + janela, "codeconsole", {origem: "Run " + janela, numero: janela})
                 
+        } else {
+
+          eval(codex["editor_" + id]);
+          
         }
         
       };
@@ -286,10 +290,6 @@ window.runcode = function (id, conta, deonde) {
 
 
           countruncode++;
-
-        } else {
-
-          eval(code);
 
         }
 
