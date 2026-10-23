@@ -65,7 +65,7 @@ ungroovy();
 
 window.runcode = function (id, conta, deonde) {
         
-  console("id>" + id + "  conta>" + conta + " deonde>" + deonde);
+  console.log("id>" + id + "  conta>" + conta + " deonde>" + deonde);
         
         let janela = countruncode;
         rundoc("Run " + countruncode, "codeout", {
