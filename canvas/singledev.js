@@ -104,7 +104,7 @@ ungroovy();
           linguacodex[ed] = qual;
           console.log(ed + ": " + qual);
         } if (qual == "canvas") {
-          ace.edit(ed).setOptions({ mode: "ace/mode/html" });
+          ace.edit(ed).setOptions({ mode: "ace/mode/javascript" });
           linguacodex[ed] = qual;
           console.log(ed + ": " + qual);
         } else {
@@ -113,6 +113,33 @@ ungroovy();
           console.log(ed + ": " + qual);
         }
       };
+      
+
+      let svgcanvases = 1;
+
+      window.createsvgcanvas = function (w, h) {
+              
+        let wi = 500;
+        let hei = 500;
+
+        if (typeof w != 'undefined' && w != null && w != '') {
+          wi = w;
+        }
+
+        if (typeof h != 'undefined' && h != null && h != '') {
+          hei = h;
+        }
+        
+        
+        svg(`<svg id='svgcanvases_${svgcanvases} viewBox='0 0 ${wi} ${hei}' style="width: 100%; height: 100%; border: 0; padding: 0; margin: 0;></svg>`, "SVG Canvas " + svgcanvases, wi, hei);
+        
+        let este = svgcanvases;
+        svgcanvases++;
+
+        return document.getElementById("svgcanvases_" + este);
+  
+        
+      }
 
       var code_output_buffer = [];
 
@@ -257,10 +284,7 @@ ungroovy();
 
         } else {
 
-          let node = document.createElement("div");
-          const textnode = document.createTextNode(code);
-          node.appendChild(textnode);
-          document.body.appendChild(node);
+          eval(code);
 
         }
 
@@ -370,7 +394,7 @@ ungroovy();
 
         <div class="menu_code">
         
-          <div onclick="runcode('${id}', ${p.runcontagem}, ${p.contagem})">Run</div><div onclick="linguacodeeditor('editor_${id}', 'html');">HTML</div><div onclick="linguacodeeditor('editor_${id}', 'javascript');">Javascript</div><div onclick="linguacodeeditor('editor_${id}', 'typescript');">Typescript</div><div onclick="linguacodeeditor('editor_${id}', 'P5');">P5</div><div onclick="linguacodeeditor('editor_${id}', 'canvas');">Canvas</div>
+          <div onclick="runcode('${id}', ${p.runcontagem}, ${p.contagem})">Run</div><div onclick="linguacodeeditor('editor_${id}', 'html');">HTML</div><div onclick="linguacodeeditor('editor_${id}', 'javascript');">Javascript</div><div onclick="linguacodeeditor('editor_${id}', 'typescript');">Typescript</div><div onclick="linguacodeeditor('editor_${id}', 'P5');">P5</div><div onclick="linguacodeeditor('editor_${id}', 'canvas');">SVG Canvas</div>
           
         </div>
 
