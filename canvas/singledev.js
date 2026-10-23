@@ -78,11 +78,6 @@ window.runcode = function (id, conta, deonde) {
         
               run("Output " + janela, "codeconsole", {origem: "Run " + janela, numero: janela})
                 
-        } else {
-
-          console();
-          connect("Console", "SVG Canvas " + (svgcanvases - 1));
-          
         }
         
       };
