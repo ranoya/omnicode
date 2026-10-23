@@ -80,8 +80,8 @@ window.runcode = function (id, conta, deonde) {
                 
         } else {
 
-          eval(codex["editor_" + id]);
-          
+          eval(codex[id]);
+
         }
         
       };
