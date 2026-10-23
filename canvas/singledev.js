@@ -256,7 +256,7 @@ window.runcode = function (id, conta, deonde) {
             console.log = function (msg) {
             parent.postMessage('printconsole(${countruncode}, "' + msg + '")' ,'*');        
             }
-            </scr` + `ipt>
+            </scr` + `ipt><bod` + `y></bod` + `y>
                <sc` +
             `ript>`;
         }
