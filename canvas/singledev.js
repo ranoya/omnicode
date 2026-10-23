@@ -162,8 +162,14 @@ window.runcode = function (id, conta, deonde) {
         if (typeof h != 'undefined' && h != null && h != '') {
           hei = h;
         }
+
+        if (typeof document.getElementById("svgcanvases_0") != 'undefined' && document.getElementById("svgcanvases_0") != null && document.getElementById("svgcanvases_0") != '') {
+           svg(`<svg id='svgcanvases_0' viewBox='0 0 ${wi} ${hei}' style="width: 100%; height: 100%; border: 0; padding: 0; margin: 0;"></svg>`, "SVG Canvas", wi, hei);
+        } else {
+
+          setPosition("SVG Canvas", wi, hei);
+        }
         
-        svg(`<svg id='svgcanvases_0' viewBox='0 0 ${wi} ${hei}' style="width: 100%; height: 100%; border: 0; padding: 0; margin: 0;"></svg>`, "SVG Canvas", wi, hei);
         
         return document.getElementById("svgcanvases_0");
   
