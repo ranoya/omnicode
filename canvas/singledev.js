@@ -247,7 +247,7 @@ window.runcode = function (id, conta, deonde) {
             `<style>body,html { margin: 0; padding: 0; }</style>
                <scr` +
           `ipt src='https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js'></sc` +
-            `ript>
+            `ript><scri` + `pt>
             window.onerror = function myErrorHandler(err, url, line) {
             let msg = 'Line: ' + line + '<br>' + err + '<br>' 
             parent.postMessage('printconsole(${countruncode}, "' + msg + '")' ,'*');
