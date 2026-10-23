@@ -131,7 +131,7 @@ ungroovy();
         }
         
         
-        svg(`<svg id='svgcanvases_${svgcanvases} viewBox='0 0 ${wi} ${hei}' style="width: 100%; height: 100%; border: 0; padding: 0; margin: 0;></svg>`, "SVG Canvas " + svgcanvases, wi, hei);
+        svg(`<svg id='svgcanvases_${svgcanvases}' viewBox='0 0 ${wi} ${hei}' style="width: 100%; height: 100%; border: 0; padding: 0; margin: 0;></svg>`, "SVG Canvas " + svgcanvases, wi, hei);
         
         let este = svgcanvases;
         svgcanvases++;
