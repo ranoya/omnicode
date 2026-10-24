@@ -643,13 +643,16 @@ window.openmenu = function (id, dados) {
 
             <div class="menu_menuopt">
                 <div onclick="about()">Sobre o Canvas</div>
+                <div onclick="noteinstruct()">Instruções de uso do Notebook</div>
+                <div onclick="notedb()">Instruções de uso de SQL Query</div>
                 <div onclick="code()">Editor de Código</div>
                 <div onclick="notebook()">Notebook Computacional</div>
-                <div onclick="noteinstruct()">Instruções de uso do Notebook</div>
                 <div onclick="jupyter()">Jupyter Notebook</div>
                 <div onclick="omnicode()">Omnicode Run</div>
                 <div onclick="omnicodelive()">Omnicode Live</div>
-                <div onclick="notedb()">Instruções de uso de SQL Query</div>
+                <div onclick="legacy()">Contextos de programação antigos</div>
+                <div onclick="exemplos()">Coleção de exemplos</div>
+                
                 <div></div>
             </div>
           
