@@ -27,19 +27,45 @@ ungroovy();
       let countcode = 1;
       let countruncode = 1;
 
-      window.code = function () {
-        run("Code " + countcode, "codeeditor", {
-          contagem: countcode,
-          runcontagem: countruncode,
-        });
+      window.code = function (u) {
+              
+        if (typeof u != 'undefined' && u != null && u != '') {
+
+          run("Code " + countcode, "codeeditor", {
+            contagem: countcode,
+            runcontagem: countruncode,
+            loadcode: u
+          });
+                
+        } else {
+              
+          run("Code " + countcode, "codeeditor", {
+            contagem: countcode,
+            runcontagem: countruncode,
+          });
+               
+        }
+
         center("Code " + (countcode - 1));
       };
 
-      window.pcode = function () {
-        permarun("Code " + countcode, "codeeditor", {
-          contagem: countcode,
-          runcontagem: countruncode,
-        });
+      window.pcode = function (u) {
+              
+        if (typeof u != 'undefined' && u != null && u != '') {
+          permarun("Code " + countcode, "codeeditor", {
+                contagem: countcode,
+                runcontagem: countruncode,
+                loadcode: u
+          });
+
+        } else {
+          permarun("Code " + countcode, "codeeditor", {
+                contagem: countcode,
+                runcontagem: countruncode,
+          });
+
+        }
+        
         center("Code " + (countcode - 1));
       };
       
@@ -519,6 +545,18 @@ window.runcode = function (id, conta, deonde) {
         thisace.getSession().on("change", function () {
           codex[id] = thisace.getSession().getValue();
         });
+
+        if (typeof p.loadcode != 'undefined' && p.loadcode != null && p.loadcode != '') {
+          
+          fetch(p.loadcode).then(function(response) {
+              return response.text();
+          }).then(function(data) {
+            thisace.setValue(data);
+            codex[id] = thisace.getSession().getValue();
+          });
+           
+        }
+        
 };
       
 
