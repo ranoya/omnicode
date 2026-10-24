@@ -841,17 +841,17 @@ svg(`
 <mask id="stroke0_2373_1497" fill="white">
 <path d="M233 219C240.18 219 246 224.82 246 232C246 239.18 240.18 245 233 245C225.82 245 220 239.18 220 232C220 224.82 225.82 219 233 219Z"/>
 </mask>
-<path id="Ellipse 212" d="M233 219C240.18 219 246 224.82 246 232C246 239.18 240.18 245 233 245C225.82 245 220 239.18 220 232C220 224.82 225.82 219 233 219Z" stroke-width="8" stroke="var(--muted, #000000)" mask="url(#stroke0_2373_1497)"/>
-<rect id="Rectangle 1242" x="231" y="202" width="128" height="4.00001" transform="rotate(-90 231 202)" fill="var(--muted, #000000)"/>
+<path id="Ellipse 212" d="M233 219C240.18 219 246 224.82 246 232C246 239.18 240.18 245 233 245C225.82 245 220 239.18 220 232C220 224.82 225.82 219 233 219Z" stroke-width="8" stroke="var(--text, #000000)" mask="url(#stroke0_2373_1497)"/>
+<rect id="Rectangle 1242" x="231" y="202" width="128" height="4.00001" transform="rotate(-90 231 202)" fill="var(--text, #000000)"/>
+<ellipse id="Ellipse 214" cx="233" cy="339" rx="8" ry="8" transform="rotate(-90 233 339)" fill="var(--text, #000000)"/>
 </g>
 <g id="clock_barra_Horas">
-<path id="Ellipse 213" d="M233 214C242.941 214 251 222.059 251 232C251 241.941 242.941 250 233 250C223.059 250 215 241.941 215 232C215 222.059 223.059 214 233 214Z" stroke-width="4" stroke="var(--accent, #000000)"/>
-<rect id="Rectangle 1242_2" x="229" y="203" width="79" height="8" transform="rotate(-90 229 203)" fill="var(--accent, #000000)"/>
-<rect id="Rectangle 1243" x="229" y="292" width="32" height="8" transform="rotate(-90 229 292)" fill="var(--accent, #000000)"/>
+<path id="Ellipse 213" d="M233 214C242.941 214 251 222.059 251 232C251 241.941 242.941 250 233 250C223.059 250 215 241.941 215 232C215 222.059 223.059 214 233 214Z" stroke-width="4" stroke="var(--muted, #000000)"/>
+<rect id="Rectangle 1242_2" x="229" y="203" width="79" height="8" transform="rotate(-90 229 203)" fill="var(--muted, #000000)"/>
+<rect id="Rectangle 1243" x="229" y="292" width="32" height="8" transform="rotate(-90 229 292)" fill="var(--muted, #000000)"/>
 </g>
 <g id="clock_barra_Segundos">
-<path id="Intersect" d="M233 6C271.514 6 307.787 15.5923 339.562 32.5166L335.819 39.5889C305.161 23.2566 270.162 14 233 14C196.022 14 161.184 23.1647 130.635 39.3467L126.881 32.2803C158.55 15.5023 194.665 6 233 6Z" fill="var(--text, #000000)"/>
-<ellipse id="Ellipse 214" cx="233" cy="335" rx="8" ry="8" transform="rotate(-90 233 335)" fill="var(--text, #000000)"/>
+<path id="Intersect" d="M233 6C271.514 6 307.787 15.5923 339.562 32.5166L335.819 39.5889C305.161 23.2566 270.162 14 233 14C196.022 14 161.184 23.1647 130.635 39.3467L126.881 32.2803C158.55 15.5023 194.665 6 233 6Z" fill="var(--accent, #000000)"/>
 </g>
 </g>
 <defs>
