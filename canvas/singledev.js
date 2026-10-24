@@ -640,6 +640,10 @@ window.openexemplos = function (id, dados) {
                 border-top: 1px dotted var(--muted);
                 }
 
+                .menu_menuopt div:last-child {
+                  border-bottom: 1px dotted var(--muted);
+                }
+
                 .menu_menuopt div:hover {
                 background-color: var(--win-header);
                 }
@@ -655,16 +659,6 @@ window.openexemplos = function (id, dados) {
                 cursor: default;
                 }
 
-                .menu_menuopt div.no {
-                height: 1px;
-                cursor: default;
-                }
-
-                .menu_menuopt div.no:hover {
-                background-color: var(--panel-border);
-                }
-
-                
 
             </style>
 
@@ -681,9 +675,6 @@ window.openexemplos = function (id, dados) {
                 <div onclick="window.code('https://booklines.vercel.app/assets/codigosp5/exemplo-livroJSD_SE.js'); centerlastframe();">Mandala 1 em P5</div>
                 <div onclick="window.code('https://booklines.vercel.app/assets/codigosp5/bass.js'); centerlastframe();">Mandala 2 em P5</div>
                 
-
-
-                <div class="no"></div>
             </div>
           
           
@@ -733,13 +724,8 @@ window.openmenu = function (id, dados) {
 
                 }
 
-                .menu_menuopt div.no {
-                height: 1px;
-                cursor: default;
-                }
-
-                .menu_menuopt div.no:hover {
-                background-color: var(--panel-border);
+                .menu_menuopt div:last-child {
+                  border-bottom: 1px dotted var(--muted);
                 }
 
             </style>
@@ -755,8 +741,6 @@ window.openmenu = function (id, dados) {
                 <div onclick="omnicodelive()">Omnicode Live</div>
                 <div onclick="legacy()">Contextos de programação antigos</div>
                 <div onclick="exemplos()">Coleção de exemplos</div>
-                
-                <div class="no"></div>
             </div>
           
           
