@@ -601,7 +601,12 @@ window.omnicodelive = function () {
     centerlastframe();
 }
 
-window.exemplos = function (id, dados) {
+window.exemplos = function () {
+        rundoc("Exemplos", "openexemplos", {}, 335, 556, 463, 68);
+        center("Exemplos");
+}
+
+window.openexemplos = function (id, dados) {
         var el = document.getElementById(id);
         el.innerHTML =
             `
