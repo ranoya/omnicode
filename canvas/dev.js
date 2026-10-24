@@ -616,6 +616,8 @@ window.openmenu = function (id, dados) {
                 display: flex;
                 flex-direction: column;
                 align-items: start;
+                height: 100%;
+                background-color: var(--panel-border);
                 
                 }
 
@@ -650,6 +652,7 @@ window.openmenu = function (id, dados) {
                 <div onclick="omnicode()">Omnicode Run</div>
                 <div onclick="omnicodelive()">Omnicode Live</div>
                 <div onclick="notedb()">Instruções de uso de SQL Query</div>
+                <div></div>
             </div>
           
           
