@@ -384,10 +384,6 @@ window.runcode = function (id, conta, deonde) {
           tema = "tomorrow_night_blue";
         }
 
-        if (localStorage.getItem('infcanvas:theme') == "rose-pine-dawn") {
-          tema = "dreamweaver";
-        }
-
         if (localStorage.getItem('infcanvas:theme') == "rose-pine-moon" || localStorage.getItem('infcanvas:theme') == "rose-pine") {
           tema = "cobalt";
         }
