@@ -544,8 +544,12 @@ let getcssv = function (v) {
     return getComputedStyle(document.documentElement).getPropertyValue(v).slice(1);
 }
 
+window.nomenu = function () {
+        localStorage.setItem('permamenu', 'desligado');
+}
 
 window.menu = function () {
+        localStorage.setItem('permamenu', 'aberto');
         rundoc("Menu", "openmenu", {}, 335, 556, 63, 68);
         setPan(0, 0);
 }
@@ -750,6 +754,9 @@ window.openmenu = function (id, dados) {
 window.omnihelp = function () {
         rundoc("Omnihelp", "openomnihelp", {}, 335, 556, 863, 68);
         center("Omnihelp");
+        
+        localStorage.setItem('primeiroacesso', 'feito');
+  
 }
 
 window.openomnihelp = function (id, dados) {
@@ -1616,7 +1623,15 @@ document.addEventListener('keydown', function (e) {
   
 });
 
-menu();
+if (typeof localStorage.getItem('primeiroacesso') == 'undefined' || localStorage.getItem('primeiroacesso') == null || localStorage.getItem('primeiroacesso') == '') {
+  omnihelp();
+}
+
+if (localStorage.getItem('permamenu') != 'desligado') {
+  menu();
+}
+
+
 
 
 /*
