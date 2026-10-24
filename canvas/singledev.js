@@ -666,9 +666,14 @@ window.openexemplos = function (id, dados) {
                 <div onclick="window.dataset('https://docs.google.com/spreadsheets/d/15lB-WclGe0WVET1yg94tZMOc5zVi6lufmv0vQZyXmYA/preview'); centerlastframe();">Dataset completo de Point & Click Adventures</div>
 
                 <div class="secao">Notebooks</div>
-                <div onclick="newidoc('https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem('infcanvas:theme')}&load=https://omnicode.vercel.app/notebook/creativecode.html', 'Instruções'); centerlastframe();">Exemplo de programação criativa</div>
+                <div onclick="newidoc('https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem('infcanvas:theme')}&load=https://omnicode.vercel.app/notebook/creativecode.html', 'Instruções'); centerlastframe();">Exemplo de programação criativa em notebook computacional</div>
 
+                <div class="secao">Programação</div>
+                <div onclick="window.code('https://booklines.vercel.app/assets/codigosp5/exemplo-livroJSD_SE.js'); centerlastframe();">Mandala 1 em P5</div>
+                <div onclick="window.code('https://booklines.vercel.app/assets/codigosp5/bass.js'); centerlastframe();">Mandala 2 em P5</div>
                 
+
+
                 <div></div>
             </div>
           
@@ -701,7 +706,9 @@ window.openmenu = function (id, dados) {
 
                 cursor: pointer;
                 font-size: 18px;
-                line-height: 68px;
+                line-height: 22px;
+                padding-top: 23px;
+                padding-bottom: 23px;
                 height: auto;
                 width: 100%;
                 color: var(--text);
