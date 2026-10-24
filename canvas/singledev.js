@@ -1543,9 +1543,21 @@ window.openlegacymenu = function (id, dados) {
       }
 
 
-window.onhelp =function() { 
+
+document.addEventListener('keydown', function (e) {
+            if (e.key === 'F1' || e.keyCode == 112) {
+
+                   e.cancelBubble = true;
+                    e.cancelable = true;
+                    e.stopPropagation();
+                    e.preventDefault();
+                    e.returnValue = false;
+
+                //my help menu code goes here
+  }
+  
   legacy();
-}
+});
 
 menu();
 
