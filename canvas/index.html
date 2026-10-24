@@ -295,6 +295,13 @@ $_GET = [];
   .logc-table{ border-collapse:collapse; margin:2px 0; }
   .logc-table th, .logc-table td{ border:1px solid var(--win-border); padding:2px 8px; text-align:left; white-space:pre; }
   .logc-table th{ background:var(--win-header); font-weight:600; }
+  /* floatdevmode(): painel no plano da lupa/zoom — fixo na tela, não acompanha pan nem zoom do canvas */
+  #floatTerm{
+    position:fixed; z-index:9999; display:flex; flex-direction:column;
+    min-width:260px; min-height:156px; overflow:hidden; user-select:none;
+    background:var(--win-bg); color:var(--text); font-size:14px;
+    border:1px solid var(--win-border); border-radius:10px; box-shadow:0 8px 24px var(--shadow);
+  }
 </style>
 </head>
 <body>
@@ -1256,11 +1263,18 @@ comandos já digitados, incluindo os que deram erro (em vermelho, com a mensagem
 de histórico; ao redimensionar cabem mais linhas, e quando há mais comandos do que linhas aparece uma
 barra de rolagem. A barra original some. Digitar uma letra, Enter ou espaço com o mouse fora das janelas
 foca o campo da janela, desde que ela esteja visível na tela.</p>
+<code class="sig">floatdevmode()</code>
+<p>Outro modo da barra de comandos: um painel com várias linhas (histórico + linha de entrada, como o
+Terminal), que se move pelo cabeçalho e se redimensiona pelo canto — mas que fica no mesmo plano da lupa e
+dos controles de zoom: fixo na tela, por cima de tudo, sem acompanhar o pan nem o zoom do canvas. Tem no
+mínimo 3 linhas de histórico e nunca sai da tela. Não é uma janela do canvas: não aparece na lupa e não
+aceita <code>connect</code>, <code>lock</code> nem <code>remove</code>. Continua visível mesmo com uma
+janela maximizada. Guarda posição e tamanho entre sessões. A barra original some.</p>
 <code class="sig">devmode()</code>
 <p>Devolve a barra de comandos ao normal (embaixo, centralizada) e desfaz a janela do
-<code>superdevmode()</code>, se existir. Também traz a barra de volta depois de <code>nodev()</code>.</p>
+<code>superdevmode()</code> ou o painel do <code>floatdevmode()</code>, se existirem. Também traz a barra de volta depois de <code>nodev()</code>.</p>
 <code class="sig">nodev()</code>
-<p>Corta a barra de comandos do canvas (e a janela do <code>superdevmode()</code>, se existir). Nada mais
+<p>Corta a barra de comandos do canvas (e a janela do <code>superdevmode()</code> ou o painel do <code>floatdevmode()</code>, se existirem). Nada mais
 deixa de funcionar — só não há onde digitar até chamar <code>devmode()</code> ou
 <code>superdevmode()</code> pelo console do navegador.</p>
 <hr>
@@ -1857,6 +1871,12 @@ rodado direto pelo console do navegador.</p>
       consoleInputEl.focus({ preventScroll: true });
       return;
     }
+    if (consoleMode === 'float'){
+      if (!floatPanel) return;
+      if (hoverWin) return; // mouse sobre uma janela do canvas: não rouba o foco
+      consoleInputEl.focus({ preventScroll: true });
+      return;
+    }
     if (hoverWin) return; // mouse sobre uma janela: não rouba o foco
     cmdInput.focus();
   });
@@ -2023,6 +2043,138 @@ rodado direto pelo console do navegador.</p>
     return hadFocus;
   }
 
+  // ---- floatdevmode(): a barra de comandos como painel flutuante, no plano da lupa e do zoom ----
+  // (fixo na tela, fora do canvas: não acompanha pan nem zoom e fica por cima de tudo)
+  var floatPanel = null, floatResizeHandler = null;
+  var FLOAT_MIN_W = 260, FLOAT_MIN_H = 156; // cabe pelo menos 3 linhas de histórico + a linha de entrada
+  var FLOAT_KEY = 'infcanvas:floatterm';
+
+  // mantém o painel inteiro dentro da tela e respeita o tamanho mínimo
+  function clampFloat(){
+    if (!floatPanel) return;
+    var vw = viewport.clientWidth, vh = viewport.clientHeight;
+    var w = Math.min(Math.max(parseFloat(floatPanel.style.width), FLOAT_MIN_W), vw);
+    var h = Math.min(Math.max(parseFloat(floatPanel.style.height), FLOAT_MIN_H), vh);
+    var l = Math.min(Math.max(parseFloat(floatPanel.style.left), 0), Math.max(0, vw - w));
+    var t = Math.min(Math.max(parseFloat(floatPanel.style.top), 0), Math.max(0, vh - h));
+    floatPanel.style.width = w + 'px'; floatPanel.style.height = h + 'px';
+    floatPanel.style.left = l + 'px'; floatPanel.style.top = t + 'px';
+  }
+  function saveFloatGeometry(){
+    if (!floatPanel) return;
+    try {
+      localStorage.setItem(FLOAT_KEY, JSON.stringify({
+        left: parseFloat(floatPanel.style.left), top: parseFloat(floatPanel.style.top),
+        width: parseFloat(floatPanel.style.width), height: parseFloat(floatPanel.style.height)
+      }));
+    } catch (e) { /* storage indisponível: segue sem persistir */ }
+  }
+
+  function removeFloatPanel(){
+    if (!floatPanel) return false;
+    var hadFocus = floatPanel.contains(document.activeElement);
+    window.removeEventListener('resize', floatResizeHandler);
+    floatPanel.remove();
+    floatPanel = null; floatResizeHandler = null;
+    consoleHistoryEl = null; consoleInputEl = null;
+    return hadFocus;
+  }
+  // desfaz qualquer forma de "barra como janela/painel" que esteja ativa
+  function removeConsoleSurfaces(){
+    var a = removeConsoleWindow(), b = removeFloatPanel();
+    return a || b;
+  }
+
+  function buildFloatPanel(){
+    var vw = viewport.clientWidth, vh = viewport.clientHeight;
+    var g = null;
+    try { g = JSON.parse(localStorage.getItem(FLOAT_KEY)); } catch (e) {}
+    var valid = g && [g.left, g.top, g.width, g.height].every(function(n){ return typeof n === 'number' && isFinite(n); });
+    if (!valid){
+      // nasce onde a barra original ficava: embaixo, centralizada
+      var wS = Math.min(Math.max(vw * 0.5, 360), vw - 24);
+      var hS = Math.max(vh * 0.28, 170);
+      g = { left: (vw - wS) / 2, top: vh - hS - 12, width: wS, height: hS };
+    }
+    var panel = document.createElement('div');
+    panel.id = 'floatTerm';
+    panel.style.left = g.left + 'px'; panel.style.top = g.top + 'px';
+    panel.style.width = g.width + 'px'; panel.style.height = g.height + 'px';
+    panel.innerHTML =
+      '<div class="win-header win-draghandle"><span class="win-title">Terminal</span></div>' +
+      '<div class="win-body no-padding console-body">' +
+        '<div class="console-history"></div>' +
+        '<div class="console-inputrow">' +
+          '<span class="prompt">&gt;</span>' +
+          '<input class="console-input" placeholder="digite help() para ver todos os comandos" autocomplete="off" spellcheck="false">' +
+        '</div>' +
+      '</div>' +
+      '<div class="win-resize"></div>';
+    document.body.appendChild(panel); // depois dos controles de zoom/lupa no DOM: no mesmo plano, mas por cima
+    floatPanel = panel;
+    consoleHistoryEl = panel.querySelector('.console-history');
+    consoleInputEl = panel.querySelector('.console-input');
+    cmdHistory.forEach(appendConsoleLine);
+    clampFloat();
+    floatResizeHandler = clampFloat; // se a tela encolher, o painel volta pra dentro dela
+    window.addEventListener('resize', floatResizeHandler);
+
+    // mover: arrastar pelo cabeçalho (em pixels de tela — sem dividir por zoom, o painel não está no canvas)
+    var handle = panel.querySelector('.win-draghandle');
+    handle.addEventListener('pointerdown', function(e){
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      e.preventDefault();
+      var startX = e.clientX, startY = e.clientY;
+      var origL = parseFloat(panel.style.left), origT = parseFloat(panel.style.top);
+      handle.setPointerCapture(e.pointerId);
+      function onMove(ev){
+        panel.style.left = (origL + ev.clientX - startX) + 'px';
+        panel.style.top = (origT + ev.clientY - startY) + 'px';
+        clampFloat();
+      }
+      function onUp(){
+        handle.releasePointerCapture(e.pointerId);
+        handle.removeEventListener('pointermove', onMove);
+        handle.removeEventListener('pointerup', onUp);
+        saveFloatGeometry();
+      }
+      handle.addEventListener('pointermove', onMove);
+      handle.addEventListener('pointerup', onUp);
+    });
+    // redimensionar: alça do canto inferior direito (nunca passa da borda da tela nem do tamanho mínimo)
+    var grip = panel.querySelector('.win-resize');
+    grip.addEventListener('pointerdown', function(e){
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      e.preventDefault(); e.stopPropagation();
+      var startX = e.clientX, startY = e.clientY;
+      var origW = parseFloat(panel.style.width), origH = parseFloat(panel.style.height);
+      var left = parseFloat(panel.style.left), top = parseFloat(panel.style.top);
+      grip.setPointerCapture(e.pointerId);
+      function onMove(ev){
+        var vw2 = viewport.clientWidth, vh2 = viewport.clientHeight;
+        panel.style.width = Math.max(FLOAT_MIN_W, Math.min(origW + ev.clientX - startX, vw2 - left)) + 'px';
+        panel.style.height = Math.max(FLOAT_MIN_H, Math.min(origH + ev.clientY - startY, vh2 - top)) + 'px';
+      }
+      function onUp(){
+        grip.releasePointerCapture(e.pointerId);
+        grip.removeEventListener('pointermove', onMove);
+        grip.removeEventListener('pointerup', onUp);
+        clampFloat();
+        saveFloatGeometry();
+      }
+      grip.addEventListener('pointermove', onMove);
+      grip.addEventListener('pointerup', onUp);
+    });
+    var input = consoleInputEl;
+    input.addEventListener('keydown', function(e){
+      if (e.key === 'Enter'){
+        var v = input.value;
+        input.value = '';
+        runCommand(v);
+      }
+    });
+  }
+
   function buildConsoleWindow(){
     var name = 'Terminal';
     var pos = loadWinState(name); // se já foi movida/redimensionada antes, reabre onde ficou
@@ -2070,6 +2222,7 @@ rodado direto pelo console do navegador.</p>
       consoleInputEl.focus({ preventScroll: true });
       return consoleWin;
     }
+    removeFloatPanel();
     buildConsoleWindow();
     consoleMode = 'window';
     updateUIVisibility(); // esconde a barra original
@@ -2077,16 +2230,29 @@ rodado direto pelo console do navegador.</p>
     return consoleWin;
   }
   function devmode(){
-    var hadFocus = removeConsoleWindow();
+    var hadFocus = removeConsoleSurfaces();
     consoleMode = 'bar';
     updateUIVisibility();
     if (hadFocus) cmdInput.focus();
   }
   function nodev(){
-    removeConsoleWindow();
+    removeConsoleSurfaces();
     consoleMode = 'hidden';
     updateUIVisibility();
   }
+  function floatdevmode(){
+    if (consoleMode === 'float' && floatPanel){
+      consoleInputEl.focus({ preventScroll: true });
+      return floatPanel;
+    }
+    removeConsoleWindow();
+    buildFloatPanel();
+    consoleMode = 'float';
+    updateUIVisibility(); // esconde a barra original (o painel, esse, continua visível mesmo com janela maximizada)
+    consoleInputEl.focus({ preventScroll: true });
+    return floatPanel;
+  }
+  window.floatdevmode = floatdevmode;
   window.superdevmode = superdevmode; // pode ser chamado pelo console do navegador também
   window.devmode = devmode;
   window.nodev = nodev;
@@ -2107,7 +2273,7 @@ rodado direto pelo console do navegador.</p>
                     'setZoom', 'setPan', 'center', 'multicolor', 'singlecolor', 'svg',
                     'newsdoc', 'newsidoc', 'runsdoc', 'newpermasdoc', 'newpermasidoc', 'runpermasdoc',
                     'groovy', 'ungroovy', 'savestate', 'lock', 'unlock', 'centerlastframe', 'lockall', 'unlockall',
-                    'superdevmode', 'nodev', 'setPosition', 'console',
+                    'superdevmode', 'nodev', 'setPosition', 'console', 'floatdevmode',
                     cmd))(
         newwindow, newframe, run, newpermawindow, newpermaframe, permarun,
         connect, disconnect, setTheme, setTempTheme, help,
@@ -2116,7 +2282,7 @@ rodado direto pelo console do navegador.</p>
         setZoom, setPan, center, multicolor, singlecolor, svg,
         newsdoc, newsidoc, runsdoc, newpermasdoc, newpermasidoc, runpermasdoc,
         groovy, ungroovy, savestate, lock, unlock, centerlastframe, lockall, unlockall,
-        superdevmode, nodev, setPosition, consoleCallable);
+        superdevmode, nodev, setPosition, consoleCallable, floatdevmode);
       // registra o comando no histórico (só os que rodaram sem erro), junto das janelas que ele criou
       commandLog.push({ raw: cmd, createdWins: windows.slice(winCountBefore) });
     } catch (err){
@@ -2205,6 +2371,7 @@ if (
       também é necessário incluir o DATAT no início do código:
 
       script src="https://datat.vercel.app/basicsmin.js"
+      script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"
 
       */
 
