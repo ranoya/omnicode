@@ -601,6 +601,79 @@ window.omnicodelive = function () {
     centerlastframe();
 }
 
+window.exemplos = function (id, dados) {
+        var el = document.getElementById(id);
+        el.innerHTML =
+            `
+            <style>
+
+                
+
+                .menu_menuopt {
+                
+                display: flex;
+                flex-direction: column;
+                align-items: start;
+                height: 100%;
+                background-color: var(--panel-border);
+                
+                }
+
+                .menu_menuopt div {
+
+                cursor: pointer;
+                font-size: 18px;
+                line-height: 22px;
+                padding-top: 23px;
+                padding-bottom: 23px;
+                height: auto;
+                width: 100%;
+                color: var(--text);
+                background-color: var(--panel-border);
+                padding-left: 20px;
+                padding-right: 20px;
+                border-top: 1px dotted var(--muted);
+                }
+
+                .menu_menuopt div:hover {
+                background-color: var(--win-header);
+                }
+
+                .menu_menuopt div.secao {
+                cursor: default;
+                background-color: var(--accent);
+                color: var(--bg);
+                }
+
+                .menu_menuopt div.secao:hover {
+                background-color: var(--accent);
+                cursor: default;
+                }
+
+                
+
+            </style>
+
+            <div class="menu_menuopt">
+                <div class="secao">Dados</div>
+                <div onclick="dataset('https://docs.google.com/spreadsheets/d/1FbY8hPtM8IxEJ26ybMZHpMrHdk-LEm1yuYPiFVwF94U/edit?gid=0#gid=0'); centerlastframe();">Dataset de Exemplo</div>
+
+                <div onclick="dataset('https://docs.google.com/spreadsheets/d/15lB-WclGe0WVET1yg94tZMOc5zVi6lufmv0vQZyXmYA/preview'); centerlastframe();">Dataset completo de Point & Click Adventures</div>
+
+                <div class="secao">Notebooks</div>
+                <div onclick="newidoc('https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem('infcanvas:theme')}&load=https://omnicode.vercel.app/notebook/creativecode.html', 'Instruções'); centerlastframe();">Exemplo de programação criativa</div>
+
+                
+                <div></div>
+            </div>
+          
+          
+          
+          
+            `;
+        
+      }
+
 
 
 window.openmenu = function (id, dados) {
