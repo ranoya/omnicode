@@ -655,6 +655,15 @@ window.openexemplos = function (id, dados) {
                 cursor: default;
                 }
 
+                .menu_menuopt div.no {
+                height: 1px;
+                cursor: default;
+                }
+
+                .menu_menuopt div.no:hover {
+                background-color: var(--panel-border);
+                }
+
                 
 
             </style>
@@ -674,7 +683,7 @@ window.openexemplos = function (id, dados) {
                 
 
 
-                <div></div>
+                <div class="no"></div>
             </div>
           
           
@@ -724,6 +733,15 @@ window.openmenu = function (id, dados) {
 
                 }
 
+                .menu_menuopt div.no {
+                height: 1px;
+                cursor: default;
+                }
+
+                .menu_menuopt div.no:hover {
+                background-color: var(--panel-border);
+                }
+
             </style>
 
             <div class="menu_menuopt">
@@ -738,7 +756,7 @@ window.openmenu = function (id, dados) {
                 <div onclick="legacy()">Contextos de programação antigos</div>
                 <div onclick="exemplos()">Coleção de exemplos</div>
                 
-                <div></div>
+                <div class="no"></div>
             </div>
           
           
