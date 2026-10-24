@@ -116,10 +116,6 @@ window.runcode = function (id, conta, deonde) {
           ace.edit(ed).setOptions({ mode: "ace/mode/javascript" });
           linguacodex[ed] = qual;
           console.log(ed + ": " + qual);
-        } else if (qual == "D3") {
-          ace.edit(ed).setOptions({ mode: "ace/mode/javascript" });
-          linguacodex[ed] = qual;
-          console.log(ed + ": " + qual);
         } else {
           ace.edit(ed).setOptions({ mode: "ace/mode/" + qual });
           linguacodex[ed] = qual;
@@ -242,25 +238,6 @@ window.runcode = function (id, conta, deonde) {
             `ript type='text/typescript'>`;
         }
 
-        if (linguacodex["editor_" + p.fromeditor] == "D3") {
-          code =
-            `<style>body,html { margin: 0; padding: 0; }</style>
-               <scr` +
-          `ipt src='https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js'></sc` +
-            `ript><scri` + `pt>
-            window.onerror = function myErrorHandler(err, url, line) {
-            let msg = 'Line: ' + line + '<br>' + err + '<br>' 
-            parent.postMessage('printconsole(${countruncode}, "' + msg + '")' ,'*');
-            return false;
-            }
-            console.log = function (msg) {
-            parent.postMessage('printconsole(${countruncode}, "' + msg + '")' ,'*');        
-            }
-            </scr` + `ipt><bod` + `y></bod` + `y>
-               <sc` +
-            `ript>`;
-        }
-
         if (linguacodex["editor_" + p.fromeditor] == "P5") {
           code =
             `<style>body,html { margin: 0; padding: 0; }</style>
@@ -298,10 +275,6 @@ window.runcode = function (id, conta, deonde) {
         }
 
         if (linguacodex["editor_" + p.fromeditor] == "P5") {
-          code += `</scr` + `ipt>`;
-        }
-
-        if (linguacodex["editor_" + p.fromeditor] == "D3") {
           code += `</scr` + `ipt>`;
         }
 
@@ -370,6 +343,61 @@ window.runcode = function (id, conta, deonde) {
       window.codeeditor = function (id, p) {
         countcode++;
 
+        let tema = "tomorrow";
+        if (localStorage.getItem('infcanvas:theme') == "dracula") {
+          tema = "dracula";
+        }
+
+        if (localStorage.getItem('infcanvas:theme') == "light") {
+          tema = "tomorrow";
+        }
+
+        if (localStorage.getItem('infcanvas:theme') == "nord") {
+          tema = "nord_dark";
+        }
+
+        if (localStorage.getItem('infcanvas:theme') == "monokai") {
+          tema = "monokai";
+        }
+
+        if (localStorage.getItem('infcanvas:theme') == "gruvbox-dark") {
+          tema = "gruvbox";
+        }
+
+        if (localStorage.getItem('infcanvas:theme') == "solarized-light") {
+          tema = "solarized_light";
+        }
+
+        if (localStorage.getItem('infcanvas:theme') == "github-dark") {
+          tema = "dracula";
+        }
+
+        if (localStorage.getItem('infcanvas:theme') == "one-dark") {
+          tema = "one_dark";
+        }
+
+        if (localStorage.getItem('infcanvas:theme') == "xcode") {
+          tema = "xcode";
+        }
+
+        if (localStorage.getItem('infcanvas:theme') == "tomorrow-night-blue") {
+          tema = "tomorrow_night_blue";
+        }
+
+        if (localStorage.getItem('infcanvas:theme') == "rose-pine-dawn") {
+          tema = "solarized_light";
+        }
+
+        if (localStorage.getItem('infcanvas:theme') == "rose-pine-moon" || localStorage.getItem('infcanvas:theme') == "rose-pine") {
+          tema = "cobalt";
+        }
+
+
+
+
+
+
+
         let code = `
     
         <style>
@@ -416,21 +444,19 @@ window.runcode = function (id, conta, deonde) {
                          height: calc(100% - 44px);
                          border: 0;
                          outline: 0 !important;
-                         background-color: #fffef5;
+                         
                          font-size: 14px;
                          line-height: 20px;
                          margin-top: 0 !important;
                          overflow-x: hidden;
         }
 
-        .ace_gutter-layer {
-           background-color: #fffef5;
-        }
+        
 
-        /*
+        
         .ace_tooltip {
           display: none !important;
-        } */
+        } 
 
         .codefull {
           width:100%;
@@ -452,7 +478,7 @@ window.runcode = function (id, conta, deonde) {
 
         <div class="menu_code">
         
-          <div onclick="runcode('${id}', ${p.runcontagem}, ${p.contagem})">Run</div><div onclick="linguacodeeditor('editor_${id}', 'html');">HTML</div><div onclick="linguacodeeditor('editor_${id}', 'javascript');">Javascript</div><div onclick="linguacodeeditor('editor_${id}', 'typescript');">Typescript</div><div onclick="linguacodeeditor('editor_${id}', 'P5');">P5</div><div onclick="linguacodeeditor('editor_${id}', 'D3');">D3</div><div onclick="linguacodeeditor('editor_${id}', 'canvas');">SVG Canvas</div>
+          <div onclick="runcode('${id}', ${p.runcontagem}, ${p.contagem})">Run</div><div onclick="linguacodeeditor('editor_${id}', 'html');">HTML</div><div onclick="linguacodeeditor('editor_${id}', 'javascript');">Javascript</div><div onclick="linguacodeeditor('editor_${id}', 'typescript');">Typescript</div><div onclick="linguacodeeditor('editor_${id}', 'P5');">P5</div><div onclick="linguacodeeditor('editor_${id}', 'canvas');">SVG Canvas</div>
           
         </div>
 
@@ -461,11 +487,11 @@ window.runcode = function (id, conta, deonde) {
         document.getElementById(id).innerHTML = code;
 
         let thisace = ace.edit("editor_" + id);
-        thisace.setTheme("ace/theme/Tomorrow");
+        thisace.setTheme("ace/theme/" + tema);
         thisace.setKeyboardHandler("ace/keyboard/vscode");
         thisace.session.setMode("ace/mode/html");
         let acegeneralconfig = {
-          theme: "ace/theme/Tomorrow",
+          theme: "ace/theme/" + tema,
           mode: "ace/mode/html",
           enableBasicAutocompletion: true,
           enableSnippets: true,
