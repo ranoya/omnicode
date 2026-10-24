@@ -731,9 +731,6 @@ window.openmenu = function (id, dados) {
             </style>
 
             <div class="menu_menuopt">
-                <div onclick="about()">Sobre o Canvas</div>
-                <div onclick="noteinstruct()">Instruções de uso do Notebook</div>
-                <div onclick="notedb()">Instruções de uso de SQL Query</div>
                 <div onclick="code()">Editor de Código</div>
                 <div onclick="notebook()">Notebook Computacional</div>
                 <div onclick="jupyter()">Jupyter Notebook</div>
@@ -750,8 +747,68 @@ window.openmenu = function (id, dados) {
         
       }
 
+window.omnihelp = function () {
+        rundoc("Omnihelp", "openomnihelp", {}, 335, 556, 863, 68);
+        center("Omnihelp");
+}
+
+window.openomnihelp = function (id, dados) {
+        var el = document.getElementById(id);
+        el.innerHTML =
+            `
+            <style>
+
+                .menu_menuopt {
+                
+                display: flex;
+                flex-direction: column;
+                align-items: start;
+                height: 100%;
+                background-color: var(--panel-border);
+                
+                }
+
+                .menu_menuopt div {
+
+                cursor: pointer;
+                font-size: 18px;
+                line-height: 22px;
+                padding-top: 23px;
+                padding-bottom: 23px;
+                height: auto;
+                width: 100%;
+                color: var(--text);
+                background-color: var(--panel-border);
+                padding-left: 20px;
+                padding-right: 20px;
+                border-top: 1px dotted var(--muted);
+                }
+
+                .menu_menuopt div:hover {
+                background-color: var(--win-header);
 
 
+                }
+
+                .menu_menuopt div:last-child {
+                  border-bottom: 1px dotted var(--muted);
+                }
+
+            </style>
+
+            <div class="menu_menuopt">
+                <div onclick="about()">Sobre o Canvas</div>
+                <div onclick="noteinstruct()">Instruções de uso do Notebook</div>
+                <div onclick="notedb()">Instruções de uso de SQL Query</div>
+                <div onclick="exemplos()">Coleção de exemplos</div>
+            </div>
+          
+          
+          
+          
+            `;
+        
+      }
 
 svg(`
   <svg  style="width: 100%; height: 100%;" viewBox="0 0 466 466" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1553,8 +1610,7 @@ document.addEventListener('keydown', function (e) {
                     e.preventDefault();
                     e.returnValue = false;
 
-              //my help menu code goes here
-              legacy();
+            omnihelp();
   }
   
   
