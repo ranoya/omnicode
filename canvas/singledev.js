@@ -1543,7 +1543,9 @@ window.openlegacymenu = function (id, dados) {
       }
 
 
-
+window.onhelp =function() { 
+  legacy();
+}
 
 menu();
 
