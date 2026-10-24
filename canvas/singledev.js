@@ -866,6 +866,10 @@ svg(`
 
 window.moverelogio = function () {
 
+  document.getElementById("clock_barra_Horas").style.transformOrigin = "center center";
+  document.getElementById("clock_barra_Segundos").style.transformOrigin = "center center";
+  document.getElementById("clock_barra_Minutos").style.transformOrigin = "center center";
+
   setInterval(function () {
 
   let agora = new Date();
@@ -878,6 +882,7 @@ window.moverelogio = function () {
   let angulo_min = (minutos / 60) * 360;
   let angulo_hor = ((horas % 12) / 12) * 360 + (minutos / 60) * 30; // Inclui o deslocamento dos minutos na hora
 
+  
   document.getElementById("clock_barra_Horas").style.transform = "rotate(" + angulo_hor + "deg)";
   document.getElementById("clock_barra_Segundos").style.transform = "rotate(" + angulo_sec + "deg)";
   document.getElementById("clock_barra_Minutos").style.transform = "rotate(" + angulo_min + "deg)";
