@@ -28,7 +28,7 @@ ungroovy();
       let countruncode = 1;
 
       window.code = function (u) {
-              
+        
         if (typeof u != 'undefined' && u != null && u != '') {
 
           run("Code " + countcode, "codeeditor", {
@@ -534,6 +534,39 @@ ungroovy();
           });
            
         }
+
+        let abrirArquivo = function() {
+          const seletor = document.getElementById("seletorGeraldeArquivo");
+
+          // Abre a janela de seleção de arquivos
+          seletor.click();
+
+          // Lê o arquivo selecionado
+          seletor.onchange = async function () {
+            const arquivo = seletor.files[0];
+
+            if (!arquivo) return;
+
+            // Lê o conteúdo como texto
+            let texto = await arquivo.text();
+
+            thisace.setValue(texto);
+            codex[id] = thisace.getSession().getValue();
+
+            seletor.value = "";
+          };
+        }
+
+        window.addEventListener("keydown", function(event) {
+          // Verifica se a tecla Ctrl (ou Meta/Cmd no Mac) e a letra 'i' (maiúscula ou minúscula) foram acionadas
+          if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "i") {
+            event.preventDefault(); // Evita o comportamento padrão do navegador (se houver)
+            event.cancelable = true;
+            event.stopPropagation();
+            event.returnValue = false;
+            abrirArquivo();
+          }
+        });
         
 };
       
@@ -1532,7 +1565,7 @@ window.multiplan = function () {
 
 
 window.legacy = function () {
-        rundoc("Legacy", "openlegacymenu", {}, 335, 556, 563, 68);
+        rundoc("Legacy", "openlegacymenu", {}, 335, 556, 467, 68);
         setPan(0, 0);
 }
 
