@@ -1553,10 +1553,11 @@ document.addEventListener('keydown', function (e) {
                     e.preventDefault();
                     e.returnValue = false;
 
-                //my help menu code goes here
+              //my help menu code goes here
+              legacy();
   }
   
-  legacy();
+  
 });
 
 menu();
