@@ -860,15 +860,24 @@ svg(`
 </clipPath>
 </defs>
 </svg>
+
+<style>
+#clock_barra_Horas {
+transform-origin: center center;
+}
+
+#clock_barra_Minutos {
+transform-origin: center center;
+}
+
+#clock_barra_Segundos {
+transform-origin: center center;
+}
 `
   
 , "Relógio");
 
 window.moverelogio = function () {
-
-  document.getElementById("clock_barra_Horas").style.transformOrigin = "center center";
-  document.getElementById("clock_barra_Segundos").style.transformOrigin = "center center";
-  document.getElementById("clock_barra_Minutos").style.transformOrigin = "center center";
 
   setInterval(function () {
 
