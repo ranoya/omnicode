@@ -30,19 +30,45 @@ setTransparentBackground();
       let countcode = 1;
       let countruncode = 1;
 
-      window.code = function () {
-        run("Code " + countcode, "codeeditor", {
-          contagem: countcode,
-          runcontagem: countruncode,
-        });
+      window.code = function (u) {
+              
+        if (typeof u != 'undefined' && u != null && u != '') {
+
+          run("Code " + countcode, "codeeditor", {
+            contagem: countcode,
+            runcontagem: countruncode,
+            loadcode: u
+          });
+                
+        } else {
+              
+          run("Code " + countcode, "codeeditor", {
+            contagem: countcode,
+            runcontagem: countruncode,
+          });
+               
+        }
+
         center("Code " + (countcode - 1));
       };
 
-      window.pcode = function () {
-        permarun("Code " + countcode, "codeeditor", {
-          contagem: countcode,
-          runcontagem: countruncode,
-        });
+      window.pcode = function (u) {
+              
+        if (typeof u != 'undefined' && u != null && u != '') {
+          permarun("Code " + countcode, "codeeditor", {
+                contagem: countcode,
+                runcontagem: countruncode,
+                loadcode: u
+          });
+
+        } else {
+          permarun("Code " + countcode, "codeeditor", {
+                contagem: countcode,
+                runcontagem: countruncode,
+          });
+
+        }
+        
         center("Code " + (countcode - 1));
       };
       
@@ -68,16 +94,25 @@ setTransparentBackground();
 
       window.runcode = function (id, conta, deonde) {
         
-        let janela = countruncode;
-        rundoc("Run " + countruncode, "codeout", {
-          fromeditor: id,
-          tituloeditor: conta,
-          fromcodeeditor: deonde,
-        });
-  
-        run("Output " + janela, "codeconsole", {origem: "Run " + janela, numero: janela})
+        console.log("id>" + id + "  conta>" + conta + " deonde>" + deonde);
+              
+        if (linguacodex["editor_" + id] != "canvas") {
 
+          let janela = countruncode;
+              rundoc("Run " + countruncode, "codeout", {
+                fromeditor: id,
+                tituloeditor: conta,
+                fromcodeeditor: deonde,
+              });
+        
+              run("Output " + janela, "codeconsole", {origem: "Run " + janela, numero: janela})
+                
+        } else {
 
+          eval(codex[id]);
+
+        }
+        
       };
 
       if (
@@ -93,16 +128,14 @@ setTransparentBackground();
         let loader = document.createElement("script");
         loader.src = "https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.2/ace.js";
         document.head.appendChild(loader);
-        /*
-        let loader2 = document.createElement("script");
-        loader2.src =
-          "https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.2/ext-language_tools.min.js";
-        document.head.appendChild(loader2);
-        */
       }
 
       let linguacodeeditor = function (ed, qual) {
         if (qual == "P5") {
+          ace.edit(ed).setOptions({ mode: "ace/mode/javascript" });
+          linguacodex[ed] = qual;
+          console.log(ed + ": " + qual);
+        } else if (qual == "canvas") {
           ace.edit(ed).setOptions({ mode: "ace/mode/javascript" });
           linguacodex[ed] = qual;
           console.log(ed + ": " + qual);
@@ -112,13 +145,66 @@ setTransparentBackground();
           console.log(ed + ": " + qual);
         }
       };
+      
+
+      let svgcanvases = 1;
+
+      window.createsvgcanvas = function (w, h) {
+              
+        let wi = 500;
+        let hei = 500;
+
+        if (typeof w != 'undefined' && w != null && w != '') {
+          wi = w;
+        }
+
+        if (typeof h != 'undefined' && h != null && h != '') {
+          hei = h;
+        }
+        
+        
+        svg(`<svg id='svgcanvases_${svgcanvases}' viewBox='0 0 ${wi} ${hei}' style="width: 100%; height: 100%; border: 0; padding: 0; margin: 0;"></svg>`, "SVG Canvas " + svgcanvases, wi, hei);
+        
+        let este = svgcanvases;
+        svgcanvases++;
+
+        return document.getElementById("svgcanvases_" + este);
+  
+        
+      }
+      
+      window.createpermasvgcanvas = function (w, h) {
+              
+        let wi = 500;
+        let hei = 500;
+
+        if (typeof w != 'undefined' && w != null && w != '') {
+          wi = w;
+        }
+
+        if (typeof h != 'undefined' && h != null && h != '') {
+          hei = h;
+        }
+
+        if (typeof document.getElementById("svgcanvases_0") != 'undefined' && document.getElementById("svgcanvases_0") != null && document.getElementById("svgcanvases_0") != '') {
+           svg(`<svg id='svgcanvases_0' viewBox='0 0 ${wi} ${hei}' style="width: 100%; height: 100%; border: 0; padding: 0; margin: 0;"></svg>`, "SVG Canvas", wi, hei);
+        } else {
+
+          setPosition("SVG Canvas", wi, hei);
+        }
+        
+        
+        return document.getElementById("svgcanvases_0");
+  
+        
+      }
 
       var code_output_buffer = [];
 
       window.codeout = function (id, p) {
-        console.log(id);
-        console.log(p.fromeditor);
-        console.log(linguacodex["editor_" + p.fromeditor]);
+        //console.log(id);
+        //console.log(p.fromeditor);
+        //console.log(linguacodex["editor_" + p.fromeditor]);
 
         let frame = `<iframe frameborder="0" style="display: block; border: 0; padding: 0; margin: 0; width: 100%; height: 100%;" id="ifr_${id}"</iframe>`;
 
@@ -217,39 +303,36 @@ setTransparentBackground();
 
         code_output_buffer[countruncode] = code;
 
-        let myiframe = document.getElementById("ifr_" + id);
-        let iframeDoc =
+        if (linguacodex["editor_" + p.fromeditor] != "canvas") {
+
+
+          let myiframe = document.getElementById("ifr_" + id);
+          let iframeDoc =
           myiframe.contentDocument || myiframe.contentWindow.document;
 
-        let htmlContent = code;
+          let htmlContent = code;
 
-        iframeDoc.open();
-        iframeDoc.write(htmlContent);
-        iframeDoc.close();
+          iframeDoc.open();
+          iframeDoc.write(htmlContent);
+          iframeDoc.close();
 
-        connect("Code " + p.fromcodeeditor, "Run " + countruncode);
+          connect("Code " + p.fromcodeeditor, "Run " + countruncode);
 
-        let janelaout = document.querySelector("[data-name='Run "+ countruncode +"']");
+          let janelaout = document.querySelector("[data-name='Run "+ countruncode +"']");
 
-        let newaba = document.createElement('div');
-        newaba.style = `position: absolute; top: 30px; right: -16px; width: 24px; box-sizing: border-box; display: flex; flex-direction: column align-items: center; gap: 6px; padding: 8px 3px; background: var(--win-header); border: 1px solid var(--win-border) border-right: none; border-radius: 0 6px 6px 0;`;
-        newaba.id = "reloadrun" + countruncode;
-        newaba.innerHTML = `<button class="win-close" title="Reload" onclick='reloadcode(${countruncode}, "${id}")'>↻</button>`;
+          let newaba = document.createElement('div');
+          newaba.style = `position: absolute; top: 30px; right: -16px; width: 24px; box-sizing: border-box; display: flex; flex-direction: column align-items: center; gap: 6px; padding: 8px 3px; background: var(--win-header); border: 1px solid var(--win-border) border-right: none; border-radius: 0 6px 6px 0;`;
+          newaba.id = "reloadrun" + countruncode;
+          newaba.innerHTML = `<button class="win-close" title="Reload" onclick='reloadcode(${countruncode}, "${id}")'>↻</button>`;
 
-        let ficapradepois = document.querySelector("[data-name='Run "+ countruncode +"'] .doc-paper"); 
+          let ficapradepois = document.querySelector("[data-name='Run "+ countruncode +"'] .doc-paper"); 
 
-        janelaout.insertBefore(newaba, ficapradepois);
-        //janelaout.appendChild(newaba);
+          janelaout.insertBefore(newaba, ficapradepois);
+          countruncode++;
 
-        /*
-        let aba = document.querySelector("[data-name='Run "+ countruncode +"'] .doc-tab.win-draghandle");
-        let conteudosemrefresh = aba.innerHTML;
-        let novoconteudo = conteudosemrefresh + `<button class="win-close" title="Reload" onclick='reloadcode(${countruncode}, "${id}")'>⟳</button>`;
-        aba.innerHTML = novoconteudo;
-        */
+        }
 
-
-        countruncode++;
+        
       };
 
       window.reloadcode = function(n, id) {
@@ -272,6 +355,51 @@ setTransparentBackground();
 
       window.codeeditor = function (id, p) {
         countcode++;
+
+        let tema = "tomorrow";
+        if (localStorage.getItem('infcanvas:theme') == "dracula") {
+          tema = "dracula";
+        }
+
+        if (localStorage.getItem('infcanvas:theme') == "light") {
+          tema = "tomorrow";
+        }
+
+        if (localStorage.getItem('infcanvas:theme') == "nord") {
+          tema = "nord_dark";
+        }
+
+        if (localStorage.getItem('infcanvas:theme') == "monokai") {
+          tema = "monokai";
+        }
+
+        if (localStorage.getItem('infcanvas:theme') == "gruvbox-dark") {
+          tema = "gruvbox";
+        }
+
+        if (localStorage.getItem('infcanvas:theme') == "solarized-light") {
+          tema = "solarized_light";
+        }
+
+        if (localStorage.getItem('infcanvas:theme') == "github-dark") {
+          tema = "dracula";
+        }
+
+        if (localStorage.getItem('infcanvas:theme') == "one-dark") {
+          tema = "one_dark";
+        }
+
+        if (localStorage.getItem('infcanvas:theme') == "xcode") {
+          tema = "xcode";
+        }
+
+        if (localStorage.getItem('infcanvas:theme') == "tomorrow-night-blue") {
+          tema = "tomorrow_night_blue";
+        }
+
+        if (localStorage.getItem('infcanvas:theme') == "rose-pine-moon" || localStorage.getItem('infcanvas:theme') == "rose-pine") {
+          tema = "cobalt";
+        }
 
         let code = `
     
@@ -319,21 +447,19 @@ setTransparentBackground();
                          height: calc(100% - 44px);
                          border: 0;
                          outline: 0 !important;
-                         background-color: #fffef5;
+                         
                          font-size: 14px;
                          line-height: 20px;
                          margin-top: 0 !important;
                          overflow-x: hidden;
         }
 
-        .ace_gutter-layer {
-           background-color: #fffef5;
-        }
+        
 
-        /*
+        
         .ace_tooltip {
           display: none !important;
-        } */
+        } 
 
         .codefull {
           width:100%;
@@ -355,7 +481,7 @@ setTransparentBackground();
 
         <div class="menu_code">
         
-          <div onclick="runcode('${id}', ${p.runcontagem}, ${p.contagem})">Run</div><div onclick="linguacodeeditor('editor_${id}', 'html');">HTML</div><div onclick="linguacodeeditor('editor_${id}', 'javascript');">Javascript</div><div onclick="linguacodeeditor('editor_${id}', 'typescript');">Typescript</div><div onclick="linguacodeeditor('editor_${id}', 'P5');">P5</div>
+          <div onclick="runcode('${id}', ${p.runcontagem}, ${p.contagem})">Run</div><div onclick="linguacodeeditor('editor_${id}', 'html');">HTML</div><div onclick="linguacodeeditor('editor_${id}', 'javascript');">Javascript</div><div onclick="linguacodeeditor('editor_${id}', 'typescript');">Typescript</div><div onclick="linguacodeeditor('editor_${id}', 'P5');">P5</div><div onclick="linguacodeeditor('editor_${id}', 'canvas');">SVG Canvas</div>
           
         </div>
 
@@ -364,11 +490,11 @@ setTransparentBackground();
         document.getElementById(id).innerHTML = code;
 
         let thisace = ace.edit("editor_" + id);
-        thisace.setTheme("ace/theme/Tomorrow");
+        thisace.setTheme("ace/theme/" + tema);
         thisace.setKeyboardHandler("ace/keyboard/vscode");
         thisace.session.setMode("ace/mode/html");
         let acegeneralconfig = {
-          theme: "ace/theme/Tomorrow",
+          theme: "ace/theme/" + tema,
           mode: "ace/mode/html",
           enableBasicAutocompletion: true,
           enableSnippets: true,
@@ -400,6 +526,18 @@ setTransparentBackground();
         thisace.getSession().on("change", function () {
           codex[id] = thisace.getSession().getValue();
         });
+
+        if (typeof p.loadcode != 'undefined' && p.loadcode != null && p.loadcode != '') {
+          
+          fetch(p.loadcode).then(function(response) {
+              return response.text();
+          }).then(function(data) {
+            thisace.setValue(data);
+            codex[id] = thisace.getSession().getValue();
+          });
+           
+        }
+        
 };
       
 

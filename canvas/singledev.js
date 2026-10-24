@@ -89,7 +89,7 @@ ungroovy();
         
       }
 
-window.runcode = function (id, conta, deonde) {
+      window.runcode = function (id, conta, deonde) {
         
         console.log("id>" + id + "  conta>" + conta + " deonde>" + deonde);
               
@@ -125,12 +125,6 @@ window.runcode = function (id, conta, deonde) {
         let loader = document.createElement("script");
         loader.src = "https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.2/ace.js";
         document.head.appendChild(loader);
-        /*
-        let loader2 = document.createElement("script");
-        loader2.src =
-          "https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.2/ext-language_tools.min.js";
-        document.head.appendChild(loader2);
-        */
       }
 
       let linguacodeeditor = function (ed, qual) {
@@ -205,9 +199,9 @@ window.runcode = function (id, conta, deonde) {
       var code_output_buffer = [];
 
       window.codeout = function (id, p) {
-        console.log(id);
-        console.log(p.fromeditor);
-        console.log(linguacodex["editor_" + p.fromeditor]);
+        //console.log(id);
+        //console.log(p.fromeditor);
+        //console.log(linguacodex["editor_" + p.fromeditor]);
 
         let frame = `<iframe frameborder="0" style="display: block; border: 0; padding: 0; margin: 0; width: 100%; height: 100%;" id="ifr_${id}"</iframe>`;
 
@@ -331,16 +325,6 @@ window.runcode = function (id, conta, deonde) {
           let ficapradepois = document.querySelector("[data-name='Run "+ countruncode +"'] .doc-paper"); 
 
           janelaout.insertBefore(newaba, ficapradepois);
-          //janelaout.appendChild(newaba);
-
-          /*
-          let aba = document.querySelector("[data-name='Run "+ countruncode +"'] .doc-tab.win-draghandle");
-          let conteudosemrefresh = aba.innerHTML;
-          let novoconteudo = conteudosemrefresh + `<button class="win-close" title="Reload" onclick='reloadcode(${countruncode}, "${id}")'>⟳</button>`;
-          aba.innerHTML = novoconteudo;
-          */
-
-
           countruncode++;
 
         }
@@ -413,12 +397,6 @@ window.runcode = function (id, conta, deonde) {
         if (localStorage.getItem('infcanvas:theme') == "rose-pine-moon" || localStorage.getItem('infcanvas:theme') == "rose-pine") {
           tema = "cobalt";
         }
-
-
-
-
-
-
 
         let code = `
     
