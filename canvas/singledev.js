@@ -546,6 +546,7 @@ let getcssv = function (v) {
 
 window.nomenu = function () {
         localStorage.setItem('permamenu', 'desligado');
+        remove("Menu");
 }
 
 window.menu = function () {
