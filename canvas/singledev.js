@@ -385,7 +385,7 @@ window.runcode = function (id, conta, deonde) {
         }
 
         if (localStorage.getItem('infcanvas:theme') == "rose-pine-dawn") {
-          tema = "solarized_light";
+          tema = "dreamweaver";
         }
 
         if (localStorage.getItem('infcanvas:theme') == "rose-pine-moon" || localStorage.getItem('infcanvas:theme') == "rose-pine") {
