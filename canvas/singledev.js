@@ -627,6 +627,17 @@ ungroovy();
             abrirArquivo();
           }
         });
+
+        window.addEventListener("keydown", function(event) {
+          // Verifica se a tecla Ctrl (ou Meta/Cmd no Mac) e a letra 's' (maiúscula ou minúscula) foram acionadas
+          if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "s") {
+            event.preventDefault(); // Evita o comportamento padrão do navegador (se houver)
+            event.cancelable = true;
+            event.stopPropagation();
+            event.returnValue = false;
+            salvarArquivo();
+          }
+        });
         
 };
       
