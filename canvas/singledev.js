@@ -559,12 +559,13 @@ ungroovy();
         }
 
         async function salvarArquivo() {
-            let conteudo = thisace.getSession().getValue();
+          let conteudo = thisace.getSession().getValue();
+          let handle = "";
 
             try {
 
               if (linguacodex["editor_" + p.fromeditor] == "javascript" || linguacodex["editor_" + p.fromeditor] == "canvas" || linguacodex["editor_" + p.fromeditor] == "P5") {
-                const handle = await window.showSaveFilePicker({
+                handle = await window.showSaveFilePicker({
                 suggestedName: "meu-arquivo.js",
                 types: [{
                   description: "Arquivo de texto",
@@ -576,7 +577,7 @@ ungroovy();
               }
 
               if (linguacodex["editor_" + p.fromeditor] == "typescript") {
-                const handle = await window.showSaveFilePicker({
+                handle = await window.showSaveFilePicker({
                 suggestedName: "meu-arquivo.ts",
                 types: [{
                   description: "Arquivo de texto",
@@ -589,7 +590,7 @@ ungroovy();
 
 
               if (linguacodex["editor_" + p.fromeditor] == "html") {
-                const handle = await window.showSaveFilePicker({
+                handle = await window.showSaveFilePicker({
                 suggestedName: "meu-arquivo.html",
                 types: [{
                   description: "Arquivo de texto",
