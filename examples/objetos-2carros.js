@@ -1,6 +1,6 @@
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  background("#8c30b1");
+  background("transparent");
 }
 
 // Objeto carro
@@ -55,7 +55,7 @@ let carro2 = {
 };
 
 function draw() {
-  background("#8c30b1");
+  background("transparent");
 
   // Espera um pouco para dar ignição nos carros
   let comeca = random(100);

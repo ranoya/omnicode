@@ -1,6 +1,6 @@
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  background("#8c30b1");
+  background("transparent");
   noStroke();
 }
 
@@ -74,7 +74,7 @@ for (let i = 0; i < totaldecarros; i = i + 1) {
 }
 
 function draw() {
-  background("#8c30b1");
+  background("transparent");
 
   // Loop para acionar todos os carros
   for (let i = 0; i < totaldecarros; i = i + 1) {

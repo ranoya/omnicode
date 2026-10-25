@@ -1,6 +1,6 @@
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  background("#8c30b1");
+  background("transparent");
   noStroke();
 }
 
@@ -46,7 +46,7 @@ let carroB = {
 };
 
 function draw() {
-  background("#8c30b1");
+  background("transparent");
 
   // Desenha os dois carros
   carroA.desenha();
