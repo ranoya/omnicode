@@ -27,14 +27,21 @@ ungroovy();
       let countcode = 1;
       let countruncode = 1;
 
-      window.code = function (u) {
+      window.code = function (u, t) {
         
+        let tipo = "html";
+        if (typeof t != 'undefined' && t != null && t != '') {
+          tipo = t;
+        }
+        
+
         if (typeof u != 'undefined' && u != null && u != '') {
 
           run("Code " + countcode, "codeeditor", {
             contagem: countcode,
             runcontagem: countruncode,
-            loadcode: u
+            loadcode: u,
+            lingua: tipo
           });
                 
         } else {
@@ -42,6 +49,7 @@ ungroovy();
           run("Code " + countcode, "codeeditor", {
             contagem: countcode,
             runcontagem: countruncode,
+            lingua: tipo
           });
                
         }
@@ -49,19 +57,26 @@ ungroovy();
         center("Code " + (countcode - 1));
       };
 
-      window.pcode = function (u) {
+      window.pcode = function (u, t) {
+        
+        let tipo = "html";
+        if (typeof t != 'undefined' && t != null && t != '') {
+          tipo = t;
+        }
               
         if (typeof u != 'undefined' && u != null && u != '') {
           permarun("Code " + countcode, "codeeditor", {
                 contagem: countcode,
                 runcontagem: countruncode,
-                loadcode: u
+                loadcode: u,
+                lingua: tipo
           });
 
         } else {
           permarun("Code " + countcode, "codeeditor", {
                 contagem: countcode,
                 runcontagem: countruncode,
+                lingua: tipo
           });
 
         }
@@ -492,10 +507,10 @@ ungroovy();
         let thisace = ace.edit("editor_" + id);
         thisace.setTheme("ace/theme/" + tema);
         thisace.setKeyboardHandler("ace/keyboard/vscode");
-        thisace.session.setMode("ace/mode/html");
+        thisace.session.setMode("ace/mode/" + p.lingua);
         let acegeneralconfig = {
           theme: "ace/theme/" + tema,
-          mode: "ace/mode/html",
+          mode: "ace/mode/" + p.lingua,
           enableBasicAutocompletion: true,
           enableSnippets: true,
           enableLiveAutocompletion: true,
@@ -537,6 +552,8 @@ ungroovy();
           });
            
         }
+
+        linguacodex["editor_" + id] = p.lingua;
 
         
 
@@ -767,9 +784,9 @@ window.openexemplos = function (id, dados) {
                 <div onclick="newidoc('https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem('infcanvas:theme')}&load=https://omnicode.vercel.app/notebook/creativecode.html', 'Instruções'); centerlastframe();">Exemplo de programação criativa em notebook computacional</div>
 
                 <div class="secao">Programação</div>
-                <div onclick="window.code('https://omnicode.vercel.app/examples/meucanvas.js'); centerlastframe();">Hello World para Canvas</div>
-                <div onclick="window.code('https://booklines.vercel.app/assets/codigosp5/exemplo-livroJSD_SE.js'); centerlastframe();">Mandala 1 em P5</div>
-                <div onclick="window.code('https://booklines.vercel.app/assets/codigosp5/bass.js'); centerlastframe();">Mandala 2 em P5</div>
+                <div onclick="window.code('https://omnicode.vercel.app/examples/meucanvas.js', 'canvas'); centerlastframe();">Hello World para Canvas</div>
+                <div onclick="window.code('https://booklines.vercel.app/assets/codigosp5/exemplo-livroJSD_SE.js', 'P5'); centerlastframe();">Mandala 1 em P5</div>
+                <div onclick="window.code('https://booklines.vercel.app/assets/codigosp5/bass.js', 'P5'); centerlastframe();">Mandala 2 em P5</div>
                 
             </div>
           
