@@ -302,6 +302,11 @@ $_GET = [];
     background:var(--win-bg); color:var(--text); font-size:14px;
     border:1px solid var(--win-border); border-radius:10px; box-shadow:0 8px 24px var(--shadow);
   }
+  /* widget(): janelas do canvas convertidas em elementos flutuantes, fixos na tela (plano da lupa/zoom,
+     por baixo dos controles, da barra e do painel da lupa, por cima de todas as janelas do canvas) */
+  #widgetLayer{ position:fixed; inset:0; z-index:9999; pointer-events:none; }
+  .win.widget{ pointer-events:auto; }
+  .win.widget .win-max{ display:none; }
 </style>
 </head>
 <body>
@@ -310,6 +315,8 @@ $_GET = [];
     <svg id="linksLayer" width="1" height="1" style="position:absolute;top:0;left:0;overflow:visible;pointer-events:none;"></svg>
   </div>
 </div>
+
+<div id="widgetLayer"></div>
 
 <div id="console">
   <span class="prompt">&gt;</span>
@@ -692,6 +699,7 @@ $_GET = [];
   // ---- persistência de posição/tamanho por nome (localStorage) ----
   function storageKey(name){ return 'infcanvas:' + String(name).trim().toLowerCase(); }
   function saveWinState(win){
+    if (win._isWidget) return; // geometria de widget é em pixels de tela: não serve como posição de canvas
     try {
       // maximizada, win.style guarda a geometria de tela cheia: o que vale é a de antes de maximizar
       var g = (win.classList.contains('maximized') && win._restore) ? win._restore : win.style;
@@ -1218,6 +1226,27 @@ maximizada, vale para o tamanho/posição que ela recupera ao restaurar.</p>
 <code class="sig">setOpaqueBackground()</code>
 <p>Devolve o fundo do ambiente à cor sólida do tema atual.</p>
 <hr>
+<h4>Widgets (janelas flutuantes)</h4>
+<code class="sig">widget(título, w, h, x, y)</code>
+<p>Converte a janela com esse título num elemento flutuante: ela passa para o plano da lupa e dos controles
+de zoom — fixa na tela, por cima de todas as janelas do canvas e sem acompanhar pan nem zoom, como o painel
+do <code>floatdevmode()</code>. Aparece exatamente onde e com o tamanho que tinha na tela naquele momento;
+<code>w, h, x, y</code> são opcionais (pixels de tela ou <code>%</code> da tela; <code>null</code> mantém) e
+valem como <code>setPosition</code>. Funciona com qualquer modalidade, menos o Terminal (use
+<code>floatdevmode()</code>). Continua se movendo pelo cabeçalho (ou aba/legenda), redimensionando pela
+alça e fechando pelo botão de fechar, mas nunca sai da tela, e o botão de maximizar some (uma janela
+maximizada é restaurada antes de virar widget).</p>
+<p>Detalhes: <code>center()</code>, <code>centerlastframe()</code> e a lupa só trazem o widget para a
+frente (não há o que centralizar). Linhas de <code>connect()</code> continuam ligando o widget às janelas do
+canvas, acompanhando onde ele está na tela. A posição de um widget não é gravada no <code>localStorage</code>,
+só vale na sessão; o <code>savestate()</code> grava a criação da janela e, logo depois, um
+<code>widget(título, w, h, x, y)</code> com a posição atual na tela. Em navegadores recentes (com
+<code>moveBefore</code>) os iframes da janela não recarregam na conversão; nos demais, recarregam e voltam
+ao estado inicial.</p>
+<code class="sig">removewidget(título)</code>
+<p>O caminho de volta: o widget retorna ao espaço do canvas, cobrindo visualmente o mesmo lugar e tamanho
+que ocupa na tela agora (considerando o zoom e o pan atuais), e volta a acompanhar pan e zoom.</p>
+<hr>
 <h4>Remover janelas</h4>
 <code class="sig">remove(título)</code>
 <p>Fecha por programação a janela com esse título — o mesmo que o botão ✕, só que também serve para as
@@ -1396,10 +1425,8 @@ rodado direto pelo console do navegador.</p>
         return;
       }
       l.el.style.display = '';
-      var ax = parseFloat(l.a.style.left) + l.a.offsetWidth / 2;
-      var ay = parseFloat(l.a.style.top) + l.a.offsetHeight / 2;
-      var bx = parseFloat(l.b.style.left) + l.b.offsetWidth / 2;
-      var by = parseFloat(l.b.style.top) + l.b.offsetHeight / 2;
+      var ca = winCenterCanvas(l.a), cb = winCenterCanvas(l.b);
+      var ax = ca.x, ay = ca.y, bx = cb.x, by = cb.y;
       l.el.setAttribute('x1', ax); l.el.setAttribute('y1', ay);
       l.el.setAttribute('x2', bx); l.el.setAttribute('y2', by);
     });
@@ -1497,10 +1524,12 @@ rodado direto pelo console do navegador.</p>
       var origLeft = parseFloat(win.style.left), origTop = parseFloat(win.style.top);
       dragHandle.setPointerCapture(e.pointerId);
       function onMove(ev){
-        var dx = (ev.clientX - startX) / zoom;
-        var dy = (ev.clientY - startY) / zoom;
+        var kz = win._isWidget ? 1 : zoom; // widget está no plano da tela, não do canvas
+        var dx = (ev.clientX - startX) / kz;
+        var dy = (ev.clientY - startY) / kz;
         win.style.left = (origLeft + dx) + 'px';
         win.style.top  = (origTop + dy) + 'px';
+        if (win._isWidget) clampWidget(win);
       }
       function onUp(ev){
         dragHandle.releasePointerCapture(e.pointerId);
@@ -1526,8 +1555,9 @@ rodado direto pelo console do navegador.</p>
       var rightEdge = origLeft + origW;
       resize.setPointerCapture(e.pointerId);
       function onMove(ev){
-        var dx = (ev.clientX - startX) / zoom;
-        var dy = (ev.clientY - startY) / zoom;
+        var kz = win._isWidget ? 1 : zoom;
+        var dx = (ev.clientX - startX) / kz;
+        var dy = (ev.clientY - startY) / kz;
         if (fromLeft){
           var newW = Math.max(win._minW || 150, origW - dx);
           win.style.width = newW + 'px';
@@ -1536,6 +1566,7 @@ rodado direto pelo console do navegador.</p>
           win.style.width = Math.max(win._minW || 150, origW + dx) + 'px';
         }
         win.style.height = Math.max(win._minH || 110, origH + dy) + 'px';
+        if (win._isWidget) clampWidget(win, true);
       }
       function onUp(ev){
         resize.releasePointerCapture(e.pointerId);
@@ -1668,6 +1699,7 @@ rodado direto pelo console do navegador.</p>
   var searchList = document.getElementById('searchList');
 
   function panToWindow(win){
+    if (win._isWidget){ bringToFront(win); return; } // fixo na tela: não há o que centralizar
     var cx = parseFloat(win.style.left) + win.offsetWidth / 2;
     var cy = parseFloat(win.style.top) + win.offsetHeight / 2;
     pan.x = viewport.clientWidth / (2 * zoom) - cx;
@@ -1715,10 +1747,11 @@ rodado direto pelo console do navegador.</p>
       }
       return resolved;
     }
-    var rw = pick(w, resolveDim(w, vw), 'w');
-    var rh = pick(h, resolveDim(h, vh), 'h');
-    var rx = pick(x, resolveCoord(x, true), 'x');
-    var ry = pick(y, resolveCoord(y, false), 'y');
+    var isWd = !!win._isWidget; // widget: valores em pixels de tela
+    var rw = pick(w, isWd ? resolveScreenVal(w, vw) : resolveDim(w, vw), 'w');
+    var rh = pick(h, isWd ? resolveScreenVal(h, vh) : resolveDim(h, vh), 'h');
+    var rx = pick(x, isWd ? resolveScreenVal(x, vw) : resolveCoord(x, true), 'x');
+    var ry = pick(y, isWd ? resolveScreenVal(y, vh) : resolveCoord(y, false), 'y');
     // mesmos tamanhos mínimos do redimensionar à mão
     if (rw !== undefined) rw = Math.max(win._minW || 150, rw);
     if (rh !== undefined) rh = Math.max(win._minH || 110, rh);
@@ -1730,9 +1763,113 @@ rodado direto pelo console do navegador.</p>
     if (rx !== undefined) target.left = rx + 'px';
     if (ry !== undefined) target.top = ry + 'px';
     saveWinState(win);
+    if (isWd) clampWidget(win);
     return win;
   }
   window.setPosition = setPosition;
+
+  // ---- widgets: janelas do canvas convertidas em elementos flutuantes (fixos na tela) ----
+  var widgetLayer = document.getElementById('widgetLayer');
+
+  function canvasToScreen(cx, cy){
+    var r = viewport.getBoundingClientRect();
+    return { x: (cx + pan.x) * zoom + r.left, y: (cy + pan.y) * zoom + r.top };
+  }
+  // centro da janela em coordenadas do canvas (pro widget, o ponto do canvas que está sob ele na tela)
+  function winCenterCanvas(win){
+    var cx = parseFloat(win.style.left) + win.offsetWidth / 2;
+    var cy = parseFloat(win.style.top) + win.offsetHeight / 2;
+    return win._isWidget ? screenToCanvas(cx, cy) : { x: cx, y: cy };
+  }
+  // número (px de tela) ou "%" da tela; qualquer outra coisa é inválida
+  function resolveScreenVal(val, ref){
+    if (typeof val === 'number') return val;
+    if (typeof val === 'string'){
+      var t = val.trim();
+      if (/%$/.test(t)){
+        var p = parseFloat(t);
+        if (!isNaN(p)) return ref * p / 100;
+      }
+    }
+    return undefined;
+  }
+  // mantém o widget dentro da tela; capSize=true (redimensionando) limita o tamanho em vez de empurrar a posição
+  function clampWidget(win, capSize){
+    var vw = viewport.clientWidth, vh = viewport.clientHeight;
+    var minW = win._minW || 150, minH = win._minH || 110;
+    var l = parseFloat(win.style.left), t = parseFloat(win.style.top);
+    var w = parseFloat(win.style.width), h = parseFloat(win.style.height);
+    if (capSize){ w = Math.min(w, vw - Math.max(l, 0)); h = Math.min(h, vh - Math.max(t, 0)); }
+    w = Math.max(Math.min(w, vw), Math.min(minW, vw));
+    h = Math.max(Math.min(h, vh), Math.min(minH, vh));
+    l = Math.min(Math.max(l, 0), Math.max(0, vw - w));
+    t = Math.min(Math.max(t, 0), Math.max(0, vh - h));
+    win.style.width = w + 'px'; win.style.height = h + 'px';
+    win.style.left = l + 'px'; win.style.top = t + 'px';
+  }
+  window.addEventListener('resize', function(){
+    windows.forEach(function(w){ if (w._isWidget) clampWidget(w); });
+  });
+
+  // move o nó de lugar sem recarregar iframes quando o navegador sabe (moveBefore, preserva o estado);
+  // senão, appendChild — que faz os iframes dentro da janela recarregarem
+  function reparent(node, newParent){
+    if (typeof newParent.moveBefore === 'function'){
+      try { newParent.moveBefore(node, null); return; } catch (e) { /* cai no appendChild */ }
+    }
+    newParent.appendChild(node);
+  }
+
+  function widget(titulo, w, h, x, y){
+    var win = findWindowByName(titulo);
+    if (!win){ console.warn('widget: janela "' + titulo + '" não encontrada.'); return null; }
+    if (win === consoleWin){ console.warn('widget: o Terminal já tem o seu modo flutuante — use floatdevmode().'); return null; }
+    if (!win._isWidget){
+      if (win.classList.contains('maximized')) win.querySelector('.win-max').click(); // restaura antes de converter
+      // aparece exatamente onde e com o tamanho que tem na tela agora
+      var tl = canvasToScreen(parseFloat(win.style.left), parseFloat(win.style.top));
+      var sw = parseFloat(win.style.width) * zoom, sh = parseFloat(win.style.height) * zoom;
+      win.style.left = tl.x + 'px'; win.style.top = tl.y + 'px';
+      win.style.width = sw + 'px'; win.style.height = sh + 'px';
+      win._isWidget = true;
+      win.classList.add('widget');
+      reparent(win, widgetLayer);
+      bringToFront(win);
+      clampWidget(win);
+    }
+    // w, h, x, y opcionais (pixels de tela ou %): mesma regra do setPosition, null mantém
+    if ([w, h, x, y].some(function(v){ return v !== null && v !== undefined; })) setPosition(titulo, w, h, x, y);
+    return win;
+  }
+  function removewidget(titulo){
+    var win = findWindowByName(titulo);
+    if (!win){ console.warn('removewidget: janela "' + titulo + '" não encontrada.'); return null; }
+    if (!win._isWidget){ console.warn('removewidget: "' + titulo + '" não é um widget.'); return null; }
+    // volta pro canvas cobrindo, visualmente, o mesmo lugar e tamanho que ocupa na tela agora
+    var tl = screenToCanvas(parseFloat(win.style.left), parseFloat(win.style.top));
+    var cw = parseFloat(win.style.width) / zoom, ch = parseFloat(win.style.height) / zoom;
+    win._isWidget = false;
+    win.classList.remove('widget');
+    win.style.left = tl.x + 'px'; win.style.top = tl.y + 'px';
+    win.style.width = cw + 'px'; win.style.height = ch + 'px';
+    reparent(win, canvas);
+    bringToFront(win);
+    return win;
+  }
+  window.widget = widget;
+  window.removewidget = removewidget;
+
+  // pro savestate: o widget vira "criação no canvas" + "widget(título, w, h, x, y)" com a posição na tela
+  function widgetCanvasGeo(win){
+    var tl = screenToCanvas(parseFloat(win.style.left), parseFloat(win.style.top));
+    return { left: tl.x + 'px', top: tl.y + 'px',
+             width: (parseFloat(win.style.width) / zoom) + 'px', height: (parseFloat(win.style.height) / zoom) + 'px' };
+  }
+  function widgetLine(win){
+    return 'widget(' + JSON.stringify(win.dataset.name) + ', ' +
+      Math.round(parseFloat(win.style.width)) + ', ' + Math.round(parseFloat(win.style.height)) + ', ' +
+      Math.round(parseFloat(win.style.left)) + ', ' + Math.round(parseFloat(win.style.top)) + ');';
+  }
 
   // ---- travar / destravar uma janela (vale para todas as modalidades) ----
   function lock(titulo){
@@ -1940,10 +2077,10 @@ rodado direto pelo console do navegador.</p>
 
   function savestate(){
     var lines = [];
-    commandLog.forEach(function(entry){
+    function processEntry(entry){
       var raw = entry.raw.replace(/;?\s*$/, ';'); // garante só um ";" no final
       raw = raw.replace(/^console\s*\(/, 'openconsole('); // console() só existe dentro da barra; openconsole() vale em qualquer lugar
-      if (/^remove\s*\(/.test(raw)) return; // a janela removida já ficou de fora do arquivo; repetir o remove() não serviria de nada
+      if (/^(remove|widget|removewidget)\s*\(/.test(raw)) return; // a janela removida já ficou de fora do arquivo; repetir o remove() não serviria de nada
       var createdWins = entry.createdWins || [];
 
       if (createdWins.length === 0){
@@ -1960,6 +2097,7 @@ rodado direto pelo console do navegador.</p>
         if (parsed && typeof argCount === 'number'){
           var lead = splitTopLevelArgs(parsed.argsStr).slice(0, argCount);
           var geo = (win.classList.contains('maximized') && win._restore) ? win._restore : win.style;
+          if (win._isWidget) geo = widgetCanvasGeo(win); // geometria de widget é de tela: grava o equivalente no canvas
           var W = Math.round(parseFloat(geo.width));
           var H = Math.round(parseFloat(geo.height));
           var X = Math.round(parseFloat(geo.left));
@@ -1974,6 +2112,13 @@ rodado direto pelo console do navegador.</p>
       // um único comando criou mais de uma janela (ex.: várias chamadas separadas por ";" na mesma
       // linha): não dá pra reescrever w,h,x,y com segurança; mantém como foi digitado
       lines.push(raw);
+    }
+    commandLog.forEach(function(entry){
+      processEntry(entry);
+      // widgets ainda abertos criados por este comando: o estado flutuante entra logo depois da criação
+      (entry.createdWins || []).forEach(function(w){
+        if (w.isConnected && w._isWidget) lines.push(widgetLine(w));
+      });
     });
 
     var text = lines.join('\n') + '\n';
@@ -2274,6 +2419,7 @@ rodado direto pelo console do navegador.</p>
                     'newsdoc', 'newsidoc', 'runsdoc', 'newpermasdoc', 'newpermasidoc', 'runpermasdoc',
                     'groovy', 'ungroovy', 'savestate', 'lock', 'unlock', 'centerlastframe', 'lockall', 'unlockall',
                     'superdevmode', 'nodev', 'setPosition', 'console', 'floatdevmode',
+                    'widget', 'removewidget',
                     cmd))(
         newwindow, newframe, run, newpermawindow, newpermaframe, permarun,
         connect, disconnect, setTheme, setTempTheme, help,
@@ -2282,7 +2428,8 @@ rodado direto pelo console do navegador.</p>
         setZoom, setPan, center, multicolor, singlecolor, svg,
         newsdoc, newsidoc, runsdoc, newpermasdoc, newpermasidoc, runpermasdoc,
         groovy, ungroovy, savestate, lock, unlock, centerlastframe, lockall, unlockall,
-        superdevmode, nodev, setPosition, consoleCallable, floatdevmode);
+        superdevmode, nodev, setPosition, consoleCallable, floatdevmode,
+        widget, removewidget);
       // registra o comando no histórico (só os que rodaram sem erro), junto das janelas que ele criou
       commandLog.push({ raw: cmd, createdWins: windows.slice(winCountBefore) });
     } catch (err){
