@@ -441,7 +441,7 @@ ungroovy();
 
         #editor_${id} {
                          width: calc(100% - 0px);
-                         height: calc(100% - 44px);
+                         height: calc(100% - 30px);
                          border: 0;
                          outline: 0 !important;
                          
@@ -449,6 +449,7 @@ ungroovy();
                          line-height: 20px;
                          margin-top: 0 !important;
                          overflow-x: hidden;
+                         margin-bottom: 0 !important;
         }
 
         
