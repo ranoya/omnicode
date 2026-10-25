@@ -480,7 +480,7 @@ ungroovy();
         <div class="menu_code">
         
           <div onclick="runcode('${id}', ${p.runcontagem}, ${p.contagem})">Run</div>
-          <div onclick="abrirArquivo()">Load</div><div onclick="salvarArquivo()">Save</div><div onclick="linguacodeeditor('editor_${id}', 'html');">HTML</div><div onclick="linguacodeeditor('editor_${id}', 'javascript');">Javascript</div><div onclick="linguacodeeditor('editor_${id}', 'typescript');">Typescript</div><div onclick="linguacodeeditor('editor_${id}', 'P5');">P5</div><div onclick="linguacodeeditor('editor_${id}', 'canvas');">SVG Canvas</div>
+          <div onclick="abrirArquivo('${id}')">Load</div><div onclick="salvarArquivo('${id}')">Save</div><div onclick="linguacodeeditor('editor_${id}', 'html');">HTML</div><div onclick="linguacodeeditor('editor_${id}', 'javascript');">Javascript</div><div onclick="linguacodeeditor('editor_${id}', 'typescript');">Typescript</div><div onclick="linguacodeeditor('editor_${id}', 'P5');">P5</div><div onclick="linguacodeeditor('editor_${id}', 'canvas');">SVG Canvas</div>
           
         </div>
 
