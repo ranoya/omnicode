@@ -836,6 +836,7 @@ window.openmenu = function (id, dados) {
                 <div onclick="omnicodelive()">Omnicode Live</div>
                 <div onclick="legacy()">Contextos de programação antigos</div>
                 <div onclick="exemplos()">Coleção de exemplos</div>
+                <div onclick="pjd()">Programação Javascript para Designers (aberto)</div>
             </div>
           
           
