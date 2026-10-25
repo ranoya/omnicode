@@ -1738,7 +1738,7 @@ window.openlegacymenu = function (id, dados) {
                     e.preventDefault();
                     e.returnValue = false;
 
-              if (devmstate = "normal") {
+              if (devmstate == "normal") {
                 floatdevmode();
                 devmstate = "float"
               } else {
