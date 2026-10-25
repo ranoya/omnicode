@@ -1118,6 +1118,8 @@ connect("Mandala 2", "Capa");
 
 window.poo = function () {
 
+  setZoom(.45);
+
   let tema = localStorage.getItem('infcanvas:theme');
     if (localStorage.getItem('infcanvas:theme') == "gruvbox-dark") {
         tema = "gruvbox";
