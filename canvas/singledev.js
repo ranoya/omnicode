@@ -553,7 +553,7 @@ ungroovy();
            
         }
 
-        linguacodex("editor_" + id, p.lingua);
+        linguacodeeditor("editor_" + id, p.lingua);
 
         
 
