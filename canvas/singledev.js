@@ -902,6 +902,7 @@ window.openomnihelp = function (id, dados) {
                 <div onclick="exemplos()">Coleção de exemplos</div>
                 <div onclick="lpjd()">Programação Javascript para Designers</div>
                 <div onclick="pjd()">Programação Javascript para Designers (aberto)</div>
+                <div onclick="poo()">Programação Orientada a Objetos em Javascript (aberto)</div>
             </div>
           
           
