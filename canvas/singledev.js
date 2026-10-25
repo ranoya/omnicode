@@ -1711,6 +1711,37 @@ document.addEventListener('keydown', function (e) {
 
             omnihelp();
   }
+
+  document.addEventListener('keydown', function (e) {
+            if (e.key === 'F2' || e.keyCode == 113) {
+
+                   e.cancelBubble = true;
+                    e.cancelable = true;
+                    e.stopPropagation();
+                    e.preventDefault();
+                    e.returnValue = false;
+
+            menu();
+    }
+    
+  let devmstate = "normal";
+
+  document.addEventListener('keydown', function (e) {
+            if (e.key === 'F3' || e.keyCode == 114) {
+
+                   e.cancelBubble = true;
+                    e.cancelable = true;
+                    e.stopPropagation();
+                    e.preventDefault();
+                    e.returnValue = false;
+
+              if (devmstate = "normal") {
+                floatdevmode();
+                devmstate = "float"
+              } else {
+                floatdevmode();
+              }
+  }
   
   
 });
