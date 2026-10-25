@@ -1748,6 +1748,7 @@ document.addEventListener('keydown', function (e) {
                 devmstate = "float"
               } else {
                 devmode();
+                devmstate = "normal";
               }
   }
   

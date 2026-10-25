@@ -1743,6 +1743,7 @@ window.openlegacymenu = function (id, dados) {
                 devmstate = "float"
               } else {
                 devmode();
+                devmstate = "normal";
               }
   }
   
