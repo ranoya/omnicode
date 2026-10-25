@@ -556,10 +556,9 @@ ungroovy();
 
             seletor.value = "";
           };
+        }
 
-          
-
-          async function salvarArquivo() {
+        async function salvarArquivo() {
             let conteudo = thisace.getSession().getValue();
 
             try {
@@ -616,9 +615,6 @@ ungroovy();
 
               console.error("Erro ao salvar o arquivo:", erro);
             }
-          }
-
-
         }
 
         window.addEventListener("keydown", function(event) {
