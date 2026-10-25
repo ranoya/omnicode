@@ -843,12 +843,13 @@ window.openmenu = function (id, dados) {
       }
 
 window.omnihelp = function () {
-        rundoc("Omnihelp", "openomnihelp", {}, 335, 556, 863, 68);
+        rundoc("Omnihelp", "openomnihelp", {}, 335, 556, -282, -125);
         center("Omnihelp");
         
         localStorage.setItem('primeiroacesso', 'feito');
   
 }
+
 
 window.openomnihelp = function (id, dados) {
         var el = document.getElementById(id);
@@ -1622,8 +1623,8 @@ window.multiplan = function () {
 
 
 window.legacy = function () {
-        rundoc("Legacy", "openlegacymenu", {}, 335, 556, 467, 68);
-        setPan(0, 0);
+        rundoc("Legacy", "openlegacymenu", {}, 335, 556, 408, 241);
+        center("Legacy");
 }
 
 window.openlegacymenu = function (id, dados) {
