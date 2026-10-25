@@ -1701,28 +1701,30 @@ window.openlegacymenu = function (id, dados) {
 
 
 document.addEventListener('keydown', function (e) {
-            if (e.key === 'F1' || e.keyCode == 112) {
+  if (e.key === 'F1' || e.keyCode == 112) {
 
-                   e.cancelBubble = true;
-                    e.cancelable = true;
-                    e.stopPropagation();
-                    e.preventDefault();
-                    e.returnValue = false;
+    e.cancelBubble = true;
+    e.cancelable = true;
+    e.stopPropagation();
+    e.preventDefault();
+    e.returnValue = false;
 
-            omnihelp();
+    omnihelp();
   }
+});
 
-  document.addEventListener('keydown', function (e) {
-            if (e.key === 'F2' || e.keyCode == 113) {
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'F2' || e.keyCode == 113) {
 
-                   e.cancelBubble = true;
-                    e.cancelable = true;
-                    e.stopPropagation();
-                    e.preventDefault();
-                    e.returnValue = false;
+    e.cancelBubble = true;
+    e.cancelable = true;
+    e.stopPropagation();
+    e.preventDefault();
+    e.returnValue = false;
 
-            menu();
-    }
+    menu();
+  }
+});
     
   let devmstate = "normal";
 
