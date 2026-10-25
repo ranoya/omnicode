@@ -573,12 +573,15 @@ ungroovy();
           link.style="display: none;"
           link.href = url;
 
+          // Pergunta nome do arquivo
+          let nomedoarq = prompt("Nome do Arquivo", "meu arquivo");
+
           if (linguacodex["editor_" + p.fromeditor] == "javascript" || linguacodex["editor_" + p.fromeditor] == "canvas" || linguacodex["editor_" + p.fromeditor] == "P5") {
-            link.download = "meu-arquivo.js";
+            link.download = nomedoarq + ".js";
           } else if (linguacodex["editor_" + p.fromeditor] == "typescript") {
-            link.download = "meu-arquivo.ts";
+            link.download = nomedoarq + ".ts";
           } else {
-            link.download = "meu-arquivo.html";
+            link.download = nomedoarq + ".html";
           }
 
           // Aciona o download
