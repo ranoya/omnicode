@@ -467,70 +467,7 @@ ungroovy();
         }
         </style>
 
-        <scri`+`pt>
-
-          let thisace = ace.edit("editor_" + ${id});
-
-          let abrirArquivo = function() {
-          const seletor = document.getElementById("seletorGeraldeArquivo");
-
-          // Abre a janela de seleção de arquivos
-          seletor.click();
-
-          // Lê o arquivo selecionado
-          seletor.onchange = async function () {
-            const arquivo = seletor.files[0];
-
-            if (!arquivo) return;
-
-            // Lê o conteúdo como texto
-            let texto = await arquivo.text();
-
-            thisace.setValue(texto);
-            codex[id] = thisace.getSession().getValue();
-
-            seletor.value = "";
-          };
-        }
-
-        let salvarArquivo = function() {
-          let conteudo = thisace.getSession().getValue();
-          // Cria um Blob com o conteúdo em formato TXT
-          const blob = new Blob(
-            [conteudo],
-            { type: "text/plain;charset=utf-8" }
-          );
-          // Cria uma URL temporária para o arquivo
-          const url = URL.createObjectURL(blob);
-
-          // Cria um link para iniciar o download
-          const link = document.createElement("a");
-          link.style="display: none;"
-          link.href = url;
-
-          // Pergunta nome do arquivo
-          let nomedoarq = prompt("Nome do Arquivo", "meu arquivo");
-
-          if (linguacodex["editor_" + p.fromeditor] == "javascript" || linguacodex["editor_" + p.fromeditor] == "canvas" || linguacodex["editor_" + p.fromeditor] == "P5") {
-            link.download = nomedoarq + ".js";
-          } else if (linguacodex["editor_" + p.fromeditor] == "typescript") {
-            link.download = nomedoarq + ".ts";
-          } else {
-            link.download = nomedoarq + ".html";
-          }
-
-          // Aciona o download
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-
-          // Libera a URL temporária
-          setTimeout(() => URL.revokeObjectURL(url), 1000);
-
-        }
-
-        </sc`+`ript>
-
+       
         <pre
         class="editor codefull"
         data-name="editor_${id}"
@@ -600,7 +537,37 @@ ungroovy();
            
         }
 
-        let abrirArquivo = function() {
+        
+
+        
+       /*
+        window.addEventListener("keydown", function(event) {
+          // Verifica se a tecla Ctrl (ou Meta/Cmd no Mac) e a letra 'i' (maiúscula ou minúscula) foram acionadas
+          if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "i") {
+            event.preventDefault(); // Evita o comportamento padrão do navegador (se houver)
+            event.cancelable = true;
+            event.stopPropagation();
+            event.returnValue = false;
+            abrirArquivo(id);
+          }
+        });
+
+        window.addEventListener("keydown", function(event) {
+          // Verifica se a tecla Ctrl (ou Meta/Cmd no Mac) e a letra 's' (maiúscula ou minúscula) foram acionadas
+          if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "s") {
+            event.preventDefault(); // Evita o comportamento padrão do navegador (se houver)
+            event.cancelable = true;
+            event.stopPropagation();
+            event.returnValue = false;
+            salvarArquivo();
+          }
+        });
+        */
+        
+};
+
+window.abrirArquivo = function (id) {
+          let thisace = ace.edit("editor_" + id);
           const seletor = document.getElementById("seletorGeraldeArquivo");
 
           // Abre a janela de seleção de arquivos
@@ -622,7 +589,8 @@ ungroovy();
           };
         }
 
-        let salvarArquivo = function() {
+window.salvarArquivo = function (id) {
+          let thisace = ace.edit("editor_" + id);
           let conteudo = thisace.getSession().getValue();
           // Cria um Blob com o conteúdo em formato TXT
           const blob = new Blob(
@@ -640,9 +608,9 @@ ungroovy();
           // Pergunta nome do arquivo
           let nomedoarq = prompt("Nome do Arquivo", "meu arquivo");
 
-          if (linguacodex["editor_" + p.fromeditor] == "javascript" || linguacodex["editor_" + p.fromeditor] == "canvas" || linguacodex["editor_" + p.fromeditor] == "P5") {
+          if (linguacodex["editor_" + id] == "javascript" || linguacodex["editor_" + id] == "canvas" || linguacodex["editor_" + id] == "P5") {
             link.download = nomedoarq + ".js";
-          } else if (linguacodex["editor_" + p.fromeditor] == "typescript") {
+          } else if (linguacodex["editor_" + id] == "typescript") {
             link.download = nomedoarq + ".ts";
           } else {
             link.download = nomedoarq + ".html";
@@ -657,32 +625,6 @@ ungroovy();
           setTimeout(() => URL.revokeObjectURL(url), 1000);
 
         }
-
-        
-
-        window.addEventListener("keydown", function(event) {
-          // Verifica se a tecla Ctrl (ou Meta/Cmd no Mac) e a letra 'i' (maiúscula ou minúscula) foram acionadas
-          if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "i") {
-            event.preventDefault(); // Evita o comportamento padrão do navegador (se houver)
-            event.cancelable = true;
-            event.stopPropagation();
-            event.returnValue = false;
-            abrirArquivo();
-          }
-        });
-
-        window.addEventListener("keydown", function(event) {
-          // Verifica se a tecla Ctrl (ou Meta/Cmd no Mac) e a letra 's' (maiúscula ou minúscula) foram acionadas
-          if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "s") {
-            event.preventDefault(); // Evita o comportamento padrão do navegador (se houver)
-            event.cancelable = true;
-            event.stopPropagation();
-            event.returnValue = false;
-            salvarArquivo();
-          }
-        });
-        
-};
       
 
 
