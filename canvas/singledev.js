@@ -1118,6 +1118,17 @@ connect("Mandala 2", "Capa");
 
 window.poo = function () {
 
+  let tema = localStorage.getItem('infcanvas:theme');
+    if (localStorage.getItem('infcanvas:theme') == "gruvbox-dark") {
+        tema = "gruvbox";
+    }
+    if (localStorage.getItem('infcanvas:theme') == "light") {
+        tema = "dawn";
+    }
+    if (localStorage.getItem('infcanvas:theme') == "nord") {
+        tema = "nord_dark";
+    }
+
   newidoc("https://slidelines.vercel.app/level/?s=start&filtra=observable&allblocks=true&timeheight=100&followbg=true&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit?gid=1355216689#gid=1355216689&theme=https://slidelines.vercel.app/styles/leveloptmizednormal.css", "Code Tour POO", 1283, 987, 2428, 5078);
   
   newidoc(`https://omnicode.vercel.app/clr?preview=50&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-inicio.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 1", 994, 704, 2589, 6214);
