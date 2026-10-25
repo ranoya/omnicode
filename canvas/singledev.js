@@ -697,7 +697,7 @@ window.omnicodelive = function () {
 }
 
 window.exemplos = function () {
-        rundoc("Exemplos", "openexemplos", {}, 335, 556, 463, 68);
+        rundoc("Exemplos", "openexemplos", {}, 335, 556, -625, -317);
         center("Exemplos");
 }
 
