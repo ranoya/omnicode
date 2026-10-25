@@ -558,65 +558,40 @@ ungroovy();
           };
         }
 
-        async function salvarArquivo() {
+        let salvarArquivo = function() {
           let conteudo = thisace.getSession().getValue();
-          let handle = "";
+          // Cria um Blob com o conteúdo em formato TXT
+          const blob = new Blob(
+            [conteudo],
+            { type: "text/plain;charset=utf-8" }
+          );
+          // Cria uma URL temporária para o arquivo
+          const url = URL.createObjectURL(blob);
 
-            try {
+          // Cria um link para iniciar o download
+          const link = document.createElement("a");
+          link.style="display: none;"
+          link.href = url;
 
-              if (linguacodex["editor_" + p.fromeditor] == "javascript" || linguacodex["editor_" + p.fromeditor] == "canvas" || linguacodex["editor_" + p.fromeditor] == "P5") {
-                handle = await window.showSaveFilePicker({
-                suggestedName: "meu-arquivo.js",
-                types: [{
-                  description: "Arquivo de texto",
-                  accept: {
-                    "text/plain": [".js"]
-                  }
-                }]
-              });
-              }
+          if (linguacodex["editor_" + p.fromeditor] == "javascript" || linguacodex["editor_" + p.fromeditor] == "canvas" || linguacodex["editor_" + p.fromeditor] == "P5") {
+            link.download = "meu-arquivo.js";
+          } else if (linguacodex["editor_" + p.fromeditor] == "typescript") {
+            link.download = "meu-arquivo.ts";
+          } else {
+            link.download = "meu-arquivo.html";
+          }
 
-              if (linguacodex["editor_" + p.fromeditor] == "typescript") {
-                handle = await window.showSaveFilePicker({
-                suggestedName: "meu-arquivo.ts",
-                types: [{
-                  description: "Arquivo de texto",
-                  accept: {
-                    "text/plain": [".ts"]
-                  }
-                }]
-              });
-              }
+          // Aciona o download
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
 
+          // Libera a URL temporária
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
 
-              if (linguacodex["editor_" + p.fromeditor] == "html") {
-                handle = await window.showSaveFilePicker({
-                suggestedName: "meu-arquivo.html",
-                types: [{
-                  description: "Arquivo de texto",
-                  accept: {
-                    "text/plain": [".html"]
-                  }
-                }]
-              });
-              }
-
-              // Cria o arquivo e escreve o conteúdo
-              const writable = await handle.createWritable();
-              await writable.write(conteudo);
-              await writable.close();
-
-              console.log("Arquivo salvo com sucesso!");
-
-            } catch (erro) {
-              if (erro.name === "AbortError") {
-                // O usuário cancelou a janela
-                return;
-              }
-
-              console.error("Erro ao salvar o arquivo:", erro);
-            }
         }
+
+        
 
         window.addEventListener("keydown", function(event) {
           // Verifica se a tecla Ctrl (ou Meta/Cmd no Mac) e a letra 'i' (maiúscula ou minúscula) foram acionadas
