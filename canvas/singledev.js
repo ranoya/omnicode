@@ -1742,7 +1742,7 @@ window.openlegacymenu = function (id, dados) {
                 floatdevmode();
                 devmstate = "float"
               } else {
-                floatdevmode();
+                devmode();
               }
   }
   
