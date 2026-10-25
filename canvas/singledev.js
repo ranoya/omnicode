@@ -1036,7 +1036,11 @@ transform-origin: center center;
 }
 `
   
-, "Relógio");
+  , "Relógio");
+
+setPosition("Relógio", "8%", "8%", "3%", "83%");
+widget("Relógio");
+lock("Relógio");
 
 window.moverelogio = function () {
 
