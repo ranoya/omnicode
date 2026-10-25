@@ -478,7 +478,8 @@ ungroovy();
 
         <div class="menu_code">
         
-          <div onclick="runcode('${id}', ${p.runcontagem}, ${p.contagem})">Run</div><div onclick="linguacodeeditor('editor_${id}', 'html');">HTML</div><div onclick="linguacodeeditor('editor_${id}', 'javascript');">Javascript</div><div onclick="linguacodeeditor('editor_${id}', 'typescript');">Typescript</div><div onclick="linguacodeeditor('editor_${id}', 'P5');">P5</div><div onclick="linguacodeeditor('editor_${id}', 'canvas');">SVG Canvas</div>
+          <div onclick="runcode('${id}', ${p.runcontagem}, ${p.contagem})">Run</div>
+          <div onclick="abrirArquivo()">Load</div><div onclick="salvarArquivo()">Save</div><div onclick="linguacodeeditor('editor_${id}', 'html');">HTML</div><div onclick="linguacodeeditor('editor_${id}', 'javascript');">Javascript</div><div onclick="linguacodeeditor('editor_${id}', 'typescript');">Typescript</div><div onclick="linguacodeeditor('editor_${id}', 'P5');">P5</div><div onclick="linguacodeeditor('editor_${id}', 'canvas');">SVG Canvas</div>
           
         </div>
 
@@ -555,6 +556,69 @@ ungroovy();
 
             seletor.value = "";
           };
+
+          
+
+          async function salvarArquivo() {
+            let conteudo = thisace.getSession().getValue();
+
+            try {
+
+              if (linguacodex["editor_" + p.fromeditor] == "javascript" || linguacodex["editor_" + p.fromeditor] == "canvas" || linguacodex["editor_" + p.fromeditor] == "P5") {
+                const handle = await window.showSaveFilePicker({
+                suggestedName: "meu-arquivo.js",
+                types: [{
+                  description: "Arquivo de texto",
+                  accept: {
+                    "text/plain": [".js"]
+                  }
+                }]
+              });
+              }
+
+              if (linguacodex["editor_" + p.fromeditor] == "typescript") {
+                const handle = await window.showSaveFilePicker({
+                suggestedName: "meu-arquivo.ts",
+                types: [{
+                  description: "Arquivo de texto",
+                  accept: {
+                    "text/plain": [".ts"]
+                  }
+                }]
+              });
+              }
+
+
+              if (linguacodex["editor_" + p.fromeditor] == "html") {
+                const handle = await window.showSaveFilePicker({
+                suggestedName: "meu-arquivo.html",
+                types: [{
+                  description: "Arquivo de texto",
+                  accept: {
+                    "text/plain": [".html"]
+                  }
+                }]
+              });
+              }
+
+              // Cria o arquivo e escreve o conteúdo
+              const writable = await handle.createWritable();
+              await writable.write(conteudo);
+              await writable.close();
+
+              console.log("Arquivo salvo com sucesso!");
+
+            } catch (erro) {
+              if (erro.name === "AbortError") {
+                // O usuário cancelou a janela
+                return;
+              }
+
+              console.error("Erro ao salvar o arquivo:", erro);
+            }
+          }
+
+
         }
 
         window.addEventListener("keydown", function(event) {
