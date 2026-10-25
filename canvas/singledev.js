@@ -767,6 +767,7 @@ window.openexemplos = function (id, dados) {
                 <div onclick="newidoc('https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem('infcanvas:theme')}&load=https://omnicode.vercel.app/notebook/creativecode.html', 'Instruções'); centerlastframe();">Exemplo de programação criativa em notebook computacional</div>
 
                 <div class="secao">Programação</div>
+                <div onclick="window.code('https://omnicode.vercel.app/canvas/meucanvas.js'); centerlastframe();">Hello World para Canvas</div>
                 <div onclick="window.code('https://booklines.vercel.app/assets/codigosp5/exemplo-livroJSD_SE.js'); centerlastframe();">Mandala 1 em P5</div>
                 <div onclick="window.code('https://booklines.vercel.app/assets/codigosp5/bass.js'); centerlastframe();">Mandala 2 em P5</div>
                 
