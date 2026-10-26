@@ -785,6 +785,7 @@ window.openexemplos = function (id, dados) {
 
                 <div class="secao">Programação</div>
                 <div onclick="window.code('https://omnicode.vercel.app/examples/meucanvas.js', 'canvas'); centerlastframe();">Hello World para Canvas</div>
+                <div onclick="window.code('https://omnicode.vercel.app/examples/logoddesigncanvas.js', 'canvas'); centerlastframe();">Logotipo do departamento de design para Canvas</div>
                 <div onclick="window.code('https://booklines.vercel.app/assets/codigosp5/exemplo-livroJSD_SE.js', 'P5'); centerlastframe();">Mandala 1 em P5</div>
                 <div onclick="window.code('https://booklines.vercel.app/assets/codigosp5/bass.js', 'P5'); centerlastframe();">Mandala 2 em P5</div>
                 
