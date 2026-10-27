@@ -581,6 +581,8 @@ $_GET = [];
 
   var pan = {x:0, y:0};
   var zoom = 1;
+  var snapOn = false;   // snap(): encaixa o que for movido/redimensionado à mão numa grade
+  var SNAP_SIZE = 30;
   var zTop = 1;
   var windows = [];
   var links = [];
@@ -588,9 +590,11 @@ $_GET = [];
 
   function applyTransform(){
     canvas.style.transform = 'scale(' + zoom + ') translate(' + pan.x + 'px, ' + pan.y + 'px)';
-    var grid = 32 * zoom;
+    var grid = (snapOn ? SNAP_SIZE : 32) * zoom;
+    // o gradiente centra o ponto no ladrilho; com snap, recuo meio ladrilho pro ponto cair nas linhas da grade
+    var off = snapOn ? grid / 2 : 0;
     viewport.style.backgroundSize = grid + 'px ' + grid + 'px';
-    viewport.style.backgroundPosition = (pan.x * zoom) + 'px ' + (pan.y * zoom) + 'px';
+    viewport.style.backgroundPosition = (pan.x * zoom - off) + 'px ' + (pan.y * zoom - off) + 'px';
     zoomLabel.textContent = Math.round(zoom * 100) + '%';
   }
 
@@ -1256,6 +1260,19 @@ maximizada, o zoom volta ao que era antes. Com o título do Terminal (<code>supe
 barra de comandos original, como <code>devmode()</code> — o Terminal não pode simplesmente sumir, senão não
 haveria onde digitar. Devolve <code>true</code> se removeu e <code>false</code> se não achou a janela.</p>
 <hr>
+<h4>Grade (snap)</h4>
+<code class="sig">snap()</code>
+<p>Liga o encaixe numa grade de 30 em 30 pixels: ao mover uma janela com o mouse, o canto superior esquerdo
+cai num ponto da grade; ao redimensionar, a borda que você arrasta é que cai na grade (o tamanho mínimo
+continua valendo — se ele ficar entre dois pontos, vale o ponto seguinte). Enquanto o snap está ligado, os
+pontinhos do fundo passam de 32 para 30 de espaçamento e marcam os pontos da grade, pra você ver onde as
+janelas vão encaixar. Vale também para widgets, mas aí a grade é de 30 pixels de tela.</p>
+<code class="sig">nosnap()</code>
+<p>Volta ao movimento e ao redimensionamento livres, e os pontinhos ao espaçamento de antes.</p>
+<p>O snap só age sobre o que você move ou redimensiona com o mouse daqui pra frente: não mexe em janelas
+que já estão no canvas, nem em posições e tamanhos dados por código (criação, <code>setPosition</code>,
+<code>widget</code>), nem no painel do <code>floatdevmode()</code>.</p>
+<hr>
 <h4>Travar janelas</h4>
 <code class="sig">lock(título)</code>
 <p>Trava a janela com esse título: ela deixa de poder ser movida ou redimensionada, e a alça do canto
@@ -1527,8 +1544,8 @@ rodado direto pelo console do navegador.</p>
         var kz = win._isWidget ? 1 : zoom; // widget está no plano da tela, não do canvas
         var dx = (ev.clientX - startX) / kz;
         var dy = (ev.clientY - startY) / kz;
-        win.style.left = (origLeft + dx) + 'px';
-        win.style.top  = (origTop + dy) + 'px';
+        win.style.left = snapV(origLeft + dx) + 'px';
+        win.style.top  = snapV(origTop + dy) + 'px';
         if (win._isWidget) clampWidget(win);
       }
       function onUp(ev){
@@ -1552,20 +1569,41 @@ rodado direto pelo console do navegador.</p>
       var startX = e.clientX, startY = e.clientY;
       var origW = win.offsetWidth, origH = win.offsetHeight;
       var origLeft = parseFloat(win.style.left);
+      var origTop = parseFloat(win.style.top);
       var rightEdge = origLeft + origW;
       resize.setPointerCapture(e.pointerId);
       function onMove(ev){
         var kz = win._isWidget ? 1 : zoom;
         var dx = (ev.clientX - startX) / kz;
         var dy = (ev.clientY - startY) / kz;
+        var minW = win._minW || 150, minH = win._minH || 110;
         if (fromLeft){
-          var newW = Math.max(win._minW || 150, origW - dx);
+          var newW = Math.max(minW, origW - dx);
+          var newLeft = rightEdge - newW;
+          if (snapOn){
+            newLeft = snapV(newLeft);
+            // se o mínimo cair entre dois pontos da grade, vale o ponto que mantém o tamanho mínimo
+            if (rightEdge - newLeft < minW) newLeft = Math.floor((rightEdge - minW) / SNAP_SIZE) * SNAP_SIZE;
+            newW = rightEdge - newLeft;
+          }
           win.style.width = newW + 'px';
-          win.style.left = (rightEdge - newW) + 'px';
+          win.style.left = newLeft + 'px';
         } else {
-          win.style.width = Math.max(win._minW || 150, origW + dx) + 'px';
+          var newW2 = Math.max(minW, origW + dx);
+          if (snapOn){
+            var r = snapV(origLeft + newW2);
+            if (r - origLeft < minW) r = Math.ceil((origLeft + minW) / SNAP_SIZE) * SNAP_SIZE;
+            newW2 = r - origLeft;
+          }
+          win.style.width = newW2 + 'px';
         }
-        win.style.height = Math.max(win._minH || 110, origH + dy) + 'px';
+        var newH = Math.max(minH, origH + dy);
+        if (snapOn){
+          var b = snapV(origTop + newH);
+          if (b - origTop < minH) b = Math.ceil((origTop + minH) / SNAP_SIZE) * SNAP_SIZE;
+          newH = b - origTop;
+        }
+        win.style.height = newH + 'px';
         if (win._isWidget) clampWidget(win, true);
       }
       function onUp(ev){
@@ -1641,6 +1679,15 @@ rodado direto pelo console do navegador.</p>
     pan.y += (after.y - before.y);
     applyTransform();
   }
+
+  // ---- snap: encaixa janelas movidas/redimensionadas à mão numa grade de 30 em 30 ----
+  // (grade do canvas; pra widgets, que vivem na tela, são 30 pixels de tela. Posições e tamanhos dados por
+  // código — criação, setPosition, widget() — não são encaixados: valem exatamente o que foi pedido)
+  function snapV(v){ return snapOn ? Math.round(v / SNAP_SIZE) * SNAP_SIZE : v; }
+  function snap(){ snapOn = true; applyTransform(); }
+  function nosnap(){ snapOn = false; applyTransform(); }
+  window.snap = snap; // pode ser chamado pelo console do navegador também
+  window.nosnap = nosnap;
 
   // ---- aliases simples pra quem for implementar manualmente por cima do Canvas Infinito ----
   function setZoom(level){
