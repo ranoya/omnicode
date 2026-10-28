@@ -1212,6 +1212,19 @@ janela invisível pela lupa ou referenciá-la em <code>connect</code>/<code>disc
 <p>Encontra a janela com esse título exato e centraliza o canvas nela (mantendo o zoom atual), além de trazê-la pra frente de todas as outras — o mesmo que acontece ao escolher uma janela na lista da lupa, só que por código.</p>
 <code class="sig">centerlastframe()</code>
 <p>Centraliza o canvas na última janela criada que ainda esteja aberta (e a traz pra frente), sem precisar informar o título.</p>
+<code class="sig">Ctrl + → &nbsp;/&nbsp; Ctrl + ←</code>
+<p>Atalho de teclado: centraliza a próxima / a anterior janela da lista (a mesma ordem da lupa, ou seja, a
+de criação, voltando ao começo quando chega ao fim) e a traz para a frente. A janela "atual" é a que está
+mais à frente. Widgets são ignorados. A janela do Terminal só entra na lista no modo
+<code>superdevmode()</code>; a barra comum e o painel do <code>floatdevmode()</code> não são janelas e ficam de
+fora.</p>
+<p>Com uma janela maximizada, o atalho não centraliza: ele <b>troca a maximizada</b> — restaura a atual e
+maximiza a próxima/anterior (o zoom volta ao de antes de maximizar quando você restaura). Só entram nessa troca
+as janelas que têm botão de maximizar (a polaroid e a svg não têm).</p>
+<p>Nos campos de texto das janelas editáveis, da lupa e dos artefatos, Ctrl+seta continua sendo o salto de
+palavra. Nos campos de comando (barra, Terminal, painel flutuante) o atalho tem prioridade. Não funciona com o
+foco dentro de um iframe (o teclado vai para o conteúdo dele): clique antes no cabeçalho da janela. No macOS,
+Ctrl+seta costuma ser um atalho do sistema (trocar de espaço) e pode nem chegar à página.</p>
 <code class="sig">setPosition(título, w, h, x, y)</code>
 <p>Muda o tamanho e/ou a posição de uma janela que já existe. <code>w, h, x, y</code> aceitam número
 (pixels do canvas) ou <code>%</code> da tela visível, como na criação. Passe <code>null</code> em qualquer
@@ -1905,6 +1918,53 @@ rodado direto pelo console do navegador.</p>
   }
   window.widget = widget;
   window.removewidget = removewidget;
+
+  // ---- Ctrl+→ / Ctrl+←: centraliza a próxima / anterior janela da lista ----
+  // (com uma janela maximizada, em vez de centralizar, troca a maximizada)
+  // a lista é a mesma da lupa (ordem de criação); widgets ficam de fora. A janela do Terminal só existe no
+  // modo superdevmode(); a barra comum e o painel do floatdevmode() não são janelas, então já ficam de fora
+  function frontmostWindow(list){
+    var best = null, bestZ = -Infinity;
+    list.forEach(function(w){
+      var z = parseInt(w.style.zIndex, 10) || 0;
+      if (z >= bestZ){ bestZ = z; best = w; }
+    });
+    return best;
+  }
+  function stepWindow(dir){
+    var list = windows.filter(function(w){ return !w._isWidget; });
+    if (!list.length) return;
+    var maxed = list.filter(function(w){ return w.classList.contains('maximized'); });
+    if (maxed.length){
+      var cur = frontmostWindow(maxed);
+      // só entram na troca janelas que têm botão de maximizar (polaroid e svg não têm) e que não estão maximizadas
+      var cand = list.filter(function(w){
+        return w === cur || (!w.classList.contains('maximized') && w.querySelector('.win-max'));
+      });
+      if (cand.length < 2) return;
+      var target = cand[(cand.indexOf(cur) + dir + cand.length) % cand.length];
+      cur.querySelector('.win-max').click();    // restaura a atual (o zoom volta ao de antes)
+      target.querySelector('.win-max').click(); // e maximiza a próxima/anterior
+      return;
+    }
+    // a "atual" é a que está mais à frente; centralizar a vizinha também a traz pra frente, então o ciclo anda
+    var curIdx = list.indexOf(frontmostWindow(list));
+    panToWindow(list[(curIdx + dir + list.length) % list.length]);
+  }
+  document.addEventListener('keydown', function(e){
+    if (!e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) return;
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    var ae = document.activeElement;
+    // em campos de texto de verdade (janela editável, busca, campos dentro de artefatos) Ctrl+seta continua
+    // sendo o salto de palavra; nos campos de comando (barra, Terminal, painel flutuante) o atalho tem prioridade
+    if (ae && ae !== cmdInput && ae !== consoleInputEl){
+      var tag = ae.tagName;
+      if (tag === 'TEXTAREA' || tag === 'INPUT' || tag === 'SELECT' || ae.isContentEditable ||
+          (ae.closest && ae.closest('[contenteditable="true"],[contenteditable=""]'))) return;
+    }
+    e.preventDefault();
+    stepWindow(e.key === 'ArrowRight' ? 1 : -1);
+  });
 
   // pro savestate: o widget vira "criação no canvas" + "widget(título, w, h, x, y)" com a posição na tela
   function widgetCanvasGeo(win){
