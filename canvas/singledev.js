@@ -1,7 +1,7 @@
 devmode();
 ungroovy();
 
-//
+      //
       //
       // -- NOTEBOOKS ------------------------------------
 
@@ -158,58 +158,6 @@ ungroovy();
         }
       };
       
-
-      let svgcanvases = 1;
-
-      window.createsvgcanvas = function (w, h) {
-              
-        let wi = 500;
-        let hei = 500;
-
-        if (typeof w != 'undefined' && w != null && w != '') {
-          wi = w;
-        }
-
-        if (typeof h != 'undefined' && h != null && h != '') {
-          hei = h;
-        }
-        
-        
-        svg(`<svg id='svgcanvases_${svgcanvases}' viewBox='0 0 ${wi} ${hei}' style="width: 100%; height: 100%; border: 0; padding: 0; margin: 0;"></svg>`, "SVG Canvas " + svgcanvases, wi, hei);
-        
-        let este = svgcanvases;
-        svgcanvases++;
-
-        return document.getElementById("svgcanvases_" + este);
-  
-        
-      }
-      
-      window.createpermasvgcanvas = function (w, h) {
-              
-        let wi = 500;
-        let hei = 500;
-
-        if (typeof w != 'undefined' && w != null && w != '') {
-          wi = w;
-        }
-
-        if (typeof h != 'undefined' && h != null && h != '') {
-          hei = h;
-        }
-
-        if (typeof document.getElementById("svgcanvases_0") != 'undefined' && document.getElementById("svgcanvases_0") != null && document.getElementById("svgcanvases_0") != '') {
-           svg(`<svg id='svgcanvases_0' viewBox='0 0 ${wi} ${hei}' style="width: 100%; height: 100%; border: 0; padding: 0; margin: 0;"></svg>`, "SVG Canvas", wi, hei);
-        } else {
-
-          setPosition("SVG Canvas", wi, hei);
-        }
-        
-        
-        return document.getElementById("svgcanvases_0");
-  
-        
-      }
 
       var code_output_buffer = [];
 

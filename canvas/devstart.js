@@ -4,7 +4,7 @@ ungroovy();
 setTransparentBackground();
 
 
-//
+      //
       //
       // -- NOTEBOOKS ------------------------------------
 
@@ -30,14 +30,21 @@ setTransparentBackground();
       let countcode = 1;
       let countruncode = 1;
 
-      window.code = function (u) {
+      window.code = function (u, t) {
         
+        let tipo = "html";
+        if (typeof t != 'undefined' && t != null && t != '') {
+          tipo = t;
+        }
+        
+
         if (typeof u != 'undefined' && u != null && u != '') {
 
           run("Code " + countcode, "codeeditor", {
             contagem: countcode,
             runcontagem: countruncode,
-            loadcode: u
+            loadcode: u,
+            lingua: tipo
           });
                 
         } else {
@@ -45,6 +52,7 @@ setTransparentBackground();
           run("Code " + countcode, "codeeditor", {
             contagem: countcode,
             runcontagem: countruncode,
+            lingua: tipo
           });
                
         }
@@ -52,19 +60,26 @@ setTransparentBackground();
         center("Code " + (countcode - 1));
       };
 
-      window.pcode = function (u) {
+      window.pcode = function (u, t) {
+        
+        let tipo = "html";
+        if (typeof t != 'undefined' && t != null && t != '') {
+          tipo = t;
+        }
               
         if (typeof u != 'undefined' && u != null && u != '') {
           permarun("Code " + countcode, "codeeditor", {
                 contagem: countcode,
                 runcontagem: countruncode,
-                loadcode: u
+                loadcode: u,
+                lingua: tipo
           });
 
         } else {
           permarun("Code " + countcode, "codeeditor", {
                 contagem: countcode,
                 runcontagem: countruncode,
+                lingua: tipo
           });
 
         }
@@ -146,58 +161,6 @@ setTransparentBackground();
         }
       };
       
-
-      let svgcanvases = 1;
-
-      window.createsvgcanvas = function (w, h) {
-              
-        let wi = 500;
-        let hei = 500;
-
-        if (typeof w != 'undefined' && w != null && w != '') {
-          wi = w;
-        }
-
-        if (typeof h != 'undefined' && h != null && h != '') {
-          hei = h;
-        }
-        
-        
-        svg(`<svg id='svgcanvases_${svgcanvases}' viewBox='0 0 ${wi} ${hei}' style="width: 100%; height: 100%; border: 0; padding: 0; margin: 0;"></svg>`, "SVG Canvas " + svgcanvases, wi, hei);
-        
-        let este = svgcanvases;
-        svgcanvases++;
-
-        return document.getElementById("svgcanvases_" + este);
-  
-        
-      }
-      
-      window.createpermasvgcanvas = function (w, h) {
-              
-        let wi = 500;
-        let hei = 500;
-
-        if (typeof w != 'undefined' && w != null && w != '') {
-          wi = w;
-        }
-
-        if (typeof h != 'undefined' && h != null && h != '') {
-          hei = h;
-        }
-
-        if (typeof document.getElementById("svgcanvases_0") != 'undefined' && document.getElementById("svgcanvases_0") != null && document.getElementById("svgcanvases_0") != '') {
-           svg(`<svg id='svgcanvases_0' viewBox='0 0 ${wi} ${hei}' style="width: 100%; height: 100%; border: 0; padding: 0; margin: 0;"></svg>`, "SVG Canvas", wi, hei);
-        } else {
-
-          setPosition("SVG Canvas", wi, hei);
-        }
-        
-        
-        return document.getElementById("svgcanvases_0");
-  
-        
-      }
 
       var code_output_buffer = [];
 
@@ -495,10 +458,10 @@ setTransparentBackground();
         let thisace = ace.edit("editor_" + id);
         thisace.setTheme("ace/theme/" + tema);
         thisace.setKeyboardHandler("ace/keyboard/vscode");
-        thisace.session.setMode("ace/mode/html");
+        thisace.session.setMode("ace/mode/" + p.lingua);
         let acegeneralconfig = {
           theme: "ace/theme/" + tema,
-          mode: "ace/mode/html",
+          mode: "ace/mode/" + p.lingua,
           enableBasicAutocompletion: true,
           enableSnippets: true,
           enableLiveAutocompletion: true,
@@ -540,6 +503,8 @@ setTransparentBackground();
           });
            
         }
+
+        linguacodeeditor("editor_" + id, p.lingua);
 
         
 
@@ -770,8 +735,10 @@ window.openexemplos = function (id, dados) {
                 <div onclick="newidoc('https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem('infcanvas:theme')}&load=https://omnicode.vercel.app/notebook/creativecode.html', 'Instruções'); centerlastframe();">Exemplo de programação criativa em notebook computacional</div>
 
                 <div class="secao">Programação</div>
-                <div onclick="window.code('https://booklines.vercel.app/assets/codigosp5/exemplo-livroJSD_SE.js'); centerlastframe();">Mandala 1 em P5</div>
-                <div onclick="window.code('https://booklines.vercel.app/assets/codigosp5/bass.js'); centerlastframe();">Mandala 2 em P5</div>
+                <div onclick="window.code('https://omnicode.vercel.app/examples/meucanvas.js', 'canvas'); centerlastframe();">Hello World para Canvas</div>
+                <div onclick="window.code('https://omnicode.vercel.app/examples/logoddesigncanvas.js', 'canvas'); centerlastframe();">Logotipo do departamento de design para Canvas</div>
+                <div onclick="window.code('https://booklines.vercel.app/assets/codigosp5/exemplo-livroJSD_SE.js', 'P5'); centerlastframe();">Mandala 1 em P5</div>
+                <div onclick="window.code('https://booklines.vercel.app/assets/codigosp5/bass.js', 'P5'); centerlastframe();">Mandala 2 em P5</div>
                 
             </div>
           
@@ -836,7 +803,6 @@ window.openmenu = function (id, dados) {
                 <div onclick="omnicodelive()">Omnicode Live</div>
                 <div onclick="legacy()">Contextos de programação antigos</div>
                 <div onclick="exemplos()">Coleção de exemplos</div>
-                
             </div>
           
           
@@ -907,7 +873,6 @@ window.openomnihelp = function (id, dados) {
                 <div onclick="lpjd()">Programação Javascript para Designers</div>
                 <div onclick="pjd()">Programação Javascript para Designers (aberto)</div>
                 <div onclick="poo()">Programação Orientada a Objetos em Javascript (aberto)</div>
-                
             </div>
           
           
@@ -1041,7 +1006,11 @@ transform-origin: center center;
 }
 `
   
-, "Relógio");
+  , "Relógio");
+
+setPosition("Relógio", "8%", "8%", "3%", "83%");
+widget("Relógio");
+lock("Relógio");
 
 window.moverelogio = function () {
 
@@ -1139,23 +1108,23 @@ window.poo = function () {
 
   newidoc("https://slidelines.vercel.app/level/?s=start&filtra=observable&allblocks=true&timeheight=100&followbg=true&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit?gid=1355216689#gid=1355216689&theme=https://slidelines.vercel.app/styles/leveloptmizednormal.css", "Code Tour POO", 1283, 987, 2428, 5078);
   
-  newidoc(`https://omnicode.vercel.app/clr?preview=50&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-inicio.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 1", 994, 704, 2589, 6214);
+  newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-inicio.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 1", 994, 704, 2589, 6214);
 
-  newidoc(`https://omnicode.vercel.app/clr?preview=50&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-carrosobjetos.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 2", 994, 704, 3674, 6214);
+  newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-carrosobjetos.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 2", 994, 704, 3674, 6214);
 
-  newidoc(`https://omnicode.vercel.app/clr?preview=50&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-carroanda.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 3", 994, 704, 4753, 6214);
+  newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-carroanda.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 3", 994, 704, 4753, 6214);
 
-  newidoc(`https://omnicode.vercel.app/clr?preview=50&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-carrodesenha.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 4", 994, 704, 5828, 6214);
+  newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-carrodesenha.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 4", 994, 704, 5828, 6214);
 
-  newidoc(`https://omnicode.vercel.app/clr?preview=50&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-carrocomdados.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 5", 994, 704, 6900, 6214);
+  newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-carrocomdados.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 5", 994, 704, 6900, 6214);
 
-  newidoc(`https://omnicode.vercel.app/clr?preview=50&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-carrosaleatorios.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 6", 994, 704, 7979, 6214);
+  newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-carrosaleatorios.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 6", 994, 704, 7979, 6214);
 
-  newidoc(`https://omnicode.vercel.app/clr?preview=50&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-inicializacaoseriada.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 7", 994, 704, 9054, 6214);
+  newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-inicializacaoseriada.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 7", 994, 704, 9054, 6214);
 
-  newidoc(`https://omnicode.vercel.app/clr?preview=50&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-modeloecopia.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 8", 994, 704, 10132, 6214);
+  newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-modeloecopia.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 8", 994, 704, 10132, 6214);
 
-  newidoc(`https://omnicode.vercel.app/clr?preview=50&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-corrida.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 9", 994, 704, 11210, 6214);
+  newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-corrida.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 9", 994, 704, 11210, 6214);
 
 
   connect("Code Tour POO", "POO");
@@ -1768,7 +1737,7 @@ window.openlegacymenu = function (id, dados) {
 
 
 
-document.addEventListener('keydown', function (e) {
+  document.addEventListener('keydown', function (e) {
     if (e.key === 'F1' || e.keyCode == 112) {
 
       e.cancelBubble = true;
@@ -1824,6 +1793,8 @@ if (typeof localStorage.getItem('primeiroacesso') == 'undefined' || localStorage
 if (localStorage.getItem('permamenu') != 'desligado') {
   menu();
 }
+
+
 
 
 /*

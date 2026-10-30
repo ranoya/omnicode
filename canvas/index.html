@@ -874,9 +874,10 @@ $_GET = [];
       svgEl.style.display = 'block';
     }
   }
-  function svg(str, titulo, w, h, x, y){
+  // svg() e html() são a mesma janela invisível; a única diferença é o título padrão ("SVG 1", "HTML 1"...)
+  function makeInvisible(label, str, titulo, w, h, x, y){
     var id = idSeq++;
-    var name = titulo || ('SVG ' + id);
+    var name = titulo || (label + ' ' + id);
     var pos = resolvePosition(name, w, h, x, y, id);
     var win = createSvgShell(name, pos);
     var container = win.querySelector('.svg-content');
@@ -889,14 +890,17 @@ $_GET = [];
         })
         .then(function(text){ insertSvgCode(container, text); })
         .catch(function(err){
-          console.warn('svg: não foi possível carregar "' + raw + '": ' + err.message);
+          console.warn(label.toLowerCase() + ': não foi possível carregar "' + raw + '": ' + err.message);
         });
     } else {
       insertSvgCode(container, raw);
     }
     return win;
   }
+  function svg(str, titulo, w, h, x, y){ return makeInvisible('SVG', str, titulo, w, h, x, y); }
+  function html(str, titulo, w, h, x, y){ return makeInvisible('HTML', str, titulo, w, h, x, y); }
   window.svg = svg; // pode ser chamado pelo console do navegador também
+  window.html = html;
 
   function makeWindow(permanent, title, w, h, x, y, shellFn){
     var id = idSeq++;
@@ -1185,6 +1189,12 @@ próprio código SVG como string (texto começando com <code>&lt;</code>). O <co
 <code>height</code> da tag <code>&lt;svg&gt;</code> são sobrescritos para 100%, preenchendo toda a
 janela. <code>título</code> não aparece em lugar nenhum visualmente — serve só para localizar essa
 janela invisível pela lupa ou referenciá-la em <code>connect</code>/<code>disconnect</code>.</p>
+<code class="sig">html(string, título, w, h, x, y)</code>
+<p>Exatamente igual à <code>svg()</code>: a mesma janela invisível, os mesmos argumentos e as mesmas regras
+para <code>string</code>. A única diferença é o título padrão, quando você não informa um: "HTML 1", "HTML 2"...
+em vez de "SVG 1", "SVG 2"... (a numeração é a mesma sequência de janelas, compartilhada com as demais). Como o
+conteúdo entra como HTML, qualquer HTML funciona, não só SVG; já a busca por <code>fetch</code> continua valendo
+apenas para URLs terminadas em <code>.svg</code>, como na <code>svg()</code>.</p>
 <hr>
 <h4>Conexões</h4>
 <code class="sig">connect(nomeA, nomeB)</code>
@@ -2132,7 +2142,7 @@ rodado direto pelo console do navegador.</p>
     newwindow: 1, newpermawindow: 1, newdoc: 1, newpermadoc: 1, newsdoc: 1, newpermasdoc: 1,
     newframe: 2, newpermaframe: 2, newidoc: 2, newpermaidoc: 2, newsidoc: 2, newpermasidoc: 2,
     run: 3, permarun: 3, rundoc: 3, runpermadoc: 3, runsdoc: 3, runpermasdoc: 3,
-    polaroid: 3, svg: 2, openconsole: 0
+    polaroid: 3, svg: 2, html: 2, openconsole: 0
   };
 
   // separa "fnName(...)" em nome + texto bruto dos argumentos, só se o comando for ESSA chamada pura
@@ -2522,7 +2532,7 @@ rodado direto pelo console do navegador.</p>
                     'connect', 'disconnect', 'setTheme', 'setTempTheme', 'help',
                     'centerControls', 'bottomControls', 'setTransparentBackground', 'setOpaqueBackground',
                     'polaroid', 'newdoc', 'newidoc', 'rundoc', 'newpermadoc', 'newpermaidoc', 'runpermadoc',
-                    'setZoom', 'setPan', 'center', 'multicolor', 'singlecolor', 'svg',
+                    'setZoom', 'setPan', 'center', 'multicolor', 'singlecolor', 'svg', 'html',
                     'newsdoc', 'newsidoc', 'runsdoc', 'newpermasdoc', 'newpermasidoc', 'runpermasdoc',
                     'groovy', 'ungroovy', 'savestate', 'lock', 'unlock', 'centerlastframe', 'lockall', 'unlockall',
                     'superdevmode', 'nodev', 'setPosition', 'console', 'floatdevmode',
@@ -2532,7 +2542,7 @@ rodado direto pelo console do navegador.</p>
         connect, disconnect, setTheme, setTempTheme, help,
         centerControls, bottomControls, setTransparentBackground, setOpaqueBackground,
         polaroid, newdoc, newidoc, rundoc, newpermadoc, newpermaidoc, runpermadoc,
-        setZoom, setPan, center, multicolor, singlecolor, svg,
+        setZoom, setPan, center, multicolor, singlecolor, svg, html,
         newsdoc, newsidoc, runsdoc, newpermasdoc, newpermasidoc, runpermasdoc,
         groovy, ungroovy, savestate, lock, unlock, centerlastframe, lockall, unlockall,
         superdevmode, nodev, setPosition, consoleCallable, floatdevmode,
