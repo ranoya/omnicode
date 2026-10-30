@@ -3,7 +3,7 @@ window.minhafuncao = function(id, params) {
 }
 
 let parametros = {}
-rundoc("Meu Canvas", "minhafuncao", parametros);
+rundoc("Minha Janela", "minhafuncao", parametros);
 
 // Selecione "Canvas" nas modalidades de código
 // Selecione "Run" para executar
