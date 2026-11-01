@@ -1052,8 +1052,6 @@ window.lpjd = function () {
 
 window.pjd = function () {
   
-  poo();
-
   if (!exist("Capa")) {
     newidoc("https://omnidocs.vercel.app/livros/capas/javascript", "Capa", 446, 605, 72, 878);
   }
@@ -1164,7 +1162,7 @@ connect("Mandala 2", "Capa");
   if (!exist("Code Tour POO")) {
     newidoc("https://slidelines.vercel.app/level/?s=start&filtra=observable&allblocks=true&timeheight=100&followbg=true&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit?gid=1355216689#gid=1355216689&theme=https://slidelines.vercel.app/styles/leveloptmizednormal.css", "Code Tour POO", 1283, 987, 2428, 5078);
   }
-  
+
   connect("Code Mandala 3", "Mandala 3");
 
   connect("Code Tour POO", "POO");
