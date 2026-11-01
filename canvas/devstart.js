@@ -609,7 +609,9 @@ window.nomenu = function () {
 
 window.menu = function () {
         localStorage.setItem('permamenu', 'aberto');
-        rundoc("Menu", "openmenu", {}, 335, 556, 63, 68);
+        if (!exist("Menu")) {
+          rundoc("Menu", "openmenu", {}, 335, 556, 63, 68);
+        }
         setPan(0, 0);
 }
 
@@ -665,7 +667,9 @@ window.omnicodelive = function () {
 }
 
 window.exemplos = function () {
-        rundoc("Exemplos", "openexemplos", {}, 335, 556, -625, -317);
+        if (!exist("Exemplos")) {
+          rundoc("Exemplos", "openexemplos", {}, 335, 556, -625, -317);
+        }
         center("Exemplos");
 }
 
@@ -814,7 +818,9 @@ window.openmenu = function (id, dados) {
       }
 
 window.omnihelp = function () {
-        rundoc("Omnihelp", "openomnihelp", {}, 335, 556, -282, -125);
+        if (!exist("Omnihelp")) {
+          rundoc("Omnihelp", "openomnihelp", {}, 335, 556, -282, -125);
+        }  
         center("Omnihelp");
         
         localStorage.setItem('primeiroacesso', 'feito');
@@ -1041,35 +1047,95 @@ moverelogio();
 
 window.lpjd = function () {
   
-  newidoc("https://booklines.vercel.app/livros/javascript", "Livro PJD", 730, 1089, 114, -1078);
+  if (!exist("Livro PJD")) {
+    newidoc("https://booklines.vercel.app/livros/javascript", "Livro PJD", 730, 1089, 114, -1078);
+  }
 
 }
 
 window.pjd = function () {
   
-  poo();
+  if (!exist("Capa")) {
+    newidoc("https://omnidocs.vercel.app/livros/capas/javascript", "Capa", 446, 605, 72, 878);
+  }
 
-newidoc("https://omnidocs.vercel.app/livros/capas/javascript", "Capa", 446, 605, 72, 878);
-newidoc("https://booklines.vercel.app/livros/javascript/js-programar.html?blink=Aprender%20a%20programar%20porqu%C3%AA?", "Progamar?", 822, 988, 615, 878);
-newidoc("https://booklines.vercel.app/livros/javascript/js-vibe.html?blink=O%20programar%20nos%20tempos%20do%20Vibe%20Coding", "Vibe Coding", 822, 988, 1499, 876);
-newidoc("https://slidelines.vercel.app/timelineh/?s=1&allblocks=true&startvisible=true&allowverticalscroll=true&timeheight=100&followbg=true&theme=https://slidelines.vercel.app/styles/subobservabletextsfixed.css&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit#gid=1908790630", "Aplicações", 1488, 982, 2420, 877);
-newidoc("https://booklines.vercel.app/livros/javascript/js-comecando.html?blink=Primeiros%20passos", "Iniciando", 823, 987, 615, 1936);
-newidoc("https://booklines.vercel.app/livros/javascript/js-variaveis.html?blink=Variáveis%20e%20constantes", "Variáveis", 822, 991, 1502, 1934);
-newidoc("https://booklines.vercel.app/livros/javascript/js-operacoes.html?blink=Operações%20aritméticas%20e%20lógicas", "Operações", 819, 991, 2421, 1934);
-newidoc("https://booklines.vercel.app/livros/javascript/js-condicionais.html?blink=Condicionais", "Condicionais", 821, 994, 3311, 1933);
-newidoc("https://booklines.vercel.app/livros/javascript/js-loops.html?blink=Loops", "Loops", 823, 989, 617, 2990);
-newidoc("https://booklines.vercel.app/livros/javascript/js-funcoes.html?blink=Funções", "Funções", 826, 989, 1506, 2989);
-newidoc("https://booklines.vercel.app/livros/javascript/js-arrays.html?blink=Arrays", "Arrays", 821, 989, 2423, 2987);
-newidoc("https://booklines.vercel.app/livros/javascript/js-arrayfunctions.html?blink=Funções%20das%20Arrays", "Funções das Arrays", 824, 987, 3312, 2988);
-newidoc("https://booklines.vercel.app/livros/javascript/js-dom.html?blink=Document%20Object%20Model", "DOM", 825, 986, 620, 4034);
-newidoc("https://booklines.vercel.app/livros/javascript/js-svg.html?blink=SVG", "SVG", 825, 982, 1511, 4035);
-newidoc("https://booklines.vercel.app/livros/javascript/js-datavis.html?blink=Dataviz", "Dataviz", 823, 987, 2427, 4034);
-newidoc("https://booklines.vercel.app/livros/javascript/js-objetos.html?blink=Objetos", "Objetos", 823, 987, 625, 5079);
-newidoc("https://booklines.vercel.app/livros/javascript/js-poo0.html?blink=Programação%20Orientada%20a%20Objetos", "POO", 826, 989, 1514, 5078);
+  if (!exist("Progamar?")) {
+    newidoc("https://booklines.vercel.app/livros/javascript/js-programar.html?blink=Aprender%20a%20programar%20porqu%C3%AA?", "Progamar?", 822, 988, 615, 878);
+  }
 
-newidoc("https://omnicode.vercel.app/?preview=100&nopoe=true&minial=true&nostatus=true&noconsole=true&bgcolor=ffffff&gutcolor=fffffff&bordercolor=ffffff&lang=p5&file=https://booklines.vercel.app/assets/codigosp5/arte_quadrados.js", "Mandala 1", 388, 368, -538, 878);
-newidoc("https://omnicode.vercel.app/?preview=100&nopoe=true&minial=true&nostatus=true&noconsole=true&bgcolor=ffffff&gutcolor=ffffff&bordercolor=ffffff&lang=p5&file=https://booklines.vercel.app/assets/codigosp5/exemplo-livroJSD_SE.js", "Mandala 2", 392, 370, -536, 1326);
-newidoc("https://omnicode.vercel.app/?preview=100&nopoe=true&minial=true&nostatus=true&noconsole=true&bgcolor=ffffff&gutcolor=ffffff&bordercolor=ffffff&lang=p5&file=https://booklines.vercel.app/assets/codigosp5/bass.js", "Mandala 3", 397, 368, 76, 1634);
+  if (!exist("Vibe Coding")) {
+    newidoc("https://booklines.vercel.app/livros/javascript/js-vibe.html?blink=O%20programar%20nos%20tempos%20do%20Vibe%20Coding", "Vibe Coding", 822, 988, 1499, 876);
+  }
+
+  if (!exist("Aplicações")) {
+    newidoc("https://slidelines.vercel.app/timelineh/?s=1&allblocks=true&startvisible=true&allowverticalscroll=true&timeheight=100&followbg=true&theme=https://slidelines.vercel.app/styles/subobservabletextsfixed.css&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit#gid=1908790630", "Aplicações", 1488, 982, 2420, 877);
+  }
+
+  if (!exist("Iniciando")) {
+    newidoc("https://booklines.vercel.app/livros/javascript/js-comecando.html?blink=Primeiros%20passos", "Iniciando", 823, 987, 615, 1936);
+  }
+
+  if (!exist("Variáveis")) {
+    newidoc("https://booklines.vercel.app/livros/javascript/js-variaveis.html?blink=Variáveis%20e%20constantes", "Variáveis", 822, 991, 1502, 1934);
+  }
+
+  if (!exist("Operações")) {
+    newidoc("https://booklines.vercel.app/livros/javascript/js-operacoes.html?blink=Operações%20aritméticas%20e%20lógicas", "Operações", 819, 991, 2421, 1934);
+  }
+
+  if (!exist("Condicionais")) {
+    newidoc("https://booklines.vercel.app/livros/javascript/js-condicionais.html?blink=Condicionais", "Condicionais", 821, 994, 3311, 1933);
+  }
+
+  if (!exist("Loops")) {
+    newidoc("https://booklines.vercel.app/livros/javascript/js-loops.html?blink=Loops", "Loops", 823, 989, 617, 2990);
+  }
+
+  if (!exist("Funções")) {
+    newidoc("https://booklines.vercel.app/livros/javascript/js-funcoes.html?blink=Funções", "Funções", 826, 989, 1506, 2989);
+  }
+
+  if (!exist("Arrays")) {
+    newidoc("https://booklines.vercel.app/livros/javascript/js-arrays.html?blink=Arrays", "Arrays", 821, 989, 2423, 2987);
+  }
+
+  if (!exist("Funções das Arrays")) {
+    newidoc("https://booklines.vercel.app/livros/javascript/js-arrayfunctions.html?blink=Funções%20das%20Arrays", "Funções das Arrays", 824, 987, 3312, 2988);
+  }
+
+  if (!exist("DOM")) {
+    newidoc("https://booklines.vercel.app/livros/javascript/js-dom.html?blink=Document%20Object%20Model", "DOM", 825, 986, 620, 4034);
+  }
+
+  if (!exist("SVG")) {
+    newidoc("https://booklines.vercel.app/livros/javascript/js-svg.html?blink=SVG", "SVG", 825, 982, 1511, 4035);
+  }
+
+  if (!exist("Dataviz")) {
+    newidoc("https://booklines.vercel.app/livros/javascript/js-datavis.html?blink=Dataviz", "Dataviz", 823, 987, 2427, 4034);
+  }
+
+  if (!exist("Objetos")) {
+    newidoc("https://booklines.vercel.app/livros/javascript/js-objetos.html?blink=Objetos", "Objetos", 823, 987, 625, 5079);
+  }
+
+  if (!exist("POO")) {
+    newidoc("https://booklines.vercel.app/livros/javascript/js-poo0.html?blink=Programação%20Orientada%20a%20Objetos", "POO", 826, 989, 1514, 5078);
+  }
+
+  if (!exist("Mandala 1")) {
+    newidoc("https://omnicode.vercel.app/?preview=100&nopoe=true&minial=true&nostatus=true&noconsole=true&bgcolor=ffffff&gutcolor=fffffff&bordercolor=ffffff&lang=p5&file=https://booklines.vercel.app/assets/codigosp5/arte_quadrados.js", "Mandala 1", 388, 368, -538, 878);
+  }
+
+  if (!exist("Mandala 2")) {
+    newidoc("https://omnicode.vercel.app/?preview=100&nopoe=true&minial=true&nostatus=true&noconsole=true&bgcolor=ffffff&gutcolor=ffffff&bordercolor=ffffff&lang=p5&file=https://booklines.vercel.app/assets/codigosp5/exemplo-livroJSD_SE.js", "Mandala 2", 392, 370, -536, 1326);
+  }
+
+  if (!exist("Mandala 3")) {
+    newidoc("https://omnicode.vercel.app/?preview=100&nopoe=true&minial=true&nostatus=true&noconsole=true&bgcolor=ffffff&gutcolor=ffffff&bordercolor=ffffff&lang=p5&file=https://booklines.vercel.app/assets/codigosp5/bass.js", "Mandala 3", 397, 368, 76, 1634);
+  }
+
+
 connect("Mandala 1", "Capa");
 connect("Mandala 2", "Capa");
   connect("Mandala 3", "Capa");
@@ -1080,11 +1146,26 @@ connect("Mandala 2", "Capa");
 
   connect("Arrays", "Funções das Arrays");
 
-  newframe("https://omnicode.vercel.app/cll/?bgcolor=ffffff&gutcolor=ffffff&bordercolor=ffffff&lang=p5&file=https://booklines.vercel.app/assets/codigosp5/arte_quadrados.js", "Code Mandala 1", 1033, 869, -1775, 876);
+  if (!exist("Code Mandala 1")) {
+    newframe("https://omnicode.vercel.app/cll/?bgcolor=ffffff&gutcolor=ffffff&bordercolor=ffffff&lang=p5&file=https://booklines.vercel.app/assets/codigosp5/arte_quadrados.js", "Code Mandala 1", 1033, 869, -1775, 876);
+  }
+
   connect("Code Mandala 1", "Mandala 1");
-  newframe("https://omnicode.vercel.app/cll/?bgcolor=ffffff&gutcolor=ffffff&bordercolor=ffffff&lang=p5&file=https://booklines.vercel.app/assets/codigosp5/exemplo-livroJSD_SE.js", "Code Mandala 2", 1039, 770, -1316, 1859);
+
+  if (!exist("Code Mandala 2")) {
+    newframe("https://omnicode.vercel.app/cll/?bgcolor=ffffff&gutcolor=ffffff&bordercolor=ffffff&lang=p5&file=https://booklines.vercel.app/assets/codigosp5/exemplo-livroJSD_SE.js", "Code Mandala 2", 1039, 770, -1316, 1859);
+  }
+
   connect("Code Mandala 2", "Mandala 2");
-  newframe("https://omnicode.vercel.app/cll/?bgcolor=ffffff&gutcolor=ffffff&bordercolor=ffffff&lang=p5&file=https://booklines.vercel.app/assets/codigosp5/bass.js", "Code Mandala 3", 1039, 766, -528, 2758);
+
+  if (!exist("Code Mandala 3")) {
+    newframe("https://omnicode.vercel.app/cll/?bgcolor=ffffff&gutcolor=ffffff&bordercolor=ffffff&lang=p5&file=https://booklines.vercel.app/assets/codigosp5/bass.js", "Code Mandala 3", 1039, 766, -528, 2758);
+  }
+
+  if (!exist("Code Tour POO")) {
+    newidoc("https://slidelines.vercel.app/level/?s=start&filtra=observable&allblocks=true&timeheight=100&followbg=true&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit?gid=1355216689#gid=1355216689&theme=https://slidelines.vercel.app/styles/leveloptmizednormal.css", "Code Tour POO", 1283, 987, 2428, 5078);
+  }
+
   connect("Code Mandala 3", "Mandala 3");
 
   connect("Code Tour POO", "POO");
@@ -1107,25 +1188,45 @@ window.poo = function () {
         tema = "nord_dark";
     }
 
-  newidoc("https://slidelines.vercel.app/level/?s=start&filtra=observable&allblocks=true&timeheight=100&followbg=true&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit?gid=1355216689#gid=1355216689&theme=https://slidelines.vercel.app/styles/leveloptmizednormal.css", "Code Tour POO", 1283, 987, 2428, 5078);
+  if (!exist("Code Tour POO")) {
+    newidoc("https://slidelines.vercel.app/level/?s=start&filtra=observable&allblocks=true&timeheight=100&followbg=true&file=https://docs.google.com/spreadsheets/d/1Hja-7ozKTpcfhVX9sc3FkDH-NLj_RXllFIDTO8EIFV0/edit?gid=1355216689#gid=1355216689&theme=https://slidelines.vercel.app/styles/leveloptmizednormal.css", "Code Tour POO", 1283, 987, 2428, 5078);
+  }
   
-  newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-inicio.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 1", 994, 704, 2589, 6214);
+  if (!exist("POO 1")) {
+    newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-inicio.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 1", 994, 704, 2589, 6214);
+  }
 
-  newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-carrosobjetos.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 2", 994, 704, 3674, 6214);
+  if (!exist("POO 2")) {
+    newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-carrosobjetos.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 2", 994, 704, 3674, 6214);
+  }
 
-  newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-carroanda.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 3", 994, 704, 4753, 6214);
+  if (!exist("POO 3")) {
+    newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-carroanda.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 3", 994, 704, 4753, 6214);
+  }
 
-  newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-carrodesenha.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 4", 994, 704, 5828, 6214);
+  if (!exist("POO 4")) {
+    newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-carrodesenha.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 4", 994, 704, 5828, 6214);
+  }
 
-  newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-carrocomdados.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 5", 994, 704, 6900, 6214);
+  if (!exist("POO 5")) {
+    newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-carrocomdados.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 5", 994, 704, 6900, 6214);
+  }
 
-  newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-carrosaleatorios.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 6", 994, 704, 7979, 6214);
+  if (!exist("POO 6")) {
+    newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-carrosaleatorios.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 6", 994, 704, 7979, 6214);
+  }
 
-  newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-inicializacaoseriada.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 7", 994, 704, 9054, 6214);
+  if (!exist("POO 7")) {
+    newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-inicializacaoseriada.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 7", 994, 704, 9054, 6214);
+  }
 
-  newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-modeloecopia.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 8", 994, 704, 10132, 6214);
+  if (!exist("POO 8")) {
+    newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-modeloecopia.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 8", 994, 704, 10132, 6214);
+  }
 
-  newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-corrida.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 9", 994, 704, 11210, 6214);
+  if (!exist("POO 9")) {
+    newidoc(`https://omnicode.vercel.app/run/?minimal=true&noconsole=true&preview=50&lang=p5&theme=${tema}&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--bg")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--text")}&hgcolor=${getcssv("--muted")}&file=https://omnicode.vercel.app/examples/objetos-corrida.js&basepoe=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit?gid=1757230275#gid=1757230275`, "POO 9", 994, 704, 11210, 6214);
+  }
 
 
   connect("Code Tour POO", "POO");
@@ -1661,7 +1762,9 @@ window.multiplan = function () {
 
 
 window.legacy = function () {
-        rundoc("Legacy", "openlegacymenu", {}, 335, 556, 408, 241);
+        if (!exist("Legacy")) {
+          rundoc("Legacy", "openlegacymenu", {}, 335, 556, 408, 241);
+        }
         center("Legacy");
 }
 
@@ -1803,5 +1906,3 @@ if (localStorage.getItem('permamenu') != 'desligado') {
 https://omnicode.vercel.app/clr?theme=gruvbox&bgcolor=${getcssv("--bg")}&gutcolor=${getcssv("--bg")}&guttext=${getcssv("--accent")}&bordercolor=${getcssv("--panel-border")}&pborder=${getcssv("--panel-border")}&fgcolor=${getcssv("--muted")}&hgcolor=${getcssv("--win-header")}
 
 */
-
-
