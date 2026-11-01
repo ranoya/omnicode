@@ -1274,6 +1274,17 @@ ao estado inicial.</p>
 <p>O caminho de volta: o widget retorna ao espaço do canvas, cobrindo visualmente o mesmo lugar e tamanho
 que ocupa na tela agora (considerando o zoom e o pan atuais), e volta a acompanhar pan e zoom.</p>
 <hr>
+<h4>Consultar janelas</h4>
+<code class="sig">exist(título)</code>
+<p>Devolve <code>true</code> se existe uma janela com esse título e <code>false</code> se não existe. A busca é a
+mesma das outras funções que recebem título (sem diferenciar maiúsculas; espaços nas pontas são ignorados) e
+vale para todas as janelas do ambiente: as do canvas, os widgets, a janela do Terminal
+(<code>superdevmode()</code>) e a janela Console. O painel do <code>floatdevmode()</code> e a barra de comandos
+não são janelas, então dão <code>false</code>. Serve para código, por exemplo
+<code>if (!exist("Meusite")) newframe("https://...", "Meusite")</code>. Digitada sozinha na barra de comandos, o
+resultado não aparece em lugar nenhum: use <code>console.log(exist("Meusite"))</code> e abra a janela Console
+com <code>console()</code>.</p>
+<hr>
 <h4>Remover janelas</h4>
 <code class="sig">remove(título)</code>
 <p>Fecha por programação a janela com esse título — o mesmo que o botão ✕, só que também serve para as
@@ -1413,6 +1424,14 @@ rodado direto pelo console do navegador.</p>
     applyLineColors();
   }
   window.disconnect = disconnect; // pode ser chamado pelo console do navegador também
+
+  // ---- consultar: existe uma janela com este título? (mesma busca das demais funções que recebem título) ----
+  function exist(titulo){
+    // sem título não há o que procurar (e String(undefined) casaria com uma janela chamada "undefined")
+    if (titulo === undefined || titulo === null) return false;
+    return !!findWindowByName(titulo);
+  }
+  window.exist = exist;
 
   // ---- cores das linhas do connect(): uma só cor (padrão) ou uma cor por linha ----
   var multicolorLinks = false;
