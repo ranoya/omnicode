@@ -1325,13 +1325,13 @@ window.opendataexplorer = function (id, param) {
             outline: none;
             border 0;
             height: 40px;
-            line-height: 25px;
+            line-height: 40px;
             font-size: 16px;
             width: calc(100%);
-            padding-left: 15px;
-            padding-right: 15px;
+            padding-left: 10px;
+            padding-right: 10px;
             background-color: var(--grid-dot, #c7c7d1);
-            color: var(--text,  #1c1c22);
+            color: var(--accent,  #1c1c22);
             font-family: monospace; border: 0;
           }
     </style>
