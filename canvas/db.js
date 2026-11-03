@@ -447,6 +447,11 @@ window.dataset = function (u) {
 
 window.notedb = function () {
   newidoc(`https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem('infcanvas:theme')}&load=https://omnicode.vercel.app/canvas/sql.html`, "Instruções");
+  connect("Query 1", "Intruções");
+  connect("Query 2", "Intruções");
+  connect("Query 3", "Intruções");
+  connect("Query 4", "Intruções");
+  connect("Query 5", "Intruções");
 
 }
 
@@ -456,10 +461,12 @@ window.regex = function () {
 
 }
 
-notedb();
 
-dataset("https://docs.google.com/spreadsheets/d/1FbY8hPtM8IxEJ26ybMZHpMrHdk-LEm1yuYPiFVwF94U/edit?gid=0#gid=0", "Instruções");
 
 newframe("https://docs.google.com/spreadsheets/d/1FbY8hPtM8IxEJ26ybMZHpMrHdk-LEm1yuYPiFVwF94U/edit?gid=0#gid=0", "Planilha de Origem");
 
-datatgsdata();
+dataset("https://docs.google.com/spreadsheets/d/1FbY8hPtM8IxEJ26ybMZHpMrHdk-LEm1yuYPiFVwF94U/edit?gid=0#gid=0", "Planilha de Origem");
+
+notedb();
+
+datatgsdata("https://docs.google.com/spreadsheets/d/1FbY8hPtM8IxEJ26ybMZHpMrHdk-LEm1yuYPiFVwF94U/edit?gid=0#gid=0", "Planilha de Origem");
