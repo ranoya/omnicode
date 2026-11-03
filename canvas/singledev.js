@@ -1263,8 +1263,8 @@ window.datatgetcsdata = function (url) {
 
   gsdata(u, function (dados) {
 
-    datatwindwx++;
-    rundoc("DataT " + datatwindwx, "opendataexplorer", { "dados": dados, "query": select, "indice": datatwindwx });
+    datatwindex++;
+    rundoc("DataT " + datatwindex, "opendataexplorer", { "dados": dados, "query": select, "indice": datatwindex });
 
   });
   
