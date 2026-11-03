@@ -1250,10 +1250,10 @@ window.jupyter = function () {
   jupts++;
 }
 
-let datatdata = [];
+// let datatdata = [];
 let datatwindex = 0;
 
-window.datatgetcsdata = function (url) {
+window.datatgsdata = function (url) {
 
   let u = "https://docs.google.com/spreadsheets/d/1FbY8hPtM8IxEJ26ybMZHpMrHdk-LEm1yuYPiFVwF94U/edit?gid=0#gid=0";
   if (typeof url != 'undefined' && url != null && url != '') {
@@ -1264,7 +1264,7 @@ window.datatgetcsdata = function (url) {
   gsdata(u, function (dados) {
 
     datatwindex++;
-    datatdata[datatwindex] = dados;
+    // datatdata[datatwindex] = dados;
     rundoc("DataT " + datatwindex, "opendataexplorer", { "dados": dados, "indice": datatwindex });
 
     center("DataT " + datatwindex);
@@ -1287,7 +1287,7 @@ window.opendataexplorer = function (id, param) {
             color: var(--text, #000000);
             font-size: 14px;
             line-height: 16px;
-            padding: 15px;
+            padding: 0;
             gap: 0px 0px;
             display: grid;
             padding-top: 0 !important;
@@ -1307,13 +1307,13 @@ window.opendataexplorer = function (id, param) {
       document.getElementById(id).innerHTML = code;
       document.getElementById(id).style.backgroundColor = "var(--bg, #FFFFFF)";
   
-      /*showtable(param.dados, { color: "var(--text)",
+      showtable(param.dados, { color: "var(--accent)",
                                backgroundColor: "var(--bg)",
-                               element: "var(--text)" + datatwindex,
+                               element: "datat_" + datatwindex,
                               });
-                              */
+                              
   
-      console.table(param.dados);
+ 
   
 
       document.getElementById("datatcmd_" + datatwindex).addEventListener('keydown', (event) => {
