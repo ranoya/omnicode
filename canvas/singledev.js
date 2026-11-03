@@ -1355,7 +1355,7 @@ window.opendataexplorer = function (id, param) {
   document.getElementById("datatcmd_" + param.indice).addEventListener('keydown', (event) => {
         
         let instruc = document.getElementById("datatcmd_" + param.indice).value;
-        let getvariab = instruc.replace(/(.*)(\()(.*)(\,)(.*)/i, "$3)");
+    let getvariab = instruc.match(/^\s*[a-zA-Z_$][\w$]*\s*\(\s*([a-zA-Z_$][\w$]*)\s*(?:,|\))/i)[1];
 
         if (typeof getvariab != 'undefined' && getvariab != null && getvariab != '') {
           document.getElementById("datatvar_" + param.indice).innerHTML = getvariab + " =";
@@ -1365,8 +1365,10 @@ window.opendataexplorer = function (id, param) {
         
         if (event.key === 'Enter') {
 
-          //let instruc = document.getElementById("datatcmd_" + param.indice).value;
-          let cm = instruc.replace(/(.*)(\()(.*)(\,)(.*)/i, "$1$2param.dadosarr,$4$5)");
+          // let instruc = document.getElementById("datatcmd_" + param.indice).value;
+          // let cm = instruc.replace(/(.*)(\()(.*)(\,)(.*)/i, "$1$2param.dadosarr,$4$5)");
+
+          let cm = instruc.replace(/(^\s*[a-zA-Z_$][\w$]*\s*)\((\s*([a-zA-Z_$][\w$]*)\s*)(?:,|\))/i,"$1(param.dadosarr,");
 
           let dataresult = eval(cm);
 
