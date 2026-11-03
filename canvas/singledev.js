@@ -1264,7 +1264,8 @@ window.datatgetcsdata = function (url) {
   gsdata(u, function (dados) {
 
     datatwindex++;
-    rundoc("DataT " + datatwindex, "opendataexplorer", { "dados": dados, "query": select, "indice": datatwindex });
+    datatdata[datatwindex] = dados;
+    rundoc("DataT " + datatwindex, "opendataexplorer", { "dados": dados, "indice": datatwindex });
 
     center("DataT " + datatwindex);
 
