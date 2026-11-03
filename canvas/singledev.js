@@ -1309,7 +1309,7 @@ window.opendataexplorer = function (id, param) {
       
       console.table(param.dadosarr);
   
-      document.getElementById("datat_" + datatwindwx).innerHTML = showtable(param.dadosarr, { color: "var(--text)", backgroundColor: "var(--bg)" });
+      document.getElementById("datat_" + datatwindex).innerHTML = showtable(param.dadosarr, { color: "var(--text)", backgroundColor: "var(--bg)" });
                               
   
       document.getElementById("datatcmd_" + datatwindex).addEventListener('keydown', (event) => {
