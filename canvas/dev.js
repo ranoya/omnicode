@@ -1679,16 +1679,20 @@ window.opendataset = function (id, p) {
     });
 }
 
-window.dataset = function (u) {
+window.dataset = function (u, ltitulo) {
   /* run("Dataset " + datasetwindows, "opendataset", { googlesheet: u, indice: datasetwindows}); */
 
   let url = "https://docs.google.com/spreadsheets/d/1FbY8hPtM8IxEJ26ybMZHpMrHdk-LEm1yuYPiFVwF94U/edit?gid=0#gid=0";
   if (typeof u != 'undefined' && u != null && u != '') {
     url = u;
   }
-  
 
-  sql(url, "select *", "");
+  let conecta = "";
+  if (typeof ltitulo != 'undefined' && ltitulo != null && ltitulo != '') {
+    conecta = ltitulo;
+  }
+
+  sql(url, "select *", conecta);
 
   dataseturls[datasetwindows] = url;
   datasetwindows++;
