@@ -1310,7 +1310,7 @@ window.opendataexplorer = function (id, param) {
             display: grid;
             padding-top: 0 !important;
             padding-bottom: 0;
-            height: calc(100% - 40px);
+            height: calc(100% - 80px);
             overflow-y: scroll;
 
           }
@@ -1320,7 +1320,23 @@ window.opendataexplorer = function (id, param) {
             top: 0;
             line-height: 30px;
           }
+
+          .vars {
+            outline: none;
+            border 0;
+            height: 40px;
+            line-height: 25px;
+            font-size: 16px;
+            width: calc(100%);
+            padding-left: 15px;
+            padding-right: 15px;
+            background-color: var(--grid-dot, #c7c7d1);
+            color: var(--text,  #1c1c22);
+            font-family: monospace; border: 0;
+          }
     </style>
+
+    <div id="datatvar_${param.indice}" class="vars"></div>
 
     <div id="datat_${param.indice}" class="viz"></div>
 
@@ -1336,11 +1352,21 @@ window.opendataexplorer = function (id, param) {
       document.getElementById("datat_" + param.indice).innerHTML = showtable(param.dadosarr, { color: "var(--text)", backgroundColor: "var(--bg)" });
                               
   
-      document.getElementById("datatcmd_" + param.indice).addEventListener('keydown', (event) => {
+  document.getElementById("datatcmd_" + param.indice).addEventListener('keydown', (event) => {
+        
+        let instruc = document.getElementById("datatcmd_" + param.indice).value;
+        let getvariab = instruc.replace(/(.*)(\()(.*)(\,)(.*)/i, "$3)");
+
+        if (typeof getvariab != 'undefined' && getvariab != null && getvariab != '') {
+          document.getElementById("datatvar_" + param.indice).innerHTML = getvariab + " =";
+        } else {
+          document.getElementById("datatvar_" + param.indice).innerHTML = "";
+        }
+        
         if (event.key === 'Enter') {
 
-          let instruc = document.getElementById("datatcmd_" + param.indice).value;
-          let cm = instruc.replace(/(.*)(\()(.*)/i, "$1$2param.dadosarr,$3");
+          //let instruc = document.getElementById("datatcmd_" + param.indice).value;
+          let cm = instruc.replace(/(.*)(\()(.*)(\,)(.*)/i, "$1$2param.dadosarr,$4$5)");
 
           let dataresult = eval(cm);
 
