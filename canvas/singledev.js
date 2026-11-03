@@ -1250,7 +1250,7 @@ window.jupyter = function () {
   jupts++;
 }
 
-// let datatdata = [];
+let datatdata = [];
 let datatwindex = 0;
 
 window.datatgsdata = function (url) {
@@ -1264,8 +1264,8 @@ window.datatgsdata = function (url) {
   gsdata(u, function (dados) {
 
     datatwindex++;
-    // datatdata[datatwindex] = dados;
-    rundoc("DataT " + datatwindex, "opendataexplorer", { "dados": dados, "indice": datatwindex });
+    datatdata[datatwindex] = dados;
+    rundoc("DataT " + datatwindex, "opendataexplorer", { "dadosarr": dados, "indice": datatwindex });
 
     center("DataT " + datatwindex);
 
@@ -1298,7 +1298,7 @@ window.opendataexplorer = function (id, param) {
           }
     </style>
 
-    <div id="datat_${datatwindex}" class="viz">TESTE</div>
+    <div id="datat_${datatwindex}" class="viz"></div>
 
     <input placeholder="Instrução Datat" id="datatcmd_${datatwindex}" type='text' style='outline: none; border 0; height: 40px; line-height: 25px; font-size: 16px; width: calc(100%); padding-left: 15px; padding-right: 15px; background-color: var(--grid-dot, #c7c7d1); color: var(--text,  #1c1c22); font-family: monospace; border: 0;' />
 
@@ -1307,7 +1307,7 @@ window.opendataexplorer = function (id, param) {
       document.getElementById(id).innerHTML = code;
       document.getElementById(id).style.backgroundColor = "var(--bg, #FFFFFF)";
   
-      showtable(param.dados, { color: "var(--accent)",
+      showtable(param.dadosarr, { color: "var(--accent)",
                                backgroundColor: "var(--bg)",
                                element: "datat_" + datatwindex,
                               });
