@@ -1250,6 +1250,77 @@ window.jupyter = function () {
   jupts++;
 }
 
+let datatdata = [];
+let datatwindex = 0;
+
+window.datatgetcsdata = function (url) {
+
+  let u = "https://docs.google.com/spreadsheets/d/1FbY8hPtM8IxEJ26ybMZHpMrHdk-LEm1yuYPiFVwF94U/edit?gid=0#gid=0";
+  if (typeof url != 'undefined' && url != null && url != '') {
+    u = url;
+  }
+  
+
+  gsdata(u, function (dados) {
+
+    datatwindwx++;
+    rundoc("DataT " + datatwindwx, "opendataexplorer", { "dados": dados, "query": select, "indice": datatwindwx });
+
+  });
+  
+}
+
+window.opendataexplorer = function (id, param) {
+
+
+  let code = `
+  
+    <style>
+
+          .viz {
+
+            width: 100%;
+            background-color: var(--bg, #FFFFFF);
+            color: var(--text, #000000);
+            font-size: 14px;
+            line-height: 16px;
+            padding: 15px;
+            gap: 0px 0px;
+            display: grid;
+            padding-top: 0 !important;
+            padding-bottom: 0;
+            height: calc(100% - 40px);
+            overflow-y: scroll;
+
+          }
+    </style>
+
+    <div id="datat_${datatwindex}" class="viz"></div>
+
+    <input placeholder="Instrução Datat" id="datatcmd_${datatwindex}" type='text' style='outline: none; border 0; height: 40px; line-height: 25px; font-size: 16px; width: calc(100%); padding-left: 15px; padding-right: 15px; background-color: var(--grid-dot, #c7c7d1); color: var(--text,  #1c1c22); font-family: monospace; border: 0;' />
+
+  `;
+
+      document.getElementById(id).innerHTML = code;
+      document.getElementById(id).style.backgroundColor = "var(--bg, #FFFFFF)";
+  
+      showtable(param.dados, { color: "var(--text)",
+                               backgroundColor: "var(--bg)",
+                               element: "var(--text)" + datatwindex,
+                              });
+  
+
+      document.getElementById("datatcmd_" + datatwindex).addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          
+          // AQUI
+          // executadatat("datat_${datatwindex}", document.getElementById("subqueryrunner_" + "datat_${datatwindex}").value, "Query " + indice);
+
+        }
+      });
+
+}
+
 let datasubquery = [];
 
 window.openquery = function (elem_id, extras) {
