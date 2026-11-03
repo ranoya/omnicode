@@ -307,6 +307,14 @@ $_GET = [];
   #widgetLayer{ position:fixed; inset:0; z-index:9999; pointer-events:none; }
   .win.widget{ pointer-events:auto; }
   .win.widget .win-max{ display:none; }
+  /* janela "State" (state()): o texto do savestate(), somente leitura, atualizado em tempo real */
+  .state-body{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px; line-height:1.5;
+    white-space:pre; tab-size:2;
+  }
+  .state-body.state-empty::before{
+    content:"(vazio — nenhum comando digitado ainda)"; color:var(--muted); font-style:italic;
+  }
 </style>
 </head>
 <body>
@@ -1373,6 +1381,14 @@ Se o comando usa uma função que esta skill não reconhece (uma implementação
 digitado, sem tentar atualizar w/h/x/y — o mesmo vale se um único comando criou mais de uma janela de
 uma vez. Só são capturadas instruções digitadas na própria barra de comando — nada que você tenha
 rodado direto pelo console do navegador.</p>
+<code class="sig">state(w, h, x, y)</code>
+<p>Abre a janela "State" com o texto que o <code>savestate()</code> gravaria agora. Os dois usam o mesmo código para
+montar o texto, então nunca divergem. O conteúdo se atualiza sozinho a cada comando digitado e a cada mudança de
+posição ou tamanho de uma janela, inclusive enquanto você arrasta (a checagem acontece a cada cerca de 0,1 s).
+É somente leitura, mas dá para selecionar e copiar. Se você estiver no fim do texto, a janela acompanha as novas
+linhas; se estiver lendo mais acima, a rolagem não pula. <code>w, h, x, y</code> são opcionais, como nas outras
+janelas; chamar de novo com a janela aberta só a traz para a frente, e fechá-la interrompe a atualização. Com a
+janela State aberta, ela própria aparece no texto como <code>state(...)</code>.</p>
 <hr>
 <h4>Ajuda</h4>
 <code class="sig">help()</code>
@@ -1504,6 +1520,7 @@ rodado direto pelo console do navegador.</p>
   (function frameLoop(){
     updateLinks();
     checkLazyFrames();
+    pollState();
     windows.forEach(function(w){
       if (w.classList.contains('maximized')) fitMaximizedWindow(w);
     });
@@ -2161,7 +2178,7 @@ rodado direto pelo console do navegador.</p>
     newwindow: 1, newpermawindow: 1, newdoc: 1, newpermadoc: 1, newsdoc: 1, newpermasdoc: 1,
     newframe: 2, newpermaframe: 2, newidoc: 2, newpermaidoc: 2, newsidoc: 2, newpermasidoc: 2,
     run: 3, permarun: 3, rundoc: 3, runpermadoc: 3, runsdoc: 3, runpermasdoc: 3,
-    polaroid: 3, svg: 2, html: 2, openconsole: 0
+    polaroid: 3, svg: 2, html: 2, openconsole: 0, state: 0
   };
 
   // separa "fnName(...)" em nome + texto bruto dos argumentos, só se o comando for ESSA chamada pura
@@ -2211,7 +2228,8 @@ rodado direto pelo console do navegador.</p>
     return args;
   }
 
-  function savestate(){
+  // monta o texto que o savestate() grava; o state() mostra exatamente este mesmo texto, em tempo real
+  function buildStateText(){
     var lines = [];
     function processEntry(entry){
       var raw = entry.raw.replace(/;?\s*$/, ';'); // garante só um ";" no final
@@ -2257,7 +2275,11 @@ rodado direto pelo console do navegador.</p>
       });
     });
 
-    var text = lines.join('\n') + '\n';
+    return lines.join('\n') + '\n';
+  }
+
+  function savestate(){
+    var text = buildStateText();
     var defaultName = 'canvas-infinito-estado.txt';
     var filename = defaultName;
     try {
@@ -2275,6 +2297,47 @@ rodado direto pelo console do navegador.</p>
     setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
   }
   window.savestate = savestate; // pode ser chamado pelo console do navegador também
+
+  // ---- state(): janela com o texto que o savestate() gravaria agora, sempre atualizado ----
+  var stateWin = null, stateBodyEl = null, stateLastText = null, stateLastPoll = 0;
+  function renderState(force){
+    if (!stateBodyEl) return;
+    if (!stateWin.isConnected){ stateWin = null; stateBodyEl = null; stateLastText = null; return; } // janela fechada
+    var text = buildStateText();
+    if (!force && text === stateLastText) return; // nada mudou: não mexe no DOM (nem na rolagem)
+    stateLastText = text;
+    var el = stateBodyEl;
+    var atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 6;
+    var top = el.scrollTop, left = el.scrollLeft;
+    el.textContent = text;
+    el.classList.toggle('state-empty', text.trim() === '');
+    el.scrollTop = atBottom ? el.scrollHeight : top; // no fim do texto, acompanha; lendo mais acima, não pula
+    el.scrollLeft = left;
+  }
+  // a cada comando digitado: atualização imediata
+  function refreshState(){ renderState(false); }
+  // a cada quadro (no máx. a cada 100 ms): pega mudança de posição/tamanho, inclusive durante o arrastar,
+  // e também pan/zoom, que mudam a geometria de canvas equivalente dos widgets
+  function pollState(){
+    if (!stateBodyEl) return;
+    var now = Date.now();
+    if (now - stateLastPoll < 100) return;
+    stateLastPoll = now;
+    renderState(false);
+  }
+  function state(w, h, x, y){
+    if (stateWin && stateWin.isConnected){ bringToFront(stateWin); return stateWin; }
+    var id = idSeq++;
+    var name = 'State';
+    var pos = resolvePosition(name, w, h, x, y, id);
+    var win = createWindowShell(name, pos, '<div class="win-body state-body"></div>', false); // somente leitura
+    stateWin = win;
+    stateBodyEl = win.querySelector('.state-body');
+    stateLastText = null;
+    renderState(true);
+    return win;
+  }
+  window.state = state; // pode ser chamado pelo console do navegador também
 
   // ---- barra de comandos como janela (superdevmode), barra original (devmode) e sem barra (nodev) ----
   var cmdHistory = []; // { text, ok, err }: tudo o que foi digitado, em ordem (inclusive o que deu erro)
@@ -2575,6 +2638,7 @@ rodado direto pelo console do navegador.</p>
     // histórico de tudo o que foi digitado (inclusive o que deu erro), exibido pela janela do superdevmode()
     cmdHistory.push(entry);
     appendConsoleLine(entry);
+    refreshState(); // a janela do state(), se aberta, mostra o comando novo na hora
   }
   cmdInput.addEventListener('keydown', function(e){
     if (e.key === 'Enter'){ runCommand(cmdInput.value); cmdInput.value = ''; }
