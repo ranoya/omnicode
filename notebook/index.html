@@ -1380,6 +1380,12 @@ display(quadrados);`,
       if (cell) cell.output.push(value);
     }
 
+    // Renderiza uma string como HTML dentro do .output-item desta célula.
+    function displayhtml(html) {
+      const cell = cells.find(c => c.id === activeCellId);
+      if (cell) cell.output.push({ __html: String(html ?? "") });
+    }
+
     /*
      * Recalcula todas as células em sequência.
      */
@@ -1432,6 +1438,7 @@ display(quadrados);`,
         const runner = new AsyncFunction(
           "__state",
           "display",
+          "displayhtml",
           "__scope",
           `
             with (__scope) {
@@ -1440,7 +1447,7 @@ display(quadrados);`,
           `
         );
 
-        await runner(state, display, scope);
+        await runner(state, display, displayhtml, scope);
 
       } catch (error) {
         cell.output.push({
@@ -1928,6 +1935,7 @@ document.addEventListener("DOMContentLoaded",sync,{once:true});
 // display() existe antes das células exportadas para que scripts JavaScript
 // possam ser executados normalmente pelo navegador.
 window.display = value => console.log(value);
+window.displayhtml = html => console.log(String(html ?? ""));
 <\/script>
 <div id="notebook">
 ${blocks}
@@ -1950,8 +1958,10 @@ ${blocks}
     set(target, property, value){target[property] = value; return true;}
   });
 
-  // No documento exportado, display() deliberadamente usa o console.
+  // No documento exportado, as funções de display usam o console.
   window.display = value => console.log(value);
+  window.displayhtml = html => console.log(String(html ?? ""));
+window.displayhtml = html => console.log(String(html ?? ""));
 
   function transformDeclarations(code){
     return code.replace(/\\b(let|const|var)\\s+([A-Za-z_$][\\w$]*)/g, "__state.$2");
