@@ -1306,16 +1306,12 @@ window.opendataexplorer = function (id, param) {
 
       document.getElementById(id).innerHTML = code;
       document.getElementById(id).style.backgroundColor = "var(--bg, #FFFFFF)";
+      
+      console.table(param.dadosarr);
   
-      showtable(param.dadosarr, { color: "var(--accent)",
-                               backgroundColor: "var(--bg)",
-                               element: "datat_" + datatwindex,
-                              });
+      document.getElementById("datat_" + datatwindwx).innerHTML = showtable(param.dadosarr, { color: "var(--text)", backgroundColor: "var(--bg)" });
                               
   
- 
-  
-
       document.getElementById("datatcmd_" + datatwindex).addEventListener('keydown', (event) => {
         if (event.key === 'Enter') {
           
