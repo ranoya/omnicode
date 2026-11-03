@@ -1049,15 +1049,30 @@ display(quadrados);`,
       const parsed = new DOMParser().parseFromString(html, "text/html");
 
       parsed.querySelectorAll("script[src]").forEach(sourceScript => {
-        const headScript = document.createElement("script");
+        const sourceUrl = new URL(sourceScript.getAttribute("src"), document.baseURI).href;
+        const sourceType = (sourceScript.getAttribute("type") || "").trim().toLowerCase();
 
-        // Preserva os atributos originais: src, type, integrity, crossorigin,
-        // async, defer, nomodule e quaisquer outros atributos personalizados.
-        for (const attribute of sourceScript.attributes) {
-          headScript.setAttribute(attribute.name, attribute.value);
+        // Evita carregar novamente o mesmo script externo. Compara a URL
+        // absoluta e o tipo do script, incluindo scripts já presentes no head.
+        const alreadyLoaded = Array.from(document.head.querySelectorAll("script[src]")).some(existingScript => {
+          const existingUrl = new URL(existingScript.getAttribute("src"), document.baseURI).href;
+          const existingType = (existingScript.getAttribute("type") || "").trim().toLowerCase();
+          return existingUrl === sourceUrl && existingType === sourceType;
+        });
+
+        if (!alreadyLoaded) {
+          const headScript = document.createElement("script");
+
+          // Preserva os atributos originais: src, type, integrity, crossorigin,
+          // async, defer, nomodule e quaisquer outros atributos personalizados.
+          for (const attribute of sourceScript.attributes) {
+            headScript.setAttribute(attribute.name, attribute.value);
+          }
+
+          document.head.appendChild(headScript);
         }
 
-        document.head.appendChild(headScript);
+        // A tag não permanece como conteúdo visual da célula.
         sourceScript.remove();
       });
 
