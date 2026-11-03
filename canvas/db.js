@@ -399,6 +399,7 @@ window.sql = function (googlesheet, select, conecta) {
   if (typeof conecta != "undefined" && conecta != null && conecta != "") {
     connect("Query " + querywindows, conecta);
   }
+  center("Query " + querywindows);
   querywindows++;
 
 }
