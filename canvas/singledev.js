@@ -1250,7 +1250,7 @@ window.jupyter = function () {
   jupts++;
 }
 
-//let datatdata = [];
+
 let datatwindex = 0;
 
 window.datatgsdata = function (url, ltitulo) {
@@ -1264,7 +1264,6 @@ window.datatgsdata = function (url, ltitulo) {
   gsdata(u, function (dados) {
 
     datatwindex++;
-    //datatdata[datatwindex] = dados;
     rundoc("DataT " + datatwindex, "opendataexplorer", { "dadosarr": dados, "indice": datatwindex });
 
     center("DataT " + datatwindex);
@@ -1293,7 +1292,6 @@ window.datatexec = function (dados, ltitulo) {
 
 window.opendataexplorer = function (id, param) {
 
-  
   let code = `
   
     <style>
@@ -1338,6 +1336,7 @@ window.opendataexplorer = function (id, param) {
             background-color: var(--grid-dot, #c7c7d1);
             color: var(--text,  #1c1c22);
             font-family: monospace; border: 0;
+            font-weight: bolder;
           }
     </style>
 
@@ -1351,9 +1350,6 @@ window.opendataexplorer = function (id, param) {
 
       document.getElementById(id).innerHTML = code;
       document.getElementById(id).style.backgroundColor = "var(--bg, #FFFFFF)";
-      
-      // console.table(param.dadosarr);
-  
       document.getElementById("datat_" + param.indice).innerHTML = showtable(param.dadosarr, { color: "var(--text)", backgroundColor: "var(--bg)" });
                               
   
@@ -1369,9 +1365,6 @@ window.opendataexplorer = function (id, param) {
         }
         
         if (event.key === 'Enter') {
-
-          // let instruc = document.getElementById("datatcmd_" + param.indice).value;
-          // let cm = instruc.replace(/(.*)(\()(.*)(\,)(.*)/i, "$1$2param.dadosarr,$4$5)");
 
           let cm = instruc.replace(/(^\s*[a-zA-Z_$][\w$]*\s*)\((\s*([a-zA-Z_$][\w$]*)\s*)(?:,|\))/i,"$1(param.dadosarr,");
 
@@ -1684,7 +1677,10 @@ window.opendataset = function (id, p) {
 }
 
 window.dataset = function (u) {
-  run("Dataset " + datasetwindows, "opendataset", { googlesheet: u, indice: datasetwindows});
+  /* run("Dataset " + datasetwindows, "opendataset", { googlesheet: u, indice: datasetwindows}); */
+
+  sql(u, "select *", "");
+
   dataseturls[datasetwindows] = u;
   datasetwindows++;
 }
