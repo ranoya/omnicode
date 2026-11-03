@@ -1040,8 +1040,32 @@ display(quadrados);`,
    */
 
   function executeHtml(cell) {
+    let html = cell.code;
+
+    // Scripts externos definidos em células HTML devem ser adicionados
+    // como nós reais ao <head>; scripts inseridos via innerHTML não executam.
+    const externalScriptPattern = /<script\b[^>]*\bsrc\s*=/i;
+    if (externalScriptPattern.test(html)) {
+      const parsed = new DOMParser().parseFromString(html, "text/html");
+
+      parsed.querySelectorAll("script[src]").forEach(sourceScript => {
+        const headScript = document.createElement("script");
+
+        // Preserva os atributos originais: src, type, integrity, crossorigin,
+        // async, defer, nomodule e quaisquer outros atributos personalizados.
+        for (const attribute of sourceScript.attributes) {
+          headScript.setAttribute(attribute.name, attribute.value);
+        }
+
+        document.head.appendChild(headScript);
+        sourceScript.remove();
+      });
+
+      html = parsed.body.innerHTML;
+    }
+
     cell.output = [{
-      __html: cell.code
+      __html: html
     }];
   }
 
