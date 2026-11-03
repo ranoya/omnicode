@@ -1266,6 +1266,8 @@ window.datatgetcsdata = function (url) {
     datatwindex++;
     rundoc("DataT " + datatwindex, "opendataexplorer", { "dados": dados, "query": select, "indice": datatwindex });
 
+    center("DataT " + datatwindex);
+
   });
   
 }
