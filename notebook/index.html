@@ -1435,6 +1435,17 @@ display(quadrados);`,
         const AsyncFunction =
           Object.getPrototypeOf(async function(){}).constructor;
 
+        // Cada execução recebe funções vinculadas à própria célula.
+        // Assim, callbacks assíncronos não redirecionam o output para
+        // a célula que estiver ativa quando forem chamados.
+        const displayForCell = value => {
+          cell.output.push(value);
+        };
+
+        const displayhtmlForCell = html => {
+          cell.output.push({ __html: String(html ?? "") });
+        };
+
         const runner = new AsyncFunction(
           "__state",
           "display",
@@ -1447,7 +1458,7 @@ display(quadrados);`,
           `
         );
 
-        await runner(state, display, displayhtml, scope);
+        await runner(state, displayForCell, displayhtmlForCell, scope);
 
       } catch (error) {
         cell.output.push({
