@@ -1319,6 +1319,11 @@ window.opendataexplorer = function (id, param) {
             position: sticky;
             top: 0;
             line-height: 30px;
+            align-content: center;
+          }
+
+          .maketableitem {
+            align-content: center;
           }
 
           .vars {
@@ -1331,7 +1336,7 @@ window.opendataexplorer = function (id, param) {
             padding-left: 10px;
             padding-right: 10px;
             background-color: var(--grid-dot, #c7c7d1);
-            color: var(--accent,  #1c1c22);
+            color: var(--text,  #1c1c22);
             font-family: monospace; border: 0;
           }
     </style>
