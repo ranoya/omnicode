@@ -1250,10 +1250,10 @@ window.jupyter = function () {
   jupts++;
 }
 
-let datatdata = [];
+//let datatdata = [];
 let datatwindex = 0;
 
-window.datatgsdata = function (url) {
+window.datatgsdata = function (url, ltitulo) {
 
   let u = "https://docs.google.com/spreadsheets/d/1FbY8hPtM8IxEJ26ybMZHpMrHdk-LEm1yuYPiFVwF94U/edit?gid=0#gid=0";
   if (typeof url != 'undefined' && url != null && url != '') {
@@ -1264,18 +1264,36 @@ window.datatgsdata = function (url) {
   gsdata(u, function (dados) {
 
     datatwindex++;
-    datatdata[datatwindex] = dados;
+    //datatdata[datatwindex] = dados;
     rundoc("DataT " + datatwindex, "opendataexplorer", { "dadosarr": dados, "indice": datatwindex });
 
     center("DataT " + datatwindex);
+
+    if (typeof ltitulo != 'undefined' && ltitulo != null && ltitulo != '') {
+      connect("DataT " + datatwindex, ltitulo);
+    }
+    
 
   });
   
 }
 
+window.datatexec = function (dados, ltitulo) {
+  
+    datatwindex++;
+    rundoc("DataT " + datatwindex, "opendataexplorer", { "dadosarr": dados, "indice": datatwindex });
+
+    center("DataT " + datatwindex);
+
+    if (typeof ltitulo != 'undefined' && ltitulo != null && ltitulo != '') {
+      connect("DataT " + datatwindex, ltitulo);
+    }
+  
+}
+
 window.opendataexplorer = function (id, param) {
 
-
+  
   let code = `
   
     <style>
@@ -1296,28 +1314,38 @@ window.opendataexplorer = function (id, param) {
             overflow-y: scroll;
 
           }
+
+          .maketablegridheadings {
+            position: sticky;
+            top: 0;
+            line-height: 30px;
+          }
     </style>
 
-    <div id="datat_${datatwindex}" class="viz"></div>
+    <div id="datat_${param.indice}" class="viz"></div>
 
-    <input placeholder="Instrução Datat" id="datatcmd_${datatwindex}" type='text' style='outline: none; border 0; height: 40px; line-height: 25px; font-size: 16px; width: calc(100%); padding-left: 15px; padding-right: 15px; background-color: var(--grid-dot, #c7c7d1); color: var(--text,  #1c1c22); font-family: monospace; border: 0;' />
+    <input placeholder="Instrução Datat" id="datatcmd_${param.indice}" type='text' style='outline: none; border 0; height: 40px; line-height: 25px; font-size: 16px; width: calc(100%); padding-left: 15px; padding-right: 15px; background-color: var(--grid-dot, #c7c7d1); color: var(--text,  #1c1c22); font-family: monospace; border: 0;' />
 
   `;
 
       document.getElementById(id).innerHTML = code;
       document.getElementById(id).style.backgroundColor = "var(--bg, #FFFFFF)";
       
-      console.table(param.dadosarr);
+      // console.table(param.dadosarr);
   
-      document.getElementById("datat_" + datatwindex).innerHTML = showtable(param.dadosarr, { color: "var(--text)", backgroundColor: "var(--bg)" });
+      document.getElementById("datat_" + param.indice).innerHTML = showtable(param.dadosarr, { color: "var(--text)", backgroundColor: "var(--bg)" });
                               
   
-      document.getElementById("datatcmd_" + datatwindex).addEventListener('keydown', (event) => {
+      document.getElementById("datatcmd_" + param.indice).addEventListener('keydown', (event) => {
         if (event.key === 'Enter') {
-          
-          // AQUI
-          // executadatat("datat_${datatwindex}", document.getElementById("subqueryrunner_" + "datat_${datatwindex}").value, "Query " + indice);
 
+          let instruc = document.getElementById("datatcmd_" + param.indice).value;
+          let cm = instruc.replace(/(.*)(\()(.*)/i, "$1$2param.dadosarr,$3");
+
+          let dataresult = eval(cm);
+
+          datatexec(dataresult, "DataT " + param.indice);
+          
         }
       });
 
