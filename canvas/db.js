@@ -5,7 +5,131 @@ centerControls();
 setTransparentBackground();
 
 
+let datatwindex = 0;
 
+window.datatgsdata = function (url, ltitulo) {
+
+  let u = "https://docs.google.com/spreadsheets/d/1FbY8hPtM8IxEJ26ybMZHpMrHdk-LEm1yuYPiFVwF94U/edit?gid=0#gid=0";
+  if (typeof url != 'undefined' && url != null && url != '') {
+    u = url;
+  }
+  
+
+  gsdata(u, function (dados) {
+
+    datatwindex++;
+    rundoc("DataT " + datatwindex, "opendataexplorer", { "dadosarr": dados, "indice": datatwindex });
+
+    center("DataT " + datatwindex);
+
+    if (typeof ltitulo != 'undefined' && ltitulo != null && ltitulo != '') {
+      connect("DataT " + datatwindex, ltitulo);
+    }
+    
+
+  });
+  
+}
+
+window.datatexec = function (dados, ltitulo) {
+  
+    datatwindex++;
+    rundoc("DataT " + datatwindex, "opendataexplorer", { "dadosarr": dados, "indice": datatwindex });
+
+    center("DataT " + datatwindex);
+
+    if (typeof ltitulo != 'undefined' && ltitulo != null && ltitulo != '') {
+      connect("DataT " + datatwindex, ltitulo);
+    }
+  
+}
+
+window.opendataexplorer = function (id, param) {
+
+  let code = `
+  
+    <style>
+
+          .viz {
+
+            width: 100%;
+            background-color: var(--bg, #FFFFFF);
+            color: var(--text, #000000);
+            font-size: 14px;
+            line-height: 16px;
+            padding: 0;
+            gap: 0px 0px;
+            display: grid;
+            padding-top: 0 !important;
+            padding-bottom: 0;
+            height: calc(100% - 80px);
+            overflow-y: scroll;
+
+          }
+
+          .maketablegridheadings {
+            position: sticky;
+            top: 0;
+            line-height: 30px;
+            align-content: center;
+          }
+
+          .maketableitem {
+            align-content: center;
+          }
+
+          .vars {
+            outline: none;
+            border 0;
+            height: 40px;
+            line-height: 40px;
+            font-size: 16px;
+            width: calc(100%);
+            padding-left: 10px;
+            padding-right: 10px;
+            background-color: var(--grid-dot, #c7c7d1);
+            color: var(--text,  #1c1c22);
+            font-family: monospace; border: 0;
+            font-weight: bolder;
+          }
+    </style>
+
+    <div id="datatvar_${param.indice}" class="vars"></div>
+
+    <div id="datat_${param.indice}" class="viz"></div>
+
+    <input placeholder="Instrução Datat" id="datatcmd_${param.indice}" type='text' style='outline: none; border 0; height: 40px; line-height: 25px; font-size: 16px; width: calc(100%); padding-left: 15px; padding-right: 15px; background-color: var(--grid-dot, #c7c7d1); color: var(--text,  #1c1c22); font-family: monospace; border: 0;' />
+
+  `;
+
+      document.getElementById(id).innerHTML = code;
+      document.getElementById(id).style.backgroundColor = "var(--bg, #FFFFFF)";
+      document.getElementById("datat_" + param.indice).innerHTML = showtable(param.dadosarr, { color: "var(--text)", backgroundColor: "var(--bg)" });
+                              
+  
+  document.getElementById("datatcmd_" + param.indice).addEventListener('keydown', (event) => {
+        
+        let instruc = document.getElementById("datatcmd_" + param.indice).value;
+    let getvariab = instruc.match(/^\s*[a-zA-Z_$][\w$]*\s*\(\s*([a-zA-Z_$][\w$]*)\s*(?:,|\))/i)[1];
+
+        if (typeof getvariab != 'undefined' && getvariab != null && getvariab != '') {
+          document.getElementById("datatvar_" + param.indice).innerHTML = getvariab + " =";
+        } else {
+          document.getElementById("datatvar_" + param.indice).innerHTML = "";
+        }
+        
+        if (event.key === 'Enter') {
+
+          let cm = instruc.replace(/(^\s*[a-zA-Z_$][\w$]*\s*)\((\s*([a-zA-Z_$][\w$]*)\s*)(?:,|\))/i,"$1(param.dadosarr,");
+
+          let dataresult = eval(cm);
+
+          datatexec(dataresult, "DataT " + param.indice);
+          
+        }
+      });
+
+}
 
 let datasubquery = [];
 
