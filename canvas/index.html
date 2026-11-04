@@ -3070,7 +3070,7 @@ if (
 
           for (let i = 0; i < dados.length; i++) {
 
-              if (dados.label == "-" || dados.label == "--" || dados.label == "---") {
+              if (dados[i].label == "-" || dados[i].label == "--" || dados[i].label == "---") {
                 code += `<hr></hr>`
               } else {
                 code += `<div class="item" onclick="smp_exec('${dados[i].run}'); spm_fechamenus();">${dados[i].label}</div>`;
