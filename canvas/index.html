@@ -1552,6 +1552,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
     if (maxBtn){
       var toggleMaximize = function(){
         if (win.classList.contains('maximized')){
+          spm_canvas_res();
           var r = win._restore;
           win.classList.remove('maximized');
           win.style.left = r.left; win.style.top = r.top;
@@ -1564,6 +1565,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
           maxBtn.innerHTML = ICON_WIN_MAX; maxBtn.title = 'Maximizar';
           maximizedCount--; updateUIVisibility();
         } else {
+          spm_canvas_max();
           win._restore = {
             left: win.style.left, top: win.style.top,
             width: win.style.width, height: win.style.height,
@@ -2720,7 +2722,28 @@ if (
       script src="https://datat.vercel.app/basicsmin.js"
       script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"
 
+      
+      Mudanças no código:
+      incluir remoção e restaruação de supermenu em:
+
+
+      if (maxBtn){
+      var toggleMaximize = function(){
+        if (win.classList.contains('maximized')){
+        
+          spm_canvas_res();
+      
+          ...
+
+          } else {
+          spm_canvas_max();
+
+          win._restore = {
+
+
       */
+
+
 
       nodev();
 
@@ -2930,6 +2953,22 @@ if (
       let smn = document.getElementById("supermenu");
       smn.innerHTML = t;  
 
+      }
+
+      spm_canvas_max = function() {
+        for (let i=0; i<spm_c; i++) {
+          document.getElementById("spm_titulo_" + i).style.display = "none";
+          document.getElementById("spm_conteudo_" + i).style.display = "none";
+        }
+        document.getElementById("supermenu").style.display = "none";
+      }
+
+      spm_canvas_res = function() {
+        for (let i=0; i<spm_c; i++) {
+          document.getElementById("spm_titulo_" + i).style.display = "block";
+          document.getElementById("spm_conteudo_" + i).style.display = "block";
+        }
+        document.getElementById("supermenu").style.display = "block";
       }
 
       let spm_fechamenus = function () {
