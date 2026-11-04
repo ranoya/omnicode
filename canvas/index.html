@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script src="https://datat.vercel.app/basicsmin.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <title>Canvas Infinito</title>
 <script>
 $_GET = [];
@@ -580,6 +579,7 @@ $_GET = [];
   var consoleBar = document.getElementById('console');
   var viewControls = document.getElementById('viewControls');
   var maximizedCount = 0;
+  var maxSeq = 0; // ordem de maximização: a PRIMEIRA janela maximizada é a que guarda o zoom original
   var consoleMode = 'bar'; // 'bar' (barra original), 'window' (superdevmode) ou 'hidden' (nodev)
   function updateUIVisibility(){
     var hide = maximizedCount > 0;
@@ -1301,6 +1301,15 @@ gravados pelo título, então criar a janela de novo com o mesmo título a reabr
 maximizada, o zoom volta ao que era antes. Com o título do Terminal (<code>superdevmode()</code>), devolve a
 barra de comandos original, como <code>devmode()</code> — o Terminal não pode simplesmente sumir, senão não
 haveria onde digitar. Devolve <code>true</code> se removeu e <code>false</code> se não achou a janela.</p>
+<code class="sig">removeall()</code>
+<p>Remove, de uma vez, todas as janelas do ambiente — as do canvas, os widgets e também as janelas State,
+Console e Ajuda, se estiverem abertas — <b>menos</b> a janela do Terminal (<code>superdevmode()</code>), que fica
+para você não perder onde digitar. A barra comum e o painel do <code>floatdevmode()</code> não são janelas e não
+são afetados. Funciona com janelas "perma" e travadas por <code>lock</code>, e restaura o zoom se havia janela
+maximizada. Como no <code>remove</code>, a posição e o tamanho de cada janela ficam gravados pelo título, então
+recriar uma janela com o mesmo título a reabre onde estava. Devolve quantas janelas removeu. No
+<code>savestate()</code>, o próprio comando <code>removeall()</code> não entra (as janelas removidas já ficam de
+fora do arquivo).</p>
 <hr>
 <h4>Grade (snap)</h4>
 <code class="sig">snap()</code>
@@ -1570,7 +1579,8 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
             left: win.style.left, top: win.style.top,
             width: win.style.width, height: win.style.height,
             zIndex: win.style.zIndex,
-            zoom: zoom
+            zoom: zoom,
+            seq: ++maxSeq
           };
           // zera o zoom antes de ocupar a tela: se o zoom estivesse diferente de 100%, o
           // cabeçalho e os botões (medidos em px fixos) ficariam desproporcionais à tela cheia
@@ -2065,6 +2075,25 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
   }
   window.remove = removeWindowByTitle;
 
+  // ---- remover todas as janelas de uma vez (menos o Terminal do superdevmode()) ----
+  // a barra comum e o painel do floatdevmode() não são janelas: não são afetados
+  function removeall(){
+    var list = windows.filter(function(w){ return w !== consoleWin; });
+    // com várias janelas maximizadas, só a PRIMEIRA guarda o zoom original (as seguintes guardaram o 1
+    // forçado pela anterior); restaurar na ordem de remoção deixaria um zoom velho. Se o Terminal (que
+    // fica) estiver maximizado, o zoom tem que continuar forçado em 100%.
+    var firstMax = null;
+    list.forEach(function(w){
+      if (w.classList.contains('maximized') && w._restore &&
+          (firstMax === null || w._restore.seq < firstMax._restore.seq)) firstMax = w;
+    });
+    var originalZoom = (firstMax && !(consoleWin && consoleWin.classList.contains('maximized'))) ? firstMax._restore.zoom : null;
+    list.forEach(function(w){ destroyWindow(w); });
+    if (typeof originalZoom === 'number'){ zoom = originalZoom; applyTransform(); }
+    return list.length;
+  }
+  window.removeall = removeall;
+
   function renderSearchList(filter){
     var q = (filter || '').trim().toLowerCase();
     searchList.innerHTML = '';
@@ -2236,7 +2265,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
     function processEntry(entry){
       var raw = entry.raw.replace(/;?\s*$/, ';'); // garante só um ";" no final
       raw = raw.replace(/^console\s*\(/, 'openconsole('); // console() só existe dentro da barra; openconsole() vale em qualquer lugar
-      if (/^(remove|widget|removewidget)\s*\(/.test(raw)) return; // a janela removida já ficou de fora do arquivo; repetir o remove() não serviria de nada
+      if (/^(remove|removeall|widget|removewidget)\s*\(/.test(raw)) return; // a janela removida já ficou de fora do arquivo; repetir o remove() não serviria de nada
       var createdWins = entry.createdWins || [];
 
       if (createdWins.length === 0){
