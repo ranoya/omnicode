@@ -3048,6 +3048,20 @@ if (
               background-color: var(--accent) !important;
               color: var(--panel) !important;
               }
+
+              #spm_conteudograf_${spm_c} hr {
+              padding-right: 10px;
+              padding-left: 10px;
+              line-height: 40px;
+              font-size: 12px;
+              background-color: var(--panel);
+              color: var(--text);
+              width: 100%;
+              border: none;
+              border-top: 1px solid var(--muted);
+              opacity: .5;
+              cursor: default !important;
+              }
           </style>
           
           <div id="spm_conteudograf_${spm_c}">
@@ -3056,7 +3070,11 @@ if (
 
           for (let i = 0; i < dados.length; i++) {
 
-              code += `<div class="item" onclick="smp_exec('${dados[i].run}'); spm_fechamenus();">${dados[i].label}</div>`
+              if (dados.label == "-" || dados.label == "--" || dados.label == "---") {
+                code += `<hr></hr>`
+              } else {
+                code += `<div class="item" onclick="smp_exec('${dados[i].run}'); spm_fechamenus();">${dados[i].label}</div>`;
+              }
 
           }
 
