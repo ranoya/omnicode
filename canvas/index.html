@@ -1552,7 +1552,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
     if (maxBtn){
       var toggleMaximize = function(){
         if (win.classList.contains('maximized')){
-          spm_canvas_res();
+          if (typeof spm_canvas_res == "function") { spm_canvas_res(); }
           var r = win._restore;
           win.classList.remove('maximized');
           win.style.left = r.left; win.style.top = r.top;
@@ -1565,7 +1565,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
           maxBtn.innerHTML = ICON_WIN_MAX; maxBtn.title = 'Maximizar';
           maximizedCount--; updateUIVisibility();
         } else {
-          spm_canvas_max();
+          if (typeof spm_canvas_max == "function") { spm_canvas_max(); }
           win._restore = {
             left: win.style.left, top: win.style.top,
             width: win.style.width, height: win.style.height,
@@ -2731,12 +2731,14 @@ if (
       var toggleMaximize = function(){
         if (win.classList.contains('maximized')){
         
-          spm_canvas_res();
+          if (typeof spm_canvas_res == "function") { spm_canvas_res(); }
+
       
           ...
 
           } else {
-          spm_canvas_max();
+
+          if (typeof spm_canvas_max == "function") { spm_canvas_max(); }
 
           win._restore = {
 
