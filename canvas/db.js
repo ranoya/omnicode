@@ -461,12 +461,12 @@ window.notedb = function () {
 }
 
 window.notedatat = function () {
-  newidoc(`https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem('infcanvas:theme')}&load=https://omnicode.vercel.app/canvas/sobredatat.html`, "Instruções");
-  connect("DataT 1", "Instruções");
-  connect("DataT 2", "Instruções");
-  connect("DataT 3", "Instruções");
-  connect("DataT 4", "Instruções");
-  connect("DataT 5", "Instruções");
+  newidoc(`https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem('infcanvas:theme')}&load=https://omnicode.vercel.app/canvas/sobredatat.html`, "Instruções DATAT");
+  connect("DataT 1", "Instruções DATAT");
+  connect("DataT 2", "Instruções DATAT");
+  connect("DataT 3", "Instruções DATAT");
+  connect("DataT 4", "Instruções DATAT");
+  connect("DataT 5", "Instruções DATAT");
 }
 
 
