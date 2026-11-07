@@ -482,9 +482,9 @@ newframe("https://docs.google.com/spreadsheets/d/1FbY8hPtM8IxEJ26ybMZHpMrHdk-LEm
 
 dataset("https://docs.google.com/spreadsheets/d/1FbY8hPtM8IxEJ26ybMZHpMrHdk-LEm1yuYPiFVwF94U/edit?gid=0#gid=0", "Planilha de Origem");
 
-notedb();
-
 datatgsdata("https://docs.google.com/spreadsheets/d/1FbY8hPtM8IxEJ26ybMZHpMrHdk-LEm1yuYPiFVwF94U/edit?gid=0#gid=0", "Planilha de Origem");
+
+notedb();
 
 notedatat();
 
