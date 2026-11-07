@@ -627,6 +627,11 @@ window.notedb = function () {
   centerlastframe();
 }
 
+window.notedatat = function () {
+  newidoc(`https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem('infcanvas:theme')}&load=https://omnicode.vercel.app/canvas/sobredatat.html`, "Instruções");
+  centerlastframe();
+}
+
 
 let omnicocount = 0;
 
@@ -873,6 +878,7 @@ window.openomnihelp = function (id, dados) {
                 <div onclick="about()">Sobre o Canvas</div>
                 <div onclick="noteinstruct()">Instruções de uso do Notebook</div>
                 <div onclick="notedb()">Instruções de uso de SQL Query</div>
+                <div onclick="notedatat()">Instruções de uso do DATAT</div>
                 <div onclick="exemplos()">Coleção de exemplos</div>
                 <div onclick="lpjd()">Programação Javascript para Designers</div>
                 <div onclick="pjd()">Programação Javascript para Designers (aberto)</div>
