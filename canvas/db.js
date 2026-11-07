@@ -452,21 +452,13 @@ window.dataset = function (u, ltitulo) {
 
 window.notedb = function () {
   newidoc(`https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem('infcanvas:theme')}&load=https://omnicode.vercel.app/canvas/sql.html`, "Instruções");
-  connect("Query 1", "Instruções");
-  connect("Query 2", "Instruções");
-  connect("Query 3", "Instruções");
-  connect("Query 4", "Instruções");
-  connect("Query 5", "Instruções");
+
 
 }
 
 window.notedatat = function () {
   newidoc(`https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem('infcanvas:theme')}&load=https://omnicode.vercel.app/canvas/sobredatat.html`, "Instruções DATAT");
-  connect("DataT 1", "Instruções DATAT");
-  connect("DataT 2", "Instruções DATAT");
-  connect("DataT 3", "Instruções DATAT");
-  connect("DataT 4", "Instruções DATAT");
-  connect("DataT 5", "Instruções DATAT");
+
 }
 
 
