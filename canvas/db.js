@@ -137,7 +137,7 @@ let datasubquery = [];
 
 window.openquery = function (elem_id, extras) {
 
-  let outputquery = dataout(id);
+  let outputquery = dataout(elem_id);
 
   let googlesheet = extras.sheet;
   let select = extras.query;
