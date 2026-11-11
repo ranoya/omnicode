@@ -1282,6 +1282,18 @@ ao estado inicial.</p>
 <p>O caminho de volta: o widget retorna ao espaço do canvas, cobrindo visualmente o mesmo lugar e tamanho
 que ocupa na tela agora (considerando o zoom e o pan atuais), e volta a acompanhar pan e zoom.</p>
 <hr>
+<h4>Troca de dados entre janelas</h4>
+<p>Janelas criadas com <code>run</code>, <code>permarun</code>, <code>rundoc</code>, <code>runpermadoc</code> (e as variantes "sdoc") podem trocar dados em tempo real. Quem envia declara uma saída; quem recebe declara uma entrada; e <code>linkdata</code> liga as duas pelo título. Os dados ficam só na memória (nada vai para o localStorage) e cada receptor recebe uma <b>cópia</b> independente.</p>
+<code class="sig">dataout(id [, rótulo])</code>
+<p>Dentro da função da janela, com o mesmo <code>id</code> que o <code>run</code> passou. Habilita a saída da janela e devolve um objeto com <code>send(dados)</code>. Cada chamada de <code>send</code> entrega os dados a todas as janelas ligadas; o último valor enviado fica guardado, e uma janela ligada depois já recebe esse valor. Funções e elementos do DOM não podem ser copiados: nesse caso <code>send</code> avisa no console e devolve <code>false</code>.</p>
+<code class="sig">datain(id, { data, connect, disconnect })</code>
+<p>Habilita a entrada da janela e devolve um objeto com <code>get(origem)</code> (último dado vindo da janela com esse título, ou <code>undefined</code>) e <code>all()</code> (objeto <code>{ título: dado }</code> com o último dado de cada origem ligada). <code>data(dado, origem)</code> roda a cada dado novo, de qualquer origem; <code>origem</code> tem <code>title</code> e <code>label</code>. <code>connect(origem)</code> e <code>disconnect(origem)</code> são opcionais. Um erro dentro dessas funções é avisado no console e não afeta as outras janelas.</p>
+<code class="sig">linkdata(origem, destino)</code>
+<p>Liga a saída da janela <code>origem</code> à entrada da janela <code>destino</code>, por título (como o <code>connect</code>). Não carrega dado: só cria o caminho. Várias saídas podem alimentar a mesma entrada, e uma saída pode alimentar várias entradas. Ligações que formariam um ciclo são recusadas. Devolve <code>true</code> se a ligação existe e <code>false</code> se não foi possível (o motivo aparece no console).</p>
+<code class="sig">unlinkdata(origem, destino)</code>
+<p>Desfaz a ligação (o receptor recebe <code>disconnect</code> e perde o dado dessa origem). Ao fechar uma janela, as ligações dela são desfeitas sozinhas.</p>
+<p>Exemplo: <code>window.appa = function(id){ var s = dataout(id); s.send([1,2,3]); }</code>, <code>window.appb = function(id){ datain(id, { data: function(d, o){ console.log(o.title, d); } }); }</code>, depois <code>run("A","appa"); run("B","appb"); linkdata("A","B")</code>.</p>
+<hr>
 <h4>Consultar janelas</h4>
 <code class="sig">exist(título)</code>
 <p>Devolve <code>true</code> se existe uma janela com esse título e <code>false</code> se não existe. A busca é a
@@ -1457,6 +1469,148 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
     return !!findWindowByName(titulo);
   }
   window.exist = exist;
+
+  // ---- troca de dados entre janelas: dataout / datain / linkdata / unlinkdata ----
+  // Os dados vivem só em memória (nunca vão para localStorage). Cada receptor recebe uma CÓPIA (structuredClone).
+  // (etapa 1: só o mecanismo de programação; as portas visuais vêm depois)
+  var dataOuts = [];   // { win, label, has, last, links:[] }
+  var dataIns = [];    // { win, handlers, values:{ tituloMinusculo: dado } }
+  var dataLinks = [];  // { out, inn }
+
+  function dataWinFromId(id, fname){
+    var el = (typeof id === 'string') ? document.getElementById(id) : id;
+    var win = el && el.closest ? el.closest('.win') : null;
+    if (!win) console.warn(fname + ': não achei a janela do id "' + id + '". Passe o id que a função de run() recebeu.');
+    return win;
+  }
+  function dataOutOf(win){ return dataOuts.find(function(o){ return o.win === win; }); }
+  function dataInOf(win){ return dataIns.find(function(i){ return i.win === win; }); }
+  function dataTitle(win){ return win.dataset.name; }
+  function dataKey(title){ return String(title).trim().toLowerCase(); }
+  function dataOrigin(out){ return { title: dataTitle(out.win), label: out.label }; }
+  function dataSafe(fn, thisArg, args, what){
+    try { return fn.apply(thisArg, args); }
+    catch (err){ console.warn(what + ': erro no código da janela: ' + (err && err.message)); }
+  }
+
+  function dataDeliver(link){
+    var out = link.out, inn = link.inn;
+    if (!out.has) return;
+    var copy;
+    try { copy = structuredClone(out.last); }
+    catch (err){ console.warn('dataout: não consegui copiar o dado para "' + dataTitle(inn.win) + '": ' + err.message); return; }
+    inn.values[dataKey(dataTitle(out.win))] = copy;
+    if (typeof inn.handlers.data === 'function')
+      dataSafe(inn.handlers.data, inn.handlers, [copy, dataOrigin(out)], 'datain.data');
+  }
+
+  function dataout(id, label){
+    var win = dataWinFromId(id, 'dataout');
+    if (!win) return null;
+    var out = dataOutOf(win);
+    if (!out){
+      out = { win: win, label: undefined, has: false, last: undefined };
+      dataOuts.push(out);
+      out.api = {
+        send: function(dados){
+          var stored;
+          try { stored = structuredClone(dados); }
+          catch (err){
+            console.warn('dataout.send: o dado não pôde ser copiado (funções, elementos do DOM e afins não podem ser enviados): ' + err.message);
+            return false;
+          }
+          out.last = stored; out.has = true;
+          dataLinks.filter(function(l){ return l.out === out; }).forEach(dataDeliver);
+          return true;
+        }
+      };
+    }
+    if (label !== undefined) out.label = label;
+    return out.api;
+  }
+
+  function datain(id, handlers){
+    var win = dataWinFromId(id, 'datain');
+    if (!win) return null;
+    if (typeof handlers === 'function') handlers = { data: handlers };
+    var inn = dataInOf(win);
+    if (!inn){
+      inn = { win: win, handlers: {}, values: {} };
+      dataIns.push(inn);
+      inn.api = {
+        get: function(origem){ return inn.values[dataKey(origem)]; },
+        all: function(){
+          var r = {};
+          Object.keys(inn.values).forEach(function(k){
+            var l = dataLinks.find(function(l){ return l.inn === inn && dataKey(dataTitle(l.out.win)) === k; });
+            r[l ? dataTitle(l.out.win) : k] = inn.values[k];
+          });
+          return r;
+        }
+      };
+    }
+    if (handlers && typeof handlers === 'object') inn.handlers = handlers;
+    return inn.api;
+  }
+
+  // existe caminho de dados de "de" até "ate"? (segue: saída da janela -> janelas que a recebem)
+  function dataReaches(de, ate, seen){
+    if (de === ate) return true;
+    seen = seen || [];
+    if (seen.indexOf(de) !== -1) return false;
+    seen.push(de);
+    var out = dataOutOf(de);
+    if (!out) return false;
+    return dataLinks.some(function(l){ return l.out === out && dataReaches(l.inn.win, ate, seen); });
+  }
+
+  function linkdata(origem, destino){
+    var wa = findWindowByName(origem), wb = findWindowByName(destino);
+    if (!wa || !wb){ console.warn('linkdata: janela não encontrada ("' + origem + '" ou "' + destino + '")'); return false; }
+    var out = dataOutOf(wa), inn = dataInOf(wb);
+    if (!out){ console.warn('linkdata: "' + dataTitle(wa) + '" não chamou dataout(id).'); return false; }
+    if (!inn){ console.warn('linkdata: "' + dataTitle(wb) + '" não chamou datain(id, ...).'); return false; }
+    if (wa === wb){ console.warn('linkdata: uma janela não pode ligar a si mesma.'); return false; }
+    if (dataLinks.some(function(l){ return l.out === out && l.inn === inn; })) return true; // já ligadas
+    if (dataReaches(wb, wa)){ console.warn('linkdata: essa ligação criaria um ciclo ("' + dataTitle(wb) + '" já envia dados, direta ou indiretamente, para "' + dataTitle(wa) + '").'); return false; }
+    var link = { out: out, inn: inn };
+    dataLinks.push(link);
+    if (typeof inn.handlers.connect === 'function') dataSafe(inn.handlers.connect, inn.handlers, [dataOrigin(out)], 'datain.connect');
+    dataDeliver(link); // quem liga depois recebe o último valor, se já houver
+    return true;
+  }
+
+  function dataDrop(link){
+    dataLinks = dataLinks.filter(function(l){ return l !== link; });
+    delete link.inn.values[dataKey(dataTitle(link.out.win))];
+    if (typeof link.inn.handlers.disconnect === 'function')
+      dataSafe(link.inn.handlers.disconnect, link.inn.handlers, [dataOrigin(link.out)], 'datain.disconnect');
+  }
+
+  function unlinkdata(origem, destino){
+    var wa = findWindowByName(origem), wb = findWindowByName(destino);
+    if (!wa || !wb){ console.warn('unlinkdata: janela não encontrada ("' + origem + '" ou "' + destino + '")'); return false; }
+    var out = dataOutOf(wa), inn = dataInOf(wb);
+    var link = dataLinks.find(function(l){ return l.out === out && l.inn === inn; });
+    if (!link) return false;
+    dataDrop(link);
+    return true;
+  }
+
+  // chamado quando uma janela é fechada: desfaz as ligações dela
+  function dataDropWindow(win){
+    var out = dataOutOf(win), inn = dataInOf(win);
+    dataLinks.filter(function(l){ return l.out === out || l.inn === inn; }).forEach(function(l){
+      if (l.inn.win === win){ dataLinks = dataLinks.filter(function(x){ return x !== l; }); }
+      else dataDrop(l);
+    });
+    dataOuts = dataOuts.filter(function(o){ return o.win !== win; });
+    dataIns = dataIns.filter(function(i){ return i.win !== win; });
+  }
+  window.dataout = dataout;
+  window.datain = datain;
+  window.linkdata = linkdata;
+  window.unlinkdata = unlinkdata;
 
   // ---- cores das linhas do connect(): uma só cor (padrão) ou uma cor por linha ----
   var multicolorLinks = false;
@@ -2405,6 +2559,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
       maximizedCount--;
     }
     saveWinState(win);
+    dataDropWindow(win);
     win.remove();
     windows = windows.filter(function(w){ return w !== win; });
     updateUIVisibility();
@@ -2649,7 +2804,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
                     'newsdoc', 'newsidoc', 'runsdoc', 'newpermasdoc', 'newpermasidoc', 'runpermasdoc',
                     'groovy', 'ungroovy', 'savestate', 'lock', 'unlock', 'centerlastframe', 'lockall', 'unlockall',
                     'superdevmode', 'nodev', 'setPosition', 'console', 'floatdevmode',
-                    'widget', 'removewidget',
+                    'widget', 'removewidget', 'dataout', 'datain', 'linkdata', 'unlinkdata',
                     cmd))(
         newwindow, newframe, run, newpermawindow, newpermaframe, permarun,
         connect, disconnect, setTheme, setTempTheme, help,
@@ -2659,7 +2814,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
         newsdoc, newsidoc, runsdoc, newpermasdoc, newpermasidoc, runpermasdoc,
         groovy, ungroovy, savestate, lock, unlock, centerlastframe, lockall, unlockall,
         superdevmode, nodev, setPosition, consoleCallable, floatdevmode,
-        widget, removewidget);
+        widget, removewidget, dataout, datain, linkdata, unlinkdata);
       // registra o comando no histórico (só os que rodaram sem erro), junto das janelas que ele criou
       commandLog.push({ raw: cmd, createdWins: windows.slice(winCountBefore) });
     } catch (err){
