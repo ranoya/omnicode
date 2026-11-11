@@ -228,6 +228,28 @@ $_GET = [];
   #zoomLabel{font-size:11px; color:var(--muted); padding:2px 0; text-align:center;}
   #viewControls hr{width:100%; border:none; border-top:1px solid var(--panel-border); margin:3px 0;}
   .link{ stroke:var(--accent); stroke-width:2; opacity:.85; }
+  /* ligações de dados (linkdata): curva com seta, pulso a cada dado novo; portas nas janelas */
+  .dlink{ fill:none; stroke:var(--accent); stroke-width:2; opacity:.75; }
+  .dlink.sel{ opacity:1; stroke-width:3; }
+  .dlink-hit{ fill:none; stroke:transparent; stroke-width:16; pointer-events:stroke; cursor:pointer; }
+  .dlink-temp{ fill:none; stroke:var(--accent); stroke-width:2; stroke-dasharray:6 5; opacity:.9; pointer-events:none; }
+  .dl-arrow{ fill:var(--accent); }
+  .dl-pulse{ fill:var(--accent); stroke:var(--win-bg); stroke-width:1.5; pointer-events:none; }
+  .dl-x{ cursor:pointer; pointer-events:all; }
+  .dl-x circle{ fill:var(--win-header); stroke:var(--accent); stroke-width:1.5; }
+  .dl-x text{ fill:var(--text); font-size:11px; text-anchor:middle; dominant-baseline:central; pointer-events:none; }
+  .dport{ position:absolute; top:44px; width:14px; height:14px; box-sizing:border-box; border-radius:50%;
+    border:2px solid var(--accent); z-index:4; opacity:.55; touch-action:none; transition:opacity .12s, transform .12s; }
+  .win:hover > .dport, .dport:hover{ opacity:1; }
+  .dport-out{ right:4px; background:var(--accent); cursor:crosshair; }
+  .dport-in{ left:4px; background:var(--win-bg); }
+  .win.doc-frame > .dport-out{ right:-7px; }
+  .win.doc-frame > .dport-in{ left:-7px; }
+  .dport-out:hover{ transform:scale(1.25); }
+  .win.maximized > .dport{ display:none; }
+  .win.data-target{ outline:2px dashed var(--accent); outline-offset:3px; }
+  .win.data-target.data-hover > .dport-in{ transform:scale(1.5); opacity:1; background:var(--accent); }
+  #viewport.data-linking, #viewport.data-linking *{ cursor:crosshair !important; }
   #searchPanel{
     position:fixed; right:64px; bottom:calc(12px + env(safe-area-inset-bottom,0px));
     z-index:9999; width:220px; max-height:360px; display:none; flex-direction:column;
@@ -1292,6 +1314,7 @@ que ocupa na tela agora (considerando o zoom e o pan atuais), e volta a acompanh
 <p>Liga a saída da janela <code>origem</code> à entrada da janela <code>destino</code>, por título (como o <code>connect</code>). Não carrega dado: só cria o caminho. Várias saídas podem alimentar a mesma entrada, e uma saída pode alimentar várias entradas. Ligações que formariam um ciclo são recusadas. Devolve <code>true</code> se a ligação existe e <code>false</code> se não foi possível (o motivo aparece no console).</p>
 <code class="sig">unlinkdata(origem, destino)</code>
 <p>Desfaz a ligação (o receptor recebe <code>disconnect</code> e perde o dado dessa origem). Ao fechar uma janela, as ligações dela são desfeitas sozinhas.</p>
+<p><b>Pelo mouse:</b> toda janela que chamou <code>dataout</code> mostra uma bolinha cheia na borda direita (saída), e toda que chamou <code>datain</code> mostra uma bolinha vazada na borda esquerda (entrada). Arraste da saída: as janelas que aceitam a ligação ganham um contorno tracejado; solte sobre uma delas para ligar. Esc cancela. A ligação vira uma curva com seta, e um pontinho percorre a linha a cada dado novo. Clique na linha para mostrar um ✕ no meio e clique nele para desligar. Ligações feitas e desfeitas pelo mouse entram no <code>savestate()</code> como <code>linkdata</code>/<code>unlinkdata</code>. Widgets não têm portas (só ligação por código).</p>
 <p>Exemplo: <code>window.appa = function(id){ var s = dataout(id); s.send([1,2,3]); }</code>, <code>window.appb = function(id){ datain(id, { data: function(d, o){ console.log(o.title, d); } }); }</code>, depois <code>run("A","appa"); run("B","appb"); linkdata("A","B")</code>.</p>
 <hr>
 <h4>Consultar janelas</h4>
@@ -1500,6 +1523,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
     try { copy = structuredClone(out.last); }
     catch (err){ console.warn('dataout: não consegui copiar o dado para "' + dataTitle(inn.win) + '": ' + err.message); return; }
     inn.values[dataKey(dataTitle(out.win))] = copy;
+    dataPulse(link);
     if (typeof inn.handlers.data === 'function')
       dataSafe(inn.handlers.data, inn.handlers, [copy, dataOrigin(out)], 'datain.data');
   }
@@ -1507,6 +1531,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
   function dataout(id, label){
     var win = dataWinFromId(id, 'dataout');
     if (!win) return null;
+    dataPortAdd(win, 'out');
     var out = dataOutOf(win);
     if (!out){
       out = { win: win, label: undefined, has: false, last: undefined };
@@ -1532,6 +1557,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
   function datain(id, handlers){
     var win = dataWinFromId(id, 'datain');
     if (!win) return null;
+    dataPortAdd(win, 'in');
     if (typeof handlers === 'function') handlers = { data: handlers };
     var inn = dataInOf(win);
     if (!inn){
@@ -1564,24 +1590,37 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
     return dataLinks.some(function(l){ return l.out === out && dataReaches(l.inn.win, ate, seen); });
   }
 
-  function linkdata(origem, destino){
-    var wa = findWindowByName(origem), wb = findWindowByName(destino);
-    if (!wa || !wb){ console.warn('linkdata: janela não encontrada ("' + origem + '" ou "' + destino + '")'); return false; }
+  // motivo pelo qual wa -> wb não pode ser ligado ('' = pode; 'dup' = já estão ligadas)
+  function dataLinkProblem(wa, wb){
     var out = dataOutOf(wa), inn = dataInOf(wb);
-    if (!out){ console.warn('linkdata: "' + dataTitle(wa) + '" não chamou dataout(id).'); return false; }
-    if (!inn){ console.warn('linkdata: "' + dataTitle(wb) + '" não chamou datain(id, ...).'); return false; }
-    if (wa === wb){ console.warn('linkdata: uma janela não pode ligar a si mesma.'); return false; }
-    if (dataLinks.some(function(l){ return l.out === out && l.inn === inn; })) return true; // já ligadas
-    if (dataReaches(wb, wa)){ console.warn('linkdata: essa ligação criaria um ciclo ("' + dataTitle(wb) + '" já envia dados, direta ou indiretamente, para "' + dataTitle(wa) + '").'); return false; }
+    if (!out) return '"' + dataTitle(wa) + '" não chamou dataout(id).';
+    if (!inn) return '"' + dataTitle(wb) + '" não chamou datain(id, ...).';
+    if (wa === wb) return 'uma janela não pode ligar a si mesma.';
+    if (dataLinks.some(function(l){ return l.out === out && l.inn === inn; })) return 'dup';
+    if (dataReaches(wb, wa)) return 'essa ligação criaria um ciclo ("' + dataTitle(wb) + '" já envia dados, direta ou indiretamente, para "' + dataTitle(wa) + '").';
+    return '';
+  }
+  function dataLinkWins(wa, wb){
+    var why = dataLinkProblem(wa, wb);
+    if (why === 'dup') return true; // já ligadas
+    if (why){ console.warn('linkdata: ' + why); return false; }
+    var out = dataOutOf(wa), inn = dataInOf(wb);
     var link = { out: out, inn: inn };
     dataLinks.push(link);
+    dataGfxAdd(link);
     if (typeof inn.handlers.connect === 'function') dataSafe(inn.handlers.connect, inn.handlers, [dataOrigin(out)], 'datain.connect');
     dataDeliver(link); // quem liga depois recebe o último valor, se já houver
     return true;
   }
+  function linkdata(origem, destino){
+    var wa = findWindowByName(origem), wb = findWindowByName(destino);
+    if (!wa || !wb){ console.warn('linkdata: janela não encontrada ("' + origem + '" ou "' + destino + '")'); return false; }
+    return dataLinkWins(wa, wb);
+  }
 
   function dataDrop(link){
     dataLinks = dataLinks.filter(function(l){ return l !== link; });
+    dataGfxRemove(link);
     delete link.inn.values[dataKey(dataTitle(link.out.win))];
     if (typeof link.inn.handlers.disconnect === 'function')
       dataSafe(link.inn.handlers.disconnect, link.inn.handlers, [dataOrigin(link.out)], 'datain.disconnect');
@@ -1601,12 +1640,182 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
   function dataDropWindow(win){
     var out = dataOutOf(win), inn = dataInOf(win);
     dataLinks.filter(function(l){ return l.out === out || l.inn === inn; }).forEach(function(l){
-      if (l.inn.win === win){ dataLinks = dataLinks.filter(function(x){ return x !== l; }); }
+      if (l.inn.win === win){ dataLinks = dataLinks.filter(function(x){ return x !== l; }); dataGfxRemove(l); }
       else dataDrop(l);
     });
     dataOuts = dataOuts.filter(function(o){ return o.win !== win; });
     dataIns = dataIns.filter(function(i){ return i.win !== win; });
   }
+
+  // ---- parte gráfica: portas, linha com seta, pulso, arrastar para ligar, clicar para desligar ----
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  var dataLayer = document.createElementNS(SVGNS, 'svg');
+  dataLayer.setAttribute('width', '1'); dataLayer.setAttribute('height', '1');
+  dataLayer.style.cssText = 'position:absolute;top:0;left:0;overflow:visible;pointer-events:none;';
+  dataLayer.innerHTML = '<defs><marker id="dlArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="dl-arrow" d="M0,0 L10,5 L0,10 z"/></marker></defs>';
+  linksLayer.parentNode.insertBefore(dataLayer, linksLayer.nextSibling);
+  function svgEl(tag, cls){ var e = document.createElementNS(SVGNS, tag); if (cls) e.setAttribute('class', cls); return e; }
+
+  var dataSelected = null, dataXBtn = null;
+
+  function dataPortAdd(win, kind){
+    if (win._isWidget) return; // widgets ficam de fora das portas visuais (ainda dá para ligar por código)
+    if (win.querySelector(':scope > .dport-' + kind)) return;
+    var p = document.createElement('div');
+    p.className = 'dport dport-' + kind;
+    p.title = kind === 'out' ? 'Saída de dados: arraste até uma janela com entrada' : 'Entrada de dados';
+    win.appendChild(p);
+    if (kind === 'out') p.addEventListener('pointerdown', function(e){ dataDragStart(e, win); });
+  }
+
+  // centro da porta no espaço do canvas (a porta fica a 51px do topo; dentro da borda, ou sobre ela nas janelas doc)
+  function dataPortPos(win, kind){
+    if (win._isWidget) return winCenterCanvas(win);
+    var l = parseFloat(win.style.left) || 0, t = parseFloat(win.style.top) || 0;
+    var inset = win.classList.contains('doc-frame') ? 0 : 11;
+    return { x: kind === 'out' ? l + win.offsetWidth - inset : l + inset, y: t + 51 };
+  }
+  function dataCurve(a, b){
+    var dx = Math.max(40, Math.abs(b.x - a.x) / 2);
+    return 'M' + a.x + ',' + a.y + ' C' + (a.x + dx) + ',' + a.y + ' ' + (b.x - dx) + ',' + b.y + ' ' + b.x + ',' + b.y;
+  }
+
+  function dataGfxAdd(link){
+    link.el = svgEl('path', 'dlink');
+    link.el.setAttribute('marker-end', 'url(#dlArrow)');
+    link.hit = svgEl('path', 'dlink-hit');
+    var tip = svgEl('title'); tip.textContent = 'Clique para desligar'; link.hit.appendChild(tip);
+    link.hit.addEventListener('click', function(e){ e.stopPropagation(); dataSelect(link); });
+    link.pulses = [];
+    dataLayer.appendChild(link.el); dataLayer.appendChild(link.hit);
+  }
+  function dataGfxRemove(link){
+    if (dataSelected === link) dataSelect(null);
+    if (link.el) link.el.remove();
+    if (link.hit) link.hit.remove();
+    (link.pulses || []).forEach(function(p){ p.el.remove(); });
+    link.pulses = [];
+  }
+  function dataPulse(link){
+    if (!link.el) return;
+    var c = svgEl('circle', 'dl-pulse'); c.setAttribute('r', '4');
+    c.style.display = 'none';
+    dataLayer.appendChild(c);
+    link.pulses.push({ t0: performance.now(), el: c });
+  }
+
+  function dataSelect(link){
+    if (dataSelected) dataSelected.el.classList.remove('sel');
+    if (dataXBtn){ dataXBtn.remove(); dataXBtn = null; }
+    dataSelected = link;
+    if (!link) return;
+    link.el.classList.add('sel');
+    dataXBtn = svgEl('g', 'dl-x');
+    var c = svgEl('circle'); c.setAttribute('r', '10');
+    var t = svgEl('text'); t.textContent = '✕';
+    var tip = svgEl('title'); tip.textContent = 'Desligar';
+    dataXBtn.appendChild(c); dataXBtn.appendChild(t); dataXBtn.appendChild(tip);
+    dataXBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var a = dataTitle(link.out.win), b = dataTitle(link.inn.win);
+      dataDrop(link);
+      dataLogCommand('unlinkdata(' + JSON.stringify(a) + ', ' + JSON.stringify(b) + ')');
+    });
+    dataLayer.appendChild(dataXBtn);
+  }
+  document.addEventListener('pointerdown', function(e){
+    if (!dataSelected) return;
+    if (e.target && e.target.closest && (e.target.closest('.dl-x') || e.target.closest('.dlink-hit'))) return;
+    dataSelect(null);
+  });
+
+  // ligações feitas pelo mouse entram no histórico, para o savestate() reproduzi-las
+  function dataLogCommand(text){ commandLog.push({ raw: text, createdWins: [] }); }
+
+  // chamada a cada quadro (frameLoop)
+  function updateDataLinks(){
+    dataLinks.slice().forEach(function(l){
+      if (!l.out.win.isConnected){ dataDropWindow(l.out.win); return; }
+      if (!l.inn.win.isConnected){ dataDropWindow(l.inn.win); return; }
+      var hidden = l.out.win.classList.contains('maximized') || l.inn.win.classList.contains('maximized');
+      l.el.style.display = hidden ? 'none' : '';
+      l.hit.style.display = hidden ? 'none' : '';
+      if (hidden){
+        l.pulses.forEach(function(p){ p.el.style.display = 'none'; });
+        if (dataSelected === l && dataXBtn) dataXBtn.style.display = 'none';
+        return;
+      }
+      var d = dataCurve(dataPortPos(l.out.win, 'out'), dataPortPos(l.inn.win, 'in'));
+      l.el.setAttribute('d', d); l.hit.setAttribute('d', d);
+      var len = (l.el.getTotalLength ? l.el.getTotalLength() : 0);
+      if (dataSelected === l && dataXBtn && len){
+        var m = l.el.getPointAtLength(len / 2);
+        dataXBtn.style.display = '';
+        dataXBtn.setAttribute('transform', 'translate(' + m.x + ',' + m.y + ')');
+      }
+      var now = performance.now();
+      l.pulses = l.pulses.filter(function(p){
+        var k = (now - p.t0) / 700;
+        if (k >= 1 || !len){ p.el.remove(); return false; }
+        var pt = l.el.getPointAtLength(len * k);
+        p.el.style.display = '';
+        p.el.setAttribute('cx', pt.x); p.el.setAttribute('cy', pt.y);
+        return true;
+      });
+    });
+  }
+
+  // arrastar da porta de saída até uma janela com entrada
+  var dataDrag = null;
+  function dataCanLink(wa, wb){ return dataLinkProblem(wa, wb) === ''; }
+  function dataTargetAt(e){
+    var el = document.elementFromPoint(e.clientX, e.clientY);
+    var w = el && el.closest ? el.closest('.win') : null;
+    return (w && w.classList.contains('data-target')) ? w : null;
+  }
+  function dataDragStart(e, win){
+    if (e.button !== 0 || dataDrag) return;
+    e.preventDefault(); e.stopPropagation();
+    var tmp = svgEl('path', 'dlink-temp');
+    tmp.setAttribute('marker-end', 'url(#dlArrow)');
+    dataLayer.appendChild(tmp);
+    dataDrag = { win: win, tmp: tmp, hover: null };
+    windows.forEach(function(w){ if (dataCanLink(win, w)) w.classList.add('data-target'); });
+    viewport.classList.add('data-linking');
+    document.addEventListener('pointermove', dataDragMove);
+    document.addEventListener('pointerup', dataDragEnd);
+    document.addEventListener('keydown', dataDragKey);
+    dataDragMove(e);
+  }
+  function dataDragMove(e){
+    if (!dataDrag) return;
+    var tgt = dataTargetAt(e);
+    if (dataDrag.hover !== tgt){
+      if (dataDrag.hover) dataDrag.hover.classList.remove('data-hover');
+      if (tgt) tgt.classList.add('data-hover');
+      dataDrag.hover = tgt;
+    }
+    var to = tgt ? dataPortPos(tgt, 'in') : screenToCanvas(e.clientX, e.clientY);
+    dataDrag.tmp.setAttribute('d', dataCurve(dataPortPos(dataDrag.win, 'out'), to));
+  }
+  function dataDragStop(){
+    if (!dataDrag) return;
+    dataDrag.tmp.remove();
+    windows.forEach(function(w){ w.classList.remove('data-target'); w.classList.remove('data-hover'); });
+    viewport.classList.remove('data-linking');
+    document.removeEventListener('pointermove', dataDragMove);
+    document.removeEventListener('pointerup', dataDragEnd);
+    document.removeEventListener('keydown', dataDragKey);
+    dataDrag = null;
+  }
+  function dataDragEnd(e){
+    if (!dataDrag) return;
+    var src = dataDrag.win, tgt = dataTargetAt(e);
+    dataDragStop();
+    if (tgt && dataLinkWins(src, tgt))
+      dataLogCommand('linkdata(' + JSON.stringify(dataTitle(src)) + ', ' + JSON.stringify(dataTitle(tgt)) + ')');
+  }
+  function dataDragKey(e){ if (e.key === 'Escape') dataDragStop(); }
   window.dataout = dataout;
   window.datain = datain;
   window.linkdata = linkdata;
@@ -1682,6 +1891,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
 
   (function frameLoop(){
     updateLinks();
+    updateDataLinks();
     checkLazyFrames();
     pollState();
     windows.forEach(function(w){
@@ -1708,6 +1918,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
         maximizedCount--; updateUIVisibility();
       }
       saveWinState(win);
+      dataDropWindow(win);
       win.remove();
       windows = windows.filter(function(w){ return w !== win; });
     });
