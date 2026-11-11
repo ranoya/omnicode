@@ -46,6 +46,8 @@ window.datatexec = function (dados, ltitulo) {
 
 window.opendataexplorer = function (id, param) {
 
+  let outputdataexplorer = dataout(id);
+
   let code = `
   
     <style>
@@ -134,6 +136,8 @@ window.opendataexplorer = function (id, param) {
 let datasubquery = [];
 
 window.openquery = function (elem_id, extras) {
+
+  let outputquery = dataout(id);
 
   let googlesheet = extras.sheet;
   let select = extras.query;
