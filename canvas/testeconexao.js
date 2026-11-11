@@ -1,5 +1,4 @@
 devmode();
-console();
 
 window.janelaA = function (id, param) {
     
