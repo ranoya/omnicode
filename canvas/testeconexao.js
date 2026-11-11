@@ -3,6 +3,8 @@ devmode();
 window.janelaA = function (id, param) {
     
 
+    let infor = "";
+
     let code = `
     
     <input type="text" id="dado1" /><br><br>
@@ -15,12 +17,13 @@ window.janelaA = function (id, param) {
 
     document.getElementById("botao").onclick = function () {
         
-        let infor = document.getElementById("dado1").value;
-        var saida = dataout(id);
-        saida.send(infor); 
+        infor = document.getElementById("dado1").value;
         console.log("mandou dataout");
 
     }
+
+    var saida = dataout(id);
+    saida.send(infor); 
 
 
 
