@@ -4,7 +4,8 @@ window.janelaA = function (id, param) {
     
 
     let infor = "";
-
+    var saida = dataout(id);
+    
     let code = `
     
     <input type="text" id="dado1" /><br><br>
@@ -18,15 +19,13 @@ window.janelaA = function (id, param) {
     document.getElementById("botao").onclick = function () {
         
         infor = document.getElementById("dado1").value;
+        saida.send(infor); 
         console.log("mandou dataout");
 
     }
 
-    var saida = dataout(id);
-    saida.send(infor); 
-
-
-
+    
+    
 }
 
 run("Envio", "janelaA", {});
