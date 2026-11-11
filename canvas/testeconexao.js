@@ -36,6 +36,7 @@ window.janelaB = function (id, param) {
     var entrada = datain(id, {
         data: function(dados, origem){   // chamada a cada dado novo, de qualquer origem
             console.log(dados + " / veio de: " + origem.title);
+            document.getElementById("recebe").innerHTML = dados;
         }
     });
 
@@ -48,4 +49,6 @@ window.janelaB = function (id, param) {
 }
 
 run("Recebimento", "janelaB", {});
+
+linkdata("Envio", "Recebimento");
 
