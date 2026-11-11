@@ -316,6 +316,14 @@ ungroovy();
       window.codeeditor = function (id, p) {
         countcode++;
 
+        let dadosplus = "";
+        let entradadedados = datain(id, {
+            data: function(dados, origem){   // chamada a cada dado novo, de qualquer origem
+                console.log(dados + " / origem: " + origem.title);
+                dadosplus = dados;
+            }
+        });
+
         let tema = "tomorrow";
         if (localStorage.getItem('infcanvas:theme') == "dracula") {
           tema = "dracula";
@@ -1298,6 +1306,8 @@ window.datatexec = function (dados, ltitulo) {
 
 window.opendataexplorer = function (id, param) {
 
+  let outputdataexplorer = dataout(id);
+
   let code = `
   
     <style>
@@ -1386,6 +1396,8 @@ window.opendataexplorer = function (id, param) {
 let datasubquery = [];
 
 window.openquery = function (elem_id, extras) {
+
+  let outputquery = dataout(elem_id);
 
   let googlesheet = extras.sheet;
   let select = extras.query;
