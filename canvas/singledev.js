@@ -184,7 +184,7 @@ ungroovy();
           }
           </scri` + `pt>
           
-          var $_DATA = ${codeeditordadosplus[p.fromeditor]};
+          let $_DATA = ${codeeditordadosplus[p.fromeditor]};
           
           `;
         }
@@ -201,7 +201,7 @@ ungroovy();
               parent.postMessage('printconsole(${countruncode}, "' + msg + '")' ,'*');        
               }
 
-              var $_DATA = ${p.dadosplus};
+              let $_DATA = ${codeeditordadosplus[p.fromeditor]};
 
              </scr` + `ipt><scr` + `ipt>`;
         }
@@ -224,7 +224,7 @@ ungroovy();
             parent.postMessage('printconsole(${countruncode}, "' + msg + '")' ,'*');        
             }
 
-            var $_DATA = ${p.dadosplus};
+            let $_DATA = ${codeeditordadosplus[p.fromeditor]};
 
             </scr` + `ipt>
                <sc` +
@@ -244,7 +244,7 @@ ungroovy();
               parent.postMessage('printconsole(${countruncode}, "' + msg + '")' ,'*');        
               }
 
-              var $_DATA = ${p.dadosplus};
+              let $_DATA = ${codeeditordadosplus[p.fromeditor]};
 
             </scr` + `ipt>
             <scr` +
