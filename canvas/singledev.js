@@ -335,6 +335,7 @@ ungroovy();
             data: function(dados, origem){   // chamada a cada dado novo, de qualquer origem
                 console.log(dados + " / origem: " + origem.title);
                 dadosplus = JSON.stringify(dados);
+                console.log(dadosplus);
             }
         });
 
