@@ -104,7 +104,7 @@ ungroovy();
         
       }
 
-      window.runcode = function (id, conta, deonde, conectado) {
+      window.runcode = function (id, conta, deonde) {
         
         console.log("id>" + id + "  conta>" + conta + " deonde>" + deonde);
               
@@ -115,7 +115,6 @@ ungroovy();
                 fromeditor: id,
                 tituloeditor: conta,
                 fromcodeeditor: deonde,
-                dadosplus: conectado
               });
         
               run("Output " + janela, "codeconsole", {origem: "Run " + janela, numero: janela})
@@ -185,7 +184,7 @@ ungroovy();
           }
           </scri` + `pt>
           
-          var $_DATA = ${p.dadosplus};
+          var $_DATA = ${codeeditordadosplus[p.fromeditor]};
           
           `;
         }
@@ -326,6 +325,9 @@ ungroovy();
         iframeDoc.write(htmlContent);
         iframeDoc.close();
       }
+      
+
+      let codeeditordadosplus = [];
 
       window.codeeditor = function (id, p) {
         countcode++;
@@ -335,7 +337,7 @@ ungroovy();
             data: function(dados, origem){   // chamada a cada dado novo, de qualquer origem
                 console.log(dados + " / origem: " + origem.title);
                 dadosplus = JSON.stringify(dados);
-                console.log(dadosplus);
+                codeeditordadosplus[id] = dadosplus;
             }
         });
 
@@ -466,7 +468,7 @@ ungroovy();
 
         <div class="menu_code">
         
-          <div onclick="runcode('${id}', ${p.runcontagem}, ${p.contagem}, '${dadosplus}')">Run</div>
+          <div onclick="runcode('${id}', ${p.runcontagem}, ${p.contagem})">Run</div>
           <div onclick="abrirArquivo('${id}')">Load</div><div onclick="salvarArquivo('${id}')">Save</div><div onclick="linguacodeeditor('editor_${id}', 'html');">HTML</div><div onclick="linguacodeeditor('editor_${id}', 'javascript');">Javascript</div><div onclick="linguacodeeditor('editor_${id}', 'typescript');">Typescript</div><div onclick="linguacodeeditor('editor_${id}', 'P5');">P5</div><div onclick="linguacodeeditor('editor_${id}', 'canvas');">Canvas</div>
           
         </div>
