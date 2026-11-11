@@ -239,16 +239,21 @@ $_GET = [];
   .dl-x circle{ fill:var(--win-header); stroke:var(--accent); stroke-width:1.5; }
   .dl-x text{ fill:var(--text); font-size:11px; text-anchor:middle; dominant-baseline:central; pointer-events:none; }
   .dport{ position:absolute; top:44px; width:14px; height:14px; box-sizing:border-box; border-radius:50%;
-    border:2px solid var(--accent); z-index:4; opacity:.55; touch-action:none; transition:opacity .12s, transform .12s; }
+    border:2px solid var(--text); z-index:4; opacity:.55; touch-action:none; transition:opacity .12s, transform .12s; }
   .win:hover > .dport, .dport:hover{ opacity:1; }
-  .dport-out{ right:4px; background:var(--accent); cursor:crosshair; }
-  .dport-in{ left:4px; background:var(--win-bg); }
-  .win.doc-frame > .dport-out{ right:-7px; }
-  .win.doc-frame > .dport-in{ left:-7px; }
+  .dport-out{ right:-15px; background:var(--text); cursor:crosshair; }
+  .dport-in{ left:-15px; background:var(--win-bg); }
+  /* as portas ficam inteiras fora da borda: a janela deixa de recortar o que passa da borda,
+     e o recorte arredondado passa a ser feito pelos filhos */
+  .win.has-dport{ overflow:visible; }
+  .win.has-dport > .win-header{ border-radius:9px 9px 0 0; }
+  .win.has-dport > .win-body{ border-radius:0 0 9px 9px; }
+  .win.has-dport > .win-resize{ border-bottom-right-radius:9px; }
+  .win.maximized.has-dport > .win-header, .win.maximized.has-dport > .win-body, .win.maximized.has-dport > .win-resize{ border-radius:0; }
   .dport-out:hover{ transform:scale(1.25); }
   .win.maximized > .dport{ display:none; }
   .win.data-target{ outline:2px dashed var(--accent); outline-offset:3px; }
-  .win.data-target.data-hover > .dport-in{ transform:scale(1.5); opacity:1; background:var(--accent); }
+  .win.data-target.data-hover > .dport-in{ transform:scale(1.5); opacity:1; background:var(--text); }
   #viewport.data-linking, #viewport.data-linking *{ cursor:crosshair !important; }
   #searchPanel{
     position:fixed; right:64px; bottom:calc(12px + env(safe-area-inset-bottom,0px));
@@ -1660,6 +1665,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
 
   function dataPortAdd(win, kind){
     if (win._isWidget) return; // widgets ficam de fora das portas visuais (ainda dá para ligar por código)
+    win.classList.add('has-dport');
     if (win.querySelector(':scope > .dport-' + kind)) return;
     var p = document.createElement('div');
     p.className = 'dport dport-' + kind;
@@ -1668,12 +1674,11 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
     if (kind === 'out') p.addEventListener('pointerdown', function(e){ dataDragStart(e, win); });
   }
 
-  // centro da porta no espaço do canvas (a porta fica a 51px do topo; dentro da borda, ou sobre ela nas janelas doc)
+  // centro da porta no espaço do canvas (a porta fica a 51px do topo, inteira fora da borda lateral)
   function dataPortPos(win, kind){
     if (win._isWidget) return winCenterCanvas(win);
     var l = parseFloat(win.style.left) || 0, t = parseFloat(win.style.top) || 0;
-    var inset = win.classList.contains('doc-frame') ? 0 : 11;
-    return { x: kind === 'out' ? l + win.offsetWidth - inset : l + inset, y: t + 51 };
+    return { x: kind === 'out' ? l + win.offsetWidth + 7 : l - 7, y: t + 51 };
   }
   function dataCurve(a, b){
     var dx = Math.max(40, Math.abs(b.x - a.x) / 2);
