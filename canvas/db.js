@@ -1074,7 +1074,8 @@ let devmstate = "normal";
   let nap = true;
   let inspectwin = false;
 
-
+  document.addEventListener('keydown', function (e) {
+    
     if (e.key === 'F3' || e.keyCode == 114) {
 
                    e.cancelBubble = true;
