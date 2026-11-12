@@ -184,7 +184,11 @@ setTransparentBackground();
           console.log = function (msg) {
           parent.postMessage('printconsole(${countruncode}, "' + msg + '")' ,'*');        
           }
-          </scri` + `pt>`;
+          </scri` + `pt>
+          
+          let $_DATA = ${codeeditordadosplus[p.fromeditor]};
+          
+          `;
         }
 
         if (linguacodex["editor_" + p.fromeditor] == "javascript") {
@@ -198,6 +202,9 @@ setTransparentBackground();
               console.log = function (msg) {
               parent.postMessage('printconsole(${countruncode}, "' + msg + '")' ,'*');        
               }
+
+              let $_DATA = ${codeeditordadosplus[p.fromeditor]};
+
              </scr` + `ipt><scr` + `ipt>`;
         }
 
@@ -218,6 +225,9 @@ setTransparentBackground();
             console.log = function (msg) {
             parent.postMessage('printconsole(${countruncode}, "' + msg + '")' ,'*');        
             }
+
+            let $_DATA = ${codeeditordadosplus[p.fromeditor]};
+
             </scr` + `ipt>
                <sc` +
             `ript type='text/typescript'>`;
@@ -235,6 +245,9 @@ setTransparentBackground();
               console.log = function (msg) {
               parent.postMessage('printconsole(${countruncode}, "' + msg + '")' ,'*');        
               }
+
+              let $_DATA = ${codeeditordadosplus[p.fromeditor]};
+
             </scr` + `ipt>
             <scr` +
             `ipt src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></sc` +
@@ -314,9 +327,21 @@ setTransparentBackground();
         iframeDoc.write(htmlContent);
         iframeDoc.close();
       }
+      
+
+      let codeeditordadosplus = [];
 
       window.codeeditor = function (id, p) {
         countcode++;
+
+        let dadosplus = "";
+        let entradadedados = datain(id, {
+            data: function(dados, origem){   // chamada a cada dado novo, de qualquer origem
+                console.log(dados + " / origem: " + origem.title);
+                dadosplus = JSON.stringify(dados);
+                codeeditordadosplus[id] = dadosplus;
+            }
+        });
 
         let tema = "tomorrow";
         if (localStorage.getItem('infcanvas:theme') == "dracula") {
@@ -1300,6 +1325,8 @@ window.datatexec = function (dados, ltitulo) {
 
 window.opendataexplorer = function (id, param) {
 
+  let outputdataexplorer = dataout(id);
+
   let code = `
   
     <style>
@@ -1356,6 +1383,7 @@ window.opendataexplorer = function (id, param) {
 
   `;
 
+      outputdataexplorer.send(param.dadosarr);
       document.getElementById(id).innerHTML = code;
       document.getElementById(id).style.backgroundColor = "var(--bg, #FFFFFF)";
       document.getElementById("datat_" + param.indice).innerHTML = showtable(param.dadosarr, { color: "var(--text)", backgroundColor: "var(--bg)" });
@@ -1388,6 +1416,8 @@ window.opendataexplorer = function (id, param) {
 let datasubquery = [];
 
 window.openquery = function (elem_id, extras) {
+
+  let outputquery = dataout(elem_id);
 
   let googlesheet = extras.sheet;
   let select = extras.query;
@@ -1497,7 +1527,9 @@ window.openquery = function (elem_id, extras) {
 
         constroihtml += `<div class="tabelasepara"></div>`;
 
-      }
+        }
+        
+      outputquery.send(arr);
 
       constroihtml += `</div>
                       <input placeholder="SQL Query" id="subqueryrunner_${elem_id}" type='text' style='outline: none; border 0; height: 40px; line-height: 25px; font-size: 16px; width: calc(100%); padding-left: 15px; padding-right: 15px; background-color: var(--grid-dot, #c7c7d1); color: var(--text,  #1c1c22); font-family: monospace; border: 0;' />
@@ -1986,6 +2018,9 @@ window.openlegacymenu = function (id, dados) {
       }
 
 
+  let devmstate = "normal";
+  let nap = true;
+  let inspectwin = false;
 
   document.addEventListener('keydown', function (e) {
     if (e.key === 'F1' || e.keyCode == 112) {
@@ -1998,9 +2033,7 @@ window.openlegacymenu = function (id, dados) {
 
       omnihelp();
     }
-  });
 
-  document.addEventListener('keydown', function (e) {
     if (e.key === 'F2' || e.keyCode == 113) {
 
       e.cancelBubble = true;
@@ -2011,12 +2044,8 @@ window.openlegacymenu = function (id, dados) {
 
       menu();
     }
-  });
-    
-  let devmstate = "normal";
 
-  document.addEventListener('keydown', function (e) {
-            if (e.key === 'F3' || e.keyCode == 114) {
+    if (e.key === 'F3' || e.keyCode == 114) {
 
                    e.cancelBubble = true;
                     e.cancelable = true;
@@ -2031,11 +2060,49 @@ window.openlegacymenu = function (id, dados) {
                 devmode();
                 devmstate = "normal";
               }
-  }
-  
-  
-});
+    }
 
+    if (e.key === 'F4' || e.keyCode == 115) {
+
+                   e.cancelBubble = true;
+                    e.cancelable = true;
+                    e.stopPropagation();
+                    e.preventDefault();
+                    e.returnValue = false;
+
+                if (!nap) {
+                    snap();
+                    nap = true;
+                } else {
+                    nosnap();
+                    nap = false;
+                }
+    }
+
+    if (e.key === 'F5' || e.keyCode == 116) {
+
+                   e.cancelBubble = true;
+                    e.cancelable = true;
+                    e.stopPropagation();
+                    e.preventDefault();
+                    e.returnValue = false;
+
+                if (!inspectwin) {
+                    inspectwin = true;
+                    state();
+                    widget("State");
+                } else {
+                    inspectwin = false;
+                    remove("State");
+                }
+    }
+
+
+
+  });
+
+
+  
 if (typeof localStorage.getItem('primeiroacesso') == 'undefined' || localStorage.getItem('primeiroacesso') == null || localStorage.getItem('primeiroacesso') == '') {
   omnihelp();
 }

@@ -2016,6 +2016,9 @@ window.openlegacymenu = function (id, dados) {
       }
 
 
+  let devmstate = "normal";
+  let nap = true;
+  let inspectwin = false;
 
   document.addEventListener('keydown', function (e) {
     if (e.key === 'F1' || e.keyCode == 112) {
@@ -2028,9 +2031,7 @@ window.openlegacymenu = function (id, dados) {
 
       omnihelp();
     }
-  });
 
-  document.addEventListener('keydown', function (e) {
     if (e.key === 'F2' || e.keyCode == 113) {
 
       e.cancelBubble = true;
@@ -2041,12 +2042,8 @@ window.openlegacymenu = function (id, dados) {
 
       menu();
     }
-  });
-    
-  let devmstate = "normal";
 
-  document.addEventListener('keydown', function (e) {
-            if (e.key === 'F3' || e.keyCode == 114) {
+    if (e.key === 'F3' || e.keyCode == 114) {
 
                    e.cancelBubble = true;
                     e.cancelable = true;
@@ -2061,11 +2058,49 @@ window.openlegacymenu = function (id, dados) {
                 devmode();
                 devmstate = "normal";
               }
-  }
-  
-  
-});
+    }
 
+    if (e.key === 'F4' || e.keyCode == 115) {
+
+                   e.cancelBubble = true;
+                    e.cancelable = true;
+                    e.stopPropagation();
+                    e.preventDefault();
+                    e.returnValue = false;
+
+                if (!nap) {
+                    snap();
+                    nap = true;
+                } else {
+                    nosnap();
+                    nap = false;
+                }
+    }
+
+    if (e.key === 'F5' || e.keyCode == 116) {
+
+                   e.cancelBubble = true;
+                    e.cancelable = true;
+                    e.stopPropagation();
+                    e.preventDefault();
+                    e.returnValue = false;
+
+                if (!inspectwin) {
+                    inspectwin = true;
+                    state();
+                    widget("State");
+                } else {
+                    inspectwin = false;
+                    remove("State");
+                }
+    }
+
+
+
+  });
+
+
+  
 if (typeof localStorage.getItem('primeiroacesso') == 'undefined' || localStorage.getItem('primeiroacesso') == null || localStorage.getItem('primeiroacesso') == '') {
   omnihelp();
 }
