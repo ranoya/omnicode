@@ -1070,9 +1070,10 @@ let getcssv = function (v) {
 }
 
 
-let devmstate = "normal";
+  let devmstate = "normal";
   let nap = true;
   let inspectwin = false;
+  let pintura = false;
 
   document.addEventListener('keydown', function (e) {
     
@@ -1125,6 +1126,23 @@ let devmstate = "normal";
                 } else {
                     inspectwin = false;
                     remove("State");
+                }
+    }
+
+    if (e.key === 'F6' || e.keyCode == 117) {
+
+                   e.cancelBubble = true;
+                    e.cancelable = true;
+                    e.stopPropagation();
+                    e.preventDefault();
+                    e.returnValue = false;
+
+                if (!pintura) {
+                    pintura = true;
+                    draw();
+                } else {
+                    pintura = false;
+                    removedraw();
                 }
     }
 

@@ -2022,6 +2022,7 @@ window.openlegacymenu = function (id, dados) {
   let devmstate = "normal";
   let nap = true;
   let inspectwin = false;
+  let pintura = false;
 
   document.addEventListener('keydown', function (e) {
     if (e.key === 'F1' || e.keyCode == 112) {
@@ -2095,6 +2096,23 @@ window.openlegacymenu = function (id, dados) {
                 } else {
                     inspectwin = false;
                     remove("State");
+                }
+    }
+
+    if (e.key === 'F6' || e.keyCode == 117) {
+
+                   e.cancelBubble = true;
+                    e.cancelable = true;
+                    e.stopPropagation();
+                    e.preventDefault();
+                    e.returnValue = false;
+
+                if (!pintura) {
+                    pintura = true;
+                    draw();
+                } else {
+                    pintura = false;
+                    removedraw();
                 }
     }
 
