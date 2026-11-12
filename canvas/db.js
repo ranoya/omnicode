@@ -1070,6 +1070,68 @@ let getcssv = function (v) {
 }
 
 
+let devmstate = "normal";
+  let nap = true;
+  let inspectwin = false;
+
+
+    if (e.key === 'F3' || e.keyCode == 114) {
+
+                   e.cancelBubble = true;
+                    e.cancelable = true;
+                    e.stopPropagation();
+                    e.preventDefault();
+                    e.returnValue = false;
+
+              if (devmstate == "normal") {
+                floatdevmode();
+                devmstate = "float"
+              } else {
+                devmode();
+                devmstate = "normal";
+              }
+    }
+
+    if (e.key === 'F4' || e.keyCode == 115) {
+
+                   e.cancelBubble = true;
+                    e.cancelable = true;
+                    e.stopPropagation();
+                    e.preventDefault();
+                    e.returnValue = false;
+
+                if (!nap) {
+                    snap();
+                    nap = true;
+                } else {
+                    nosnap();
+                    nap = false;
+                }
+    }
+
+    if (e.key === 'F5' || e.keyCode == 116) {
+
+                   e.cancelBubble = true;
+                    e.cancelable = true;
+                    e.stopPropagation();
+                    e.preventDefault();
+                    e.returnValue = false;
+
+                if (!inspectwin) {
+                    inspectwin = true;
+                    state();
+                    widget("State");
+                } else {
+                    inspectwin = false;
+                    remove("State");
+                }
+    }
+
+
+
+  });
+
+
 
 newframe("https://docs.google.com/spreadsheets/d/1FbY8hPtM8IxEJ26ybMZHpMrHdk-LEm1yuYPiFVwF94U/edit?gid=0#gid=0", "Planilha de Origem");
 
