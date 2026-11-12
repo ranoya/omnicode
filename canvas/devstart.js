@@ -185,9 +185,10 @@ setTransparentBackground();
           console.log = function (msg) {
           parent.postMessage('printconsole(${countruncode}, "' + msg + '")' ,'*');        
           }
-          </scri` + `pt>
-          
+
           let $_DATA = ${codeeditordadosplus[p.fromeditor]};
+
+          </scri` + `pt>
           
           `;
         }
