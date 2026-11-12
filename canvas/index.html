@@ -255,6 +255,41 @@ $_GET = [];
   .win.data-target{ outline:2px dashed var(--accent); outline-offset:3px; }
   .win.data-target.data-hover > .dport-in{ transform:scale(1.5); opacity:1; background:var(--text); }
   #viewport.data-linking, #viewport.data-linking *{ cursor:crosshair !important; }
+  /* draw(): anotações sobre o canvas */
+  #drawLayer{ position:absolute; top:0; left:0; width:1px; height:1px; overflow:visible; pointer-events:none; z-index:2147483000; }
+  #drawCapture{ position:fixed; inset:0; z-index:9000; display:none; touch-action:none; background:transparent; }
+  #drawPalette{
+    position:fixed; left:12px; top:50%; transform:translateY(-50%); z-index:9999;
+    max-height:calc(100vh - 24px); overflow:auto; scrollbar-width:none;
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+    background:var(--panel); border:1px solid var(--panel-border); border-radius:8px; padding:5px;
+  }
+  #drawPalette::-webkit-scrollbar{ display:none; }
+  #drawPalette button, #drawStamps button{
+    width:30px; height:30px; flex:none; border-radius:6px; border:none; background:transparent;
+    color:var(--text); cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;
+  }
+  #drawPalette button:hover, #drawStamps button:hover{ background:var(--panel-border); }
+  #drawPalette button.on, #drawStamps button.on{ background:var(--accent); color:var(--accent-text); }
+  #drawPalette .dp-sep{ width:100%; border-top:1px solid var(--panel-border); margin:3px 0; flex:none; }
+  #drawPalette .dp-colors{ display:grid; grid-template-columns:repeat(2, 18px); gap:4px; padding:2px 0; }
+  #drawPalette .dp-colors button{ width:18px; height:18px; border-radius:50%; border:2px solid var(--panel-border); }
+  #drawPalette .dp-colors button:hover{ border-color:var(--muted); }
+  #drawPalette .dp-colors button.on{ border-color:var(--text); box-shadow:0 0 0 1px var(--panel); }
+  #drawPalette .dp-off{ opacity:.3; pointer-events:none; }
+  #drawStamps{
+    position:fixed; z-index:9999; display:none; flex-direction:row; gap:2px; padding:4px;
+    background:var(--panel); border:1px solid var(--panel-border); border-radius:8px; box-shadow:0 8px 24px var(--shadow);
+  }
+  #drawEraserRing{
+    position:fixed; z-index:9001; display:none; pointer-events:none; box-sizing:border-box;
+    border:1.5px solid var(--text); border-radius:50%; background:rgba(128,128,128,.12);
+  }
+  .draw-editor{
+    position:fixed; z-index:9500; min-width:1ch; padding:0; margin:0; line-height:1.25; white-space:pre;
+    font-family:system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; outline:1px dashed var(--muted); outline-offset:2px;
+    background:transparent; user-select:text;
+  }
   #searchPanel{
     position:fixed; right:64px; bottom:calc(12px + env(safe-area-inset-bottom,0px));
     z-index:9999; width:220px; max-height:360px; display:none; flex-direction:column;
@@ -1309,6 +1344,15 @@ ao estado inicial.</p>
 <p>O caminho de volta: o widget retorna ao espaço do canvas, cobrindo visualmente o mesmo lugar e tamanho
 que ocupa na tela agora (considerando o zoom e o pan atuais), e volta a acompanhar pan e zoom.</p>
 <hr>
+<h4>Desenhar sobre o canvas</h4>
+<code class="sig">draw()</code>
+<p>Abre, no lado esquerdo, uma paleta para desenhar por cima de tudo o que está no canvas (acima das janelas, abaixo dos widgets). Ferramentas: <b>navegar</b> (a "mão": devolve o mouse às janelas, para clicar, rolar e arrastar), <b>caneta</b>, <b>marcador de texto</b> (traço grosso e translúcido), <b>borracha</b> (apaga só a área tocada do traço), <b>texto</b> (clique, digite, Enter confirma, Shift+Enter quebra linha, Esc cancela) e <b>carimbos</b> (estrela, coração, seta, certo, errado; dá para arrastar antes de soltar). Há três tamanhos para cada ferramenta e sete cores: as do tema (<code>--text</code>, <code>--accent</code>, <code>--muted</code>) e amarelo, vermelho, verde e azul. Com uma ferramenta ativa, o botão direito ou o do meio arrasta o canvas e a roda dá zoom. A paleta também tem desfazer (Ctrl+Z), refazer (Ctrl+Shift+Z ou Ctrl+Y), limpar tudo e fechar.</p>
+<p>Os desenhos ficam presos ao canvas (acompanham pan e zoom, mas não acompanham uma janela que for movida depois) e existem só na memória: nada é guardado e tudo some ao recarregar a página.</p>
+<code class="sig">removedraw()</code>
+<p>Tira a paleta da tela e devolve a navegação normal, mas mantém tudo o que foi desenhado. Chamar <code>draw()</code> de novo traz a paleta de volta, com os desenhos e o histórico de desfazer.</p>
+<code class="sig">cleardraw()</code>
+<p>Apaga todos os desenhos de uma vez (a paleta, se estiver aberta, continua; dá para desfazer com Ctrl+Z).</p>
+<hr>
 <h4>Troca de dados entre janelas</h4>
 <p>Janelas criadas com <code>run</code>, <code>permarun</code>, <code>rundoc</code>, <code>runpermadoc</code> (e as variantes "sdoc") podem trocar dados em tempo real. Quem envia declara uma saída; quem recebe declara uma entrada; e <code>linkdata</code> liga as duas pelo título. Os dados ficam só na memória (nada vai para o localStorage) e cada receptor recebe uma <b>cópia</b> independente.</p>
 <code class="sig">dataout(id [, rótulo])</code>
@@ -1821,6 +1865,414 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
       dataLogCommand('linkdata(' + JSON.stringify(dataTitle(src)) + ', ' + JSON.stringify(dataTitle(tgt)) + ')');
   }
   function dataDragKey(e){ if (e.key === 'Escape') dataDragStop(); }
+
+  // ---- draw(): anotações sobre o canvas (rabiscos, marcador, borracha, texto, carimbos) ----
+  // Só em memória (nada vai para localStorage nem para o savestate). A camada fica no espaço do canvas
+  // (acompanha pan e zoom), acima das janelas e abaixo dos widgets.
+  var DRAW_COLORS = [
+    { c: 'var(--text)',   t: 'Cor do texto do tema' },
+    { c: 'var(--accent)', t: 'Cor de destaque do tema' },
+    { c: 'var(--muted)',  t: 'Cor apagada do tema' },
+    { c: '#FFD60A', t: 'Amarelo' }, { c: '#FF3B30', t: 'Vermelho' },
+    { c: '#34C759', t: 'Verde' },   { c: '#0A84FF', t: 'Azul' }
+  ];
+  var DRAW_SIZES = { pen: [2, 5, 10], hl: [14, 26, 42], eraser: [8, 20, 40], text: [14, 26, 42], stamp: [28, 48, 80] };
+  var DRAW_STAMPS = {
+    star:  { fill: true,  d: 'M12 2L15.1 8.6L22 9.3L16.8 14L18.3 21L12 17.5L5.7 21L7.2 14L2 9.3L8.9 8.6Z', t: 'Estrela' },
+    heart: { fill: true,  d: 'M12 21C12 21 3 15 3 8.8C3 5.9 5.2 4 7.6 4C9.4 4 11 5 12 6.7C13 5 14.6 4 16.4 4C18.8 4 21 5.9 21 8.8C21 15 12 21 12 21Z', t: 'Coração' },
+    arrow: { fill: false, d: 'M3 12H20M13 5L20 12L13 19', t: 'Seta' },
+    check: { fill: false, d: 'M4 12.5L9.5 18L20 6', t: 'Certo' },
+    cross: { fill: false, d: 'M5 5L19 19M19 5L5 19', t: 'Errado' }
+  };
+  var DRAW_ICONS = {
+    hand:   '<path d="M3.5 2l9 5.2-4 1.1-1.8 4.2z" fill="currentColor" stroke="none"/>',
+    pen:    '<path d="M11 2.5l2.5 2.5L5.5 13l-3 .6.5-3z"/><path d="M9.5 4l2.5 2.5"/>',
+    hl:     '<path d="M10 2.5l3.5 3.5-5.5 5.5H4.5V8z"/><path d="M2.5 14h6" stroke-width="2.6" opacity=".55"/>',
+    eraser: '<path d="M9 3l4 4-5.5 5.5H4.5l-2-2z"/><path d="M5.5 6.5l4 4"/><path d="M7.5 13.5h6"/>',
+    text:   '<path d="M3 4.5V3h10v1.5M8 3v10M6 13h4"/>',
+    stamp:  '<path d="M8 1.8l1.9 3.9 4.2.6-3.05 3 .72 4.2L8 11.5l-3.77 2 .72-4.2-3.05-3 4.2-.6z"/>',
+    undo:   '<path d="M5 3L2 6l3 3"/><path d="M2 6h7a4 4 0 010 8H6"/>',
+    redo:   '<path d="M11 3l3 3-3 3"/><path d="M14 6H7a4 4 0 000 8h3"/>',
+    clear:  '<path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.6 8.5h5.8l.6-8.5M7 7v4M9 7v4"/>',
+    close:  '<path d="M4 4l8 8M12 4l-8 8"/>'
+  };
+  function drawIcon(name){
+    return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' + DRAW_ICONS[name] + '</svg>';
+  }
+
+  var drawState = { tool: 'pen', size: 1, color: 'var(--accent)', stamp: 'star' };
+  var drawItems = [];            // itens vivos, na ordem de desenho
+  var drawUndoStack = [], drawRedoStack = [];
+  var drawLayer = null, drawCapture = null, drawPalette = null, drawStampsBar = null, drawRing = null;
+  var drawGesture = null, drawEditor = null, drawKeyHandlerOn = false;
+
+  function drawEnsureLayer(){
+    if (drawLayer) return;
+    drawLayer = document.createElementNS(SVGNS, 'svg');
+    drawLayer.id = 'drawLayer';
+    canvas.appendChild(drawLayer);
+  }
+  function drawStrokeD(pts){
+    var n = pts.length;
+    if (n === 1) return 'M' + pts[0][0] + ',' + pts[0][1] + ' h0.01';
+    var d = 'M' + pts[0][0] + ',' + pts[0][1];
+    if (n === 2) return d + ' L' + pts[1][0] + ',' + pts[1][1];
+    for (var i = 1; i < n - 1; i++){
+      d += ' Q' + pts[i][0] + ',' + pts[i][1] + ' ' + ((pts[i][0] + pts[i+1][0]) / 2) + ',' + ((pts[i][1] + pts[i+1][1]) / 2);
+    }
+    return d + ' L' + pts[n-1][0] + ',' + pts[n-1][1];
+  }
+  function drawMakeEl(it){
+    var el;
+    if (it.type === 'stroke'){
+      el = svgEl('path');
+      el.setAttribute('d', drawStrokeD(it.pts));
+      el.style.fill = 'none'; el.style.stroke = it.color; el.style.strokeWidth = it.w;
+      el.style.strokeLinecap = 'round'; el.style.strokeLinejoin = 'round';
+      if (it.kind === 'hl') el.style.strokeOpacity = '.4';
+    } else if (it.type === 'text'){
+      el = svgEl('text');
+      el.setAttribute('x', it.x); el.setAttribute('y', it.y + it.size * 0.97);
+      el.style.fill = it.color; el.style.fontSize = it.size + 'px';
+      el.style.fontFamily = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+      el.style.whiteSpace = 'pre';
+      it.lines.forEach(function(line, i){
+        var ts = svgEl('tspan');
+        ts.setAttribute('x', it.x);
+        if (i > 0) ts.setAttribute('dy', it.size * 1.25);
+        ts.textContent = line === '' ? ' ' : line;
+        el.appendChild(ts);
+      });
+    } else { // stamp
+      el = svgEl('g');
+      var def = DRAW_STAMPS[it.kind];
+      var p = svgEl('path'); p.setAttribute('d', def.d);
+      if (def.fill){ p.style.fill = it.color; p.style.stroke = it.color; p.style.strokeWidth = 1; p.style.strokeLinejoin = 'round'; }
+      else { p.style.fill = 'none'; p.style.stroke = it.color; p.style.strokeWidth = 3; p.style.strokeLinecap = 'round'; p.style.strokeLinejoin = 'round'; }
+      el.appendChild(p);
+      drawPlaceStamp(it, el);
+    }
+    return el;
+  }
+  function drawPlaceStamp(it, el){
+    el = el || it.el;
+    el.setAttribute('transform', 'translate(' + (it.x - it.size / 2) + ',' + (it.y - it.size / 2) + ') scale(' + (it.size / 24) + ')');
+  }
+  function drawAddItem(it){
+    drawEnsureLayer();
+    if (!it.el) it.el = drawMakeEl(it);
+    drawItems.push(it);
+    drawLayer.appendChild(it.el);
+  }
+  function drawRemoveItem(it){
+    var i = drawItems.indexOf(it);
+    if (i !== -1) drawItems.splice(i, 1);
+    if (it.el) it.el.remove();
+  }
+  // histórico: toda ação é "remover estes itens e adicionar aqueles"
+  function drawRecord(a){ drawUndoStack.push(a); drawRedoStack.length = 0; drawRefreshPalette(); }
+  function drawApply(a, forward){
+    (forward ? a.rem : a.add).forEach(drawRemoveItem);
+    (forward ? a.add : a.rem).forEach(drawAddItem);
+  }
+  function drawUndo(){
+    var a = drawUndoStack.pop(); if (!a) return;
+    drawApply(a, false); drawRedoStack.push(a); drawRefreshPalette();
+  }
+  function drawRedo(){
+    var a = drawRedoStack.pop(); if (!a) return;
+    drawApply(a, true); drawUndoStack.push(a); drawRefreshPalette();
+  }
+  function cleardraw(){
+    if (!drawItems.length) return;
+    drawCloseEditor(false);
+    var a = { rem: drawItems.slice(), add: [] };
+    drawApply(a, true);
+    drawRecord(a);
+  }
+
+  function drawDensify(pts, step){
+    if (pts.length < 2) return pts;
+    var out = [pts[0]];
+    for (var i = 1; i < pts.length; i++){
+      var a = pts[i - 1], b = pts[i];
+      var n = Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / step) - 1;
+      for (var k = 1; k <= n; k++) out.push([a[0] + (b[0] - a[0]) * k / (n + 1), a[1] + (b[1] - a[1]) * k / (n + 1)]);
+      out.push(b);
+    }
+    return out;
+  }
+
+  // borracha: corta os traços só na área tocada; textos e carimbos tocados saem inteiros
+  function drawEraseAt(x, y, r, g){
+    drawItems.slice().forEach(function(it){
+      if (it.type === 'stroke'){
+        var lim2 = (r + it.w / 2) * (r + it.w / 2), hit = false, pieces = [], cur = [];
+        it.pts.forEach(function(p){
+          var dx = p[0] - x, dy = p[1] - y;
+          if (dx * dx + dy * dy < lim2){ hit = true; if (cur.length){ pieces.push(cur); cur = []; } }
+          else cur.push(p);
+        });
+        if (!hit) return;
+        if (cur.length) pieces.push(cur);
+        drawEraseTake(it, g);
+        pieces.filter(function(p){ return p.length >= 2; }).forEach(function(p){
+          var np = { type: 'stroke', kind: it.kind, color: it.color, w: it.w, pts: p };
+          drawAddItem(np); g.added.push(np);
+        });
+      } else {
+        var bb;
+        if (it.type === 'stamp') bb = { x: it.x - it.size / 2, y: it.y - it.size / 2, width: it.size, height: it.size };
+        else {
+          try { bb = it.el.getBBox(); } catch (err){ bb = null; }
+          if (!bb || (!bb.width && !bb.height)) bb = { x: it.x, y: it.y, width: it.size * 0.6 * Math.max.apply(null, it.lines.map(function(l){ return l.length; })), height: it.size * 1.25 * it.lines.length };
+        }
+        var cx = Math.max(bb.x, Math.min(x, bb.x + bb.width)), cy = Math.max(bb.y, Math.min(y, bb.y + bb.height));
+        if ((cx - x) * (cx - x) + (cy - y) * (cy - y) < r * r){ drawEraseTake(it, g); }
+      }
+    });
+  }
+  function drawEraseTake(it, g){
+    var i = g.added.indexOf(it);
+    if (i !== -1) g.added.splice(i, 1); else g.rem.push(it);
+    drawRemoveItem(it);
+  }
+
+  // ---- texto: editor no lugar do clique ----
+  function drawOpenEditor(pt, sx, sy){
+    drawCloseEditor(true);
+    var size = DRAW_SIZES.text[drawState.size], color = drawState.color;
+    var ed = document.createElement('div');
+    ed.className = 'draw-editor'; ed.contentEditable = 'true'; ed.spellcheck = false;
+    ed.style.left = sx + 'px'; ed.style.top = sy + 'px';
+    ed.style.fontSize = (size * zoom) + 'px'; ed.style.color = color;
+    document.body.appendChild(ed);
+    drawEditor = { el: ed, pt: pt, size: size, color: color, done: false };
+    ed.addEventListener('keydown', function(e){
+      e.stopPropagation();
+      if (e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); drawCloseEditor(true); }
+      else if (e.key === 'Escape'){ e.preventDefault(); drawCloseEditor(false); }
+    });
+    ed.addEventListener('blur', function(){ drawCloseEditor(true); });
+    ed.focus();
+  }
+  function drawCloseEditor(commit){
+    var e = drawEditor;
+    if (!e || e.done) return;
+    e.done = true; drawEditor = null;
+    var txt = (e.el.innerText || '').replace(/\n+$/, '');
+    e.el.remove();
+    if (!commit || !txt.trim()) return;
+    var it = { type: 'text', x: e.pt.x, y: e.pt.y, size: e.size, color: e.color, lines: txt.split('\n') };
+    drawAddItem(it);
+    drawRecord({ rem: [], add: [it] });
+  }
+
+  // ---- captura do mouse/toque quando uma ferramenta está ativa ----
+  function drawCanvasPt(e){ var p = screenToCanvas(e.clientX, e.clientY); return [p.x, p.y]; }
+  function drawRingUpdate(e){
+    if (!drawRing) return;
+    if (drawState.tool !== 'eraser' || !drawPalette){ drawRing.style.display = 'none'; return; }
+    var d = DRAW_SIZES.eraser[drawState.size] * zoom * 2;
+    drawRing.style.display = 'block';
+    drawRing.style.width = d + 'px'; drawRing.style.height = d + 'px';
+    drawRing.style.left = (e.clientX - d / 2) + 'px'; drawRing.style.top = (e.clientY - d / 2) + 'px';
+  }
+  function drawBuildCapture(){
+    if (drawCapture) return;
+    drawCapture = document.createElement('div'); drawCapture.id = 'drawCapture';
+    drawRing = document.createElement('div'); drawRing.id = 'drawEraserRing';
+    document.body.appendChild(drawCapture); document.body.appendChild(drawRing);
+
+    drawCapture.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+    drawCapture.addEventListener('mousedown', function(e){ if (e.button === 1) e.preventDefault(); });
+    drawCapture.addEventListener('wheel', function(e){
+      e.preventDefault();
+      zoomBy(e.deltaY < 0 ? 1.014 : 1 / 1.014, e.clientX, e.clientY);
+    }, { passive: false });
+    drawCapture.addEventListener('pointerleave', function(){ if (!drawGesture) drawRing.style.display = 'none'; });
+
+    drawCapture.addEventListener('pointerdown', function(e){
+      if (drawGesture) return;
+      e.preventDefault();
+      drawCapture.setPointerCapture(e.pointerId);
+      // botão do meio/direito: arrasta o canvas, como no resto da ferramenta
+      if (e.pointerType === 'mouse' && (e.button === 1 || e.button === 2)){
+        drawGesture = { kind: 'pan', x: e.clientX, y: e.clientY, ox: pan.x, oy: pan.y };
+        return;
+      }
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      drawCloseEditor(true);
+      var pt = drawCanvasPt(e), tool = drawState.tool, size = drawState.size;
+      if (tool === 'pen' || tool === 'hl'){
+        var it = { type: 'stroke', kind: tool, color: drawState.color, w: DRAW_SIZES[tool][size], pts: [pt] };
+        it.el = drawMakeEl(it); drawEnsureLayer(); drawLayer.appendChild(it.el);
+        drawGesture = { kind: 'stroke', it: it, lx: e.clientX, ly: e.clientY };
+      } else if (tool === 'eraser'){
+        drawGesture = { kind: 'erase', last: pt, rem: [], added: [] };
+        drawEraseAt(pt[0], pt[1], DRAW_SIZES.eraser[size], drawGesture);
+        drawRingUpdate(e);
+      } else if (tool === 'stamp'){
+        var st = { type: 'stamp', kind: drawState.stamp, x: pt[0], y: pt[1], size: DRAW_SIZES.stamp[size], color: drawState.color };
+        drawAddItem(st);
+        drawGesture = { kind: 'stamp', it: st };
+      } else if (tool === 'text'){
+        drawGesture = { kind: 'text', sx: e.clientX, sy: e.clientY, pt: { x: pt[0], y: pt[1] } };
+      }
+    });
+
+    drawCapture.addEventListener('pointermove', function(e){
+      drawRingUpdate(e);
+      var g = drawGesture;
+      if (!g) return;
+      if (g.kind === 'pan'){
+        pan.x = g.ox + (e.clientX - g.x) / zoom;
+        pan.y = g.oy + (e.clientY - g.y) / zoom;
+        applyTransform();
+      } else if (g.kind === 'stroke'){
+        var evs = (e.getCoalescedEvents && e.getCoalescedEvents()) || [];
+        if (!evs.length) evs = [e];
+        var it = g.it, changed = false;
+        evs.forEach(function(ev){
+          if (Math.hypot(ev.clientX - g.lx, ev.clientY - g.ly) < 1.5) return; // ignora tremor do mouse
+          g.lx = ev.clientX; g.ly = ev.clientY;
+          it.pts.push(drawCanvasPt(ev)); changed = true;
+        });
+        if (changed) it.el.setAttribute('d', drawStrokeD(it.pts));
+      } else if (g.kind === 'erase'){
+        var pt = drawCanvasPt(e), r = DRAW_SIZES.eraser[drawState.size];
+        var dist = Math.hypot(pt[0] - g.last[0], pt[1] - g.last[1]);
+        var steps = Math.max(1, Math.ceil(dist / (r / 3)));
+        for (var k = 1; k <= steps; k++){
+          drawEraseAt(g.last[0] + (pt[0] - g.last[0]) * k / steps, g.last[1] + (pt[1] - g.last[1]) * k / steps, r, g);
+        }
+        g.last = pt;
+      } else if (g.kind === 'stamp'){
+        var q = drawCanvasPt(e); g.it.x = q[0]; g.it.y = q[1]; drawPlaceStamp(g.it);
+      }
+    });
+
+    function endGesture(e){
+      var g = drawGesture;
+      if (!g) return;
+      drawGesture = null;
+      if (g.kind === 'stroke'){
+        var it = g.it;
+        it.pts = drawDensify(it.pts, 4);
+        it.el.setAttribute('d', drawStrokeD(it.pts));
+        drawItems.push(it);
+        drawRecord({ rem: [], add: [it] });
+      } else if (g.kind === 'erase'){
+        if (g.rem.length || g.added.length) drawRecord({ rem: g.rem, add: g.added });
+      } else if (g.kind === 'stamp'){
+        drawRecord({ rem: [], add: [g.it] });
+      } else if (g.kind === 'text'){
+        if (e.type === 'pointerup' && Math.hypot(e.clientX - g.sx, e.clientY - g.sy) < 6) drawOpenEditor(g.pt, g.sx, g.sy);
+      }
+    }
+    drawCapture.addEventListener('pointerup', endGesture);
+    drawCapture.addEventListener('pointercancel', endGesture);
+  }
+
+  // ---- paleta ----
+  function drawSetTool(t){
+    drawCloseEditor(true);
+    drawState.tool = t;
+    drawCapture.style.display = (t === 'hand') ? 'none' : 'block';
+    drawCapture.style.cursor = (t === 'text') ? 'text' : (t === 'eraser' ? 'none' : 'crosshair');
+    if (drawRing) drawRing.style.display = 'none';
+    drawRefreshPalette();
+  }
+  function drawRefreshPalette(){
+    if (!drawPalette) return;
+    var t = drawState.tool;
+    [].forEach.call(drawPalette.querySelectorAll('[data-tool]'), function(b){ b.classList.toggle('on', b.dataset.tool === t); });
+    [].forEach.call(drawPalette.querySelectorAll('[data-size]'), function(b){ b.classList.toggle('on', +b.dataset.size === drawState.size); });
+    [].forEach.call(drawPalette.querySelectorAll('[data-color]'), function(b){ b.classList.toggle('on', b.dataset.color === drawState.color); });
+    drawPalette.querySelector('.dp-sizes').classList.toggle('dp-off', t === 'hand');
+    drawPalette.querySelector('.dp-colors').classList.toggle('dp-off', t === 'hand' || t === 'eraser');
+    drawPalette.querySelector('[data-act="undo"]').classList.toggle('dp-off', !drawUndoStack.length);
+    drawPalette.querySelector('[data-act="redo"]').classList.toggle('dp-off', !drawRedoStack.length);
+    drawPalette.querySelector('[data-act="clear"]').classList.toggle('dp-off', !drawItems.length);
+    if (drawStampsBar){
+      [].forEach.call(drawStampsBar.querySelectorAll('[data-stamp]'), function(b){ b.classList.toggle('on', b.dataset.stamp === drawState.stamp); });
+      if (t === 'stamp'){
+        var r = drawPalette.querySelector('[data-tool="stamp"]').getBoundingClientRect();
+        drawStampsBar.style.display = 'flex';
+        drawStampsBar.style.left = (r.right + 14) + 'px';
+        drawStampsBar.style.top = (r.top - 4) + 'px';
+      } else drawStampsBar.style.display = 'none';
+    }
+  }
+  function drawBuildPalette(){
+    var tools = [['hand', 'Navegar (sem desenhar): clicar nas janelas, rolar, arrastar'], ['pen', 'Caneta'], ['hl', 'Marcador de texto'],
+                 ['eraser', 'Borracha'], ['text', 'Texto'], ['stamp', 'Carimbos']];
+    var h = '<div class="dp-tools">' + tools.map(function(t){
+      return '<button data-tool="' + t[0] + '" title="' + t[1] + '">' + drawIcon(t[0]) + '</button>';
+    }).join('') + '</div><div class="dp-sep"></div><div class="dp-sizes">' + [3, 5, 7].map(function(r, i){
+      return '<button data-size="' + i + '" title="' + ['Pequeno', 'Médio', 'Grande'][i] + '"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="' + r + '" fill="currentColor"/></svg></button>';
+    }).join('') + '</div><div class="dp-sep"></div><div class="dp-colors">' + DRAW_COLORS.map(function(c){
+      return '<button data-color="' + c.c + '" title="' + c.t + '" style="background:' + c.c + '"></button>';
+    }).join('') + '</div><div class="dp-sep"></div><div class="dp-actions">' +
+      '<button data-act="undo" title="Desfazer (Ctrl+Z)">' + drawIcon('undo') + '</button>' +
+      '<button data-act="redo" title="Refazer (Ctrl+Shift+Z)">' + drawIcon('redo') + '</button>' +
+      '<button data-act="clear" title="Limpar tudo (dá para desfazer)">' + drawIcon('clear') + '</button>' +
+      '<button data-act="close" title="Fechar a paleta (mantém o que foi desenhado)">' + drawIcon('close') + '</button></div>';
+    drawPalette = document.createElement('div'); drawPalette.id = 'drawPalette'; drawPalette.innerHTML = h;
+    document.body.appendChild(drawPalette);
+
+    drawStampsBar = document.createElement('div'); drawStampsBar.id = 'drawStamps';
+    drawStampsBar.innerHTML = Object.keys(DRAW_STAMPS).map(function(k){
+      var d = DRAW_STAMPS[k];
+      return '<button data-stamp="' + k + '" title="' + d.t + '"><svg width="18" height="18" viewBox="0 0 24 24" fill="' + (d.fill ? 'currentColor' : 'none') + '" stroke="currentColor" stroke-width="' + (d.fill ? 1 : 3) + '" stroke-linecap="round" stroke-linejoin="round"><path d="' + d.d + '"/></svg></button>';
+    }).join('');
+    document.body.appendChild(drawStampsBar);
+
+    drawPalette.addEventListener('click', function(e){
+      var b = e.target.closest('button'); if (!b) return;
+      if (b.dataset.tool) drawSetTool(b.dataset.tool);
+      else if (b.dataset.size) { drawState.size = +b.dataset.size; drawRefreshPalette(); }
+      else if (b.dataset.color) { drawState.color = b.dataset.color; drawRefreshPalette(); }
+      else if (b.dataset.act === 'undo') drawUndo();
+      else if (b.dataset.act === 'redo') drawRedo();
+      else if (b.dataset.act === 'clear') cleardraw();
+      else if (b.dataset.act === 'close') removedraw();
+    });
+    drawStampsBar.addEventListener('click', function(e){
+      var b = e.target.closest('button'); if (!b) return;
+      drawState.stamp = b.dataset.stamp; drawRefreshPalette();
+    });
+  }
+
+  function draw(){
+    drawEnsureLayer();
+    drawBuildCapture();
+    if (!drawPalette) drawBuildPalette();
+    if (!drawKeyHandlerOn){
+      drawKeyHandlerOn = true;
+      document.addEventListener('keydown', function(e){
+        if (!drawPalette || !(e.ctrlKey || e.metaKey)) return;
+        var t = e.target;
+        if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return; // desfazer do próprio campo de texto
+        var k = (e.key || '').toLowerCase();
+        if (k === 'z' && !e.shiftKey){ e.preventDefault(); drawUndo(); }
+        else if ((k === 'z' && e.shiftKey) || k === 'y'){ e.preventDefault(); drawRedo(); }
+      });
+    }
+    drawSetTool(drawState.tool);
+  }
+  // tira a paleta da tela e devolve a navegação normal; o que foi desenhado continua lá
+  function removedraw(){
+    drawCloseEditor(true);
+    if (drawPalette){ drawPalette.remove(); drawPalette = null; }
+    if (drawStampsBar){ drawStampsBar.remove(); drawStampsBar = null; }
+    if (drawCapture) drawCapture.style.display = 'none';
+    if (drawRing) drawRing.style.display = 'none';
+    drawGesture = null;
+  }
+  window.draw = draw;
+  window.removedraw = removedraw;
+  window.cleardraw = cleardraw;
   window.dataout = dataout;
   window.datain = datain;
   window.linkdata = linkdata;
@@ -3021,6 +3473,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
                     'groovy', 'ungroovy', 'savestate', 'lock', 'unlock', 'centerlastframe', 'lockall', 'unlockall',
                     'superdevmode', 'nodev', 'setPosition', 'console', 'floatdevmode',
                     'widget', 'removewidget', 'dataout', 'datain', 'linkdata', 'unlinkdata',
+                    'draw', 'removedraw', 'cleardraw',
                     cmd))(
         newwindow, newframe, run, newpermawindow, newpermaframe, permarun,
         connect, disconnect, setTheme, setTempTheme, help,
@@ -3030,7 +3483,8 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
         newsdoc, newsidoc, runsdoc, newpermasdoc, newpermasidoc, runpermasdoc,
         groovy, ungroovy, savestate, lock, unlock, centerlastframe, lockall, unlockall,
         superdevmode, nodev, setPosition, consoleCallable, floatdevmode,
-        widget, removewidget, dataout, datain, linkdata, unlinkdata);
+        widget, removewidget, dataout, datain, linkdata, unlinkdata,
+        draw, removedraw, cleardraw);
       // registra o comando no histórico (só os que rodaram sem erro), junto das janelas que ele criou
       commandLog.push({ raw: cmd, createdWins: windows.slice(winCountBefore) });
     } catch (err){
@@ -3111,39 +3565,6 @@ if (
 
 
  // --- IMPLEMENTAÇÕES PRÓPRIAS ------------------------------------------------------------------
-
-
-
-      /*
-      ATENÇÃO
-
-      também é necessário incluir o DATAT no início do código:
-
-      script src="https://datat.vercel.app/basicsmin.js"
-      script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"
-
-      
-      Mudanças no código:
-      incluir remoção e restaruação de supermenu em:
-
-
-      if (maxBtn){
-      var toggleMaximize = function(){
-        if (win.classList.contains('maximized')){
-        
-          if (typeof spm_canvas_res == "function") { spm_canvas_res(); }
-
-      
-          ...
-
-          } else {
-
-          if (typeof spm_canvas_max == "function") { spm_canvas_max(); }
-
-          win._restore = {
-
-
-      */
 
 
 
