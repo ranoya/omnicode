@@ -180,11 +180,19 @@
 
                 janela = function(url) {
                     window.open(url, "_blank");
+                    parent.postMessage(`remove('POE')`, "*");
                 }
 
                 vai = function(u, n) {
                     parent.postMessage(`newidoc("${u}", "${n}")`, "*");
                     parent.postMessage(`centerlastframe()`, "*");
+                    parent.postMessage(`remove('POE')`, "*");
+                }
+
+                roda = function(u) {
+                    parent.postMessage(`${u}"`, "*");
+                    parent.postMessage(`centerlastframe()`, "*");
+                    parent.postMessage(`remove('POE')`, "*");
                 }
 
                 omnifilter = function (arr) {
@@ -201,9 +209,14 @@
                         for (let i=0; i<arr.length; i++) {
                             if (arr[i].Group.match(grupos[g])) {
 
-                                if (arr[i].Type == "self" || arr[i].Type == "embed") {
+                                if (arr[i].Type == "self") {
+                                    code += `<div onclick="roda('${arr[i].Link}');">${arr[i].Name}</div>`;
+                                }
+
+                                if (arr[i].Type == "embed") {
                                     code += `<div onclick="vai('${arr[i].Link}', '${arr[i].Name}');">${arr[i].Name}</div>`;
-                                } else {
+                                } 
+                                if (arr[i].Type != "self" && arr[i].Type != "embed") {
                                     code += `<div onclick="janela('${arr[i].Link}');">${arr[i].Name}</div>`;
                                 }
                             }
