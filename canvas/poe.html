@@ -51,6 +51,7 @@
         color: var(--bg);
         background-color: var(--text);
         outline: none !important;
+        font-family: monospace;
 
     }
 
@@ -100,6 +101,10 @@
     cursor: default;
     background-color: var(--accent);
     color: var(--bg);
+    text-transform: uppercase;
+    font-family: monospace;
+    font-size: 13px;
+    font-weight: lighter;
     }
 
     .menu_menuopt div.secao:hover {
@@ -149,6 +154,30 @@
                     } 
                 })();
 
+                if(typeof $_GET["text"] != undefined && $_GET["text"] != null && $_GET["text"] != "") {
+                    cssVar("--text").value = "#" + $_GET["text"];
+                }
+
+                if(typeof $_GET["accent"] != undefined && $_GET["accent"] != null && $_GET["accent"] != "") {
+                    cssVar("--accent").value = "#" + $_GET["accent"];
+                }
+
+                if(typeof $_GET["muted"] != undefined && $_GET["muted"] != null && $_GET["muted"] != "") {
+                    cssVar("--muted").value = "#" + $_GET["muted"];
+                }
+
+                if(typeof $_GET["bg"] != undefined && $_GET["bg"] != null && $_GET["bg"] != "") {
+                    cssVar("--bg").value = "#" + $_GET["bg"];
+                }
+
+                if(typeof $_GET["panel-border"] != undefined && $_GET["panel-border"] != null && $_GET["panel-border"] != "") {
+                    cssVar("--panel-border").value = "#" + $_GET["panel-border"];
+                }
+
+                if(typeof $_GET["win-header"] != undefined && $_GET["win-header"] != null && $_GET["win-header"] != "") {
+                    cssVar("--win-header").value = "#" + $_GET["win-header"];
+                }
+
                 janela = function(url) {
                     window.open(url, "_blank");
                 }
@@ -192,6 +221,8 @@
                 }
                                 
                 omnifilterfetchcsvdata(GoogleSheetCsvURL($_GET["source"]), "entra");
+
+                document.getElementById("entra").focus();
 
             </script>
 </body>
