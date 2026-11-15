@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>POE for Canvas</title>
+    <script src="https://datat.vercel.app/basicsmin.js"></script>
+    <script src="https://datat.vercel.app/screenmin.js"></script>
+
+<style>
+
+    :root {
+        --bg: #f4f4f6;
+        --panel: #ffffff;
+        --panel-border: #d8d8de;
+        --text: #1c1c22;
+        --muted: #6b6b76;
+        --accent: #4f6df5;
+        --accent-text: #ffffff;
+        --win-header: #eceef4;
+        --win-bg: #ffffff;
+        --win-border: #c9cbd6;
+        --shadow: rgba(0, 0, 0, .15);
+        --grid-dot: #c7c7d1;
+    }
+
+    * {
+        border: 0;
+        padding: 0;
+        margin: 0;
+    }
+
+    #campoentrada {
+
+        font-size: 18px;
+        line-height: 22px;
+        padding-top: 23px;
+        padding-bottom: 23px;
+        height: 68px;
+        width: 100%;
+        color: var(--bg);
+        background-color: var(--text);
+        padding-left: 20px;
+        padding-right: 20px;
+
+    }
+
+    #campoentrada input {
+        width: 100%;
+        font-size: 18px;
+        line-height: 22px;
+        color: var(--bg);
+        background-color: var(--text);
+
+    }
+
+    #resultados {
+        width: 100%;
+        height: calc(100dvh - 68px);
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+                
+
+    .menu_menuopt {
+    
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    height: 100%;
+    background-color: var(--panel-border);
+    
+    }
+
+    .menu_menuopt div {
+
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 22px;
+    padding-top: 23px;
+    padding-bottom: 23px;
+    height: auto;
+    width: 100%;
+    color: var(--text);
+    background-color: var(--panel-border);
+    padding-left: 20px;
+    padding-right: 20px;
+    border-top: 1px dotted var(--muted);
+    }
+
+    .menu_menuopt div:last-child {
+        border-bottom: 1px dotted var(--muted);
+    }
+
+    .menu_menuopt div:hover {
+    background-color: var(--win-header);
+    }
+
+    .menu_menuopt div.secao {
+    cursor: default;
+    background-color: var(--accent);
+    color: var(--bg);
+    }
+
+    .menu_menuopt div.secao:hover {
+    background-color: var(--accent);
+    cursor: default;
+    }
+
+
+</style>
+
+</head>
+<body>
+            <div id="campoentrada"><input type="text" id="entra" /></div>
+            <div id="resultados">
+                <div class="menu_menuopt" id="poe">
+                    <div class="secao">Dados</div>
+                    <div onclick="window.dataset('https://docs.google.com/spreadsheets/d/1FbY8hPtM8IxEJ26ybMZHpMrHdk-LEm1yuYPiFVwF94U/edit?gid=0#gid=0'); centerlastframe();">Dataset de Exemplo</div>
+
+                    <div onclick="window.dataset('https://docs.google.com/spreadsheets/d/15lB-WclGe0WVET1yg94tZMOc5zVi6lufmv0vQZyXmYA/preview'); centerlastframe();">Dataset completo de Point & Click Adventures</div>
+
+                    <div class="secao">Notebooks</div>
+                    
+                    <div class="secao">Programação</div>
+                    <div onclick="window.code('https://omnicode.vercel.app/examples/htmlcanvas.js', 'canvas'); centerlastframe();">Hello World direto no Canvas</div>
+                    <div onclick="window.code('https://omnicode.vercel.app/examples/meucanvas.js', 'canvas'); centerlastframe();">Hello World em Janelas</div>
+                    <div onclick="window.code('https://omnicode.vercel.app/examples/logoddesigncanvas.js', 'canvas'); centerlastframe();">Logotipo do departamento de design para Canvas</div>
+                    <div onclick="window.code('https://booklines.vercel.app/assets/codigosp5/exemplo-livroJSD_SE.js', 'P5'); centerlastframe();">Mandala 1 em P5</div>
+                    <div onclick="window.code('https://booklines.vercel.app/assets/codigosp5/bass.js', 'P5'); centerlastframe();">Mandala 2 em P5</div>
+                    
+                </div>
+            </div>
+
+
+
+            <script>
+
+                $_GET = [];
+                (function(){
+                    corte = window.location.href.toString().indexOf('?');
+                    if (corte > 0) {
+                        argumento = window.location.href.toString().substring(corte + 1);
+                        argumentos = argumento.split('&');
+                        for (arg in argumentos){
+                            let argCorte = argumentos[arg].indexOf('=');
+                            $_GET[argumentos[arg].substring(0,argCorte)] = argumentos[arg].substring(argCorte + 1);
+                        }
+                    } 
+                })();
+
+                janela = function(url) {
+                    window.open(url, "_blank");
+                }
+
+                vai = function(u, n) {
+                    parent.postMessage(`newidoc("${u}", "${n}")`, "*");
+                    parent.postMessage(`centerlastframe()`, "*");
+                }
+
+                omnifilter = function (arr) {
+                    console.table(arr);
+
+                    let grupos = tags(arr, "Group", ",");
+
+                    let code = "";
+
+                    for (let g=0; g<grupos.length; g++) {
+
+                        code += `<div class="secao">${grupos[g]}</div>`;
+
+                        for (let i=0; i<arr.length; i++) {
+                            if (arr[i].Group.match(grupos[g])) {
+
+                                if (arr[i].Type == "self" || arr[i].Type == "embed") {
+                                    code += `<div onclick="vai('${arr[i].Link}', '${arr[i].Nome}');">${arr[i].Nome}</div>`;
+                                } else {
+                                    code += `<div onclick="janela('${arr[i].Link}');">${arr[i].Nome}</div>`;
+                                }
+                            }
+
+
+
+                        }
+
+
+
+
+                    }
+
+
+                }
+                                
+                omnifilterfetchcsvdata(GoogleSheetCsvURL($_GET["source"]), "entra");
+
+            </script>
+</body>
+
+</html>
