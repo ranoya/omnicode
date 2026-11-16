@@ -205,7 +205,7 @@
                 let filtra = "";
 
                 if (typeof $_GET["filtra"] != 'undefined' && $_GET["filtra"] != null && $_GET["filtra"] != '') {
-                   filtra = decodeURI(["filtra"]);
+                   filtra = decodeURI($_GET["filtra"]);
                 }
                 
 
