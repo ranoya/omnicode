@@ -210,11 +210,12 @@
 
                 startrun = true;
 
-                omnifilter = function (oarr) {
+                omnifilter = function (arr) {
                     
-                    let arr = selecte(oarr, "bases");
+                    let oarr = selecte(arr, "bases");
 
-                    console.table(arr);
+                    console.log(">---");
+                    console.table(oarr);
 
                     let grupos = tags(arr, "Group", ",");
 
