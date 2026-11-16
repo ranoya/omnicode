@@ -201,11 +201,18 @@
                     parent.postMessage(`remove('POE')`, "*");
                 }
 
+                let filtra = "";
+
+                if (typeof $_GET["filtra"] != 'undefined' && $_GET["filtra"] != null && $_GET["filtra"] != '') {
+                   filtra = $_GET["filtra"];
+                }
+                
+
                 startrun = true;
 
-                omnifilter = function (arr) {
+                omnifilter = function (oarr) {
                     console.table(arr);
-
+                    let arr = selecte(oarr, filtra);
 
                     let grupos = tags(arr, "Group", ",");
 
