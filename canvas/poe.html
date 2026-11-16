@@ -223,11 +223,15 @@
                     }
 
                     document.getElementById("poe").innerHTML = code;
-                    if (startrun) {
-                        startrun = false;
-                        document.getElementById("entra").value = $_GET["start"] + " ";
-                        document.getElementById("entra").dispatchEvent(new Event('input', { bubbles: true }));
-                    };
+
+                    if (typeof $_GET["start"] != 'undefined' && $_GET["start"] != null && $_GET["start"] != '') {
+                       
+                        if (startrun) {
+                            startrun = false;
+                            document.getElementById("entra").value = $_GET["start"] + " ";
+                            document.getElementById("entra").dispatchEvent(new Event('input', { bubbles: true }));
+                        };
+                    }
                 }
                                 
                 omnifilterfetchcsvdata(GoogleSheetCsvURL($_GET["source"]), "entra");
