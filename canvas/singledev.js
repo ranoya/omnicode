@@ -1957,6 +1957,24 @@ window.legacy = function () {
       center("Legacy");
 }
 
+window.poe = function () {
+  if (!exist("POE")) {
+
+    let b = getcssv("--bg");
+    let t = getcssv("--text");
+    let a = getcssv("--accent");
+    let m = getcssv("--muted");
+    let pb = getcssv("--panel-border");
+    let wh = getcssv("--win-header");
+
+    newidoc(`https://omnicode.vercel.app/canvas/poe.html?text=${t}&accent=${a}&muted=${m}&bg=${b}&panel-border=${pb}&win-header=${wh}&source=https://docs.google.com/spreadsheets/d/1K821gEs1HUvW4brTu_VRziZ6nr1wPvItNMQz5P3srtg/edit?gid=263245476#gid=263245476`, "POE");
+    widget("POE");
+    setPosition("POE", "60%", "50%", "20%", "20%");
+    lock("POE");
+  }
+
+}
+
 
 
   let devmstate = "normal";
@@ -2055,6 +2073,21 @@ window.legacy = function () {
                     removedraw();
                 }
     }
+
+    if (event.ctrlKey && event.key === '/') {
+                  // Evita comportamentos padrão do navegador, se houver
+                  e.cancelBubble = true;
+                        e.cancelable = true;
+                        e.stopPropagation();
+                        e.preventDefault();
+                        e.returnValue = false;
+              
+                  if (!exist("POE")) {
+                    window.poe();
+                  } else {
+                    remove("POE");
+                  }
+            }
 
 
 
