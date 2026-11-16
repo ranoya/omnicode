@@ -238,6 +238,24 @@
 
                 document.getElementById("entra").focus();
 
+                document.addEventListener('keydown', function (e) {
+
+                            if (event.ctrlKey && event.key === '/') {
+                                // Evita comportamentos padrão do navegador, se houver
+                                e.cancelBubble = true;
+                                        e.cancelable = true;
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                        e.returnValue = false;
+                            
+                                roda(`togglepoe()`);
+
+                            }
+
+                
+                
+                });
+
             </script>
 </body>
 
