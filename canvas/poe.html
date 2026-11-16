@@ -228,7 +228,7 @@
                        
                         if (startrun) {
                             startrun = false;
-                            document.getElementById("entra").value = decodeURI(["start"]) + " ";
+                            document.getElementById("entra").value = decodeURI($_GET["start"]) + " ";
                             document.getElementById("entra").dispatchEvent(new Event('input', { bubbles: true }));
                         };
                     }
