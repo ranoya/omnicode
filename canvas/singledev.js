@@ -846,77 +846,24 @@ window.openmenu = function (id, dados) {
       }
 
 window.omnihelp = function () {
-        if (!exist("Omnihelp")) {
-          rundoc("Omnihelp", "openomnihelp", {}, 335, 556, -282, -125);
-        }  
-        center("Omnihelp");
+  
+        let b = getcssv("--bg");
+        let t = getcssv("--text");
+        let a = getcssv("--accent");
+        let m = getcssv("--muted");
+        let pb = getcssv("--panel-border");
+        let wh = getcssv("--win-header");
+
+      if (!exist("Omnihelp")) {
+        newidoc(`https://omnicode.vercel.app/canvas/poe.html?filtra=omnihelp&text=${t}&accent=${a}&muted=${m}&bg=${b}&panel-border=${pb}&win-header=${wh}&source=https://docs.google.com/spreadsheets/d/1K821gEs1HUvW4brTu_VRziZ6nr1wPvItNMQz5P3srtg/edit?gid=263245476#gid=263245476`, "Omnihelp", 335, 556, -282, -125);
+      }
+
+      center("Omnihelp");
         
         localStorage.setItem('primeiroacesso', 'feito');
   
 }
 
-
-window.openomnihelp = function (id, dados) {
-        var el = document.getElementById(id);
-        el.innerHTML =
-            `
-            <style>
-
-                .menu_menuopt {
-                
-                display: flex;
-                flex-direction: column;
-                align-items: start;
-                height: 100%;
-                background-color: var(--panel-border);
-                
-                }
-
-                .menu_menuopt div {
-
-                cursor: pointer;
-                font-size: 18px;
-                line-height: 22px;
-                padding-top: 23px;
-                padding-bottom: 23px;
-                height: auto;
-                width: 100%;
-                color: var(--text);
-                background-color: var(--panel-border);
-                padding-left: 20px;
-                padding-right: 20px;
-                border-top: 1px dotted var(--muted);
-                }
-
-                .menu_menuopt div:hover {
-                background-color: var(--win-header);
-
-
-                }
-
-                .menu_menuopt div:last-child {
-                  border-bottom: 1px dotted var(--muted);
-                }
-
-            </style>
-
-            <div class="menu_menuopt">
-                <div onclick="about()">Sobre o Canvas</div>
-                <div onclick="noteinstruct()">Instruções de uso do Notebook</div>
-                <div onclick="notedb()">Instruções de uso de SQL Query</div>
-                <div onclick="notedatat()">Instruções de uso do DATAT</div>
-                <div onclick="exemplos()">Coleção de exemplos</div>
-                <div onclick="lpjd()">Programação Javascript para Designers</div>
-                <div onclick="pjd()">Programação Javascript para Designers (aberto)</div>
-                <div onclick="poo()">Programação Orientada a Objetos em Javascript (aberto)</div>
-            </div>
-          
-          
-          
-          
-            `;
-        
-      }
 
 svg(`
   <svg  style="width: 100%; height: 100%;" viewBox="0 0 466 466" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2094,7 +2041,7 @@ window.poe = function () {
   });
 
 
-  
+
 if (typeof localStorage.getItem('primeiroacesso') == 'undefined' || localStorage.getItem('primeiroacesso') == null || localStorage.getItem('primeiroacesso') == '') {
   omnihelp();
 }
