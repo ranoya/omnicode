@@ -141,21 +141,7 @@
                     } 
                 })();
 
-                let startrun = false;
-
-                let impoe = setInterval(function() { 
-
-                    if (!startrun) {
-                        if (typeof $_GET["start"] != 'undefined' && $_GET["start"] != null && $_GET["start"] != '') {
-                            document.getElementById("entra").value = $_GET["start"] + " ";
-                            document.getElementById("entra").dispatchEvent(new Event('input', { bubbles: true }));
-                        }
-                    } else {
-                        clearInterval(impoe);
-                    }
-
-
-                }, 10);
+                
 
                 if(typeof $_GET["text"] != undefined && $_GET["text"] != null && $_GET["text"] != "") {
                     cssVar("--text").value = "#" + $_GET["text"];
@@ -198,6 +184,8 @@
                     parent.postMessage(`remove('POE')`, "*");
                 }
 
+                startrun = true;
+
                 omnifilter = function (arr) {
                     console.table(arr);
 
@@ -235,7 +223,11 @@
                     }
 
                     document.getElementById("poe").innerHTML = code;
-                    startrun = true;
+                    if (startrun) {
+                        startrun = false;
+                        document.getElementById("entra").value = $_GET["start"] + " ";
+                        document.getElementById("entra").dispatchEvent(new Event('input', { bubbles: true }));
+                    };
                 }
                                 
                 omnifilterfetchcsvdata(GoogleSheetCsvURL($_GET["source"]), "entra");
