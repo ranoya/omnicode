@@ -1845,7 +1845,7 @@ window.legacy = function () {
         let wh = getcssv("--win-header");
 
       if (!exist("Legacy")) {
-        newidoc(`https://omnicode.vercel.app/canvas/poe.html?filtra=Contextos%20de%20Programação%20Antigos&text=${t}&accent=${a}&muted=${m}&bg=${b}&panel-border=${pb}&win-header=${wh}&source=https://docs.google.com/spreadsheets/d/1K821gEs1HUvW4brTu_VRziZ6nr1wPvItNMQz5P3srtg/edit?gid=263245476#gid=263245476`, "Legacy", 335, 556, 408, 241);
+        newidoc(`https://omnicode.vercel.app/canvas/poe.html?filtra=oldprog&text=${t}&accent=${a}&muted=${m}&bg=${b}&panel-border=${pb}&win-header=${wh}&source=https://docs.google.com/spreadsheets/d/1K821gEs1HUvW4brTu_VRziZ6nr1wPvItNMQz5P3srtg/edit?gid=263245476#gid=263245476`, "Legacy", 335, 556, 408, 241);
       }
 
       center("Legacy");
