@@ -635,10 +635,19 @@ window.nomenu = function () {
 
 window.menu = function () {
         localStorage.setItem('permamenu', 'aberto');
-        if (!exist("Menu")) {
-          rundoc("Menu", "openmenu", {}, 335, 556, 63, 68);
-        }
-        setPan(0, 0);
+        
+        let b = getcssv("--bg");
+        let t = getcssv("--text");
+        let a = getcssv("--accent");
+        let m = getcssv("--muted");
+        let pb = getcssv("--panel-border");
+        let wh = getcssv("--win-header");
+
+      if (!exist("Menu")) {
+        newidoc(`https://omnicode.vercel.app/canvas/poe.html?filtra=main&text=${t}&accent=${a}&muted=${m}&bg=${b}&panel-border=${pb}&win-header=${wh}&source=https://docs.google.com/spreadsheets/d/1K821gEs1HUvW4brTu_VRziZ6nr1wPvItNMQz5P3srtg/edit?gid=263245476#gid=263245476`, "Menu", 335, 556, 63, 68);
+      }
+
+      setPan(0, 0);
 }
 
 window.noteinstruct = function () {
@@ -785,87 +794,6 @@ window.openexemplos = function (id, dados) {
         
       }
 
-
-
-window.openmenu = function (id, dados) {
-        var el = document.getElementById(id);
-        el.innerHTML =
-            `
-            <style>
-
-                .menu_menuopt {
-                
-                display: flex;
-                flex-direction: column;
-                align-items: start;
-                height: 100%;
-                background-color: var(--panel-border);
-                
-                }
-
-                .menu_menuopt div {
-
-                cursor: pointer;
-                font-size: 18px;
-                line-height: 22px;
-                padding-top: 23px;
-                padding-bottom: 23px;
-                height: auto;
-                width: 100%;
-                color: var(--text);
-                background-color: var(--panel-border);
-                padding-left: 20px;
-                padding-right: 20px;
-                border-top: 1px dotted var(--muted);
-                }
-
-                .menu_menuopt div:hover {
-                background-color: var(--win-header);
-
-
-                }
-
-                .menu_menuopt div:last-child {
-                  border-bottom: 1px dotted var(--muted);
-                }
-
-            </style>
-
-            <div class="menu_menuopt">
-                <div onclick="code()">Editor de Código</div>
-                <div onclick="notebook()">Notebook Computacional</div>
-                <div onclick="jupyter()">Jupyter Notebook</div>
-                <div onclick="omnicode()">Omnicode Run</div>
-                <div onclick="omnicodelive()">Omnicode Live</div>
-                <div onclick="legacy()">Contextos de programação antigos</div>
-                <div onclick="exemplos()">Coleção de exemplos</div>
-            </div>
-          
-          
-          
-          
-            `;
-        
-      }
-
-window.omnihelp = function () {
-  
-        let b = getcssv("--bg");
-        let t = getcssv("--text");
-        let a = getcssv("--accent");
-        let m = getcssv("--muted");
-        let pb = getcssv("--panel-border");
-        let wh = getcssv("--win-header");
-
-      if (!exist("Omnihelp")) {
-        newidoc(`https://omnicode.vercel.app/canvas/poe.html?filtra=omnihelp&text=${t}&accent=${a}&muted=${m}&bg=${b}&panel-border=${pb}&win-header=${wh}&source=https://docs.google.com/spreadsheets/d/1K821gEs1HUvW4brTu_VRziZ6nr1wPvItNMQz5P3srtg/edit?gid=263245476#gid=263245476`, "Omnihelp", 335, 556, -282, -125);
-      }
-
-      center("Omnihelp");
-        
-        localStorage.setItem('primeiroacesso', 'feito');
-  
-}
 
 svg(`
   <svg  style="width: 100%; height: 100%;" viewBox="0 0 466 466" fill="none" xmlns="http://www.w3.org/2000/svg">
