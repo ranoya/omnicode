@@ -1943,82 +1943,21 @@ window.multiplan = function () {
 
 
 window.legacy = function () {
-        if (!exist("Legacy")) {
-          rundoc("Legacy", "openlegacymenu", {}, 335, 556, 408, 241);
-        }
-        center("Legacy");
-}
 
-window.openlegacymenu = function (id, dados) {
-        var el = document.getElementById(id);
-        el.innerHTML =
-            `
-            <style>
+  
+        let b = getcssv("--bg");
+        let t = getcssv("--text");
+        let a = getcssv("--accent");
+        let m = getcssv("--muted");
+        let pb = getcssv("--panel-border");
+        let wh = getcssv("--win-header");
 
-                .menu_menuopt {
-                
-                display: flex;
-                flex-direction: column;
-                align-items: start;
-                
-                }
-
-                .menu_menuopt div {
-
-                cursor: pointer;
-                font-size: 18px;
-                line-height: 68px;
-                height: auto;
-                width: 100%;
-                color: var(--text);
-                background-color: var(--panel-border);
-                padding-left: 20px;
-                padding-right: 20px;
-                border-top: 1px dotted var(--muted);
-                }
-
-                .menu_menuopt div:hover {
-                background-color: var(--win-header);
-
-
-                }
-
-            </style>
-
-            <div class="menu_menuopt">
-                <div onclick="applelogo()">Apple II Logo</div>
-                <div onclick="msxlogo()">MSX Logo</div>
-                <div onclick="applebasic()">Apple II BASIC</div>
-                <div onclick="msxbasic()">MSX BASIC</div>
-                <div onclick="gwbasic()">DOS GW-BASIC</div>
-                <div onclick="turbobasic()">DOS Borland Turbo BASIC</div>
-                <div onclick="qbasic45()">DOS Microsoft Quick BASIC 4.5</div>
-                <div onclick="qbasic71()">DOS Microsoft Quick BASIC 7.1</div>
-                <div onclick="vbasicdos()">DOS Visual BASIC 2.0</div>
-                <div onclick="vbasic()">Windows Visual BASIC 1.0</div>
-                <div onclick="pascal1()">DOS Borland Turbo Pascal 1.0</div>
-                <div onclick="pascal3()">DOS Borland Turbo Pascal 3.0</div>
-                <div onclick="pascal5()">DOS Borland Turbo Pascal 5.0</div>
-                <div onclick="pascal7()">DOS Borland Turbo Pascal 7.0</div>
-                <div onclick="pascalw1()">Windows Turbo Pascal 1.5</div>
-                <div onclick="pascalw7()">Windows Turbo Pascal 7.0</div>
-                <div onclick="qpascal()">DOS Microsoft Quick Pascal 1.0</div>
-                <div onclick="msqc()">DOS Microsoft Quick C</div>
-                <div onclick="btc()">DOS Borland Turbo C++ 3.0</div>
-                <div onclick="delphi()">Windows Borland Delphi 1.0</div>
-                <div onclick="wmath()">Wolfram Mathematica</div>
-                <div onclick="db3()">dBase III Plus</div>
-                <div onclick="db4()">dBase IV</div>
-                <div onclick="foxpro()">DOS Microsoft FoxPro 2.0</div>
-                <div onclick="foxprow()">Windows Microsof FoxPro 2.6</div>
-                <div onclick="paradox()">DOS Borland Paradox 4.5</div>
-                <div onclick="paradoxw()">Borland Paradox for Windows</div>
-                <div onclick="paradoxw45()">Borland Paradox 4.5 for Windows</div>
-            </div>
-
-            `;
-        
+      if (!exist("Legacy")) {
+        newidoc(`https://omnicode.vercel.app/canvas/poe.html?filtra=legacy&text=${t}&accent=${a}&muted=${m}&bg=${b}&panel-border=${pb}&win-header=${wh}&source=https://docs.google.com/spreadsheets/d/1K821gEs1HUvW4brTu_VRziZ6nr1wPvItNMQz5P3srtg/edit?gid=263245476#gid=263245476`, "Legacy", 335, 556, 408, 241);
       }
+
+      center("Legacy");
+}
 
 
   let devmstate = "normal";
