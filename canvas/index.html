@@ -3755,11 +3755,37 @@ if (
         rundoc("Out run", "openretro", {core: "fbneo", rom: "files/outrun.zip"});
       }
 
+      let mylove = 0;
       window.love = function() {
         groovy();
-        polaroid("https://omnicode.vercel.app/canvas/fotoamores.jpeg", "Minhas paixões", "Love", 216, 252, "80%", "3%");
+        if (mylove == 0) {
+          if (!exist("Love 1")) {
+            polaroid("https://omnicode.vercel.app/canvas/fotoamores.jpeg", "Minhas paixões", "Love 1", 216, 252, "80%", "3%");
+          }
+          widget("Love 1");
+        }
+
+        if (mylove == 1) {
+          if (!exist("Love 2")) {
+            polaroid("https://omnicode.vercel.app/canvas/fotoHelena.jpeg", "Minhas paixões", "Love 2", 216, 288, "80%", "25%");
+          }
+          widget("Love 2");
+        }
+
+        if (mylove == 2) {
+          if (!exist("Love 3")) {
+            polaroid("https://omnicode.vercel.app/canvas/fotoGael.jpeg", "Minhas paixões", "Love 3", 216, 347, "80%", "60%");
+          }
+          widget("Love 3");
+        }
+
+        mylove++;
+        if (mylove > 2) {
+          mylove = 0;
+        }
+
         ungroovy();
-        widget("Love");
+        
       }
 
 
