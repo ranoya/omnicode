@@ -4,9 +4,24 @@
   "icons": [
     {
       "src": "omnigraph2.ico",
-      "sizes": "256x256 48x48 16x16",
+      "sizes": "256x256",
       "type": "image/x-icon",
       "purpose": "any maskable"
+    },  
+    {
+      "src": "omnigraph2256.png",
+      "type": "image/png",
+      "sizes": "256x256"
+    },
+    {
+      "src": "omnigraph248.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "omnigraph216.png",
+      "type": "image/png",
+      "sizes": "16x16"
     }
   ],
   "start_url": ".",
