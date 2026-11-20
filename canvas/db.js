@@ -1064,6 +1064,13 @@ window.salvarArquivo = function (id) {
         }
       
 
+window.listaeditores = function () {
+  if (!exist("Editores de Código")) {
+    newidoc("https://poepalette.vercel.app/csv?css=https://poepalette.vercel.app/dev/bigblue.css&json=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit#gid=0&plugins=https://docs.google.com/spreadsheets/d/10wpfmMWn3igQF4rJBYCo8OR90igO1tfKwcmrot0ult0/edit#gid=162814784&css=https://poepalette.vercel.app/dev/bigblue.css", "Editores de Código", 860, 650, 450, -450);
+  }
+
+  center("Editores de Código");
+}        
 
 
 let getcssv = function (v) {
