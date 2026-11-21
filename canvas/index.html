@@ -229,7 +229,14 @@ $_GET = [];
   #viewControls button:hover{background:var(--panel-border);}
   #zoomLabel{font-size:11px; color:var(--muted); padding:2px 0; text-align:center;}
   #viewControls hr{width:100%; border:none; border-top:1px solid var(--panel-border); margin:3px 0;}
-  .link{ stroke:var(--accent); stroke-width:2; opacity:.85; }
+  .link{ stroke:var(--accent); stroke-width:2; opacity:.85; transition:opacity .15s ease; }
+  /* highlight(): área de captura larga sobre cada linha do connect() e esmaecimento do que está fora do grupo */
+  .link-hit{ stroke:transparent; stroke-width:16; pointer-events:none; }
+  body.hl-on .link-hit{ pointer-events:stroke; }
+  .win{ transition:opacity .15s ease; }
+  .win.hl-dim{ opacity:.28; }
+  .link.hl-dim{ opacity:.12; }
+  .link.hl-in{ opacity:1; stroke-width:3.5; }
   /* ligações de dados (linkdata): curva com seta, pulso a cada dado novo; portas nas janelas */
   .dlink{ fill:none; stroke:var(--accent); stroke-width:2; opacity:.75; }
   .dlink.sel{ opacity:1; stroke-width:3; }
@@ -1277,6 +1284,10 @@ apenas para URLs terminadas em <code>.svg</code>, como na <code>svg()</code>.</p
 <p>Cada linha desenhada por <code>connect</code> passa a ter uma cor diferente (matiz espalhado uniformemente), mantendo a mesma saturação e luminosidade da cor de destaque (<code>--accent</code>) do tema atual. Ajuda a distinguir qual janela está ligada a qual quando há várias conexões. Acompanha a troca de tema automaticamente.</p>
 <code class="sig">singlecolor()</code>
 <p>Volta todas as linhas a usar a cor de destaque única do tema (padrão).</p>
+<code class="sig">highlight()</code>
+<p>Liga o destaque de conexões: ao passar o mouse sobre uma linha do <code>connect()</code> (ou sobre uma janela que tenha ligações), todo o grupo conectado, inclusive as ramificações (as janelas ligadas às ligadas, e assim por diante), fica em destaque, e as demais janelas e linhas esmaecem. Ao tirar o mouse, tudo volta ao normal. As janelas esmaecidas continuam utilizáveis. Não vale para as ligações de dados (<code>linkdata</code>), não funciona com janela maximizada nem com uma ferramenta do <code>draw()</code> ativa (use a "mão"). Em tela de toque, tocar numa linha ou janela ligada mantém o destaque até o próximo toque no fundo.</p>
+<code class="sig">nohighlight()</code>
+<p>Desliga o destaque de conexões.</p>
 <hr>
 <h4>Temas</h4>
 <code class="sig">setTheme(nome)</code>
@@ -1517,7 +1528,10 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
     var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     line.setAttribute('class', 'link');
     linksLayer.appendChild(line);
-    var link = { a:a, b:b, el:line };
+    var hit = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    hit.setAttribute('class', 'link-hit');
+    linksLayer.appendChild(hit);
+    var link = { a:a, b:b, el:line, hit:hit };
     links.push(link);
     applyLineColors();
     return link;
@@ -1529,12 +1543,76 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
     if (!a || !b){ console.warn('disconnect: janela não encontrada ("' + nameA + '" ou "' + nameB + '")'); return; }
     links = links.filter(function(l){
       var match = (l.a === a && l.b === b) || (l.a === b && l.b === a);
-      if (match) l.el.remove();
+      if (match){ l.el.remove(); l.hit.remove(); }
       return !match;
     });
+    hlClear();
     applyLineColors();
   }
   window.disconnect = disconnect; // pode ser chamado pelo console do navegador também
+
+  // ---- highlight(): ao passar o mouse numa linha do connect() (ou numa janela ligada), destaca todo o grupo
+  // conectado (diretas e ramificações) e esmaece o resto ----
+  var hlOn = false, hlStart = null, hlListening = false;
+  function hlGroup(start){
+    var seen = [start], queue = [start];
+    while (queue.length){
+      var w = queue.shift();
+      links.forEach(function(l){
+        var o = l.a === w ? l.b : (l.b === w ? l.a : null);
+        if (o && seen.indexOf(o) === -1){ seen.push(o); queue.push(o); }
+      });
+    }
+    return seen;
+  }
+  function hlClear(){
+    if (hlStart === null) return;
+    hlStart = null;
+    windows.forEach(function(w){ w.classList.remove('hl-dim'); });
+    links.forEach(function(l){ l.el.classList.remove('hl-dim'); l.el.classList.remove('hl-in'); });
+  }
+  function hlApply(start){
+    if (maximizedCount > 0) return; // com janela maximizada as linhas ficam escondidas
+    if (hlStart !== null && hlGroup(hlStart).indexOf(start) !== -1) return; // já é o grupo destacado
+    hlStart = start;
+    var grp = hlGroup(start);
+    windows.forEach(function(w){ w.classList.toggle('hl-dim', grp.indexOf(w) === -1); });
+    links.forEach(function(l){
+      var inGroup = grp.indexOf(l.a) !== -1;
+      l.el.classList.toggle('hl-dim', !inGroup);
+      l.el.classList.toggle('hl-in', inGroup);
+    });
+  }
+  function hlStartFor(target){
+    if (!target || !target.closest) return null;
+    var h = target.closest('.link-hit');
+    if (h){ var lk = links.find(function(x){ return x.hit === h; }); return lk ? lk.a : null; }
+    var w = target.closest('.win');
+    if (w && links.some(function(l){ return l.a === w || l.b === w; })) return w;
+    return null;
+  }
+  function highlight(){
+    hlOn = true;
+    document.body.classList.add('hl-on');
+    if (hlListening) return;
+    hlListening = true;
+    document.addEventListener('pointerover', function(e){
+      if (!hlOn) return;
+      var s = hlStartFor(e.target);
+      if (s) hlApply(s); else hlClear(); // no toque, tocar no fundo desfaz o destaque
+    });
+    document.addEventListener('pointerout', function(e){
+      if (!hlOn || e.pointerType === 'touch') return; // no toque o destaque fica até o próximo toque
+      if (!e.relatedTarget) hlClear(); // o mouse saiu da página
+    });
+  }
+  function nohighlight(){
+    hlOn = false;
+    document.body.classList.remove('hl-on');
+    hlClear();
+  }
+  window.highlight = highlight;
+  window.nohighlight = nohighlight;
 
   // ---- consultar: existe uma janela com este título? (mesma busca das demais funções que recebem título) ----
   function exist(titulo){
@@ -2322,19 +2400,21 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
 
   function updateLinks(){
     links = links.filter(function(l){
-      if (!l.a.isConnected || !l.b.isConnected){ l.el.remove(); return false; }
+      if (!l.a.isConnected || !l.b.isConnected){ l.el.remove(); l.hit.remove(); return false; }
       return true;
     });
     links.forEach(function(l){
       if (l.a.classList.contains('maximized') || l.b.classList.contains('maximized')){
-        l.el.style.display = 'none';
+        l.el.style.display = 'none'; l.hit.style.display = 'none';
         return;
       }
-      l.el.style.display = '';
+      l.el.style.display = ''; l.hit.style.display = '';
       var ca = winCenterCanvas(l.a), cb = winCenterCanvas(l.b);
       var ax = ca.x, ay = ca.y, bx = cb.x, by = cb.y;
       l.el.setAttribute('x1', ax); l.el.setAttribute('y1', ay);
       l.el.setAttribute('x2', bx); l.el.setAttribute('y2', by);
+      l.hit.setAttribute('x1', ax); l.hit.setAttribute('y1', ay);
+      l.hit.setAttribute('x2', bx); l.hit.setAttribute('y2', by);
     });
   }
   function fitMaximizedWindow(win){
@@ -3475,7 +3555,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
                     'groovy', 'ungroovy', 'savestate', 'lock', 'unlock', 'centerlastframe', 'lockall', 'unlockall',
                     'superdevmode', 'nodev', 'setPosition', 'console', 'floatdevmode',
                     'widget', 'removewidget', 'dataout', 'datain', 'linkdata', 'unlinkdata',
-                    'draw', 'removedraw', 'cleardraw',
+                    'draw', 'removedraw', 'cleardraw', 'highlight', 'nohighlight',
                     cmd))(
         newwindow, newframe, run, newpermawindow, newpermaframe, permarun,
         connect, disconnect, setTheme, setTempTheme, help,
@@ -3486,7 +3566,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
         groovy, ungroovy, savestate, lock, unlock, centerlastframe, lockall, unlockall,
         superdevmode, nodev, setPosition, consoleCallable, floatdevmode,
         widget, removewidget, dataout, datain, linkdata, unlinkdata,
-        draw, removedraw, cleardraw);
+        draw, removedraw, cleardraw, highlight, nohighlight);
       // registra o comando no histórico (só os que rodaram sem erro), junto das janelas que ele criou
       commandLog.push({ raw: cmd, createdWins: windows.slice(winCountBefore) });
     } catch (err){
