@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -417,6 +418,9 @@ $_GET = [];
   <button id="btnZoomOut" title="Diminuir zoom">−</button>
   <hr>
   <button id="btnReset" title="Centralizar">⌖</button>
+  <button id="btnTilt" title="Restaurar coordenadas (tilt)">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9"/><path d="M13.5 2.5v3h-3"/></svg>
+  </button>
   <button id="btnFullscreen" title="Tela cheia"></button>
 </div>
 
@@ -1301,6 +1305,8 @@ apenas para URLs terminadas em <code>.svg</code>, como na <code>svg()</code>.</p
 <p>Define o zoom diretamente (1 = 100%, 0.5 = 50%, 2 = 200%...), sem precisar simular scroll ou cliques nos botões de zoom. Fica limitado entre 20% e 400%, como o zoom manual.</p>
 <code class="sig">setPan(x, y)</code>
 <p>Desloca o canvas diretamente para as coordenadas <code>x, y</code> (em pixels do espaço do canvas), sem precisar simular arrastar o fundo. Útil pra implementações manuais que queiram levar o usuário a um ponto específico.</p>
+<code class="sig">tilt()</code>
+<p>Também existe como botão na barra de zoom (ícone de setas circulares, entre o de centralizar e o de tela cheia). Guarda o pan atual, desloca o canvas por quatro posições distantes (<code>setPan(-20000, 0)</code>, <code>setPan(0, -20000)</code>, <code>setPan(20000, 0)</code> e <code>setPan(0, 20000)</code>) e volta exatamente ao pan guardado. Serve para restaurar o sistema de coordenadas quando a inclusão de algum site (<code>newidoc</code>, <code>newiframe</code>) o bagunça. Cada posição dura um quadro de tela, então o conjunto leva uma fração de segundo; o zoom não é alterado.</p>
 <code class="sig">center(título)</code>
 <p>Encontra a janela com esse título exato e centraliza o canvas nela (mantendo o zoom atual), além de trazê-la pra frente de todas as outras — o mesmo que acontece ao escolher uma janela na lista da lupa, só que por código.</p>
 <code class="sig">centerlastframe()</code>
@@ -2684,6 +2690,26 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
   window.setZoom = setZoom; // pode ser chamado pelo console do navegador também
   window.setPan = setPan;
 
+  // tilt(): guarda o pan atual, passa por quatro posições distantes (esquerda, cima, direita, baixo) e volta ao pan
+  // guardado. Serve para restaurar o sistema de coordenadas quando algum site embutido o bagunça.
+  // Cada passo espera um quadro de tela e força o navegador a processar a posição, senão os quatro setPan
+  // seguidos num mesmo instante seriam fundidos em um só e nada aconteceria.
+  var tilting = false;
+  function tilt(){
+    if (tilting) return;
+    tilting = true;
+    var x0 = pan.x, y0 = pan.y;
+    var steps = [[-20000, 0], [0, -20000], [20000, 0], [0, 20000], [x0, y0]];
+    var i = 0;
+    (function next(){
+      var st = steps[i++];
+      setPan(st[0], st[1]);
+      canvas.getBoundingClientRect(); // força o cálculo de layout desta posição
+      if (i < steps.length) requestAnimationFrame(next); else tilting = false;
+    })();
+  }
+  window.tilt = tilt;
+
   viewport.addEventListener('wheel', function(e){
     // sobre uma janela, o scroll pertence ao conteúdo dela: sem zoom do canvas
     if (e.target.closest && e.target.closest('.win')) return;
@@ -2701,6 +2727,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
   document.getElementById('btnReset').addEventListener('click', function(){
     pan = {x:0,y:0}; zoom = 1; applyTransform();
   });
+  document.getElementById('btnTilt').addEventListener('click', function(){ tilt(); });
 
   // ---- posição do bloco de controles (zoom/lupa/tela cheia/centralizar + painel de busca) ----
   function centerControls(){ document.body.classList.add('controls-centered'); }
@@ -3555,7 +3582,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
                     'groovy', 'ungroovy', 'savestate', 'lock', 'unlock', 'centerlastframe', 'lockall', 'unlockall',
                     'superdevmode', 'nodev', 'setPosition', 'console', 'floatdevmode',
                     'widget', 'removewidget', 'dataout', 'datain', 'linkdata', 'unlinkdata',
-                    'draw', 'removedraw', 'cleardraw', 'highlight', 'nohighlight',
+                    'draw', 'removedraw', 'cleardraw', 'highlight', 'nohighlight', 'tilt',
                     cmd))(
         newwindow, newframe, run, newpermawindow, newpermaframe, permarun,
         connect, disconnect, setTheme, setTempTheme, help,
@@ -3566,7 +3593,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
         groovy, ungroovy, savestate, lock, unlock, centerlastframe, lockall, unlockall,
         superdevmode, nodev, setPosition, consoleCallable, floatdevmode,
         widget, removewidget, dataout, datain, linkdata, unlinkdata,
-        draw, removedraw, cleardraw, highlight, nohighlight);
+        draw, removedraw, cleardraw, highlight, nohighlight, tilt);
       // registra o comando no histórico (só os que rodaram sem erro), junto das janelas que ele criou
       commandLog.push({ raw: cmd, createdWins: windows.slice(winCountBefore) });
     } catch (err){
