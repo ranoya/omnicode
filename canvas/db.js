@@ -1189,4 +1189,6 @@ notedb();
 
 notedatat();
 
-setPan(0, 0);
+setTimeout(function () {
+  setPan(0, 0);
+}, 1500);
