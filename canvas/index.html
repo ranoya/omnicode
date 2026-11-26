@@ -672,6 +672,7 @@ $_GET = [];
   var idSeq = 1;
 
   function applyTransform(){
+    if (inertiaRaf && !inertiaStepping) inertiaStop(); // qualquer outra mudança de pan/zoom interrompe a inércia
     canvas.style.transform = 'scale(' + zoom + ') translate(' + pan.x + 'px, ' + pan.y + 'px)';
     var grid = (snapOn ? SNAP_SIZE : 32) * zoom;
     // o gradiente centra o ponto no ladrilho; com snap, recuo meio ladrilho pro ponto cair nas linhas da grade
@@ -1305,6 +1306,10 @@ apenas para URLs terminadas em <code>.svg</code>, como na <code>svg()</code>.</p
 <p>Define o zoom diretamente (1 = 100%, 0.5 = 50%, 2 = 200%...), sem precisar simular scroll ou cliques nos botões de zoom. Fica limitado entre 20% e 400%, como o zoom manual.</p>
 <code class="sig">setPan(x, y)</code>
 <p>Desloca o canvas diretamente para as coordenadas <code>x, y</code> (em pixels do espaço do canvas), sem precisar simular arrastar o fundo. Útil pra implementações manuais que queiram levar o usuário a um ponto específico.</p>
+<code class="sig">inertia(nível)</code>
+<p><code>nível</code> vai de 0 a 1 (sem valor, usa 0.5): 0 equivale a <code>noinertia()</code>, 0.3 é uma inércia curta, 0.7 é um deslize médio e 1 desliza bem mais longe. Liga o efeito de inércia no pan: ao soltar o botão direito (ou o do meio) no fim de um arrasto do fundo, o canvas continua deslizando na direção do movimento e vai freando sozinho; quanto mais rápido o gesto, mais longe ele desliza. Qualquer clique, toque, scroll, zoom ou comando de posição interrompe o deslizamento. Vale também para o toque e para o arrasto feito com uma ferramenta do <code>draw()</code> ativa. Chamar de novo com outro nível troca a intensidade. Vem desligado.</p>
+<code class="sig">noinertia()</code>
+<p>Desliga o efeito de inércia (o pan volta a parar assim que você solta).</p>
 <code class="sig">tilt()</code>
 <p>Também existe como botão na barra de zoom (ícone de setas circulares, entre o de centralizar e o de tela cheia). Guarda o pan atual, desloca o canvas por quatro posições distantes (<code>setPan(-20000, 0)</code>, <code>setPan(0, -20000)</code>, <code>setPan(20000, 0)</code> e <code>setPan(0, 20000)</code>) e volta exatamente ao pan guardado. Serve para restaurar o sistema de coordenadas quando a inclusão de algum site (<code>newidoc</code>, <code>newiframe</code>) o bagunça. Cada posição dura um quadro de tela, então o conjunto leva uma fração de segundo; o zoom não é alterado.</p>
 <code class="sig">center(título)</code>
@@ -2185,6 +2190,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
       // botão do meio/direito: arrasta o canvas, como no resto da ferramenta
       if (e.pointerType === 'mouse' && (e.button === 1 || e.button === 2)){
         drawGesture = { kind: 'pan', x: e.clientX, y: e.clientY, ox: pan.x, oy: pan.y };
+        inertiaBegin(e.clientX, e.clientY);
         return;
       }
       if (e.pointerType === 'mouse' && e.button !== 0) return;
@@ -2214,6 +2220,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
       if (g.kind === 'pan'){
         pan.x = g.ox + (e.clientX - g.x) / zoom;
         pan.y = g.oy + (e.clientY - g.y) / zoom;
+        inertiaTrack(e.clientX, e.clientY);
         applyTransform();
       } else if (g.kind === 'stroke'){
         var evs = (e.getCoalescedEvents && e.getCoalescedEvents()) || [];
@@ -2242,7 +2249,9 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
       var g = drawGesture;
       if (!g) return;
       drawGesture = null;
-      if (g.kind === 'stroke'){
+      if (g.kind === 'pan'){
+        if (e.type === 'pointerup') inertiaRelease(); else inertiaSamples = [];
+      } else if (g.kind === 'stroke'){
         var it = g.it;
         it.pts = drawDensify(it.pts, 4);
         it.el.setAttribute('d', drawStrokeD(it.pts));
@@ -2627,18 +2636,21 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
     viewport.classList.add('panning');
     panStart = {x:e.clientX, y:e.clientY};
     panOrig = {x:pan.x, y:pan.y};
+    inertiaBegin(e.clientX, e.clientY);
     viewport.setPointerCapture(e.pointerId);
   });
   viewport.addEventListener('pointermove', function(e){
     if (!panning) return;
     pan.x = panOrig.x + (e.clientX - panStart.x) / zoom;
     pan.y = panOrig.y + (e.clientY - panStart.y) / zoom;
+    inertiaTrack(e.clientX, e.clientY);
     applyTransform();
   });
   function endPan(e){
     if (!panning) return;
     if (e.type === 'pointerup' && e.pointerType === 'mouse' && e.button !== panButton) return;
     panning = false;
+    if (e.type === 'pointerup') inertiaRelease(); else inertiaSamples = [];
     viewport.classList.remove('panning');
     // o menu de contexto pode disparar logo após soltar o botão direito
     setTimeout(function(){ suppressCtx = false; }, 50);
@@ -2709,6 +2721,60 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
     })();
   }
   window.tilt = tilt;
+
+  // ---- inertia(): ao soltar o botão no fim de um arrasto do canvas, o pan continua deslizando e vai freando ----
+  // (vale para o arrasto com o botão direito/do meio, para o toque e para o arrasto com ferramenta do draw() ativa)
+  var inertiaOn = false, inertiaRaf = 0, inertiaStepping = false, inertiaSamples = [];
+  var inertiaTau = 260;      // ms: quanto maior, mais longe ele desliza (definido pelo nível dado a inertia())
+  var INERTIA_MIN = 0.15;    // px/ms: abaixo disso, soltar não gera inércia
+  var INERTIA_MAX = 5;       // px/ms: teto da velocidade inicial
+  function inertiaStop(){ if (inertiaRaf){ cancelAnimationFrame(inertiaRaf); inertiaRaf = 0; } }
+  function inertiaTrack(x, y){
+    if (!inertiaOn) return;
+    var t = performance.now();
+    inertiaSamples.push({ x: x, y: y, t: t });
+    while (inertiaSamples.length > 1 && t - inertiaSamples[0].t > 100) inertiaSamples.shift(); // só os últimos 100 ms contam
+  }
+  function inertiaBegin(x, y){ inertiaStop(); inertiaSamples = []; inertiaTrack(x, y); }
+  function inertiaRelease(){
+    var s = inertiaSamples; inertiaSamples = [];
+    if (!inertiaOn || s.length < 2) return;
+    var a = s[0], b = s[s.length - 1], now = performance.now();
+    if (now - b.t > 80 || b.t <= a.t) return; // a mão parou antes de soltar: sem inércia
+    var vx = (b.x - a.x) / (b.t - a.t), vy = (b.y - a.y) / (b.t - a.t);
+    var sp = Math.hypot(vx, vy);
+    if (sp < INERTIA_MIN) return;
+    if (sp > INERTIA_MAX){ vx *= INERTIA_MAX / sp; vy *= INERTIA_MAX / sp; }
+    var last = now;
+    (function step(){
+      var t = performance.now(), dt = Math.min(t - last, 50);
+      last = t;
+      pan.x += vx * dt / zoom; pan.y += vy * dt / zoom;
+      var decay = Math.exp(-dt / inertiaTau);
+      vx *= decay; vy *= decay;
+      inertiaStepping = true; applyTransform(); inertiaStepping = false;
+      if (Math.hypot(vx, vy) < 0.02){ inertiaRaf = 0; return; }
+      inertiaRaf = requestAnimationFrame(step);
+    })();
+  }
+  // clicar/tocar ou rolar em qualquer lugar da página interrompe o deslizamento (sem efeito se não houver nenhum)
+  document.addEventListener('pointerdown', inertiaStop, true);
+  document.addEventListener('wheel', inertiaStop, { capture: true, passive: true });
+  // nível de 0 a 1: 0 desliga, 0.7 é o "padrão de referência" (tau = 260 ms), 1 desliza bem mais longe; sem valor, 0.5
+  function inertia(level){
+    if (level === undefined || level === null) level = 0.5;
+    if (typeof level !== 'number' || isNaN(level)){
+      console.warn('inertia: informe um número de 0 a 1 (ou nada, para usar 0.5).');
+      level = 0.5;
+    }
+    level = Math.min(1, Math.max(0, level));
+    if (level === 0){ noinertia(); return; }
+    inertiaTau = 260 * Math.pow(level / 0.7, 1.5);
+    inertiaOn = true;
+  }
+  function noinertia(){ inertiaOn = false; inertiaStop(); inertiaSamples = []; }
+  window.inertia = inertia;
+  window.noinertia = noinertia;
 
   viewport.addEventListener('wheel', function(e){
     // sobre uma janela, o scroll pertence ao conteúdo dela: sem zoom do canvas
@@ -3582,7 +3648,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
                     'groovy', 'ungroovy', 'savestate', 'lock', 'unlock', 'centerlastframe', 'lockall', 'unlockall',
                     'superdevmode', 'nodev', 'setPosition', 'console', 'floatdevmode',
                     'widget', 'removewidget', 'dataout', 'datain', 'linkdata', 'unlinkdata',
-                    'draw', 'removedraw', 'cleardraw', 'highlight', 'nohighlight', 'tilt',
+                    'draw', 'removedraw', 'cleardraw', 'highlight', 'nohighlight', 'tilt', 'inertia', 'noinertia',
                     cmd))(
         newwindow, newframe, run, newpermawindow, newpermaframe, permarun,
         connect, disconnect, setTheme, setTempTheme, help,
@@ -3593,7 +3659,7 @@ janela State aberta, ela própria aparece no texto como <code>state(...)</code>.
         groovy, ungroovy, savestate, lock, unlock, centerlastframe, lockall, unlockall,
         superdevmode, nodev, setPosition, consoleCallable, floatdevmode,
         widget, removewidget, dataout, datain, linkdata, unlinkdata,
-        draw, removedraw, cleardraw, highlight, nohighlight, tilt);
+        draw, removedraw, cleardraw, highlight, nohighlight, tilt, inertia, noinertia);
       // registra o comando no histórico (só os que rodaram sem erro), junto das janelas que ele criou
       commandLog.push({ raw: cmd, createdWins: windows.slice(winCountBefore) });
     } catch (err){
