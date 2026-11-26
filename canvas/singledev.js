@@ -713,7 +713,7 @@ window.exemplos = function () {
         let wh = getcssv("--win-header");
 
       if (!exist("Exemplos")) {
-        newidoc(`https://omnicode.vercel.app/canvas/poe.html?filtra=main&text=${t}&accent=${a}&muted=${m}&bg=${b}&panel-border=${pb}&win-header=${wh}&source=https://docs.google.com/spreadsheets/d/1K821gEs1HUvW4brTu_VRziZ6nr1wPvItNMQz5P3srtg/edit?gid=1599126170#gid=1599126170`, "Exemplos", 335, 556, -625, -317);
+        newidoc(`https://omnicode.vercel.app/canvas/poe.html?filtra=&text=${t}&accent=${a}&muted=${m}&bg=${b}&panel-border=${pb}&win-header=${wh}&source=https://docs.google.com/spreadsheets/d/1K821gEs1HUvW4brTu_VRziZ6nr1wPvItNMQz5P3srtg/edit?gid=1599126170#gid=1599126170`, "Exemplos", 335, 556, -625, -317);
       }
 
       setPan(0, 500);
