@@ -968,6 +968,22 @@ window.moverelogio = function () {
 
 moverelogio();
 
+window.dicionariohtml() = function () {
+  if (!exist("Dicionário HTML")) {
+    newidoc(`https://omnidocs.vercel.app/glossario/web.html?filtra=_html&titulo=Dicionário%20HTML&bg=${getcssv("--accent")}&fg=${getcssv("--bg")}`, "Dicionário HTML", 810, 990, -810, 990);
+  }
+
+  center("Dicionário HTML");
+}
+
+window.dicionariocss() = function () {
+  if (!exist("Dicionário CSS")) {
+    newidoc(`https://omnidocs.vercel.app/glossario/web.html?filtra=_css&titulo=Dicionário%20CSS&bg=${getcssv("--accent")}&fg=${getcssv("--bg")}`, "Dicionário CSS", 930, 990, 180, 990);
+  }
+
+  center("Dicionário CSS");
+}
+
 window.lpjd = function () {
   
   if (!exist("Livro PJD")) {
