@@ -914,6 +914,22 @@ window.dicionariocss = function () {
   center("Dicionário CSS");
 }
 
+window.exemplosweb = function () {
+  if (!exist("Exemplos HTML, CSS e SVG")) {
+    newidoc(`https://omnidocs.vercel.app/glossario/web.html?filtra=aula-web&titulo=Exemplos%20desenvolvido%20em%20aula&bg=${getcssv("--accent")}&fg=${getcssv("--bg")}`, "Exemplos HTML, CSS e SVG", 1110, 990, -2100, 990);
+  }
+
+  center("Exemplos HTML, CSS e SVG");
+}
+
+window.exemplosdgen = function () {
+  if (!exist("Exemplos Javascript, P5, D3 e SVG")) {
+    newidoc(`https://omnidocs.vercel.app/glossario/web.html?filtra=aula-dgen&titulo=Exemplos%20desenvolvido%20em%20aula&bg=${getcssv("--accent")}&fg=${getcssv("--bg")}`, "Exemplos Javascript, P5, D3 e SVG", 1110, 990, -3390, 990);
+  }
+
+  center("Exemplos Javascript, P5, D3 e SVG");
+}
+
 window.lpjd = function () {
   
   if (!exist("Livro PJD")) {
