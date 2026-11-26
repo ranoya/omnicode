@@ -3,6 +3,8 @@ ungroovy();
 setTheme("Light");
 centerControls();
 setTransparentBackground();
+inertia();
+
 
 
 let datatwindex = 0;

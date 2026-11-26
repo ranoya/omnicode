@@ -1,5 +1,6 @@
 devmode();
 ungroovy();
+inertia();
 
       //
       //

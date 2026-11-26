@@ -2,6 +2,7 @@ setTempTheme("gruvbox-dark");
 devmode();
 ungroovy();
 setTransparentBackground();
+inertia();
 
 
       //

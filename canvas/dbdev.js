@@ -1,6 +1,7 @@
 devmode();
 ungroovy();
 setTheme("Light");
+inertia();
 
 let datatwindex = 0;
 

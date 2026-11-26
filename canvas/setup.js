@@ -1,3 +1,4 @@
 devmode();
 setTempTheme("light");
+inertia();
 
