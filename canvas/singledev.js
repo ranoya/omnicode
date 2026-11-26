@@ -704,93 +704,20 @@ window.omnicodelive = function () {
 }
 
 window.exemplos = function () {
-        if (!exist("Exemplos")) {
-          rundoc("Exemplos", "openexemplos", {}, 335, 556, -625, -317);
-        }
-        center("Exemplos");
-}
 
-window.openexemplos = function (id, dados) {
-        var el = document.getElementById(id);
-        el.innerHTML =
-            `
-            <style>
+        let b = getcssv("--bg");
+        let t = getcssv("--text");
+        let a = getcssv("--accent");
+        let m = getcssv("--muted");
+        let pb = getcssv("--panel-border");
+        let wh = getcssv("--win-header");
 
-                
-
-                .menu_menuopt {
-                
-                display: flex;
-                flex-direction: column;
-                align-items: start;
-                height: 100%;
-                background-color: var(--panel-border);
-                
-                }
-
-                .menu_menuopt div {
-
-                cursor: pointer;
-                font-size: 18px;
-                line-height: 22px;
-                padding-top: 23px;
-                padding-bottom: 23px;
-                height: auto;
-                width: 100%;
-                color: var(--text);
-                background-color: var(--panel-border);
-                padding-left: 20px;
-                padding-right: 20px;
-                border-top: 1px dotted var(--muted);
-                }
-
-                .menu_menuopt div:last-child {
-                  border-bottom: 1px dotted var(--muted);
-                }
-
-                .menu_menuopt div:hover {
-                background-color: var(--win-header);
-                }
-
-                .menu_menuopt div.secao {
-                cursor: default;
-                background-color: var(--accent);
-                color: var(--bg);
-                }
-
-                .menu_menuopt div.secao:hover {
-                background-color: var(--accent);
-                cursor: default;
-                }
-
-
-            </style>
-
-            <div class="menu_menuopt">
-                <div class="secao">Dados</div>
-                <div onclick="window.dataset('https://docs.google.com/spreadsheets/d/1FbY8hPtM8IxEJ26ybMZHpMrHdk-LEm1yuYPiFVwF94U/edit?gid=0#gid=0'); centerlastframe();">Dataset de Exemplo</div>
-
-                <div onclick="window.dataset('https://docs.google.com/spreadsheets/d/15lB-WclGe0WVET1yg94tZMOc5zVi6lufmv0vQZyXmYA/preview'); centerlastframe();">Dataset completo de Point & Click Adventures</div>
-
-                <div class="secao">Notebooks</div>
-                <div onclick="newidoc('https://omnicode.vercel.app/notebook/?temptheme=${localStorage.getItem('infcanvas:theme')}&load=https://omnicode.vercel.app/notebook/creativecode.html', 'Instruções'); centerlastframe();">Exemplo de programação criativa em notebook computacional</div>
-
-                <div class="secao">Programação</div>
-                <div onclick="window.code('https://omnicode.vercel.app/examples/htmlcanvas.js', 'canvas'); centerlastframe();">Hello World direto no Canvas</div>
-                <div onclick="window.code('https://omnicode.vercel.app/examples/meucanvas.js', 'canvas'); centerlastframe();">Hello World em Janelas</div>
-                <div onclick="window.code('https://omnicode.vercel.app/examples/logoddesigncanvas.js', 'canvas'); centerlastframe();">Logotipo do departamento de design para Canvas</div>
-                <div onclick="window.code('https://booklines.vercel.app/assets/codigosp5/exemplo-livroJSD_SE.js', 'P5'); centerlastframe();">Mandala 1 em P5</div>
-                <div onclick="window.code('https://booklines.vercel.app/assets/codigosp5/bass.js', 'P5'); centerlastframe();">Mandala 2 em P5</div>
-                
-            </div>
-          
-          
-          
-          
-            `;
-        
+      if (!exist("Exemplos")) {
+        newidoc(`https://omnicode.vercel.app/canvas/poe.html?filtra=main&text=${t}&accent=${a}&muted=${m}&bg=${b}&panel-border=${pb}&win-header=${wh}&source=https://docs.google.com/spreadsheets/d/1K821gEs1HUvW4brTu_VRziZ6nr1wPvItNMQz5P3srtg/edit?gid=1599126170#gid=1599126170`, "Exemplos", 335, 556, -625, -317);
       }
 
+      setPan(0, 500);
+}
 
 window.omnihelp = function () {
   
